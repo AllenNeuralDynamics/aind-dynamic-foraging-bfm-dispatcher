@@ -18,6 +18,7 @@ DATASET_IDS = {
     "chen": "chen-et-al-2021",
     "zid": "zid-et-al-2026-experiment-1",
 }
+PYARROW_VERSION = "21.0.0"
 PYARROW_WHEEL_SHA256 = (
     "b7ae0bbdc8c6674259b25bef5d2a1d6af5d39d7200c819cf99e07f7dfef1c51e"
 )
@@ -25,12 +26,17 @@ PYARROW_WHEEL_SHA256 = (
 
 def _ensure_pyarrow(deps_root: Path = Path("/deps")) -> None:
     try:
-        import pyarrow  # noqa: F401
-
-        return
+        import pyarrow
     except ModuleNotFoundError:
         pass
-    wheels = list(deps_root.glob("pyarrow-21.0.0-*.whl"))
+    else:
+        if pyarrow.__version__ != PYARROW_VERSION:
+            raise RuntimeError(
+                "Installed pyarrow version does not match the pinned runtime: "
+                f"expected={PYARROW_VERSION} actual={pyarrow.__version__}"
+            )
+        return
+    wheels = list(deps_root.glob(f"pyarrow-{PYARROW_VERSION}-*.whl"))
     if len(wheels) != 1:
         raise RuntimeError(
             f"Expected one pinned pyarrow wheel in {deps_root}; "
@@ -145,9 +151,7 @@ def main() -> None:
         "target_data": {
             "_target_": "data_loaders.external_bandit.ExternalBanditDatasetLoader",
             "file_path": str(args.data_root / f"{args.dataset}.parquet"),
-            "split_manifest_path": str(
-                args.data_root / f"{args.dataset}.split.json"
-            ),
+            "split_manifest_path": str(args.data_root / f"{args.dataset}.split.json"),
             "dataset_id": DATASET_IDS[args.dataset],
             "batch_size": None,
             "batch_mode": "single",

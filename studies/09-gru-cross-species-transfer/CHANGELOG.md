@@ -2,6 +2,8 @@
 
 ## 2026-09-05
 
+- Require any preinstalled pyarrow to match the pinned 21.0.0 runtime instead
+  of bypassing the wheel-version contract.
 - Removed the obsolete Result 1 pointer after its GRU-versus-Q content was
   consolidated into Result 2, and updated all report-consumer references.
 - Added deterministic representative behavior-session plots for Grossman, Chen,
