@@ -7,5 +7,5 @@
 - Settled: 2026-09-05 03:08 PT
 - Status: success (15/15)
 - Key numbers: normalized likelihood 0.70371–0.72008; D=300 mean 0.71727 and D=614 mean 0.71363
-- Feeds reports: r1
+- Feeds reports: r2
 - Notes: the first API submission attempt returned a database conflict and created no experiment; the clean retry above succeeded

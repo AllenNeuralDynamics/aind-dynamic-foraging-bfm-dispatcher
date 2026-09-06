@@ -130,8 +130,8 @@ generic family instead of the model selected by each dataset's authors:
   overall history-kernel-2 foraging-RL model.
 
 They use the same subject-level adaptation observations and identical held-out
-trial keys as Result 1. These fits are CPU-only SLURM jobs on Allen HPC; they
-must not be sent to Beaker.
+trial keys as the GRU and common-Q comparisons in Result 2. These fits are
+CPU-only SLURM jobs on Allen HPC; they must not be sent to Beaker.
 
 The completed consolidated comparison is
 [Result 2](analysis/reports/r2-author-aligned-baselines.md).

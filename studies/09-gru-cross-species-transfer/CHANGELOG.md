@@ -2,6 +2,8 @@
 
 ## 2026-09-05
 
+- Removed the obsolete Result 1 pointer after its GRU-versus-Q content was
+  consolidated into Result 2, and updated all report-consumer references.
 - Added deterministic representative behavior-session plots for Grossman, Chen,
   and Zid to Result 2 using the pinned basic-analysis session plotter.
 - Consolidated Result 1 into Result 2, fixed author-line styling, added task and

@@ -7,5 +7,5 @@
 - Settled: 2026-09-05 03:07 PT
 - Status: success (3/3)
 - Key numbers: normalized likelihood 0.73177 Grossman, 0.58747 Chen, 0.70427 Zid
-- Feeds reports: r1
+- Feeds reports: r2
 - Notes: Q baselines ran on HPC, never Beaker; each task used the exact matched adaptation/test split scored by GRU
