@@ -17,9 +17,19 @@ inputs:
   data:
     - analysis/author_baseline_results.json
     - analysis/matched_half_results.json
+    - analysis/example_behavior_sessions.json
   figures:
     - analysis/fig_author_baseline_likelihood.png
     - analysis/fig_subject_baseline_likelihood.png
+    - analysis/fig_example_sessions_grossman_lower.png
+    - analysis/fig_example_sessions_grossman_median.png
+    - analysis/fig_example_sessions_grossman_upper.png
+    - analysis/fig_example_sessions_chen_lower.png
+    - analysis/fig_example_sessions_chen_median.png
+    - analysis/fig_example_sessions_chen_upper.png
+    - analysis/fig_example_sessions_zid_lower.png
+    - analysis/fig_example_sessions_zid_median.png
+    - analysis/fig_example_sessions_zid_upper.png
 reproduce: make -C studies/09-gru-cross-species-transfer r2
 ---
 
@@ -39,6 +49,63 @@ All models use the same subject-level adaptation/test split and score the exact 
 
 Each value is that model's subject-level normalized likelihood minus the same subject's author-selected-model likelihood. Thus the red zero line is the author-model reference; positive values favor the displayed model. Dots are subjects, thin lines connect each subject across models, and violins show the distributions. GRU subject log likelihood is averaged across the three source seeds before conversion to normalized likelihood. Panel annotations report unadjusted two-sided paired Wilcoxon signed-rank p-values versus the author model. The symmetric-log y-axis is linear within ±0.01 and retains the large Zid outliers while resolving the central distribution.
 The common Q fits five parameters: one reward learning rate, unchosen-value forgetting, one-step choice-kernel weight, side bias, and softmax inverse temperature. The `ForagerQLearning` parameter generator always adds `biasL`; the one-step kernel's step size is fixed at 1 and is not counted as a fitted parameter.
+
+### Representative behavior sessions
+
+These examples were selected deterministically, not by visual inspection: each category contains the three subjects at neighboring ranks around the 10th, 50th, or 90th percentile of the subject-level D=614 GRU minus author-selected-model normalized-likelihood difference. Negative values favor the author model; positive values favor the GRU.
+
+#### Grossman mouse
+
+##### Lower tail
+
+![Lower tail Grossman mouse behavior sessions](../fig_example_sessions_grossman_lower.png)
+
+##### Median
+
+![Median Grossman mouse behavior sessions](../fig_example_sessions_grossman_median.png)
+
+##### Upper tail
+
+![Upper tail Grossman mouse behavior sessions](../fig_example_sessions_grossman_upper.png)
+
+For each selected subject, the plot shows the first chronologically held-out session from the frozen odd/even session split.
+Black and gray choice marks denote rewarded and unrewarded trials, the black line is the nine-trial smoothed right-choice fraction, and the lower strip shows the left/right reward probabilities.
+
+#### Chen mouse
+
+##### Lower tail
+
+![Lower tail Chen mouse behavior sessions](../fig_example_sessions_chen_lower.png)
+
+##### Median
+
+![Median Chen mouse behavior sessions](../fig_example_sessions_chen_median.png)
+
+##### Upper tail
+
+![Upper tail Chen mouse behavior sessions](../fig_example_sessions_chen_upper.png)
+
+For each selected subject, the plot shows the first chronologically held-out session from the frozen odd/even session split.
+Black and gray choice marks denote rewarded and unrewarded trials, the black line is the nine-trial smoothed right-choice fraction, and the lower strip shows the left/right reward probabilities.
+
+#### Zid human
+
+##### Lower tail
+
+![Lower tail Zid human behavior sessions](../fig_example_sessions_zid_lower.png)
+
+##### Median
+
+![Median Zid human behavior sessions](../fig_example_sessions_zid_median.png)
+
+##### Upper tail
+
+![Upper tail Zid human behavior sessions](../fig_example_sessions_zid_upper.png)
+
+The full 300-trial session is shown; the purple dashed line separates the 150-trial adaptation prefix from the held-out suffix.
+Black and gray choice marks denote rewarded and unrewarded trials, the black line is the nine-trial smoothed right-choice fraction, and the lower strip shows the left/right reward probabilities.
+
+Plots use the pinned [`plot_foraging_session`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis/blob/590e5f085711a8ba99ca0d86e94471f347318daa/src/aind_dynamic_foraging_basic_analysis/plot/plot_foraging_session.py) implementation from `aind-dynamic-foraging-basic-analysis`.
 
 ### Subject-level likelihood differences from the author model
 
