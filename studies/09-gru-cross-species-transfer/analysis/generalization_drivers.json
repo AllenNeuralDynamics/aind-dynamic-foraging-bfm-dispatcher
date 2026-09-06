@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_generalization_drivers.py",
-    "produced_at_pt": "2026-09-06T08:25:32-07:00",
-    "dispatcher_git_sha": "e646d58c478c0fa8815162eec739f5faeb9077b7",
+    "produced_at_pt": "2026-09-06T08:27:28-07:00",
+    "dispatcher_git_sha": "187ad1f5953eec24e3633b21dd526c3f01edc820",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
