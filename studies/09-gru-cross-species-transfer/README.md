@@ -214,11 +214,10 @@ isolated by this survey.
 
 ## Generalization drivers
 
-[Result 3](analysis/reports/r3-generalization-drivers.md) is a first-pass
-cross-cohort meta-analysis using only the existing frozen GRU, common-Q, and
-embedding artifacts. It compares subject-balanced D=614 GRU improvement with
-full-4D source-centroid Mahalanobis distance and common-Q predictability, and
-tests whether D=614 versus D=10 scaling benefit varies with embedding distance.
-Species is shown descriptively because species, study, and task are confounded.
-Objective reward-schedule and categorical task-design distances are reserved
-for the next report revision.
+[Result 3](analysis/reports/r3-generalization-drivers.md) is a cross-cohort
+meta-analysis of the frozen GRU, common-Q, embedding, and task-design artifacts.
+It compares subject-balanced D=614 GRU improvement and embedding displacement
+with an evidence-backed categorical distance from the AIND source tasks. For
+the seven cohorts with complete trial-wise arm probabilities, it also tests an
+empirical reward-schedule distance from Grossman. Species remains descriptive
+because species, study, apparatus, and task design are confounded.

@@ -17,8 +17,10 @@ from plot_style import apply_presentation_style  # noqa: E402
 
 
 DATA = STUDY / "analysis" / "generalization_drivers.json"
+TASK_DATA = STUDY / "analysis" / "task_design_features.json"
 MAIN_FIGURE = STUDY / "analysis" / "fig_generalization_drivers.png"
 ROBUSTNESS_FIGURE = STUDY / "analysis" / "fig_generalization_robustness.png"
+TASK_FIGURE = STUDY / "analysis" / "fig_task_design_drivers.png"
 REPORT = STUDY / "analysis" / "reports" / "r3-generalization-drivers.md"
 START = "<!-- BEGIN result-3 -->"
 END = "<!-- END result-3 -->"
@@ -274,6 +276,93 @@ def _plot_robustness(data: dict) -> None:
     plt.close(fig)
 
 
+def _plot_task_design(task_data: dict) -> None:
+    apply_presentation_style()
+    fig, axes = plt.subplots(2, 3, figsize=(18.5, 11.2), constrained_layout=True)
+    columns = (
+        (
+            "categorical_distance.task_structure",
+            "Task-structure distance from AIND",
+            "task_structure_distance",
+        ),
+        (
+            "categorical_distance.full_design",
+            "Full-design distance from AIND",
+            "full_design_distance",
+        ),
+        (
+            "empirical_schedule_distance_to_grossman",
+            "Empirical schedule distance from Grossman",
+            "empirical_schedule_distance",
+        ),
+    )
+    outcomes = (
+        (
+            "gru_d614_minus_q_bits_per_trial",
+            "GRU D=614 − common Q\n(subject-balanced bits/trial)",
+            "gru_d614_minus_q",
+        ),
+        (
+            "embedding_centroid_mahalanobis",
+            "External-centroid distance from source\n(4D Mahalanobis)",
+            "embedding_centroid",
+        ),
+    )
+
+    def nested(record: dict, path: str) -> float | None:
+        value: object = record
+        for key in path.split("."):
+            if not isinstance(value, dict):
+                return None
+            value = value.get(key)
+        return None if value is None else float(value)
+
+    for column, (x_path, x_label, relationship_x) in enumerate(columns):
+        for row, (outcome, y_label, relationship_y) in enumerate(outcomes):
+            axis = axes[row, column]
+            for cohort in task_data["cohorts"].values():
+                x = nested(cohort, x_path)
+                if x is None:
+                    continue
+                color = SPECIES_COLORS[cohort["species"]]
+                y = float(cohort["outcomes"][outcome])
+                axis.scatter(
+                    x,
+                    y,
+                    color=color,
+                    edgecolor="white",
+                    linewidth=0.8,
+                    s=78,
+                    zorder=4,
+                )
+                _annotate(axis, x, y, cohort["label"])
+            relationship = task_data["relationships"][
+                f"{relationship_y}_vs_{relationship_x}"
+            ]
+            if row == 0:
+                axis.axhline(0, color="#777777", linestyle="--", linewidth=1)
+            axis.set_xlabel(x_label)
+            axis.set_ylabel(y_label)
+            axis.set_title(
+                f"n={relationship['n_cohorts']}; "
+                f"Spearman ρ={relationship['spearman_rho']:+.2f}; "
+                f"p={relationship['permutation_p_two_sided']:.3f}"
+            )
+
+    fig.legend(
+        handles=_species_legend(),
+        loc="outside lower center",
+        ncol=4,
+        frameon=False,
+    )
+    fig.suptitle(
+        "Task-design distance predicts embedding displacement more clearly than transfer advantage\n"
+        "Categorical scores are nearest-prototype mismatch; schedule scores use complete trial-wise probabilities"
+    )
+    fig.savefig(TASK_FIGURE, bbox_inches="tight")
+    plt.close(fig)
+
+
 def _fmt_interval(values: list[float]) -> str:
     return f"[{values[0]:+.2f}, {values[1]:+.2f}]"
 
@@ -321,7 +410,136 @@ def _cohort_rows(data: dict) -> list[str]:
     return rows
 
 
-def _result_block(data: dict) -> str:
+def _value_text(value: object) -> str:
+    if isinstance(value, list):
+        return ", ".join(str(item).replace("_", " ") for item in value)
+    if isinstance(value, bool):
+        return "yes" if value else "no"
+    return str(value).replace("_", " ")
+
+
+def _task_rows(task_data: dict) -> list[str]:
+    rows = []
+    for cohort in task_data["cohorts"].values():
+        annotation = cohort["annotation"]
+        rows.append(
+            f"| [{cohort['label']}]({annotation['evidence_url']}) | "
+            f"{cohort['species']} | {_value_text(annotation['schedule_family'])} | "
+            f"{_value_text(annotation['arm_coupling'])} | "
+            f"{_value_text(annotation['baiting'])} | "
+            f"{_value_text(annotation['choice_target'])} | "
+            f"{_value_text(annotation['physical_context'])} | "
+            f"{_value_text(annotation['response_modality'])} | "
+            f"{_value_text(annotation['reward_modality'])} | "
+            f"{cohort['categorical_distance']['task_structure']:.2f} | "
+            f"{cohort['categorical_distance']['full_design']:.2f} |"
+        )
+    return rows
+
+
+def _species_rows(task_data: dict) -> list[str]:
+    rows = []
+    for species in SPECIES_COLORS:
+        cohorts = [
+            cohort
+            for cohort in task_data["cohorts"].values()
+            if cohort["species"] == species
+        ]
+        delta = np.asarray(
+            [
+                cohort["outcomes"]["gru_d614_minus_q_bits_per_trial"]
+                for cohort in cohorts
+            ],
+            dtype=float,
+        )
+        embedding = np.asarray(
+            [
+                cohort["outcomes"]["embedding_centroid_mahalanobis"]
+                for cohort in cohorts
+            ],
+            dtype=float,
+        )
+        task_distance = np.asarray(
+            [
+                cohort["categorical_distance"]["task_structure"]
+                for cohort in cohorts
+            ],
+            dtype=float,
+        )
+        rows.append(
+            f"| {species.capitalize()} | {len(cohorts)} | {delta.mean():+.4f} | "
+            f"{np.median(delta):+.4f} | [{delta.min():+.4f}, {delta.max():+.4f}] | "
+            f"{embedding.mean():.2f} | {task_distance.mean():.2f} |"
+        )
+    return rows
+
+
+def _schedule_rows(task_data: dict) -> list[str]:
+    labels = {
+        "mean_arm_lag1_autocorrelation": "arm lag-1",
+        "reward_gap_lag1_autocorrelation": "gap lag-1",
+        "cross_arm_correlation": "cross-arm",
+        "probability_change_rate": "change rate",
+        "mean_absolute_arm_step_on_change": "step size",
+        "mean_absolute_reward_gap": "mean |gap|",
+        "mean_reward_probability": "mean p(reward)",
+        "equal_probability_fraction": "equal-p fraction",
+    }
+    rows = []
+    for name in task_data["contract"]["schedule_cohort_order"]:
+        cohort = task_data["cohorts"][name]
+        values = [
+            cohort["schedule_features"][feature]["subject_balanced_mean"]
+            for feature in labels
+        ]
+        rows.append(
+            f"| {cohort['label']} | "
+            + " | ".join(f"{value:.3f}" for value in values)
+            + f" | {cohort['empirical_schedule_distance_to_grossman']:.2f} |"
+        )
+    return rows
+
+
+def _task_relationship_rows(task_data: dict) -> list[str]:
+    labels = {
+        "gru_d614_minus_q_vs_task_structure_distance": "GRU614−Q vs task-structure distance",
+        "embedding_centroid_vs_task_structure_distance": "embedding vs task-structure distance",
+        "gru_d614_minus_q_vs_full_design_distance": "GRU614−Q vs full-design distance",
+        "embedding_centroid_vs_full_design_distance": "embedding vs full-design distance",
+        "gru_d614_minus_q_vs_empirical_schedule_distance": "GRU614−Q vs empirical schedule distance",
+        "embedding_centroid_vs_empirical_schedule_distance": "embedding vs empirical schedule distance",
+    }
+    rows = []
+    for key, label in labels.items():
+        result = task_data["relationships"][key]
+        rows.append(
+            f"| {label} | {result['n_cohorts']} | {result['spearman_rho']:+.3f} | "
+            f"{_fmt_interval(result['bootstrap_95_ci'])} | "
+            f"{result['permutation_p_two_sided']:.4f} ({result['permutation_method']}) | "
+            f"{_fmt_interval(result['leave_one_out_range'])} |"
+        )
+    return rows
+
+
+def _feature_screen_rows(task_data: dict) -> list[str]:
+    labels = {
+        "mean_arm_lag1_autocorrelation": "mean arm lag-1 autocorrelation",
+        "reward_gap_lag1_autocorrelation": "reward-gap lag-1 autocorrelation",
+        "cross_arm_correlation": "contemporaneous cross-arm correlation",
+        "probability_change_rate": "probability-change rate",
+        "mean_absolute_arm_step_on_change": "mean absolute arm step when changed",
+        "mean_absolute_reward_gap": "mean absolute reward gap",
+        "mean_reward_probability": "mean reward probability",
+        "equal_probability_fraction": "equal-probability fraction",
+    }
+    return [
+        f"| {labels[row['feature']]} | {row['spearman_rho']:+.3f} | "
+        f"{row['permutation_p_two_sided']:.4f} | {row['bh_fdr_q']:.4f} |"
+        for row in task_data["schedule_feature_screen_vs_gru_d614_minus_q"]
+    ]
+
+
+def _result_block(data: dict, task_data: dict) -> str:
     deltas = {
         cohort["label"]: _summary(
             cohort, "gru_d614_minus_q_bits_per_trial"
@@ -338,6 +556,24 @@ def _result_block(data: dict) -> str:
     ]
     scaling = data["relationships"][
         "gru_d614_minus_d10_vs_embedding_centroid"
+    ]
+    task_performance = task_data["relationships"][
+        "gru_d614_minus_q_vs_task_structure_distance"
+    ]
+    task_embedding = task_data["relationships"][
+        "embedding_centroid_vs_task_structure_distance"
+    ]
+    full_performance = task_data["relationships"][
+        "gru_d614_minus_q_vs_full_design_distance"
+    ]
+    full_embedding = task_data["relationships"][
+        "embedding_centroid_vs_full_design_distance"
+    ]
+    schedule_performance = task_data["relationships"][
+        "gru_d614_minus_q_vs_empirical_schedule_distance"
+    ]
+    schedule_embedding = task_data["relationships"][
+        "embedding_centroid_vs_empirical_schedule_distance"
     ]
     lines = [
         "[regenerated by `analysis/report_generalization_drivers.py` — do not edit by hand]",
@@ -404,21 +640,99 @@ def _result_block(data: dict) -> str:
         "GRU-minus-Q vertical axis. Its correlation is not an independent test of whether "
         "intrinsically easier tasks transfer better.",
         "",
+        "## Task-design meta-analysis",
+        "",
+        "![Task-design distance versus transfer and embedding displacement](../fig_task_design_drivers.png)",
+        "",
+        "The categorical analysis is outcome-blind. Task-structure distance is the equal-weight "
+        "mismatch over schedule family, arm coupling, baiting, and what the subject chooses. "
+        "Full-design distance adds physical context, response modality, and reward modality. "
+        "Each cohort is scored against the nearest of the three task prototypes actually "
+        "represented in the AIND source-training snapshot; this preserves source heterogeneity "
+        "and makes Grossman a zero-distance anchor.",
+        "",
+        f"Task-structure distance is associated with adapted embedding-centroid displacement "
+        f"(ρ={task_embedding['spearman_rho']:+.3f}, permutation "
+        f"p={task_embedding['permutation_p_two_sided']:.4f}) but not with GRU advantage "
+        f"(ρ={task_performance['spearman_rho']:+.3f}, "
+        f"p={task_performance['permutation_p_two_sided']:.4f}). The same separation is stronger "
+        f"for the full-design score: embedding ρ={full_embedding['spearman_rho']:+.3f} "
+        f"(p={full_embedding['permutation_p_two_sided']:.4f}), versus GRU advantage "
+        f"ρ={full_performance['spearman_rho']:+.3f} "
+        f"(p={full_performance['permutation_p_two_sided']:.4f}). Thus the transferred embedding "
+        "geometry carries an auditable task/apparatus-distance signal, but categorical closeness "
+        "alone does not explain whether GRU beats common Q.",
+        "",
+        "### Species-stratified description",
+        "",
+        "| species | cohorts | mean GRU614−Q bits/trial | median | range | mean embedding distance | mean task distance |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+        *_species_rows(task_data),
+        "",
+        "These are equal-cohort descriptive summaries, not species effects. Each species is "
+        "represented by only two to six studies, and task design differs systematically by "
+        "species. In particular, a species contrast would currently relabel the same design and "
+        "apparatus contrasts rather than isolate biology.",
+        "",
+        f"For the seven cohorts whose canonical adapters expose complete trial-wise probabilities "
+        f"for both arms, empirical schedule distance from Grossman is negatively associated with "
+        f"GRU advantage (ρ={schedule_performance['spearman_rho']:+.3f}, exact permutation "
+        f"p={schedule_performance['permutation_p_two_sided']:.4f}; bootstrap 95% CI "
+        f"{_fmt_interval(schedule_performance['bootstrap_95_ci'])}; leave-one-out range "
+        f"{_fmt_interval(schedule_performance['leave_one_out_range'])}). Its association with "
+        f"embedding-centroid distance is weak (ρ={schedule_embedding['spearman_rho']:+.3f}, "
+        f"p={schedule_embedding['permutation_p_two_sided']:.4f}). The performance result is "
+        "promising but small-sample: the bootstrap interval crosses zero, and Grossman defines "
+        "the schedule-distance origin.",
+        "",
+        "### Evidence-backed categorical matrix",
+        "",
+        "| cohort | species | schedule | coupling | baited | choice target | context | response | reward | task distance | full distance |",
+        "|---|---|---|---|---|---|---|---|---|---:|---:|",
+        *_task_rows(task_data),
+        "",
+        "Cohort names link to the primary Methods source used for annotation. The complete "
+        "evidence note for every row, the three AIND prototypes, and the scoring contract are "
+        "frozen in `analysis/task_design_features.json`.",
+        "",
+        "### Empirical reward-schedule features",
+        "",
+        "| cohort | arm lag-1 | gap lag-1 | cross-arm | change rate | step size | mean abs(gap) | mean p(reward) | equal-p fraction | distance to Grossman |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        *_schedule_rows(task_data),
+        "",
+        "Every metric is computed using only within-session transitions. Subjects are summarized "
+        "first and then averaged equally within a cohort. The composite distance is the root-mean-"
+        "square standardized Euclidean distance across seven predeclared features; reward-gap "
+        "autocorrelation is reported but omitted from the distance because it largely duplicates "
+        "the two arm-autocorrelation terms. No missing schedule is imputed.",
+        "",
+        "| relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |",
+        "|---|---:|---:|---:|---:|---:|",
+        *_task_relationship_rows(task_data),
+        "",
+        "### Individual schedule-feature screen",
+        "",
+        "| schedule feature vs GRU614−Q | Spearman ρ | exact p | BH-FDR q |",
+        "|---|---:|---:|---:|",
+        *_feature_screen_rows(task_data),
+        "",
+        "No individual schedule feature survives the eight-feature FDR correction. The composite "
+        "distance result should therefore motivate preregistered tests on additional datasets, "
+        "not a post-hoc claim that one schedule statistic is the mechanism.",
+        "",
         "## What this version can and cannot answer",
         "",
-        "This first version tests geometry and baseline predictability using already frozen "
-        "results. Embedding distance is measured after embedding-only adaptation, so it can "
-        "reflect both task structure and cohort behavior. It is not yet a pure task-distance "
-        "measure. Thirteen cohorts are also too few, and too confounded, to estimate a causal "
-        "species effect.",
+        "Embedding distance is measured after embedding-only adaptation, so it can reflect both "
+        "task structure and cohort behavior. Species, study, apparatus, reward schedule, and data "
+        "volume remain confounded, and 13 cohorts are too few for a causal species effect or a "
+        "stable multivariable regression. Species colors are descriptive only.",
         "",
-        "The next revision should add two task-design layers: (1) quantitative reward-schedule "
-        "features, including persistence of `p_right - p_left`, arm coupling, switch hazard, "
-        "step size, and reward gap; and (2) an evidence-backed categorical matrix for baiting, "
-        "schedule family, action versus stimulus choice, restraint, response modality, and "
-        "reward modality. Species and split/data-volume variables should remain separate from "
-        "the task-distance score. An LLM-derived pairwise rank should be a blinded sensitivity "
-        "analysis only after the auditable feature matrix exists.",
+        "The next defensible extension is to recover explicit schedules for the six currently "
+        "excluded adapters, then test whether the schedule-distance relationship replicates. An "
+        "LLM pairwise closeness rank remains a blinded sensitivity analysis: prompts and Methods "
+        "excerpts should be frozen before exposing the model to GRU outcomes, and agreement with "
+        "the auditable matrix should be reported rather than used to replace it.",
         "",
         "## Reproduce",
         "",
@@ -433,6 +747,7 @@ def _result_block(data: dict) -> str:
 
 def main() -> None:
     data = json.loads(DATA.read_text())
+    task_data = json.loads(TASK_DATA.read_text())
     expected = tuple(data["contract"]["cohort_order"])
     if tuple(data["cohorts"]) != expected:
         raise AssertionError("Generalization-driver cohort order drifted")
@@ -442,12 +757,15 @@ def main() -> None:
         raise AssertionError("Species color map does not match frozen cohorts")
     _plot_main(data)
     _plot_robustness(data)
-    body = _result_block(data)
+    _plot_task_design(task_data)
+    body = _result_block(data, task_data)
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
     end_start = text.index(END, start_end)
     REPORT.write_text(text[:start_end] + "\n" + body + "\n" + text[end_start:])
-    print(f"Wrote {MAIN_FIGURE}, {ROBUSTNESS_FIGURE}, and {REPORT}")
+    print(
+        f"Wrote {MAIN_FIGURE}, {ROBUSTNESS_FIGURE}, {TASK_FIGURE}, and {REPORT}"
+    )
 
 
 if __name__ == "__main__":

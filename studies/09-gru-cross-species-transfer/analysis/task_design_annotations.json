@@ -1,0 +1,197 @@
+{
+  "contract": {
+    "description": "Outcome-blind task-design annotations extracted from the cited Methods sections.",
+    "task_structure_axes": [
+      "schedule_family",
+      "arm_coupling",
+      "baiting",
+      "choice_target"
+    ],
+    "apparatus_axes": [
+      "physical_context",
+      "response_modality",
+      "reward_modality"
+    ],
+    "distance_rule": "Equal-weight Gower/Hamming mismatch, minimized over the three source-task prototypes. A list-valued annotation matches when either task value overlaps the prototype value. No weights or annotations use GRU results."
+  },
+  "aind_source_prototypes": {
+    "uncoupled_baiting": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "independent",
+      "baiting": true,
+      "choice_target": "spatial_action",
+      "physical_context": "head_fixed",
+      "response_modality": "lick",
+      "reward_modality": "water"
+    },
+    "uncoupled_no_baiting": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "independent",
+      "baiting": false,
+      "choice_target": "spatial_action",
+      "physical_context": "head_fixed",
+      "response_modality": "lick",
+      "reward_modality": "water"
+    },
+    "coupled_baiting": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "coupled",
+      "baiting": true,
+      "choice_target": "spatial_action",
+      "physical_context": "head_fixed",
+      "response_modality": "lick",
+      "reward_modality": "water"
+    }
+  },
+  "cohorts": {
+    "grossman": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "independent",
+      "baiting": false,
+      "choice_target": "spatial_action",
+      "physical_context": "head_fixed",
+      "response_modality": "lick",
+      "reward_modality": "water",
+      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8825708/",
+      "evidence_note": "Head-restrained mice chose left/right lick spouts; independent water probabilities changed in blocks."
+    },
+    "chen": {
+      "schedule_family": "random_walk",
+      "arm_coupling": "independent",
+      "baiting": false,
+      "choice_target": "spatial_action",
+      "physical_context": "freely_moving",
+      "response_modality": "nose_poke",
+      "reward_modality": "liquid_food",
+      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8794469/",
+      "evidence_note": "Freely moving mice nose-poked one of two touchscreen targets for liquid Ensure under independent restless schedules."
+    },
+    "zid": {
+      "schedule_family": "random_walk",
+      "arm_coupling": "independent",
+      "baiting": false,
+      "choice_target": "abstract_option",
+      "physical_context": "online",
+      "response_modality": "computer_input",
+      "reward_modality": "monetary_points",
+      "evidence_url": "https://www.nature.com/articles/s41467-026-75773-4",
+      "evidence_note": "Online participants chose between two card decks for points with independently evolving reward probabilities."
+    },
+    "lebedeva": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "coupled",
+      "baiting": false,
+      "choice_target": "spatial_action",
+      "physical_context": "head_fixed",
+      "response_modality": "wheel",
+      "reward_modality": "water",
+      "evidence_url": "https://www.nature.com/articles/s41467-026-71664-w",
+      "evidence_note": "Head-fixed mice turned a wheel left/right for water under complementary 80/20 reversals."
+    },
+    "beron": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "coupled",
+      "baiting": false,
+      "choice_target": "spatial_action",
+      "physical_context": "freely_moving",
+      "response_modality": "nose_poke",
+      "reward_modality": "water",
+      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9169659/",
+      "evidence_note": "Freely moving mice chose left/right ports for water in a latent-state probabilistic reversal task."
+    },
+    "kwak": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "independent",
+      "baiting": false,
+      "choice_target": "spatial_action",
+      "physical_context": "freely_moving",
+      "response_modality": "nose_poke",
+      "reward_modality": "water",
+      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6658164/",
+      "evidence_note": "Freely moving mice nose-poked left/right ports for water; each arm probability was constant within blocks and changed without cues."
+    },
+    "miller": {
+      "schedule_family": "random_walk",
+      "arm_coupling": "independent",
+      "baiting": false,
+      "choice_target": "spatial_action",
+      "physical_context": "freely_moving",
+      "response_modality": "nose_poke",
+      "reward_modality": "liquid_food",
+      "evidence_url": "https://www.biorxiv.org/content/10.1101/461129v3",
+      "evidence_note": "Rats repeatedly selected two nose ports for small liquid rewards while both reinforcement probabilities changed continuously."
+    },
+    "findling": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "coupled",
+      "baiting": false,
+      "choice_target": "visual_stimulus",
+      "physical_context": "laboratory",
+      "response_modality": "handheld_button",
+      "reward_modality": "monetary_points",
+      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12728203/",
+      "evidence_note": "Human participants used handheld buttons to choose visual shapes with randomized screen position, 85/15 reversals, and euro feedback."
+    },
+    "tang": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "coupled",
+      "baiting": false,
+      "choice_target": [
+        "spatial_action",
+        "visual_stimulus"
+      ],
+      "physical_context": "head_fixed",
+      "response_modality": "saccade",
+      "reward_modality": "juice",
+      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7873307/",
+      "evidence_note": "Head-restrained macaques made saccades in action- and object-value blocks for juice under 70/30 reversals."
+    },
+    "alsio": {
+      "schedule_family": "criterion_reversal",
+      "arm_coupling": "coupled",
+      "baiting": false,
+      "choice_target": [
+        "spatial_action",
+        "visual_stimulus"
+      ],
+      "physical_context": "freely_moving",
+      "response_modality": "touchscreen",
+      "reward_modality": "food_pellet",
+      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6695374/",
+      "evidence_note": "Freely moving rats performed spatial and visual touchscreen reversals for food pellets; contingencies reversed after a criterion."
+    },
+    "eckstein": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "coupled",
+      "baiting": false,
+      "choice_target": "spatial_action",
+      "physical_context": "laboratory",
+      "response_modality": "keyboard",
+      "reward_modality": "monetary_points",
+      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9108470/",
+      "evidence_note": "Human participants selected left/right boxes by keyboard in a stochastic reversal task with points/coin feedback."
+    },
+    "costa": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "coupled",
+      "baiting": false,
+      "choice_target": "visual_stimulus",
+      "physical_context": "head_fixed",
+      "response_modality": "saccade",
+      "reward_modality": "juice",
+      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5074688/",
+      "evidence_note": "Head-restrained macaques chose randomized-position visual stimuli by saccade for apple juice under 80/20, 70/30, or 60/40 reversals."
+    },
+    "lopez_mouse": {
+      "schedule_family": "variable_interval",
+      "arm_coupling": "choice_dependent",
+      "baiting": true,
+      "choice_target": "spatial_action",
+      "physical_context": "freely_moving",
+      "response_modality": "nose_poke",
+      "reward_modality": "water",
+      "evidence_url": "https://doi.org/10.1371/journal.pcbi.1009452",
+      "evidence_note": "Freely moving mice nose-poked left/right ports for water under baited variable-interval schedules with blockwise set rates."
+    }
+  }
+}

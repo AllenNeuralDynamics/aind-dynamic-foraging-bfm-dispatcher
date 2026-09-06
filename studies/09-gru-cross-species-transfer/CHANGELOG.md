@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-06
+
+- Added an outcome-blind categorical task-design matrix, nearest-AIND-prototype
+  distances, and subject-balanced empirical reward-schedule features for the
+  seven cohorts with complete arm probabilities.
+- Related categorical and empirical schedule distance to D=614 GRU advantage
+  and adapted embedding displacement with permutation, bootstrap, leave-one-out,
+  and feature-wise FDR sensitivity analyses.
+
 ## 2026-09-05
 
 - Added Result 3 relating subject-balanced GRU transfer advantage and source-D
