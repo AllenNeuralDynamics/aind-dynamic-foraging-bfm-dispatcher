@@ -55,8 +55,13 @@ ARTIFACT_FILES_QUERY = """query ArtifactFiles($id:ID!){
 def _wandb_key() -> str:
     if key := os.environ.get("WANDB_API_KEY"):
         return key
-    credentials = netrc.netrc().authenticators("api.wandb.ai")
-    if credentials is None:
+    try:
+        credentials = netrc.netrc().authenticators("api.wandb.ai")
+    except (OSError, netrc.NetrcParseError) as error:
+        raise RuntimeError(
+            "WANDB_API_KEY is unset and ~/.netrc could not be read"
+        ) from error
+    if not credentials or not credentials[2]:
         raise RuntimeError("WANDB_API_KEY is unset and api.wandb.ai is absent from ~/.netrc")
     return credentials[2]
 
