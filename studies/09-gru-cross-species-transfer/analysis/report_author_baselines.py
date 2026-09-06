@@ -32,9 +32,9 @@ SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_baseline_likelihood.png"
 GRU_Q_SUBJECT_FIGURE = (
     STUDY / "analysis" / "fig_subject_gru_minus_q_likelihood.png"
 )
-REPORT = STUDY / "analysis" / "reports" / "r2-author-aligned-baselines.md"
-START = "<!-- BEGIN result-2 -->"
-END = "<!-- END result-2 -->"
+REPORT = STUDY / "analysis" / "reports" / "r1-author-aligned-baselines.md"
+START = "<!-- BEGIN result-1 -->"
+END = "<!-- END result-1 -->"
 DS = (10, 30, 100, 300, 614)
 DATASET_ORDER = (
     "grossman",

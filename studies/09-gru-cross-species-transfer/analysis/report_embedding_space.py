@@ -19,9 +19,9 @@ from plot_style import apply_presentation_style  # noqa: E402
 DATA = STUDY / "analysis" / "embedding_space_results.json"
 PCA_FIGURE = STUDY / "analysis" / "fig_embedding_space_pca.png"
 DISTANCE_FIGURE = STUDY / "analysis" / "fig_embedding_space_distance.png"
-REPORT = STUDY / "analysis" / "reports" / "r3-embedding-space.md"
-START = "<!-- BEGIN result-3 -->"
-END = "<!-- END result-3 -->"
+REPORT = STUDY / "analysis" / "reports" / "r2-embedding-space.md"
+START = "<!-- BEGIN result-2 -->"
+END = "<!-- END result-2 -->"
 PAIR_INDICES = ((0, 1), (0, 2), (1, 2))
 CHI2_95_DF2 = 5.991464547107979
 COLORS = {
@@ -344,7 +344,7 @@ downloaded embedding tables, subject maps, and adaptation summaries. Regenerate
 both figures and this report offline with:
 
 ```bash
-make r3
+make r2
 ```
 """
 

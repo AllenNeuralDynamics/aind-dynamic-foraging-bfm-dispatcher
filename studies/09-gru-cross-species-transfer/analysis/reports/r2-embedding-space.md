@@ -1,5 +1,6 @@
 ---
-title: "Result 3: transferred subject embedding space"
+id: r2
+title: "Result 2: transferred subject embedding space"
 status: live
 issue: 126
 data:
@@ -22,16 +23,16 @@ wandb_groups:
   - gru-eckstein-matched-half@20260905-232924
   - gru-costa-matched-half@20260905-232924
   - gru-lopez-mouse-matched-half@20260905-232924
-reproduce: make r3
+reproduce: make r2
 ---
 
-# Result 3: where transferred subjects land in the GRU embedding space
+# Result 2: where transferred subjects land in the GRU embedding space
 
 This result asks where unseen held-out AIND mice and every admitted external
 two-arm-bandit cohort land in the subject-embedding manifold learned from the
 614 source mice.
 
-<!-- BEGIN result-3 -->
+<!-- BEGIN result-2 -->
 ## Result
 
 ![All transferred subjects in source-fitted PCA space](../fig_embedding_space_pca.png)
@@ -136,6 +137,6 @@ downloaded embedding tables, subject maps, and adaptation summaries. Regenerate
 both figures and this report offline with:
 
 ```bash
-make r3
+make r2
 ```
-<!-- END result-3 -->
+<!-- END result-2 -->

@@ -2,6 +2,9 @@
 
 ## 2026-09-05
 
+- Renumbered the two live reports after removing the obsolete first-round
+  report: the consolidated decision report is now Result 1 and the embedding
+  analysis is Result 2.
 - Expanded the checksum-pinned binary dataset suite to 13 admitted cohorts
   using only the existing v1/v2 contracts; documented five skipped cohorts.
 - Added exact held-out-count/digest validation, one-subject loader and Q
@@ -15,11 +18,14 @@
   source-distance audit and immutable artifact/file provenance.
 - Require any preinstalled pyarrow to match the pinned 21.0.0 runtime instead
   of bypassing the wheel-version contract.
-- Removed the obsolete Result 1 pointer after its GRU-versus-Q content was
-  consolidated into Result 2, and updated all report-consumer references.
+- Removed the obsolete first-round report after its GRU-versus-Q content was
+  consolidated into the current Result 1, and updated all report-consumer
+  references.
 - Added deterministic representative behavior-session plots for Grossman, Chen,
-  and Zid to Result 2 using the pinned basic-analysis session plotter.
-- Consolidated Result 1 into Result 2, fixed author-line styling, added task and
+  and Zid to the current Result 1 using the pinned basic-analysis session
+  plotter.
+- Consolidated the first-round report into the current Result 1, fixed
+  author-line styling, added task and
   subject-count panel labels, and added author-relative paired subject-level
   violin plots with Wilcoxon tests across common Q, published baselines, and
   every GRU source D.

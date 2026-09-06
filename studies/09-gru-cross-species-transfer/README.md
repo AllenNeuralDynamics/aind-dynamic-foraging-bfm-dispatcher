@@ -146,7 +146,7 @@ declared `pyarrow` dependency, so tasks also mount dependency bundle
 `pyarrow==21.0.0` before reading the canonical Parquet table.
 
 The common-Q comparison is consolidated into
-[Result 2](analysis/reports/r2-author-aligned-baselines.md).
+[Result 1](analysis/reports/r1-author-aligned-baselines.md).
 All 13 cohorts and all 195 GRU cells are frozen. Exact ordered trial-key equality
 passes between every GRU cell and its cohort's Q baseline. At D=614, the
 exploratory subject-paired result favors GRU for Grossman, Chen, Lebedeva, and
@@ -179,11 +179,11 @@ generic family instead of the model selected by each dataset's authors:
   overall history-kernel-2 foraging-RL model.
 
 They use the same subject-level adaptation observations and identical held-out
-trial keys as the GRU and common-Q comparisons in Result 2. These fits are
+trial keys as the GRU and common-Q comparisons in Result 1. These fits are
 CPU-only SLURM jobs on Allen HPC; they must not be sent to Beaker.
 
 The completed consolidated comparison is
-[Result 2](analysis/reports/r2-author-aligned-baselines.md).
+[Result 1](analysis/reports/r1-author-aligned-baselines.md).
 The author-selected model beats common Q only for Chen (+0.00392 normalized
 likelihood). The D=614 transferred GRU remains above the author-selected model
 by +0.01559 on Grossman, +0.00136 on Chen, and +0.03057 on Zid.
@@ -195,7 +195,7 @@ expanded GRU-versus-common-Q result.
 
 ## Subject embedding space
 
-[Result 3](analysis/reports/r3-embedding-space.md) uses the three D=614 source
+[Result 2](analysis/reports/r2-embedding-space.md) uses the three D=614 source
 seeds to ask where unseen subjects land after embedding-only adaptation. PCA is
 fit separately to the 614 source-training AIND mice in each seed; the primary
 control is the 149 held-out AIND mice, which were also unseen by the frozen GRU
