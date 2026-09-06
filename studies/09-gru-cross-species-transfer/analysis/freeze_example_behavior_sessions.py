@@ -151,9 +151,20 @@ def _manifest_subject(manifest: dict, subject_id: str) -> dict:
     return matches[0]
 
 
+def _source_session_id(subject_id: str, model_session_id: str) -> str:
+    """Undo the wrapper's collision-proof subject prefix for source lookup."""
+    prefix = f"{subject_id}__"
+    return (
+        model_session_id[len(prefix) :]
+        if model_session_id.startswith(prefix)
+        else model_session_id
+    )
+
+
 def _session_record(df, manifest: dict, example: dict, dataset_name: str) -> dict:
     split = _manifest_subject(manifest, example["subject_id"])
-    session_id = example["session_id"]
+    model_session_id = str(example["session_id"])
+    session_id = _source_session_id(str(example["subject_id"]), model_session_id)
     if "adapt_prefix_trials" in split:
         if str(split["session_id"]) != str(session_id):
             raise AssertionError(f"Manifest session mismatch for {example['subject_id']}")
@@ -183,6 +194,7 @@ def _session_record(df, manifest: dict, example: dict, dataset_name: str) -> dic
     return {
         **example,
         "session_id": str(session_id),
+        "model_session_id": model_session_id,
         "partition": partition,
         "adapt_prefix_trials": adapt_prefix_trials,
         "n_trials": int(len(rows)),

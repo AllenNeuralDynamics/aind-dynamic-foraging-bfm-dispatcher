@@ -22,5 +22,8 @@
   ],
   "canonical_data_root": "/allen/aind/scratch/han.hou/datasets/study09-external-v1v2-20260905/canonical",
   "output_root": "/allen/aind/scratch/han.hou/outputs/study09-external-transfer",
-  "submitted_at": "2026-09-06T00:16:56-07:00"
+  "submitted_at": "2026-09-06T00:16:56-07:00",
+  "settled_at": "2026-09-06T04:26:46-07:00",
+  "status": "success",
+  "completed_tasks": 10
 }

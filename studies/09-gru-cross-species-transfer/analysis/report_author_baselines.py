@@ -518,19 +518,20 @@ def _plot_examples(example_data: dict) -> list[Path]:
                     ],
                     dtype=float,
                 )
-                _, axes = plot_foraging_session(
-                    choice_history=np.asarray(example["choice"], dtype=float),
-                    reward_history=np.asarray(example["reward"], dtype=bool),
-                    p_reward=probability,
-                    smooth_factor=9,
-                    ax=holder,
-                    vertical=False,
-                    plot_list=(
-                        ["choice", "reward_prob"]
-                        if example["reward_probability_available"]
-                        else ["choice"]
-                    ),
-                )
+                with np.errstate(divide="ignore", invalid="ignore"):
+                    _, axes = plot_foraging_session(
+                        choice_history=np.asarray(example["choice"], dtype=float),
+                        reward_history=np.asarray(example["reward"], dtype=bool),
+                        p_reward=probability,
+                        smooth_factor=9,
+                        ax=holder,
+                        vertical=False,
+                        plot_list=(
+                            ["choice", "reward_prob"]
+                            if example["reward_probability_available"]
+                            else ["choice"]
+                        ),
+                    )
                 current_legend = axes[0].get_legend()
                 if legend_handles is None:
                     legend_handles, legend_labels = axes[0].get_legend_handles_labels()
@@ -647,6 +648,104 @@ def _author_subject_rows(author_data: dict, matched: dict) -> list[str]:
     return rows
 
 
+def _stage_a_read(matched: dict) -> list[str]:
+    results = {}
+    for dataset_name in DATASET_ORDER:
+        dataset = matched["datasets"][dataset_name]
+        values = _subject_differences(dataset, 614)
+        pooled = statistics.mean(
+            _metric(row) for row in _gru_for_d(dataset, 614)
+        ) - _metric(dataset["q"])
+        results[dataset_name] = {
+            "mean": statistics.mean(values),
+            "median": statistics.median(values),
+            "p": _wilcoxon(values),
+            "fraction": sum(value > 0 for value in values) / len(values),
+            "pooled": pooled,
+        }
+
+    def describe(names: list[str]) -> str:
+        return ", ".join(
+            f"**{LABELS[name]}** (mean Δ={results[name]['mean']:+.5f}, "
+            f"p={results[name]['p']:.3g})"
+            for name in names
+        )
+
+    gru_better = [
+        name
+        for name in DATASET_ORDER
+        if results[name]["p"] < 0.05 and results[name]["mean"] > 0
+    ]
+    q_better = [
+        name
+        for name in DATASET_ORDER
+        if results[name]["p"] < 0.05 and results[name]["mean"] < 0
+    ]
+    unresolved = [
+        name for name in DATASET_ORDER if results[name]["p"] >= 0.05
+    ]
+    direction_mismatch = [
+        name
+        for name in DATASET_ORDER
+        if results[name]["pooled"] * results[name]["mean"] < 0
+    ]
+    scaling = {
+        name: statistics.mean(
+            _metric(row) for row in _gru_for_d(matched["datasets"][name], 614)
+        )
+        - statistics.mean(
+            _metric(row) for row in _gru_for_d(matched["datasets"][name], 10)
+        )
+        for name in DATASET_ORDER
+    }
+    lines = [
+        "### Stage-A scientific read",
+        "",
+        "At D=614, the exploratory unadjusted subject-paired Wilcoxon result favors GRU "
+        f"for {describe(gru_better)}.",
+        "",
+        "It favors common Q for " + describe(q_better) + ".",
+        "",
+        "The remaining cohorts are unresolved at the 0.05 level: "
+        + describe(unresolved)
+        + ". Tang has only two subjects, so its inferential result is especially limited.",
+        "",
+        f"Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614. "
+        f"The largest gains are "
+        + ", ".join(
+            f"**{LABELS[name]}** ({value:+.5f})"
+            for name, value in sorted(scaling.items(), key=lambda item: item[1], reverse=True)[:4]
+        )
+        + ". Several curves peak at D=100 or D=300, so the evidence supports scaling "
+        "the source population but not a universal optimum at the largest D.",
+    ]
+    if direction_mismatch:
+        name = direction_mismatch[0]
+        result = results[name]
+        lines += [
+            "",
+            f"**Aggregation warning — {LABELS[name]}.** The trial-pooled D=614 score "
+            f"favors GRU by {result['pooled']:+.5f}, while the arithmetic mean subject "
+            f"difference is {result['mean']:+.5f} (median {result['median']:+.5f}; "
+            f"{result['fraction']:.0%} of subjects favor GRU; p={result['p']:.3g}). "
+            "All Zid subjects contribute the same 150 held-out trials, so this reversal is "
+            "not unequal trial weighting. It reflects the nonlinear difference between a "
+            "geometric pooled likelihood and arithmetic per-subject likelihood differences "
+            "in the heterogeneous Zid distribution. The subject-paired result is primary for "
+            "claims about a typical subject; the pooled score remains descriptive of total "
+            "trial prediction.",
+        ]
+    lines += [
+        "",
+        "This screen therefore supports broad transfer, but not universal superiority over "
+        "a fitted subject-level Q model. López-Yépez, Grossman, Lebedeva, and Chen are the "
+        "positive-transfer cases; Findling, Eckstein, Miller, Kwak, and subject-balanced Zid "
+        "are the main stress tests for Stage-B model selection. No new author model is "
+        "implemented until those candidates are explicitly chosen.",
+    ]
+    return lines
+
+
 def _result_block(
     author_data: dict,
     matched: dict,
@@ -655,6 +754,16 @@ def _result_block(
 ) -> str:
     author_rows, correlations = _author_rows(author_data, matched)
     author_subject_rows = _author_subject_rows(author_data, matched)
+    actual_ds = {
+        d: sorted(
+            {
+                int(row["actual_D"])
+                for dataset in matched["datasets"].values()
+                for row in _gru_for_d(dataset, d)
+            }
+        )
+        for d in DS
+    }
     lines = [
         "[regenerated by `analysis/report_author_baselines.py` — do not edit by hand]",
         "",
@@ -760,6 +869,8 @@ def _result_block(
 
     lines += [
         "",
+        *_stage_a_read(matched),
+        "",
         "### Existing author-aligned baselines",
         "",
         "| cohort | published model | author-selected? | common Q | published model refit | GRU D=614 |",
@@ -851,6 +962,9 @@ def _result_block(
         "`(subject_id, ses_idx, trial, choice)` keys.",
         "- V2 uses the complete first-half prefix with no K condition, then scores the "
         "second-half suffix after state replay.",
+        "- Nominal source D is plotted. Realized source-subject counts were "
+        + ", ".join(f"D={d}: {actual_ds[d]}" for d in DS)
+        + ".",
         "- New author-selected models remain outside Stage A.",
     ]
     return "\n".join(lines)

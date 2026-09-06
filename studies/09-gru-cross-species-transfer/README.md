@@ -143,9 +143,19 @@ declared `pyarrow` dependency, so tasks also mount dependency bundle
 
 The common-Q comparison is consolidated into
 [Result 2](analysis/reports/r2-author-aligned-baselines.md).
-At D=614, trial-pooled GRU normalized likelihood exceeds Q-learning by 0.01358
-on Grossman, 0.00528 on Chen, and 0.00936 on Zid. The frozen input also proves
-exact ordered trial-key equality between every GRU cell and its Q baseline.
+All 13 cohorts and all 195 GRU cells are frozen. Exact ordered trial-key equality
+passes between every GRU cell and its cohort's Q baseline. At D=614, the
+exploratory subject-paired result favors GRU for Grossman, Chen, Lebedeva, and
+López-Yépez mouse; it favors common Q for Zid, Kwak, Miller, Findling, and
+Eckstein; Beron, Tang, Alsiö, and Costa are unresolved at the unadjusted 0.05
+level. Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614,
+although several curves peak at D=100 or D=300.
+
+Zid is the one aggregation reversal: its trial-pooled D=614 score favors GRU by
+0.00936, but its arithmetic mean subject difference favors Q by 0.00171 and its
+median difference favors Q by 0.00870. All subjects contribute 150 held-out
+trials, so this reflects geometric pooled versus arithmetic subject-level
+summaries in a heterogeneous distribution, not unequal trial weighting.
 
 ## Author-aligned baselines
 
@@ -183,9 +193,10 @@ core. A full four-dimensional Mahalanobis-distance analysis accompanies the 2D
 PC views.
 
 Held-out AIND mice remain calibrated to the source distribution, with only
-4.0%--5.4% outside its empirical 95th percentile. Grossman mice are moderately
-shifted (14.6%--22.9%), whereas Chen mice (100%) and Zid humans
-(97.3%--98.1%) are strongly displaced in all three seeds. Because Chen and Zid
-share the restless random-walk task while Grossman is a mouse blockwise task
-closer to AIND dynamic foraging, task structure is a better first explanation
-than species alone; the datasets do not isolate those factors experimentally.
+4.0%--5.4% outside its empirical 95th percentile. Every external cohort's
+median four-dimensional Mahalanobis distance exceeds the held-out-AIND median
+in all three seeds. Grossman, Beron, Lebedeva, and Tang are nearest to the
+source distribution; Zid, Eckstein, and López-Yépez mouse are farthest on
+average. Distance is descriptive: species, task structure, reward contingency,
+session duration, and adaptation-data volume vary together and cannot be
+isolated by this survey.

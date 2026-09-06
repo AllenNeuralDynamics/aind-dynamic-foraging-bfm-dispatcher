@@ -34,43 +34,101 @@ two-arm-bandit cohort land in the subject-embedding manifold learned from the
 <!-- BEGIN result-3 -->
 ## Result
 
-![Subject embeddings in source-fitted PCA space](../fig_embedding_space_pca.png)
+![All transferred subjects in source-fitted PCA space](../fig_embedding_space_pca.png)
 
-The comparison is deliberately anchored on **held-out AIND mice**, not on the source-training mice. The 149 held-out AIND mice and all external subjects were unseen while the GRU core was trained; each entered at the source-embedding mean and received the same 500-step, learning-rate-0.001 embedding-only adaptation. The 614 source-training mice define the coordinate system and reference distribution.
+The primary comparison is **held-out AIND mice versus external subjects**. All of
+these subjects were unseen during GRU-core training, initialized at the source
+embedding mean, and adapted for the same 500 steps at learning rate 0.001 while
+the core remained frozen. The 614 source-training mice define the coordinate
+system but are not treated as the transfer control.
 
-Each seed has its own independently learned embedding coordinates, so PCA was fit on that seed's source-training mice and no raw coordinates were pooled across seeds. The first three PCs contain 93.4%--98.0% of source variance across seeds. The star is the source mean and therefore the initialization point for every adapted subject; the dashed ellipse is the Gaussian 95% contour of the source distribution in each displayed 2D projection.
+PCA is fit independently to each seed's source-training mice; raw coordinates
+are never pooled across seeds. The first three PCs explain
+93.4%–98.0% of source variance. The
+star is the common initialization point and the dashed ellipse is the Gaussian
+95% source contour in each displayed projection.
 
 ![Full-dimensional distance from the source distribution](../fig_embedding_space_distance.png)
 
-The second figure checks the same question in the full four-dimensional space rather than relying on a 2D projection. Distances use each seed's source mean and covariance; the dashed line is that seed's empirical source 95th percentile. External median distance exceeds the held-out-AIND median for Grossman mouse (3/3 seeds), Chen mouse (3/3 seeds), Zid human (3/3 seeds). This is descriptive evidence of how far each transferred cohort must move in the learned subject space, not a test of a pure species effect.
+The Mahalanobis analysis uses all four embedding dimensions and each seed's
+source covariance. External median distance exceeds the held-out-AIND median in
+Grossman mouse (3/3 seeds); Chen mouse (3/3 seeds); Zid human (3/3 seeds); Lebedeva mouse (3/3 seeds); Beron mouse (3/3 seeds); Kwak mouse (3/3 seeds); Miller rat (3/3 seeds); Findling human (3/3 seeds); Tang macaque (3/3 seeds); Alsiö rat (3/3 seeds); Eckstein human (3/3 seeds); Costa macaque (3/3 seeds); López-Yépez mouse (3/3 seeds).
 
-| seed | population | n | median distance | centroid distance | outside source 95% |
-|---:|---|---:|---:|---:|---:|
-| 0 | AIND held-out mice | 149 | 1.67 | 0.07 | 5.4% |
-| 0 | Grossman mouse | 48 | 2.56 | 0.61 | 14.6% |
-| 0 | Chen mouse | 32 | 10.51 | 8.76 | 100.0% |
-| 0 | Zid human | 258 | 11.38 | 7.84 | 97.3% |
-| 1 | AIND held-out mice | 149 | 1.67 | 0.14 | 5.4% |
-| 1 | Grossman mouse | 48 | 2.45 | 0.60 | 22.9% |
-| 1 | Chen mouse | 32 | 6.56 | 5.54 | 100.0% |
-| 1 | Zid human | 258 | 9.27 | 5.68 | 97.3% |
-| 2 | AIND held-out mice | 149 | 1.62 | 0.09 | 4.0% |
-| 2 | Grossman mouse | 48 | 2.31 | 0.53 | 20.8% |
-| 2 | Chen mouse | 32 | 8.45 | 7.07 | 100.0% |
-| 2 | Zid human | 258 | 10.74 | 7.75 | 98.1% |
+| seed | population | species | n | median distance | centroid distance | outside source 95% |
+|---:|---|---|---:|---:|---:|---:|
+| 0 | AIND held-out mice | mouse | 149 | 1.67 | 0.07 | 5.4% |
+| 0 | Grossman mouse | mouse | 48 | 2.56 | 0.61 | 14.6% |
+| 0 | Chen mouse | mouse | 32 | 10.51 | 8.76 | 100.0% |
+| 0 | Zid human | human | 258 | 11.38 | 7.84 | 97.3% |
+| 0 | Lebedeva mouse | mouse | 10 | 2.54 | 1.88 | 0.0% |
+| 0 | Beron mouse | mouse | 6 | 2.82 | 2.64 | 0.0% |
+| 0 | Kwak mouse | mouse | 39 | 3.79 | 4.66 | 56.4% |
+| 0 | Miller rat | rat | 20 | 6.62 | 6.83 | 95.0% |
+| 0 | Findling human | human | 22 | 10.04 | 9.72 | 100.0% |
+| 0 | Tang macaque | macaque | 2 | 2.59 | 2.57 | 0.0% |
+| 0 | Alsiö rat | rat | 95 | 10.09 | 9.42 | 100.0% |
+| 0 | Eckstein human | human | 306 | 12.64 | 12.16 | 100.0% |
+| 0 | Costa macaque | macaque | 11 | 5.58 | 6.08 | 100.0% |
+| 0 | López-Yépez mouse | mouse | 8 | 17.24 | 15.34 | 87.5% |
+| 1 | AIND held-out mice | mouse | 149 | 1.67 | 0.14 | 5.4% |
+| 1 | Grossman mouse | mouse | 48 | 2.45 | 0.60 | 22.9% |
+| 1 | Chen mouse | mouse | 32 | 6.56 | 5.54 | 100.0% |
+| 1 | Zid human | human | 258 | 9.27 | 5.68 | 97.3% |
+| 1 | Lebedeva mouse | mouse | 10 | 2.41 | 1.69 | 0.0% |
+| 1 | Beron mouse | mouse | 6 | 2.50 | 2.36 | 16.7% |
+| 1 | Kwak mouse | mouse | 39 | 3.13 | 3.09 | 41.0% |
+| 1 | Miller rat | rat | 20 | 4.36 | 4.28 | 75.0% |
+| 1 | Findling human | human | 22 | 6.15 | 5.60 | 100.0% |
+| 1 | Tang macaque | macaque | 2 | 2.35 | 2.33 | 0.0% |
+| 1 | Alsiö rat | rat | 95 | 7.43 | 6.53 | 100.0% |
+| 1 | Eckstein human | human | 306 | 9.23 | 8.22 | 100.0% |
+| 1 | Costa macaque | macaque | 11 | 6.51 | 6.59 | 100.0% |
+| 1 | López-Yépez mouse | mouse | 8 | 10.33 | 9.30 | 87.5% |
+| 2 | AIND held-out mice | mouse | 149 | 1.62 | 0.09 | 4.0% |
+| 2 | Grossman mouse | mouse | 48 | 2.31 | 0.53 | 20.8% |
+| 2 | Chen mouse | mouse | 32 | 8.45 | 7.07 | 100.0% |
+| 2 | Zid human | human | 258 | 10.74 | 7.75 | 98.1% |
+| 2 | Lebedeva mouse | mouse | 10 | 3.39 | 2.90 | 50.0% |
+| 2 | Beron mouse | mouse | 6 | 2.59 | 2.46 | 0.0% |
+| 2 | Kwak mouse | mouse | 39 | 3.79 | 3.97 | 66.7% |
+| 2 | Miller rat | rat | 20 | 6.05 | 6.61 | 95.0% |
+| 2 | Findling human | human | 22 | 8.00 | 8.29 | 100.0% |
+| 2 | Tang macaque | macaque | 2 | 3.61 | 3.54 | 50.0% |
+| 2 | Alsiö rat | rat | 95 | 9.12 | 8.28 | 100.0% |
+| 2 | Eckstein human | human | 306 | 10.72 | 10.27 | 100.0% |
+| 2 | Costa macaque | macaque | 11 | 10.44 | 10.19 | 100.0% |
+| 2 | López-Yépez mouse | mouse | 8 | 10.06 | 8.97 | 87.5% |
 
-## Scientific interpretation
+## Cross-cohort read
 
-- **Matched internal control:** held-out AIND mice are the clean reference for transfer because, like external subjects, they were absent from source-core training and only their embeddings were adapted.
-- **Main result:** held-out AIND is calibrated to the source distribution (4.0%--5.4% outside the source 95th percentile), Grossman is moderately shifted (14.6%--22.9%), and Chen (100%) and Zid (97.3%--98.1%) are strongly displaced in every seed.
-- **Task is a better first explanation than species:** Chen mice and Zid humans share the restless random-walk task and both move far from the AIND manifold, while Grossman mice perform a blockwise task closer to AIND dynamic foraging and remain much nearer. This repeated cross-seed geometry argues against reading the Zid separation as simply mouse versus human.
-- **What proximity means:** overlap with held-out AIND says the frozen core can represent the target behavior using subject coordinates similar to those used for new in-distribution mice. Larger distance says adaptation found a more out-of-distribution coordinate; it does not by itself mean worse prediction.
-- **What this cannot identify:** dataset, task schedule, species, recording duration, and adaptation-data volume change together. Consequently, external separation cannot be assigned to species alone. Grossman and Chen are especially useful mouse controls for judging whether task structure, rather than species, drives the displacement.
-- **Seed discipline:** agreement of the qualitative ordering across independently trained spaces is stronger evidence than any absolute PC direction. PC axes and embedding coordinates have no cross-seed identity.
+Average median distance across the three independently trained spaces, nearest
+to farthest, is:
+
+1. **Grossman mouse** — 2.44
+2. **Beron mouse** — 2.64
+3. **Lebedeva mouse** — 2.78
+4. **Tang macaque** — 2.85
+5. **Kwak mouse** — 3.57
+6. **Miller rat** — 5.67
+7. **Costa macaque** — 7.51
+8. **Findling human** — 8.06
+9. **Chen mouse** — 8.51
+10. **Alsiö rat** — 8.88
+11. **Zid human** — 10.46
+12. **Eckstein human** — 10.87
+13. **López-Yépez mouse** — 12.54
+
+This ordering is descriptive. Species, task schedule, reward contingencies,
+recording duration, and adaptation-data volume change together across these
+datasets, so distance cannot be interpreted as a pure species effect. Proximity
+means the frozen core can express a target near the coordinates used by new
+in-distribution mice; distance does not by itself imply poor prediction.
 
 ## Reproduce
 
-The committed JSON contains every 4D embedding plus SHA-256 digests of the downloaded tables, subject maps, and adaptation summaries. Regenerate both figures and this report offline with:
+The committed JSON contains every 4D embedding plus SHA-256 digests of the
+downloaded embedding tables, subject maps, and adaptation summaries. Regenerate
+both figures and this report offline with:
 
 ```bash
 make r3
