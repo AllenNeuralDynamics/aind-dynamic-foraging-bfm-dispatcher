@@ -37,8 +37,34 @@ All models use the same subject-level adaptation/test split and score the exact 
 
 ![Subject-level held-out likelihood distributions with paired trajectories](../fig_subject_baseline_likelihood.png)
 
-Each dot is one subject. Thin lines connect that subject across the common Q, paper baselines, and GRU source sizes; violins show the distribution. GRU subject log likelihood is averaged across the three source seeds before conversion to normalized likelihood. These panels weight subjects equally, whereas the summary figure above pools held-out trials.
+Each value is that model's subject-level normalized likelihood minus the same subject's author-selected-model likelihood. Thus the red zero line is the author-model reference; positive values favor the displayed model. Dots are subjects, thin lines connect each subject across models, and violins show the distributions. GRU subject log likelihood is averaged across the three source seeds before conversion to normalized likelihood. Panel annotations report unadjusted two-sided paired Wilcoxon signed-rank p-values versus the author model. The symmetric-log y-axis is linear within ±0.01 and retains the large Zid outliers while resolving the central distribution.
 The five-parameter common Q has one reward learning rate, unchosen-value forgetting, a one-step choice kernel, side bias, and softmax inverse temperature.
+
+### Subject-level likelihood differences from the author model
+
+The median uses normalized-likelihood differences shown in the figure. P-values are unadjusted two-sided paired Wilcoxon signed-rank tests against zero.
+
+| target | author reference | comparison | median Δ likelihood | Wilcoxon p |
+|---|---|---|---:|---:|
+| Grossman mouse | meta-learning RL | Common Q | +0.00265 | 0.00015 |
+| Grossman mouse | meta-learning RL | GRU D=10 | +0.00888 | 1.1e-10 |
+| Grossman mouse | meta-learning RL | GRU D=30 | +0.01265 | 1.5e-12 |
+| Grossman mouse | meta-learning RL | GRU D=100 | +0.01340 | 7.1e-14 |
+| Grossman mouse | meta-learning RL | GRU D=300 | +0.01510 | 2.1e-14 |
+| Grossman mouse | meta-learning RL | GRU D=614 | +0.01541 | 2.1e-14 |
+| Chen mouse | 4-parameter RLCK | Common Q | -0.00504 | 0.023 |
+| Chen mouse | 4-parameter RLCK | GRU D=10 | -0.00650 | 3.9e-05 |
+| Chen mouse | 4-parameter RLCK | GRU D=30 | -0.00562 | 0.011 |
+| Chen mouse | 4-parameter RLCK | GRU D=100 | -0.00115 | 0.85 |
+| Chen mouse | 4-parameter RLCK | GRU D=300 | +0.00038 | 0.38 |
+| Chen mouse | 4-parameter RLCK | GRU D=614 | +0.00045 | 0.45 |
+| Zid human | HK2 foraging RL | Common Q | +0.00184 | 0.074 |
+| Zid human | HK2 foraging RL | traditional RLCK | +0.00098 | 0.75 |
+| Zid human | HK2 foraging RL | GRU D=10 | -0.00559 | 0.062 |
+| Zid human | HK2 foraging RL | GRU D=30 | -0.00628 | 0.086 |
+| Zid human | HK2 foraging RL | GRU D=100 | -0.00393 | 0.65 |
+| Zid human | HK2 foraging RL | GRU D=300 | -0.00204 | 0.98 |
+| Zid human | HK2 foraging RL | GRU D=614 | -0.00394 | 0.53 |
 
 ### Trial-pooled held-out likelihood
 

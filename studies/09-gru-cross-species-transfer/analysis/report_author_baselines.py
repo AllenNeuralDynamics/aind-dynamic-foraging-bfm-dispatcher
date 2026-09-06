@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from scipy.stats import wilcoxon
 
 
 STUDY = Path(__file__).resolve().parents[1]
@@ -109,15 +110,23 @@ def _gru_q_comparison(dataset: dict, d: int) -> dict:
 
 def _subject_conditions(
     dataset_name: str, author_data: dict, dataset: dict
-) -> tuple[list[str], list[list[float]], list[str]]:
+) -> tuple[str, list[str], list[list[float]], list[str], list[float]]:
     records = [
         (key, record)
         for key, record in author_data["records"].items()
         if record["dataset"] == dataset_name
     ]
-    records.sort(key=lambda item: (not item[1]["author_selected"], item[0]))
+    selected = [(key, record) for key, record in records if record["author_selected"]]
+    if len(selected) != 1:
+        raise AssertionError("Expected exactly one author-selected model per dataset")
+    selected_baseline, selected_record = selected[0]
+    records = [(key, record) for key, record in records if not record["author_selected"]]
+    records.sort(key=lambda item: item[0])
     q = dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"]
     subjects = sorted(q)
+    reference = selected_record["metrics"]["per_subject_mean_log_likelihood_nats"]
+    if set(reference) != set(q):
+        raise AssertionError("Author and Q per-subject metric sets do not align")
     labels = ["Common Q"]
     log_values = [[float(q[subject]) for subject in subjects]]
     colors = ["#666666"]
@@ -127,7 +136,7 @@ def _subject_conditions(
             raise AssertionError("Author and Q per-subject metric sets do not align")
         labels.append(BASELINE_LABELS[baseline])
         log_values.append([float(values[subject]) for subject in subjects])
-        colors.append("#C44E52" if record["author_selected"] else "#DD8452")
+        colors.append("#DD8452")
     for d in DS:
         seeds = [
             row["metrics"]["per_subject_mean_log_likelihood_nats"]
@@ -138,7 +147,16 @@ def _subject_conditions(
             [statistics.mean(float(seed[subject]) for seed in seeds) for subject in subjects]
         )
         colors.append("#4C72B0")
-    return labels, [[math.exp(value) for value in values] for values in log_values], colors
+    reference_likelihood = [math.exp(float(reference[subject])) for subject in subjects]
+    differences = [
+        [
+            math.exp(value) - reference_value
+            for value, reference_value in zip(values, reference_likelihood)
+        ]
+        for values in log_values
+    ]
+    p_values = [float(wilcoxon(values, alternative="two-sided").pvalue) for values in differences]
+    return BASELINE_LABELS[selected_baseline], labels, differences, colors, p_values
 
 
 def _plot(author_data: dict, matched: dict) -> None:
@@ -205,10 +223,12 @@ def _plot(author_data: dict, matched: dict) -> None:
 
 def _plot_subjects(author_data: dict, matched: dict) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(1, 3, figsize=(16.2, 5.4), constrained_layout=True)
+    fig, axes = plt.subplots(1, 3, figsize=(16.2, 5.8), constrained_layout=True)
     for axis, dataset_name in zip(axes, ("grossman", "chen", "zid")):
         dataset = matched["datasets"][dataset_name]
-        labels, values, colors = _subject_conditions(dataset_name, author_data, dataset)
+        reference_label, labels, values, colors, p_values = _subject_conditions(
+            dataset_name, author_data, dataset
+        )
         positions = list(range(len(labels)))
         n_subjects = len(values[0])
         jitter = [((index % 17) - 8) / 80 for index in range(n_subjects)]
@@ -240,18 +260,52 @@ def _plot_subjects(author_data: dict, matched: dict) -> None:
                 linewidths=0,
                 zorder=3,
             )
-        axis.set_xticks(positions, labels, rotation=31, ha="right")
+        tick_labels = [
+            label.replace("4-parameter ", "4-param\n")
+            .replace("traditional ", "traditional\n")
+            .replace("GRU ", "GRU\n")
+            for label in labels
+        ]
+        axis.set_xticks(positions, tick_labels)
+        axis.tick_params(axis="x", labelsize=8)
         axis.set_title(
-            f"{LABELS[dataset_name]}\n{TASK_DETAILS[dataset_name]} · n_subject={n_subjects}"
+            f"{LABELS[dataset_name]} (n_subject={n_subjects})\n"
+            f"{TASK_DETAILS[dataset_name]}\nReference: {reference_label}"
         )
-        axis.set_ylabel("Subject held-out normalized likelihood")
+        axis.axhline(0, color="#C44E52", linewidth=1.6, alpha=0.8, zorder=0)
+        axis.set_yscale("symlog", linthresh=0.01)
+        axis.set_ylabel("Δ subject held-out\nnormalized likelihood")
         axis.grid(axis="y", alpha=0.2)
+        for position, p_value in zip(positions, p_values):
+            axis.text(
+                position,
+                0.985,
+                _p_axis_label(p_value),
+                transform=axis.get_xaxis_transform(),
+                ha="center",
+                va="top",
+                fontsize=7.5,
+                bbox={
+                    "facecolor": "white",
+                    "edgecolor": "none",
+                    "alpha": 0.72,
+                    "pad": 1,
+                },
+            )
     fig.savefig(SUBJECT_FIGURE, bbox_inches="tight")
     plt.close(fig)
 
 
 def _interval(stats: dict) -> str:
     return f"{stats['mean']:+.5f} [{stats['low']:+.5f}, {stats['high']:+.5f}]"
+
+
+def _p_value(value: float) -> str:
+    return f"{value:.2g}"
+
+
+def _p_axis_label(value: float) -> str:
+    return "p<.001" if value < 0.001 else f"p={value:.3f}".replace("0.", ".")
 
 
 def _result_block(author_data: dict, matched: dict) -> str:
@@ -276,12 +330,36 @@ def _result_block(author_data: dict, matched: dict) -> str:
         "",
         "![Subject-level held-out likelihood distributions with paired trajectories](../fig_subject_baseline_likelihood.png)",
         "",
-        "Each dot is one subject. Thin lines connect that subject across the common Q, paper baselines, "
-        "and GRU source sizes; violins show the distribution. GRU subject log likelihood is averaged "
-        "across the three source seeds before conversion to normalized likelihood. These panels weight "
-        "subjects equally, whereas the summary figure above pools held-out trials.",
+        "Each value is that model's subject-level normalized likelihood minus the same subject's "
+        "author-selected-model likelihood. Thus the red zero line is the author-model reference; "
+        "positive values favor the displayed model. Dots are subjects, thin lines connect each subject "
+        "across models, and violins show the distributions. GRU subject log likelihood is averaged "
+        "across the three source seeds before conversion to normalized likelihood. Panel annotations report "
+        "unadjusted two-sided paired Wilcoxon signed-rank p-values versus the author model. The "
+        "symmetric-log y-axis is linear within ±0.01 and retains the large Zid outliers while resolving "
+        "the central distribution.",
         "The five-parameter common Q has one reward learning rate, unchosen-value forgetting, "
         "a one-step choice kernel, side bias, and softmax inverse temperature.",
+        "",
+        "### Subject-level likelihood differences from the author model",
+        "",
+        "The median uses normalized-likelihood differences shown in the figure. P-values are "
+        "unadjusted two-sided paired Wilcoxon signed-rank tests against zero.",
+        "",
+        "| target | author reference | comparison | median Δ likelihood | Wilcoxon p |",
+        "|---|---|---|---:|---:|",
+    ]
+    for dataset_name in ("grossman", "chen", "zid"):
+        dataset = matched["datasets"][dataset_name]
+        reference_label, labels, values, _, p_values = _subject_conditions(
+            dataset_name, author_data, dataset
+        )
+        for label, differences, p_value in zip(labels, values, p_values):
+            lines.append(
+                f"| {LABELS[dataset_name]} | {reference_label} | {label} | "
+                f"{statistics.median(differences):+.5f} | {_p_value(p_value)} |"
+            )
+    lines += [
         "",
         "### Trial-pooled held-out likelihood",
         "",

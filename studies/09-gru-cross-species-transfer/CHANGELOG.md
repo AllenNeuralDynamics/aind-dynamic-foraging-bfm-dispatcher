@@ -3,8 +3,9 @@
 ## 2026-09-05
 
 - Consolidated Result 1 into Result 2, fixed author-line styling, added task and
-  subject-count panel labels, and added paired subject-level violin plots across
-  common Q, published baselines, and every GRU source D.
+  subject-count panel labels, and added author-relative paired subject-level
+  violin plots with Wilcoxon tests across common Q, published baselines, and
+  every GRU source D.
 - Refit the Grossman, Chen, and Zid author-aligned models subject by subject on
   the matched adaptation halves and added a frozen comparison against common Q
   and D=614 transferred GRU.
