@@ -2,6 +2,9 @@
 
 ## 2026-09-06
 
+- Split the generalization, robustness/scaling, and task-design figures into
+  separate primary-inference, stress-test, and descriptive-only views so the
+  inclusion tiers remain visually legible.
 - Quarantined Kwak (mouse) because the frozen manifest adapts on CNO sessions
   and tests on DMSO sessions; documented a DMSO/control-only odd/even rerun and
   excluded the current result from every plot and inference.

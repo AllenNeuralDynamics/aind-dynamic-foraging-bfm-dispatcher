@@ -21,6 +21,21 @@ TASK_DATA = STUDY / "analysis" / "task_design_features.json"
 MAIN_FIGURE = STUDY / "analysis" / "fig_generalization_drivers.png"
 ROBUSTNESS_FIGURE = STUDY / "analysis" / "fig_generalization_robustness.png"
 TASK_FIGURE = STUDY / "analysis" / "fig_task_design_drivers.png"
+MAIN_FIGURES = {
+    "primary": MAIN_FIGURE,
+    "stress_test": STUDY / "analysis" / "fig_generalization_drivers_stress_test.png",
+    "descriptive_only": STUDY / "analysis" / "fig_generalization_drivers_descriptive_only.png",
+}
+ROBUSTNESS_FIGURES = {
+    "primary": ROBUSTNESS_FIGURE,
+    "stress_test": STUDY / "analysis" / "fig_generalization_robustness_stress_test.png",
+    "descriptive_only": STUDY / "analysis" / "fig_generalization_robustness_descriptive_only.png",
+}
+TASK_FIGURES = {
+    "primary": TASK_FIGURE,
+    "stress_test": STUDY / "analysis" / "fig_task_design_drivers_stress_test.png",
+    "descriptive_only": STUDY / "analysis" / "fig_task_design_drivers_descriptive_only.png",
+}
 REPORT = STUDY / "analysis" / "reports" / "r3-generalization-drivers.md"
 START = "<!-- BEGIN result-3 -->"
 END = "<!-- END result-3 -->"
@@ -30,10 +45,10 @@ SPECIES_COLORS = {
     "macaque": "#C44E52",
     "human": "#8172B3",
 }
-TIER_MARKERS = {
-    "primary": "o",
-    "stress_test": "s",
-    "descriptive_only": "^",
+TIER_LABELS = {
+    "primary": "Primary-inference",
+    "stress_test": "Stress-test",
+    "descriptive_only": "Descriptive-only",
 }
 
 
@@ -56,7 +71,8 @@ def _annotate(axis: plt.Axes, x: float, y: float, label: str) -> None:
     )
 
 
-def _species_legend() -> list[Line2D]:
+def _species_legend(cohorts: list[dict]) -> list[Line2D]:
+    present = {cohort["species"] for cohort in cohorts}
     return [
         Line2D(
             [0],
@@ -69,27 +85,7 @@ def _species_legend() -> list[Line2D]:
             label=species.capitalize(),
         )
         for species, color in SPECIES_COLORS.items()
-    ]
-
-
-def _tier_legend() -> list[Line2D]:
-    labels = {
-        "primary": "Primary",
-        "stress_test": "Stress test",
-        "descriptive_only": "Descriptive only",
-    }
-    return [
-        Line2D(
-            [0],
-            [0],
-            marker=marker,
-            color="none",
-            markerfacecolor="#777777",
-            markeredgecolor="white",
-            markersize=9,
-            label=labels[tier],
-        )
-        for tier, marker in TIER_MARKERS.items()
+        if species in present
     ]
 
 
@@ -101,14 +97,33 @@ def _valid_cohorts(data: dict) -> list[dict]:
     ]
 
 
-def _plot_main(data: dict) -> None:
+def _tier_cohorts(data: dict, tier: str) -> list[dict]:
+    return [
+        cohort
+        for cohort in data["cohorts"].values()
+        if cohort["analysis_tier"] == tier
+    ]
+
+
+def _relation_title(
+    label: str, relation: dict | None, n_cohorts: int, tier: str
+) -> str:
+    if relation is None:
+        return f"{label}\nn={n_cohorts}; descriptive"
+    return (
+        f"{label}\nn={relation['n_cohorts']}; Spearman ρ={relation['spearman_rho']:+.2f}, "
+        f"permutation p={relation['permutation_p_two_sided']:.3f}"
+    )
+
+
+def _plot_main(data: dict, tier: str, output: Path) -> None:
     apply_presentation_style()
     fig, axes = plt.subplots(1, 3, figsize=(18.5, 6.2), constrained_layout=True)
-    cohorts = _valid_cohorts(data)
+    cohorts = _tier_cohorts(data, tier)
+    relation_source = data["relationships"] if tier == "primary" else None
 
     for cohort in cohorts:
         color = SPECIES_COLORS[cohort["species"]]
-        marker = TIER_MARKERS[cohort["analysis_tier"]]
         centroid = _seed_values(cohort, "embedding_centroid_mahalanobis")
         delta = _seed_values(cohort, "gru_d614_minus_q_bits_per_trial")
         q_likelihood = _summary(
@@ -120,7 +135,7 @@ def _plot_main(data: dict) -> None:
         q_predictability = _summary(cohort, "q_bits_above_chance")
 
         axes[0].plot(centroid, delta, color=color, alpha=0.20, linewidth=0.9)
-        axes[0].scatter(centroid, delta, color=color, alpha=0.32, s=24, marker=marker)
+        axes[0].scatter(centroid, delta, color=color, alpha=0.32, s=24)
         axes[0].scatter(
             centroid.mean(),
             delta.mean(),
@@ -128,7 +143,6 @@ def _plot_main(data: dict) -> None:
             edgecolor="white",
             linewidth=0.8,
             s=75,
-            marker=marker,
             zorder=4,
         )
         _annotate(
@@ -148,7 +162,6 @@ def _plot_main(data: dict) -> None:
             color=color,
             alpha=0.32,
             s=24,
-            marker=marker,
         )
         axes[1].scatter(
             q_likelihood,
@@ -157,7 +170,6 @@ def _plot_main(data: dict) -> None:
             edgecolor="white",
             linewidth=0.8,
             s=75,
-            marker=marker,
             zorder=4,
         )
         _annotate(
@@ -177,7 +189,6 @@ def _plot_main(data: dict) -> None:
             color=color,
             alpha=0.32,
             s=24,
-            marker=marker,
         )
         axes[2].scatter(
             q_predictability,
@@ -186,23 +197,24 @@ def _plot_main(data: dict) -> None:
             edgecolor="white",
             linewidth=0.8,
             s=75,
-            marker=marker,
             zorder=4,
         )
         _annotate(
             axes[2], q_predictability, delta.mean(), cohort["label"]
         )
 
-    relation = data["relationships"][
-        "gru_d614_minus_q_vs_embedding_centroid"
-    ]
+    relation = (
+        relation_source["gru_d614_minus_q_vs_embedding_centroid"]
+        if relation_source is not None
+        else None
+    )
     axes[0].axhline(0, color="#777777", linestyle="--", linewidth=1)
     axes[0].set_xlabel("External-centroid distance from source\n(4D Mahalanobis)")
     axes[0].set_ylabel("GRU D=614 − common Q\n(subject-balanced bits/trial)")
     axes[0].set_title(
-        "Transfer advantage vs embedding displacement\n"
-        f"Spearman ρ={relation['spearman_rho']:+.2f}, "
-        f"permutation p={relation['permutation_p_two_sided']:.3f}"
+        _relation_title(
+            "Transfer advantage vs embedding displacement", relation, len(cohorts), tier
+        )
     )
 
     all_likelihoods = [
@@ -225,40 +237,42 @@ def _plot_main(data: dict) -> None:
     axes[1].set_ylabel("GRU D=614 normalized likelihood")
     axes[1].set_title("Absolute held-out predictability\n(identity line = equal performance)")
 
-    coupled = data["relationships"][
-        "gru_d614_minus_q_vs_common_q_predictability"
-    ]
+    coupled = (
+        relation_source["gru_d614_minus_q_vs_common_q_predictability"]
+        if relation_source is not None
+        else None
+    )
     axes[2].axhline(0, color="#777777", linestyle="--", linewidth=1)
     axes[2].set_xlabel("Common-Q predictability (bits above chance)")
     axes[2].set_ylabel("GRU D=614 − common Q\n(subject-balanced bits/trial)")
     axes[2].set_title(
-        "Advantage vs common-Q predictability†\n"
-        f"Spearman ρ={coupled['spearman_rho']:+.2f}, "
-        f"permutation p={coupled['permutation_p_two_sided']:.3f}"
+        _relation_title(
+            "Advantage vs common-Q predictability†", coupled, len(cohorts), tier
+        )
     )
 
     fig.legend(
-        handles=[*_species_legend(), *_tier_legend()],
+        handles=_species_legend(cohorts),
         loc="outside lower center",
-        ncol=7,
+        ncol=4,
         frameon=False,
     )
     fig.suptitle(
-        "Study 09 external transfer: embedding displacement and baseline predictability\n"
+        f"Study 09 external transfer — {TIER_LABELS[tier]} cohorts\n"
         "Large labeled points are cohort means; small points are paired source seeds"
     )
-    fig.savefig(MAIN_FIGURE, bbox_inches="tight")
+    fig.savefig(output, bbox_inches="tight", pad_inches=0.35)
     plt.close(fig)
 
 
-def _plot_robustness(data: dict) -> None:
+def _plot_robustness(data: dict, tier: str, output: Path) -> None:
     apply_presentation_style()
     fig, axes = plt.subplots(1, 2, figsize=(13.2, 6.2), constrained_layout=True)
-    cohorts = _valid_cohorts(data)
+    cohorts = _tier_cohorts(data, tier)
+    relation_source = data["relationships"] if tier == "primary" else None
 
     for cohort in cohorts:
         color = SPECIES_COLORS[cohort["species"]]
-        marker = TIER_MARKERS[cohort["analysis_tier"]]
         delta = _seed_values(cohort, "gru_d614_minus_q_bits_per_trial")
         median_distance = _seed_values(
             cohort, "embedding_median_subject_mahalanobis"
@@ -270,7 +284,7 @@ def _plot_robustness(data: dict) -> None:
             (axes[1], centroid, scaling),
         ):
             axis.plot(x, y, color=color, alpha=0.20, linewidth=0.9)
-            axis.scatter(x, y, color=color, alpha=0.32, s=24, marker=marker)
+            axis.scatter(x, y, color=color, alpha=0.32, s=24)
             axis.scatter(
                 x.mean(),
                 y.mean(),
@@ -278,50 +292,60 @@ def _plot_robustness(data: dict) -> None:
                 edgecolor="white",
                 linewidth=0.8,
                 s=75,
-                marker=marker,
                 zorder=4,
             )
             _annotate(axis, x.mean(), y.mean(), cohort["label"])
 
-    median_relation = data["relationships"][
-        "gru_d614_minus_q_vs_embedding_median_subject_distance"
-    ]
+    median_relation = (
+        relation_source["gru_d614_minus_q_vs_embedding_median_subject_distance"]
+        if relation_source is not None
+        else None
+    )
     axes[0].axhline(0, color="#777777", linestyle="--", linewidth=1)
     axes[0].set_xlabel("Median subject distance from source\n(4D Mahalanobis)")
     axes[0].set_ylabel("GRU D=614 − common Q\n(subject-balanced bits/trial)")
     axes[0].set_title(
-        "Robustness: individual-subject distance\n"
-        f"Spearman ρ={median_relation['spearman_rho']:+.2f}, "
-        f"p={median_relation['permutation_p_two_sided']:.3f}"
+        _relation_title(
+            "Robustness: individual-subject distance",
+            median_relation,
+            len(cohorts),
+            tier,
+        )
     )
 
-    scaling_relation = data["relationships"][
-        "gru_d614_minus_d10_vs_embedding_centroid"
-    ]
+    scaling_relation = (
+        relation_source["gru_d614_minus_d10_vs_embedding_centroid"]
+        if relation_source is not None
+        else None
+    )
     axes[1].axhline(0, color="#777777", linestyle="--", linewidth=1)
     axes[1].set_xlabel("External-centroid distance from source\n(4D Mahalanobis)")
     axes[1].set_ylabel("GRU D=614 − GRU D=10\n(subject-balanced bits/trial)")
     axes[1].set_title(
-        "Does source-population scaling help distant tasks?\n"
-        f"Spearman ρ={scaling_relation['spearman_rho']:+.2f}, "
-        f"p={scaling_relation['permutation_p_two_sided']:.3f}"
+        _relation_title(
+            "Does source-population scaling help distant tasks?",
+            scaling_relation,
+            len(cohorts),
+            tier,
+        )
     )
 
     fig.legend(
-        handles=[*_species_legend(), *_tier_legend()],
+        handles=_species_legend(cohorts),
         loc="outside lower center",
-        ncol=7,
+        ncol=4,
         frameon=False,
     )
-    fig.suptitle("Embedding-distance robustness and source-D scaling")
-    fig.savefig(ROBUSTNESS_FIGURE, bbox_inches="tight")
+    fig.suptitle(
+        f"Embedding-distance robustness and source-D scaling — {TIER_LABELS[tier]} cohorts"
+    )
+    fig.savefig(output, bbox_inches="tight", pad_inches=0.35)
     plt.close(fig)
 
 
-def _plot_task_design(task_data: dict) -> None:
+def _plot_task_design(task_data: dict, tier: str, output: Path) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(2, 3, figsize=(18.5, 11.2), constrained_layout=True)
-    columns = (
+    all_columns = (
         (
             "categorical_distance.task_structure",
             "Task-structure distance from AIND",
@@ -338,6 +362,15 @@ def _plot_task_design(task_data: dict) -> None:
             "empirical_schedule_distance",
         ),
     )
+    columns = all_columns if tier == "primary" else all_columns[:2]
+    fig, axes = plt.subplots(
+        2,
+        len(columns),
+        figsize=(18.5 if tier == "primary" else 14.5, 11.2),
+        constrained_layout=True,
+    )
+    cohorts = _tier_cohorts(task_data, tier)
+    relation_source = task_data["relationships"] if tier == "primary" else None
     outcomes = (
         (
             "gru_d614_minus_q_bits_per_trial",
@@ -362,12 +395,11 @@ def _plot_task_design(task_data: dict) -> None:
     for column, (x_path, x_label, relationship_x) in enumerate(columns):
         for row, (outcome, y_label, relationship_y) in enumerate(outcomes):
             axis = axes[row, column]
-            for cohort in _valid_cohorts(task_data):
+            for cohort in cohorts:
                 x = nested(cohort, x_path)
                 if x is None:
                     continue
                 color = SPECIES_COLORS[cohort["species"]]
-                marker = TIER_MARKERS[cohort["analysis_tier"]]
                 y = float(cohort["outcomes"][outcome])
                 axis.scatter(
                     x,
@@ -376,34 +408,31 @@ def _plot_task_design(task_data: dict) -> None:
                     edgecolor="white",
                     linewidth=0.8,
                     s=78,
-                    marker=marker,
                     zorder=4,
                 )
                 _annotate(axis, x, y, cohort["label"])
-            relationship = task_data["relationships"][
-                f"{relationship_y}_vs_{relationship_x}"
-            ]
+            relationship = (
+                relation_source[f"{relationship_y}_vs_{relationship_x}"]
+                if relation_source is not None
+                else None
+            )
             if row == 0:
                 axis.axhline(0, color="#777777", linestyle="--", linewidth=1)
             axis.set_xlabel(x_label)
             axis.set_ylabel(y_label)
-            axis.set_title(
-                f"n={relationship['n_cohorts']}; "
-                f"Spearman ρ={relationship['spearman_rho']:+.2f}; "
-                f"p={relationship['permutation_p_two_sided']:.3f}"
-            )
+            axis.set_title(_relation_title("", relationship, len(cohorts), tier).lstrip())
 
     fig.legend(
-        handles=[*_species_legend(), *_tier_legend()],
+        handles=_species_legend(cohorts),
         loc="outside lower center",
-        ncol=7,
+        ncol=4,
         frameon=False,
     )
-    fig.suptitle(
-        "Task-design distance predicts embedding displacement more clearly than transfer advantage\n"
-        "Categorical scores are nearest-prototype mismatch; schedule scores use complete trial-wise probabilities"
-    )
-    fig.savefig(TASK_FIGURE, bbox_inches="tight")
+    subtitle = "Categorical scores are nearest-prototype mismatch"
+    if tier == "primary":
+        subtitle += "; schedule scores use complete trial-wise probabilities"
+    fig.suptitle(f"Task-design distance — {TIER_LABELS[tier]} cohorts\n{subtitle}")
+    fig.savefig(output, bbox_inches="tight", pad_inches=0.35)
     plt.close(fig)
 
 
@@ -633,16 +662,32 @@ def _result_block(data: dict, task_data: dict) -> str:
         "",
         "## First-pass result",
         "",
-        "![Generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers.png)",
+        "### Primary-inference cohorts",
+        "",
+        "![Primary cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers.png)",
         "",
         f"Primary inference uses {primary_n} equal-weight cross-study cohorts. Performance is the arithmetic "
         "mean held-out log likelihood across subjects, converted to bits per trial. "
         "Embedding distance is calculated in the full four-dimensional space, separately "
         "for each source seed. Large labeled points average the three paired seeds; small "
-        "points show the seed-specific values. Square stress-test and triangular descriptive-only "
-        f"cohorts are displayed but excluded from primary correlations; all {valid_n} valid cohorts "
-        "are included in the sensitivity table. Species is descriptive rather than an inferential "
+        "points show the seed-specific values. Inclusion tiers are shown in separate figures, "
+        f"so secondary cohorts no longer obscure the {primary_n}-cohort inference. All {valid_n} valid cohorts "
+        "remain included in the numerical sensitivity table. Species is descriptive rather than an inferential "
         "grouping because species, study, and task design are confounded.",
+        "",
+        "### Stress-test cohorts",
+        "",
+        "![Stress-test cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_stress_test.png)",
+        "",
+        "These three valid boundary cases are displayed descriptively and do not inherit the "
+        "primary-cohort correlation annotations.",
+        "",
+        "### Descriptive-only cohort",
+        "",
+        "![Descriptive-only cohort: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_descriptive_only.png)",
+        "",
+        "Tang (macaque) is isolated because two released subjects are insufficient for a "
+        "cross-cohort inferential tier.",
         "",
         f"The D=614 GRU has higher subject-balanced mean log likelihood than common Q in "
         f"{len(positive)} cohorts ({', '.join(positive)}) and lower mean log likelihood in "
@@ -666,7 +711,9 @@ def _result_block(data: dict, task_data: dict) -> str:
         "mathematically coupled because Q appears on both axes. It is therefore descriptive, "
         f"even though its observed ρ is {q_relation['spearman_rho']:+.3f}.",
         "",
-        "![Robustness and source-population scaling](../fig_generalization_robustness.png)",
+        "### Primary robustness and source-population scaling",
+        "",
+        "![Primary cohorts: robustness and source-population scaling](../fig_generalization_robustness.png)",
         "",
         "Median individual-subject embedding distance tests whether the centroid result is "
         "hiding a dispersed or bimodal cohort. The scaling panel asks whether increasing "
@@ -674,6 +721,14 @@ def _result_block(data: dict, task_data: dict) -> str:
         f"source embedding distribution. Its cross-cohort Spearman ρ is "
         f"{scaling['spearman_rho']:+.3f} "
         f"(permutation p={scaling['permutation_p_two_sided']:.4f}).",
+        "",
+        "### Stress-test robustness and scaling",
+        "",
+        "![Stress-test cohorts: robustness and source-population scaling](../fig_generalization_robustness_stress_test.png)",
+        "",
+        "### Descriptive-only robustness and scaling",
+        "",
+        "![Descriptive-only cohort: robustness and source-population scaling](../fig_generalization_robustness_descriptive_only.png)",
         "",
         "### Valid cohort estimates",
         "",
@@ -706,7 +761,9 @@ def _result_block(data: dict, task_data: dict) -> str:
         "",
         "## Task-design meta-analysis",
         "",
-        "![Task-design distance versus transfer and embedding displacement](../fig_task_design_drivers.png)",
+        "### Primary task-design view",
+        "",
+        "![Primary cohorts: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers.png)",
         "",
         "The categorical analysis is outcome-blind. Task-structure distance is the equal-weight "
         "mismatch over schedule family, arm coupling, baiting, and what the subject chooses. "
@@ -726,6 +783,14 @@ def _result_block(data: dict, task_data: dict) -> str:
         f"(p={full_performance['permutation_p_two_sided']:.4f}). Thus the transferred embedding "
         "geometry carries an auditable task/apparatus-distance signal, but categorical closeness "
         "alone does not explain whether GRU beats common Q.",
+        "",
+        "### Stress-test task-design view",
+        "",
+        "![Stress-test cohorts: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_stress_test.png)",
+        "",
+        "### Descriptive-only task-design view",
+        "",
+        "![Descriptive-only cohort: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_descriptive_only.png)",
         "",
         "### Species-stratified all-valid description",
         "",
@@ -833,17 +898,24 @@ def main() -> None:
         SPECIES_COLORS
     ):
         raise AssertionError("Species color map does not match frozen cohorts")
-    _plot_main(data)
-    _plot_robustness(data)
-    _plot_task_design(task_data)
+    for tier, output in MAIN_FIGURES.items():
+        _plot_main(data, tier, output)
+    for tier, output in ROBUSTNESS_FIGURES.items():
+        _plot_robustness(data, tier, output)
+    for tier, output in TASK_FIGURES.items():
+        _plot_task_design(task_data, tier, output)
     body = _result_block(data, task_data)
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
     end_start = text.index(END, start_end)
     REPORT.write_text(text[:start_end] + "\n" + body + "\n" + text[end_start:])
-    print(
-        f"Wrote {MAIN_FIGURE}, {ROBUSTNESS_FIGURE}, {TASK_FIGURE}, and {REPORT}"
-    )
+    outputs = [
+        *MAIN_FIGURES.values(),
+        *ROBUSTNESS_FIGURES.values(),
+        *TASK_FIGURES.values(),
+        REPORT,
+    ]
+    print("Wrote " + ", ".join(str(output) for output in outputs))
 
 
 if __name__ == "__main__":
