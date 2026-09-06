@@ -3,18 +3,27 @@
 Issues: dispatcher [#32](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/32),
 [#126](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/126),
 and [#127](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/127);
+Stage-A expansion [#134](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/134)
+through [#138](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/138);
 author-aligned baselines [#131](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/131),
 [#132](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/132),
 and [#133](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/133);
 wrapper [#91](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/91)
 and [#92](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/92).
 
-This starter suite tests whether the GRU core learned from AIND dynamic
-foraging transfers to external two-arm bandit behavior. The priority order is:
+This suite tests whether the GRU core learned from AIND dynamic foraging
+transfers to external binary two-arm-bandit behavior. The completed starter
+panel is:
 
 1. Grossman, Bari & Cohen: 48 mice, blockwise independent reward probabilities.
 2. Chen et al.: 32 mice, eight restless-bandit sessions.
 3. Zid et al. Experiment 1: 258 humans, schedule-matched to Chen.
+
+Stage A expands that panel only with complete cohorts that fit the existing v1
+or v2 split contracts. The cohort-by-cohort admission audit, exact counts,
+licenses, author-selected models, and reproduction feasibility are frozen in
+[`DATASET_SURVEY.md`](DATASET_SURVEY.md). Mixed split structures are skipped;
+schema v3 is intentionally not implemented.
 
 ## Build the suite
 
@@ -31,9 +40,16 @@ checksum-verified local source files.
 
 Generated files are:
 
-- $CACHE_ROOT/canonical/{grossman,chen,zid}.parquet: one row per valid decision trial;
-- $CACHE_ROOT/canonical/{grossman,chen,zid}.split.json: the immutable adaptation/test split;
-- $CACHE_ROOT/canonical/{grossman,chen,zid}.audit.json: provenance, checksums, and counts.
+- `$CACHE_ROOT/canonical/<dataset>.parquet`: one row per valid decision trial;
+- `$CACHE_ROOT/canonical/<dataset>.split.json`: the immutable adaptation/test split;
+- `$CACHE_ROOT/canonical/<dataset>.audit.json`: provenance, checksums, and counts.
+
+The admitted dataset keys are `grossman`, `chen`, `zid`, `lebedeva`, `beron`,
+`kwak`, `miller`, `findling`, `tang`, `alsio`, `eckstein`, `costa`, and
+`lopez_mouse`. Run `make validate` after generation to verify the exact release
+counts, binary choices/rewards, v1/v2 contract, deterministic manifest
+regeneration, and non-empty adaptation/test partitions. Its committed summary
+is `analysis/dataset_suite_validation.json`.
 
 With the Makefile default, `$CACHE_ROOT` is `data-cache` relative to this study directory.
 
@@ -43,6 +59,10 @@ source trial numbers, reward probabilities, and available cohort metadata as
 additional columns.
 
 ## Cohort-specific decisions
+
+The complete expansion audit is in [`DATASET_SURVEY.md`](DATASET_SURVEY.md).
+The starter decisions below remain frozen because their completed cells are
+reused rather than rerun.
 
 Grossman uses only the dynamicForaging/behavior branch. This is the curated
 48-mouse behavior cohort and avoids duplicate sessions also present under neural
@@ -66,11 +86,13 @@ the current GRU study convention (eval_every_n=2). Therefore a K-session
 few-shot run takes the first K sessions *within that odd-positioned adaptation
 sequence*, not the first K sessions before the odd/even split.
 
-Zid has one main session per person, so inventing pseudo-sessions would reset
+Zid and Eckstein have one main session per person, so inventing pseudo-sessions would reset
 the recurrent and Q-learning states at an artificial boundary. Instead, the
-manifest assigns trials 0-149 to an adaptation prefix and 150-299 to a test
-suffix. Evaluation runs the prefix to establish the state at the boundary, then
-scores the suffix without changing fitted parameters. Observed choices and
+manifest assigns each subject's complete first half to an adaptation prefix and
+the second half to a test suffix. Zid therefore uses trials 0–149 and 150–299;
+Eckstein uses the analogous subject-specific midpoint because released session
+lengths vary. Evaluation runs the prefix to establish the state at the boundary,
+then scores the suffix without changing fitted parameters. Observed choices and
 outcomes still update the recurrent or Q state online during the suffix; only
 the learned parameters remain frozen.
 
@@ -85,6 +107,10 @@ Each external dataset is held out from foundation-model training. Evaluate:
 - half-data shot: the full adaptation half, again changing only the embedding;
 - subject-level Q-learning: fit parameters on the identical adaptation
   observations and score the identical test observations.
+
+Stage A runs the full matched adaptation half only. There is no K condition for
+v2: the complete first-half prefix adapts the embedding or Q parameters, and the
+second-half suffix is scored after replaying the prefix to establish the state.
 
 The primary comparison is mean per-trial log likelihood on the test partition,
 paired by subject. Report normalized likelihood, Brier score, accuracy, and
@@ -101,22 +127,45 @@ embedding is optimized for 500 steps at learning rate 0.001; the GRU core stays
 frozen and the target test partition never selects a checkpoint. Source run IDs
 and immutable W&B artifact digests are recorded in `source_runs.json`.
 
-The three `gru-*-matched-half` variants run as GPU-only Beaker grids. The
-`q-matched-half` variant runs as a CPU-only SLURM array on Allen HPC. Both model
+The starter `gru-*-matched-half` variants and expansion dataset variants run as
+GPU-only Beaker grids. The common-Q variants run as CPU-only SLURM arrays on
+Allen HPC. Both model
 families consume the same generated Parquet table and split manifest, and both
 emit the wrapper's canonical `test_trial_predictions.csv` and
 `test_metrics.json` outputs for an exact trial-key parity check.
 
-The current GPU image predates the wrapper's declared `pyarrow` dependency.
-GPU tasks therefore mount committed Beaker dataset
-`01M1RDVWF18JF5QMEB618WJPSF`, verify the pinned wheel's SHA-256, and install
-`pyarrow==21.0.0` inside the task before reading the canonical Parquet table.
+GPU tasks mount the checksum-backed canonical dataset
+`study09-external-v1v2-20260905`
+(`01M1TMMETY8M1V0F0E2V6XP146`). The corrected Kwak rerun instead mounts the
+immutable replacement `study09-kwak-choicefix-20260906`
+(`01M1VGY7MV148S9GWM2HW38FRQ`), which inverts the released `0=right, 1=left`
+choice bit to the canonical `0=left, 1=right` convention while retaining the
+same split manifest. The current GPU image predates the wrapper's
+declared `pyarrow` dependency, so tasks also mount dependency bundle
+`01M1RDVWF18JF5QMEB618WJPSF`, verify the wheel checksum, and install
+`pyarrow==21.0.0` before reading the canonical Parquet table.
 
 The common-Q comparison is consolidated into
-[Result 2](analysis/reports/r2-author-aligned-baselines.md).
-At D=614, trial-pooled GRU normalized likelihood exceeds Q-learning by 0.01358
-on Grossman, 0.00528 on Chen, and 0.00936 on Zid. The frozen input also proves
-exact ordered trial-key equality between every GRU cell and its Q baseline.
+[Result 1](analysis/reports/r1-author-aligned-baselines.md).
+All 13 cohorts and all 195 GRU cells are frozen. Exact ordered trial-key equality
+passes between every GRU cell and its cohort's Q baseline. At D=614, the
+exploratory subject-paired result favors GRU for Grossman, Chen, Lebedeva, and
+López-Yépez mouse; it favors common Q for Zid, Kwak, Miller, Findling, and
+Eckstein; Beron, Tang, Alsiö, and Costa are unresolved at the unadjusted 0.05
+level. Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614,
+although several curves peak at D=100 or D=300.
+
+Kwak was rerun after correcting the release's reversed left/right choice labels.
+The common-Q score is invariant to numerical precision (`0.62607851`), while
+the three-seed D=614 GRU mean changes by `-0.00036` to `0.62028581`. The paired
+conclusion remains common Q over GRU (mean subject difference `-0.00587`,
+Wilcoxon `p=2.78e-6`).
+
+Zid is the one aggregation reversal: its trial-pooled D=614 score favors GRU by
+0.00936, but its arithmetic mean subject difference favors Q by 0.00171 and its
+median difference favors Q by 0.00870. All subjects contribute 150 held-out
+trials, so this reflects geometric pooled versus arithmetic subject-level
+summaries in a heterogeneous distribution, not unequal trial weighting.
 
 ## Author-aligned baselines
 
@@ -130,18 +179,23 @@ generic family instead of the model selected by each dataset's authors:
   overall history-kernel-2 foraging-RL model.
 
 They use the same subject-level adaptation observations and identical held-out
-trial keys as the GRU and common-Q comparisons in Result 2. These fits are
+trial keys as the GRU and common-Q comparisons in Result 1. These fits are
 CPU-only SLURM jobs on Allen HPC; they must not be sent to Beaker.
 
 The completed consolidated comparison is
-[Result 2](analysis/reports/r2-author-aligned-baselines.md).
+[Result 1](analysis/reports/r1-author-aligned-baselines.md).
 The author-selected model beats common Q only for Chen (+0.00392 normalized
 likelihood). The D=614 transferred GRU remains above the author-selected model
 by +0.01559 on Grossman, +0.00136 on Chen, and +0.03057 on Zid.
 
+No new author-selected model is implemented or run during Stage A. The
+feasibility table in `DATASET_SURVEY.md` is the explicit stop gate before Stage
+B; new model families require a dataset-by-dataset decision after reviewing the
+expanded GRU-versus-common-Q result.
+
 ## Subject embedding space
 
-[Result 3](analysis/reports/r3-embedding-space.md) uses the three D=614 source
+[Result 2](analysis/reports/r2-embedding-space.md) uses the three D=614 source
 seeds to ask where unseen subjects land after embedding-only adaptation. PCA is
 fit separately to the 614 source-training AIND mice in each seed; the primary
 control is the 149 held-out AIND mice, which were also unseen by the frozen GRU
@@ -149,9 +203,10 @@ core. A full four-dimensional Mahalanobis-distance analysis accompanies the 2D
 PC views.
 
 Held-out AIND mice remain calibrated to the source distribution, with only
-4.0%--5.4% outside its empirical 95th percentile. Grossman mice are moderately
-shifted (14.6%--22.9%), whereas Chen mice (100%) and Zid humans
-(97.3%--98.1%) are strongly displaced in all three seeds. Because Chen and Zid
-share the restless random-walk task while Grossman is a mouse blockwise task
-closer to AIND dynamic foraging, task structure is a better first explanation
-than species alone; the datasets do not isolate those factors experimentally.
+4.0%--5.4% outside its empirical 95th percentile. Every external cohort's
+median four-dimensional Mahalanobis distance exceeds the held-out-AIND median
+in all three seeds. Grossman, Beron, Lebedeva, and Tang are nearest to the
+source distribution; Zid, Eckstein, and López-Yépez mouse are farthest on
+average. Distance is descriptive: species, task structure, reward contingency,
+session duration, and adaptation-data volume vary together and cannot be
+isolated by this survey.

@@ -9,7 +9,7 @@ Both accepted tasks scored the same `38,700` held-out trials.
 
 The traditional RLCK result is task `25580838_0`; the corrected HK2 result is task
 `25580951_1`, which completed in `00:11:54` with exit `0:0`. These runs feed
-`analysis/author_baseline_results.json` and Result 2.
+`analysis/author_baseline_results.json` and Result 1.
 
 ## Superseded HK2 runs
 

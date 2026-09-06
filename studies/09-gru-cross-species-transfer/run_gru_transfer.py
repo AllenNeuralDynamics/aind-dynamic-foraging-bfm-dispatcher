@@ -12,11 +12,35 @@ from pathlib import Path
 
 
 STUDY_DIR = Path(__file__).resolve().parent
-DATASETS = ("grossman", "chen", "zid")
+DATASETS = (
+    "grossman",
+    "chen",
+    "zid",
+    "lebedeva",
+    "beron",
+    "kwak",
+    "miller",
+    "findling",
+    "tang",
+    "alsio",
+    "eckstein",
+    "costa",
+    "lopez_mouse",
+)
 DATASET_IDS = {
     "grossman": "grossman-bari-cohen-2021",
     "chen": "chen-et-al-2021",
     "zid": "zid-et-al-2026-experiment-1",
+    "lebedeva": "lebedeva-et-al-2026",
+    "beron": "beron-et-al-2022",
+    "kwak": "kwak-jung-2019-tab",
+    "miller": "miller-et-al-2022-tab",
+    "findling": "findling-et-al-volnoise",
+    "tang": "tang-bartolo-averbeck-2021",
+    "alsio": "alsio-et-al-2019-vpvd-tsvr",
+    "eckstein": "eckstein-et-al-2022",
+    "costa": "costa-averbeck-2016-stochastic",
+    "lopez_mouse": "lopez-yepez-et-al-2021-mouse",
 }
 PYARROW_VERSION = "21.0.0"
 PYARROW_WHEEL_SHA256 = (
