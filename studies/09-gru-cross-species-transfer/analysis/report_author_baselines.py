@@ -89,6 +89,7 @@ AUTHOR_LABELS = {
     "beron-rflr": "RFLR",
     "miller-rhg": "RHG",
     "findling-weber-imprecision": "Weber-imprecision BI",
+    "findling-weber-imprecision-64p": "Weber BI (64-particle fit)",
     "eckstein-rl": "counterfactual RL",
     "eckstein-bi": "Bayesian inference",
 }
@@ -649,9 +650,14 @@ def _author_rows(author_data: dict, matched: dict) -> tuple[list[str], list[str]
         dataset_name = record["dataset"]
         dataset = matched["datasets"][dataset_name]
         d614 = _gru_for_d(dataset, 614)
+        role = (
+            "yes"
+            if record["author_selected"]
+            else record.get("comparison_role", "paper comparator")
+        )
         rows.append(
             f"| {LABELS[dataset_name]} | {AUTHOR_LABELS[baseline]} | "
-            f"{'yes' if record['author_selected'] else 'paper comparator'} | "
+            f"{role} | "
             f"{_metric(dataset['q']):.5f} | {_metric(record):.5f} | "
             f"{_mean_sd([_metric(row) for row in d614])} |"
         )
@@ -921,9 +927,9 @@ def _result_block(
         "",
         *_stage_a_read(matched),
         "",
-        "### Existing author-aligned baselines",
+        "### Author-aligned baselines",
         "",
-        "| cohort | published model | author-selected? | common Q | published model refit | GRU D=614 |",
+        "| cohort | published model | role | common Q | published model refit | GRU D=614 |",
         "|---|---|:---:|---:|---:|---:|",
         *author_rows,
         "",

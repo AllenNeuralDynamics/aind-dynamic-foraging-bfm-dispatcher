@@ -19,7 +19,7 @@ from freeze_matched_half import (  # noqa: E402
     _artifact,
     _cached_wandb_report_files,
     _report_metrics,
-    _trial_key_digest,
+    _prediction_summary,
     _unwrapped,
     _wandb_runs,
 )
@@ -94,6 +94,16 @@ GROUPS = {
         "slurm_job_id": "25582235",
         "foraging_models_commit": PRIMARY_EXPANSION_MODELS_COMMIT,
     },
+    "findling-weber-imprecision-64p": {
+        "group": "findling-weber@slurm-25582241",
+        "display_name": "findling-weber-imprecision",
+        "dataset": "findling",
+        "agent_class": "FindlingWeberImprecision",
+        "author_selected": False,
+        "comparison_role": "particle sensitivity",
+        "slurm_job_id": "25582241",
+        "foraging_models_commit": PRIMARY_EXPANSION_MODELS_COMMIT,
+    },
     "eckstein-rl": {
         "group": "eckstein-rl@slurm-25582239",
         "dataset": "eckstein",
@@ -125,10 +135,11 @@ def _freeze() -> dict[str, dict]:
     }
     records = {}
     for baseline, specification in GROUPS.items():
+        display_name = specification.get("display_name", baseline)
         matching = [
             node
             for node in nodes_by_group[specification["group"]].values()
-            if node["displayName"] == baseline
+            if node["displayName"] == display_name
         ]
         if len(matching) != 1:
             raise AssertionError(
@@ -171,7 +182,9 @@ def _freeze() -> dict[str, dict]:
             < 1e-10
         ):
             raise AssertionError(f"W&B/file likelihood mismatch for {node['name']}")
-        trial_digest, n_prediction_rows = _trial_key_digest(predictions_bytes)
+        trial_digest, n_prediction_rows, per_session = _prediction_summary(
+            predictions_bytes
+        )
         q = matched["datasets"][specification["dataset"]]["q"]
         if (
             trial_digest != q["ordered_trial_key_sha256"]
@@ -187,7 +200,7 @@ def _freeze() -> dict[str, dict]:
             "predictions_sha256": hashlib.sha256(predictions_bytes).hexdigest(),
             "ordered_trial_key_sha256": trial_digest,
             "n_prediction_rows": n_prediction_rows,
-            "metrics": _report_metrics(metrics),
+            "metrics": _report_metrics(metrics, per_session),
         }
     return records
 
