@@ -525,7 +525,8 @@ def adapt_kwak(path: str | Path) -> AdapterResult:
                 for trial, (record, probability, timestamp) in enumerate(
                     zip(trials, probabilities, timestamps, strict=True)
                 ):
-                    choice, reward = (int(value) for value in record)
+                    source_choice, reward = (int(value) for value in record)
+                    choice = 1 - source_choice
                     rows.append(
                         {
                             "subject_id": subject_id,
@@ -542,6 +543,7 @@ def adapt_kwak(path: str | Path) -> AdapterResult:
                             "source_session": session_index + 1,
                             "source_subject": subject_index + 1,
                             "source_trial": trial,
+                            "source_choice": source_choice,
                             "reward_probability_arm_0": float(probability[0]),
                             "reward_probability_arm_1": float(probability[1]),
                             "center_poke_time_ms": int(timestamp[0]),

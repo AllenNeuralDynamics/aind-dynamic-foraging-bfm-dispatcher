@@ -576,7 +576,9 @@ class TestExternalBanditDatasets(unittest.TestCase):
                 table, manifest, _audit = adapt_kwak(path)
 
         self.assertEqual(set(table["treatment"]), {"cno", "dmso"})
-        self.assertEqual(table["animal_response"].tolist()[:2], [0, 1])
+        # Release encoding is 0=right, 1=left; canonical encoding is the reverse.
+        self.assertEqual(table["animal_response"].tolist()[:2], [1, 0])
+        self.assertEqual(table["source_choice"].tolist()[:2], [0, 1])
         self.assertEqual(table["reward_probability_arm_0"].tolist()[:2], [0.12, 0.72])
         self.assertEqual(
             manifest["subjects"][0]["adapt_session_ids"],

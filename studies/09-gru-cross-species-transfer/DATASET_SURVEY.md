@@ -39,6 +39,10 @@ unknown filter. This discrepancy remains visible in the report.
 Kwak sessions are paired across treatment folders by the release's source indices.
 The archive does not publish cross-treatment calendar timestamps, so chronological
 ordering beyond that source-index convention cannot be independently verified.
+The release metadata defines its raw choice bit as `0=right, 1=left`, opposite the
+canonical `0=left, 1=right` convention. The adapter therefore stores
+`animal_response = 1 - source_choice` while retaining `source_choice` for provenance;
+reward-condition columns already appear in canonical left/right order.
 
 Alsiö cohorts II–V form a complete multi-session cohort and are admitted together.
 The separate cohort VI probabilistic-reversal release contains dose/reversal labels but

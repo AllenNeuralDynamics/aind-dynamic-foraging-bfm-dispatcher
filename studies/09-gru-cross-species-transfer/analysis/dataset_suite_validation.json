@@ -113,9 +113,9 @@
       "num_adapt_trials": 61055,
       "num_test_trials": 60045,
       "excluded_trials": 0,
-      "table_sha256": "bc3f93b849ec8e2dff1f0fad9b7c2921536fa5597ab155e506225e553c408580",
+      "table_sha256": "e1639965875189986d0a8fef26a0e43cba74c341879927a2680fd1bed96de3b6",
       "manifest_sha256": "f876fce2fa913aaa6da76ccc5b913d1a2c5b867f6e68f00c330e6bbf33563f5b",
-      "audit_sha256": "7f7bfe3aaff36269476f68ab63c1fa37472d3a38e946ebf6df13607999a4adc3",
+      "audit_sha256": "d01ebb90eeaa52cf635178ae4ec593605f681abd7a04e90bf4f740ef499e2aac",
       "source_digest": "00cefa79b2e1b5dbc84e8ba5980fe8e2",
       "source_digest_algorithm": "md5"
     },
