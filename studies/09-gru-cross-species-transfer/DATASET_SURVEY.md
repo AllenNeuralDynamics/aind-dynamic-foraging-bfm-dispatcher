@@ -86,6 +86,6 @@ paper's original population-level model-selection analysis.
 | López-Yépez (mouse) | double-trace RL | Published MATLAB equations | Original data fit code and exact parameter bounds are not in the release | 4–7 days | Moderate |
 | Hattori (mouse) | `Hattori2019` Q family / Bayesian candidates | Existing model family in `aind-dynamic-foraging-models` | Dataset access is currently blocked; paper/model identity must be pinned before claiming parity | 1–3 days after data access | High for existing equations; low for paper-level parity until audited |
 
-Stage-B selection will occur only after the expanded GRU-versus-common-Q results are
-reviewed, using scientific value, effect size, sample/species coverage, code clarity,
-effort, and reproduction confidence.
+The primary set has passed this gate. Any additional author model remains gated on
+scientific value, effect size, sample/species coverage, code clarity, effort, and
+reproduction confidence; none is added automatically.
