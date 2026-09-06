@@ -33,6 +33,6 @@ python "${DISPATCHER_ROOT}/studies/09-gru-cross-species-transfer/run_findling_we
   --data-root "${DATA_ROOT}/canonical" \
   --output-root "${RUN_ROOT}" \
   --subject-workers 12 \
-  --fit-particles 2 \
-  --evaluation-particles 256 \
-  --seed 0
+  --fit-particles "${FINDLING_FIT_PARTICLES:-2}" \
+  --evaluation-particles "${FINDLING_EVALUATION_PARTICLES:-256}" \
+  --seed "${FINDLING_SEED:-0}"
