@@ -91,6 +91,8 @@ GROUPS = {
         "dataset": "findling",
         "agent_class": "FindlingWeberImprecision",
         "author_selected": True,
+        "fit_particles": 2,
+        "evaluation_particles": 256,
         "slurm_job_id": "25582235",
         "foraging_models_commit": PRIMARY_EXPANSION_MODELS_COMMIT,
     },
@@ -101,6 +103,8 @@ GROUPS = {
         "agent_class": "FindlingWeberImprecision",
         "author_selected": False,
         "comparison_role": "particle sensitivity",
+        "fit_particles": 64,
+        "evaluation_particles": 256,
         "slurm_job_id": "25582241",
         "foraging_models_commit": PRIMARY_EXPANSION_MODELS_COMMIT,
     },
@@ -162,6 +166,9 @@ def _freeze() -> dict[str, dict]:
                 specification["foraging_models_commit"],
             ),
         }
+        for key in ("fit_particles", "evaluation_particles"):
+            if key in specification:
+                expected[key] = (model.get(key), specification[key])
         mismatches = {
             key: values for key, values in expected.items() if values[0] != values[1]
         }
