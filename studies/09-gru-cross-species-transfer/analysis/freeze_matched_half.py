@@ -9,6 +9,7 @@ import netrc
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import requests
@@ -117,6 +118,40 @@ def _wandb_runs(group: str) -> dict[str, dict]:
     return {node["name"]: node for node in nodes}
 
 
+def _download(url: str, path: Path) -> None:
+    """Download a potentially large artifact file with bounded retries and resume."""
+    partial = path.with_suffix(path.suffix + ".part")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    for attempt in range(5):
+        offset = partial.stat().st_size if partial.exists() else 0
+        headers = {"Range": f"bytes={offset}-"} if offset else {}
+        try:
+            with requests.get(
+                url,
+                headers=headers,
+                stream=True,
+                timeout=(60, 120),
+            ) as response:
+                if offset and response.status_code == 200:
+                    offset = 0
+                elif offset and response.status_code != 206:
+                    response.raise_for_status()
+                    raise RuntimeError(
+                        f"Artifact server did not honor byte range at offset {offset}"
+                    )
+                response.raise_for_status()
+                with partial.open("ab" if offset else "wb") as stream:
+                    for chunk in response.iter_content(chunk_size=8 * 1024 * 1024):
+                        if chunk:
+                            stream.write(chunk)
+            partial.replace(path)
+            return
+        except requests.RequestException:
+            if attempt == 4:
+                raise
+            time.sleep(2**attempt)
+
+
 def _unwrapped(config: dict, key: str) -> dict:
     value = config.get(key, {})
     return value.get("value", value) if isinstance(value, dict) else {}
@@ -153,10 +188,7 @@ def _cached_wandb_report_files(artifact: dict, destination: Path) -> dict[str, b
     for suffix, matches in selected.items():
         path = destination / suffix
         if not path.exists():
-            response = requests.get(matches[0]["directUrl"], timeout=300)
-            response.raise_for_status()
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(response.content)
+            _download(matches[0]["directUrl"], path)
         output[suffix] = path.read_bytes()
     return output
 
