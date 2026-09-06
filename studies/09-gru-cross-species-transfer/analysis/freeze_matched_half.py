@@ -7,6 +7,7 @@ import hashlib
 import json
 import netrc
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -198,37 +199,36 @@ def _report_metrics(metrics: dict, per_session: list[dict]) -> dict:
     }
 
 
-def _cached_beaker_file(beaker, dataset, file_info, destination: Path) -> bytes:
-    if destination.exists():
-        data = destination.read_bytes()
-    else:
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        data = beaker.dataset.get_file(dataset, file_info, quiet=True)
-        destination.write_bytes(data)
-    digest = hashlib.sha256(data).hexdigest()
-    if digest != file_info.digest.value:
-        raise AssertionError(f"Cached file digest mismatch for {file_info.path}")
-    return data
-
-
-def _job_env(job) -> dict[str, str]:
+def _job_env(job: dict) -> dict[str, str]:
     return {
-        item.name: item.value
-        for item in job.execution.spec.env_vars
-        if item.value is not None
+        item["name"]: item["value"]
+        for item in job["execution"]["spec"]["envVars"]
+        if item.get("value") is not None
     }
 
 
-def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]:
-    from beaker import Beaker
+def _beaker_tasks(experiment_id: str) -> list[dict]:
+    result = subprocess.run(
+        ["beaker", "experiment", "tasks", experiment_id, "--format", "json"],
+        capture_output=True,
+        text=True,
+        timeout=120,
+        check=True,
+    )
+    return json.loads(result.stdout)
 
-    beaker = Beaker.from_env(check_for_upgrades=False, default_org="ai1")
+
+def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]:
     runs = _wandb_runs(group)
-    experiment = beaker.experiment.get(experiment_id)
     records = []
-    for job in experiment.jobs:
-        if str(job.status.current) != "finalized" or job.status.exit_code != 0:
-            raise AssertionError(f"Beaker job {job.id} is not a successful final result")
+    tasks = _beaker_tasks(experiment_id)
+    if len(tasks) != 15:
+        raise AssertionError(f"Beaker experiment {experiment_id} has {len(tasks)} tasks")
+    for task in tasks:
+        job = task["jobs"][-1]
+        status = job["status"]
+        if "finalized" not in status or status.get("exitCode") != 0:
+            raise AssertionError(f"Beaker job {job['id']} is not a successful final result")
         env = _job_env(job)
         run_id = env["WANDB_RUN_ID"]
         node = runs.pop(run_id)
@@ -240,29 +240,13 @@ def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]
         if target.get("dataset") != dataset_name:
             raise AssertionError(f"W&B run {run_id} targets {target.get('dataset')!r}")
 
-        result_dataset = beaker.job.results(job)
-        if result_dataset is None:
-            raise AssertionError(f"Beaker job {job.id} has no result dataset")
-        files = beaker.dataset.ls(result_dataset)
-        selected = {
-            suffix: [item for item in files if item.path.endswith(suffix)]
-            for suffix in ("test_metrics.json", "test_trial_predictions.csv")
-        }
-        if any(len(matches) != 1 for matches in selected.values()):
-            raise AssertionError(f"Beaker result {result_dataset.id} has ambiguous report files")
         source_key = source["key"]
-        metrics_bytes = _cached_beaker_file(
-            beaker,
-            result_dataset,
-            selected["test_metrics.json"][0],
-            CACHE / "gru" / dataset_name / source_key / "test_metrics.json",
+        artifact = _artifact(node, "external-gru-output-")
+        files = _cached_wandb_report_files(
+            artifact, CACHE / "gru" / dataset_name / source_key
         )
-        predictions_bytes = _cached_beaker_file(
-            beaker,
-            result_dataset,
-            selected["test_trial_predictions.csv"][0],
-            CACHE / "gru" / dataset_name / source_key / "test_trial_predictions.csv",
-        )
+        metrics_bytes = files["test_metrics.json"]
+        predictions_bytes = files["test_trial_predictions.csv"]
         trial_digest, n_prediction_rows, per_session = _prediction_summary(
             predictions_bytes
         )
@@ -281,9 +265,9 @@ def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]
                 "seed": source["seed"],
                 "wandb_run_id": run_id,
                 "wandb_url": f"https://wandb.ai/{ENTITY}/{PROJECT}/runs/{run_id}",
-                "evaluation_artifact": _artifact(node, "external-gru-output-"),
-                "beaker_job_id": job.id,
-                "beaker_result_dataset_id": result_dataset.id,
+                "evaluation_artifact": artifact,
+                "beaker_job_id": job["id"],
+                "beaker_result_dataset_id": job["result"]["beaker"],
                 "metrics_sha256": hashlib.sha256(metrics_bytes).hexdigest(),
                 "predictions_sha256": hashlib.sha256(predictions_bytes).hexdigest(),
                 "ordered_trial_key_sha256": trial_digest,
