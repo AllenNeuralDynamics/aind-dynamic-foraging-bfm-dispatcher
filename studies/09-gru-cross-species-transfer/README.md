@@ -92,7 +92,7 @@ calibration as descriptive secondary metrics. Fit preprocessing, hyperparameters
 random seeds, split manifests, source checksums, and model checkpoints are part
 of the run provenance.
 
-## Current matched-half report
+## Current consolidated report
 
 Issue #126 first evaluates the fully matched half-data condition. The GRU panel
 uses the fixed H=128 Study 01 source models at
@@ -112,7 +112,8 @@ GPU tasks therefore mount committed Beaker dataset
 `01M1RDVWF18JF5QMEB618WJPSF`, verify the pinned wheel's SHA-256, and install
 `pyarrow==21.0.0` inside the task before reading the canonical Parquet table.
 
-The completed result is [Result 1](analysis/reports/r1-matched-half-gru-vs-q.md).
+The common-Q comparison is consolidated into
+[Result 2](analysis/reports/r2-author-aligned-baselines.md).
 At D=614, trial-pooled GRU normalized likelihood exceeds Q-learning by 0.01358
 on Grossman, 0.00528 on Chen, and 0.00936 on Zid. The frozen input also proves
 exact ordered trial-key equality between every GRU cell and its Q baseline.
@@ -132,7 +133,8 @@ They use the same subject-level adaptation observations and identical held-out
 trial keys as Result 1. These fits are CPU-only SLURM jobs on Allen HPC; they
 must not be sent to Beaker.
 
-The completed comparison is [Result 2](analysis/reports/r2-author-aligned-baselines.md).
+The completed consolidated comparison is
+[Result 2](analysis/reports/r2-author-aligned-baselines.md).
 The author-selected model beats common Q only for Chen (+0.00392 normalized
 likelihood). The D=614 transferred GRU remains above the author-selected model
 by +0.01559 on Grossman, +0.00136 on Chen, and +0.03057 on Zid.

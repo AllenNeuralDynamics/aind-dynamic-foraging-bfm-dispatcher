@@ -1,4 +1,4 @@
-"""Render the offline author-aligned baseline comparison."""
+"""Render the consolidated offline external-transfer comparison."""
 
 from __future__ import annotations
 
@@ -19,6 +19,7 @@ from plot_style import apply_presentation_style, t975  # noqa: E402
 AUTHOR_DATA = STUDY / "analysis" / "author_baseline_results.json"
 MATCHED_DATA = STUDY / "analysis" / "matched_half_results.json"
 FIGURE = STUDY / "analysis" / "fig_author_baseline_likelihood.png"
+SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_baseline_likelihood.png"
 REPORT = STUDY / "analysis" / "reports" / "r2-author-aligned-baselines.md"
 START = "<!-- BEGIN result-2 -->"
 END = "<!-- END result-2 -->"
@@ -27,6 +28,11 @@ LABELS = {
     "grossman": "Grossman mouse",
     "chen": "Chen mouse",
     "zid": "Zid human",
+}
+TASK_DETAILS = {
+    "grossman": "Blockwise reversal bandit",
+    "chen": "Restless random-walk bandit",
+    "zid": "Restless random-walk bandit",
 }
 BASELINE_LABELS = {
     "grossman-meta-learning": "meta-learning RL",
@@ -46,11 +52,15 @@ def _metric(record: dict) -> float:
     return float(record["metrics"]["normalized_likelihood"])
 
 
-def _gru_d614(dataset: dict) -> list[dict]:
-    rows = [row for row in dataset["gru"] if int(row["nominal_D"]) == 614]
+def _gru_for_d(dataset: dict, d: int) -> list[dict]:
+    rows = [row for row in dataset["gru"] if int(row["nominal_D"]) == d]
     if len(rows) != 3:
-        raise AssertionError("Expected exactly three D=614 GRU source seeds")
+        raise AssertionError(f"Expected exactly three D={d} GRU source seeds")
     return rows
+
+
+def _gru_d614(dataset: dict) -> list[dict]:
+    return _gru_for_d(dataset, 614)
 
 
 def _paired(values: list[float]) -> dict:
@@ -80,6 +90,55 @@ def _paired_comparisons(record: dict, dataset: dict) -> tuple[dict, dict]:
         for key in author
     ]
     return _paired(author_minus_q), _paired(gru_minus_author)
+
+
+def _gru_q_comparison(dataset: dict, d: int) -> dict:
+    q = dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"]
+    gru = [
+        row["metrics"]["per_subject_mean_log_likelihood_nats"]
+        for row in _gru_for_d(dataset, d)
+    ]
+    if any(set(seed) != set(q) for seed in gru):
+        raise AssertionError("Q and GRU per-subject metric sets do not align")
+    differences = [
+        statistics.mean(float(seed[key]) for seed in gru) - float(q[key])
+        for key in q
+    ]
+    return _paired(differences)
+
+
+def _subject_conditions(
+    dataset_name: str, author_data: dict, dataset: dict
+) -> tuple[list[str], list[list[float]], list[str]]:
+    records = [
+        (key, record)
+        for key, record in author_data["records"].items()
+        if record["dataset"] == dataset_name
+    ]
+    records.sort(key=lambda item: (not item[1]["author_selected"], item[0]))
+    q = dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"]
+    subjects = sorted(q)
+    labels = ["Common Q"]
+    log_values = [[float(q[subject]) for subject in subjects]]
+    colors = ["#666666"]
+    for baseline, record in records:
+        values = record["metrics"]["per_subject_mean_log_likelihood_nats"]
+        if set(values) != set(q):
+            raise AssertionError("Author and Q per-subject metric sets do not align")
+        labels.append(BASELINE_LABELS[baseline])
+        log_values.append([float(values[subject]) for subject in subjects])
+        colors.append("#C44E52" if record["author_selected"] else "#DD8452")
+    for d in DS:
+        seeds = [
+            row["metrics"]["per_subject_mean_log_likelihood_nats"]
+            for row in _gru_for_d(dataset, d)
+        ]
+        labels.append(f"GRU D={d}")
+        log_values.append(
+            [statistics.mean(float(seed[subject]) for seed in seeds) for subject in subjects]
+        )
+        colors.append("#4C72B0")
+    return labels, [[math.exp(value) for value in values] for values in log_values], colors
 
 
 def _plot(author_data: dict, matched: dict) -> None:
@@ -125,12 +184,16 @@ def _plot(author_data: dict, matched: dict) -> None:
             axis.axhline(
                 _metric(record),
                 color="#C44E52" if selected else "#DD8452",
-                linestyle="-." if selected else ":",
+                linestyle="-" if selected else ":",
+                linewidth=2.2 if selected else 1.7,
                 label=f"{BASELINE_LABELS[baseline]} ({suffix})",
             )
         axis.set_xscale("log")
         axis.set_xticks(DS, [str(d) for d in DS])
-        axis.set_title(LABELS[dataset_name])
+        n_subjects = len(dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"])
+        axis.set_title(
+            f"{LABELS[dataset_name]}\n{TASK_DETAILS[dataset_name]} · n_subject={n_subjects}"
+        )
         axis.set_xlabel("Source subjects D")
         axis.set_ylabel("Held-out normalized likelihood")
         axis.grid(axis="y", alpha=0.2)
@@ -140,32 +203,107 @@ def _plot(author_data: dict, matched: dict) -> None:
     plt.close(fig)
 
 
+def _plot_subjects(author_data: dict, matched: dict) -> None:
+    apply_presentation_style()
+    fig, axes = plt.subplots(1, 3, figsize=(16.2, 5.4), constrained_layout=True)
+    for axis, dataset_name in zip(axes, ("grossman", "chen", "zid")):
+        dataset = matched["datasets"][dataset_name]
+        labels, values, colors = _subject_conditions(dataset_name, author_data, dataset)
+        positions = list(range(len(labels)))
+        n_subjects = len(values[0])
+        jitter = [((index % 17) - 8) / 80 for index in range(n_subjects)]
+        for subject_index in range(n_subjects):
+            xs = [position + jitter[subject_index] for position in positions]
+            ys = [condition[subject_index] for condition in values]
+            axis.plot(xs, ys, color="#777777", alpha=0.08, linewidth=0.45, zorder=1)
+        violins = axis.violinplot(
+            values,
+            positions=positions,
+            widths=0.72,
+            showmeans=False,
+            showmedians=True,
+            showextrema=False,
+        )
+        for body, color in zip(violins["bodies"], colors):
+            body.set_facecolor(color)
+            body.set_edgecolor(color)
+            body.set_alpha(0.22)
+        violins["cmedians"].set_color(colors)
+        violins["cmedians"].set_linewidth(1.8)
+        for position, condition, color in zip(positions, values, colors):
+            axis.scatter(
+                [position + offset for offset in jitter],
+                condition,
+                s=8,
+                color=color,
+                alpha=0.34,
+                linewidths=0,
+                zorder=3,
+            )
+        axis.set_xticks(positions, labels, rotation=31, ha="right")
+        axis.set_title(
+            f"{LABELS[dataset_name]}\n{TASK_DETAILS[dataset_name]} · n_subject={n_subjects}"
+        )
+        axis.set_ylabel("Subject held-out normalized likelihood")
+        axis.grid(axis="y", alpha=0.2)
+    fig.savefig(SUBJECT_FIGURE, bbox_inches="tight")
+    plt.close(fig)
+
+
 def _interval(stats: dict) -> str:
     return f"{stats['mean']:+.5f} [{stats['low']:+.5f}, {stats['high']:+.5f}]"
 
 
 def _result_block(author_data: dict, matched: dict) -> str:
+    actual_ds = {
+        d: sorted(
+            {
+                row["actual_D"]
+                for dataset in matched["datasets"].values()
+                for row in dataset["gru"]
+                if int(row["nominal_D"]) == d
+            }
+        )
+        for d in DS
+    }
     lines = [
         "[regenerated by `analysis/report_author_baselines.py` — do not edit by hand]",
         "",
         "![Author-aligned baselines versus common Q and transferred GRU](../fig_author_baseline_likelihood.png)",
         "",
         "All models use the same subject-level adaptation/test split and score the exact same held-out trials. "
-        "The GRU curve is mean ± SD across three source-training seeds at every D; the table reports D=614.",
+        "The GRU curve and table report mean ± SD across three source-training seeds at every D.",
         "",
-        "| target | published baseline | selected by authors? | parameters | common Q | published baseline | GRU D=614 |",
-        "|---|---|:---:|---:|---:|---:|---:|",
+        "![Subject-level held-out likelihood distributions with paired trajectories](../fig_subject_baseline_likelihood.png)",
+        "",
+        "Each dot is one subject. Thin lines connect that subject across the common Q, paper baselines, "
+        "and GRU source sizes; violins show the distribution. GRU subject log likelihood is averaged "
+        "across the three source seeds before conversion to normalized likelihood. These panels weight "
+        "subjects equally, whereas the summary figure above pools held-out trials.",
+        "The five-parameter common Q has one reward learning rate, unchosen-value forgetting, "
+        "a one-step choice kernel, side bias, and softmax inverse temperature.",
+        "",
+        "### Trial-pooled held-out likelihood",
+        "",
+        "| target | published baseline | selected? | params | common Q | baseline | GRU D=10 | D=30 | D=100 | D=300 | D=614 |",
+        "|---|---|:---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     comparisons = []
     for baseline, record in author_data["records"].items():
         dataset = matched["datasets"][record["dataset"]]
-        gru_values = [_metric(row) for row in _gru_d614(dataset)]
+        gru_cells = []
+        for d in DS:
+            gru_values = [_metric(row) for row in _gru_for_d(dataset, d)]
+            gru_cells.append(
+                f"{statistics.mean(gru_values):.5f} ± {statistics.stdev(gru_values):.5f}"
+            )
         lines.append(
             f"| {LABELS[record['dataset']]} | {BASELINE_LABELS[baseline]} | "
             f"{'yes' if record['author_selected'] else 'no — paper comparator'} | "
             f"{PARAM_COUNTS[baseline]} | {_metric(dataset['q']):.5f} | "
             f"**{_metric(record):.5f}** | "
-            f"{statistics.mean(gru_values):.5f} ± {statistics.stdev(gru_values):.5f} |"
+            + " | ".join(gru_cells)
+            + " |"
         )
         comparisons.append((baseline, record, *_paired_comparisons(record, dataset)))
 
@@ -185,6 +323,25 @@ def _result_block(author_data: dict, matched: dict) -> str:
             f"{_interval(author_q)} | {author_q['fraction_positive']:.0%} ({author_q['n']}) | "
             f"{_interval(gru_author)} | {gru_author['fraction_positive']:.0%} ({gru_author['n']}) |"
         )
+
+    lines += [
+        "",
+        "### GRU versus common Q across source D",
+        "",
+        "Each value is the subject-balanced GRU minus common-Q mean log likelihood in nats/trial, "
+        "after averaging the GRU value across source seeds. Positive favors GRU.",
+        "",
+        "| target | source D | GRU − common Q (95% CI) | subjects GRU better |",
+        "|---|---:|---:|---:|",
+    ]
+    for dataset_name in ("grossman", "chen", "zid"):
+        dataset = matched["datasets"][dataset_name]
+        for d in DS:
+            stats = _gru_q_comparison(dataset, d)
+            lines.append(
+                f"| {LABELS[dataset_name]} | {d} | {_interval(stats)} | "
+                f"{stats['fraction_positive']:.0%} ({stats['n']}) |"
+            )
 
     selected = {
         record["dataset"]: (baseline, record)
@@ -222,12 +379,49 @@ def _result_block(author_data: dict, matched: dict) -> str:
         "Accordingly, the Grossman result should be described as a reimplementation of the selected "
         "model family, not an exact reproduction of the authors' full analysis.",
         "",
+        "### Why common Q can beat an author-selected model here",
+        "",
+        "This benchmark asks which fitted model generalizes from the adaptation half to held-out data. "
+        "It does **not** reproduce each paper's original model-selection objective, so a ranking reversal "
+        "is not evidence that the paper's conclusion was wrong.",
+        "",
+        "- **[Grossman did test Q-learning](https://pmc.ncbi.nlm.nih.gov/articles/PMC8825708/).** "
+        "The paper compared meta-learning with a static-learning "
+        "Q model and favored meta-learning under hierarchical session-level Stan fits and symmetric "
+        "two-fold cross-validation. Our common Q is a different sticky, forgetful, side-biased model; "
+        "our meta-learning fit is one vector per subject, omits the paper's hierarchy and ordering "
+        "constraint, and uses only the fixed odd-session-to-even-session direction. The small common-Q "
+        "trial-pooled advantage here is only 0.00201. The paired author-minus-Q difference is "
+        "-0.00245 nats/trial with a 95% CI of [-0.00442, -0.00048], so the direction is fairly "
+        "consistent but small. It is more plausibly a pipeline/model-specification difference than "
+        "evidence that the authors never tested Q.",
+        "- **[Zid tested many traditional RL extensions](https://www.nature.com/articles/s41467-026-75773-4), "
+        "but not necessarily our exact combination.** "
+        "The paper selected HK2 foraging RL using fits to all 300 trials and AIC, after excluding four "
+        "non-switching participants from many analyses. We combine unchosen-value decay, a one-step "
+        "choice kernel, and side bias, fit only trials 0–149, score 150–299, and retain all 258 subjects. "
+        "The released HK2 state dynamics match our implementation closely. Although common Q is "
+        "0.02121 higher in the trial-pooled score, the paired author-minus-Q interval "
+        "[-0.07337, +0.01222] crosses zero and only 43% of subjects favor HK2. This is a "
+        "heterogeneous result, more consistent with a different generalization target and fit budget "
+        "than with an obvious equation bug.",
+        "",
+        "The conservative claim is therefore: **common Q generalizes better than these author-model "
+        "refits under our matched held-out protocol in Grossman and Zid**. It is not a paper-level "
+        "reproduction claim. Stronger attribution would require reproducing Grossman's hierarchy and "
+        "both fold directions, plus Zid's full-data AIC ranking and 254-subject analysis subset.",
+        "",
         "### Verification",
         "",
         "- Each published baseline was fitted independently per subject on the adaptation half; no paper-reported likelihood was copied.",
         "- Published-baseline, common-Q, and GRU prediction files have identical ordered `(subject, session, trial, choice)` keys within each target dataset.",
         "- Grossman and Chen use odd-positioned sessions for adaptation and even-positioned sessions for test. Zid adapts on trials 0–149 and scores trials 150–299 after state-only prefix replay.",
         "- The Grossman, Chen, and selected Zid implementations follow the authors' published update equations; Zid traditional RLCK is retained as the paper's simpler comparator.",
+        "- Nominal source D is plotted. Realized source-subject counts were "
+        + ", ".join(f"D={d}: {actual_ds[d]}" for d in DS)
+        + ".",
+        "- Common Q and each author model have one fitted baseline per target dataset and therefore "
+        "no source-training-seed error bar.",
     ]
     return "\n".join(lines)
 
@@ -236,12 +430,13 @@ def main() -> None:
     author_data = json.loads(AUTHOR_DATA.read_text())
     matched = json.loads(MATCHED_DATA.read_text())
     _plot(author_data, matched)
+    _plot_subjects(author_data, matched)
     block = _result_block(author_data, matched)
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
     end_start = text.index(END, start_end)
     REPORT.write_text(text[:start_end] + "\n" + block + "\n" + text[end_start:])
-    print(f"Wrote {FIGURE} and {REPORT}")
+    print(f"Wrote {FIGURE}, {SUBJECT_FIGURE}, and {REPORT}")
 
 
 if __name__ == "__main__":
