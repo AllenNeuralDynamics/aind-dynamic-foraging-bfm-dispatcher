@@ -35,14 +35,14 @@ inputs:
     - analysis/embedding_space_results.json
   figures:
     - analysis/fig_generalization_drivers.png
-    - analysis/fig_generalization_drivers_stress_test.png
-    - analysis/fig_generalization_drivers_descriptive_only.png
+    - analysis/fig_generalization_drivers_primary_plus_stress.png
+    - analysis/fig_generalization_drivers_all_valid.png
     - analysis/fig_generalization_robustness.png
-    - analysis/fig_generalization_robustness_stress_test.png
-    - analysis/fig_generalization_robustness_descriptive_only.png
+    - analysis/fig_generalization_robustness_primary_plus_stress.png
+    - analysis/fig_generalization_robustness_all_valid.png
     - analysis/fig_task_design_drivers.png
-    - analysis/fig_task_design_drivers_stress_test.png
-    - analysis/fig_task_design_drivers_descriptive_only.png
+    - analysis/fig_task_design_drivers_primary_plus_stress.png
+    - analysis/fig_task_design_drivers_all_valid.png
 reproduce: make -C studies/09-gru-cross-species-transfer r3
 ---
 
@@ -66,17 +66,17 @@ cross-treatment Kwak (mouse) result remains quarantined.
 
 Primary inference uses 8 equal-weight cross-study cohorts. Performance is the arithmetic mean held-out log likelihood across subjects, converted to bits per trial. Embedding distance is calculated in the full four-dimensional space, separately for each source seed. Large labeled points average the three paired seeds; small points show the seed-specific values. Inclusion tiers are shown in separate figures, so secondary cohorts no longer obscure the 8-cohort inference. All 12 valid cohorts remain included in the numerical sensitivity table. Species is descriptive rather than an inferential grouping because species, study, and task design are confounded.
 
-### Stress-test cohorts
+### Primary + stress-test cohorts
 
-![Stress-test cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_stress_test.png)
+![Primary plus stress-test cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_primary_plus_stress.png)
 
-These three valid boundary cases are displayed descriptively and do not inherit the primary-cohort correlation annotations.
+This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse) to the primary cohorts. It is displayed descriptively because this 11-cohort combination was not a predeclared inferential tier.
 
-### Descriptive-only cohort
+### All valid cohorts
 
-![Descriptive-only cohort: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_descriptive_only.png)
+![All valid cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_all_valid.png)
 
-Tang (macaque) is isolated because two released subjects are insufficient for a cross-cohort inferential tier.
+This cumulative sensitivity view additionally includes Tang (macaque). Its plot annotations report the frozen 12-cohort all-valid sensitivity relationships; Tang (macaque) remains descriptive-only because the release has two subjects.
 
 The D=614 GRU has higher subject-balanced mean log likelihood than common Q in 4 cohorts (Grossman (mouse), Chen (mouse), Zid (human), Lebedeva (mouse)) and lower mean log likelihood in 4 (Beron (mouse), Miller (rat), Findling (human), Eckstein (human)). This direction summary does not replace the paired subject tests in Result 1.
 
@@ -92,13 +92,13 @@ The identity plot is the primary view of baseline predictability. The right pane
 
 Median individual-subject embedding distance tests whether the centroid result is hiding a dispersed or bimodal cohort. The scaling panel asks whether increasing the source population from D=10 to D=614 helps cohorts that land farther from the source embedding distribution. Its cross-cohort Spearman ρ is +0.214 (permutation p=0.5835).
 
-### Stress-test robustness and scaling
+### Primary + stress-test robustness and scaling
 
-![Stress-test cohorts: robustness and source-population scaling](../fig_generalization_robustness_stress_test.png)
+![Primary plus stress-test cohorts: robustness and source-population scaling](../fig_generalization_robustness_primary_plus_stress.png)
 
-### Descriptive-only robustness and scaling
+### All-valid robustness and scaling
 
-![Descriptive-only cohort: robustness and source-population scaling](../fig_generalization_robustness_descriptive_only.png)
+![All valid cohorts: robustness and source-population scaling](../fig_generalization_robustness_all_valid.png)
 
 ### Valid cohort estimates
 
@@ -151,13 +151,13 @@ The categorical analysis is outcome-blind. Task-structure distance is the equal-
 
 Task-structure distance is associated with adapted embedding-centroid displacement (ρ=+0.577, permutation p=0.1548) but not with GRU advantage (ρ=-0.385, p=0.4048). The same separation is stronger for the full-design score: embedding ρ=+0.786 (p=0.0250), versus GRU advantage ρ=-0.491 (p=0.2238). Thus the transferred embedding geometry carries an auditable task/apparatus-distance signal, but categorical closeness alone does not explain whether GRU beats common Q.
 
-### Stress-test task-design view
+### Primary + stress-test task-design view
 
-![Stress-test cohorts: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_stress_test.png)
+![Primary plus stress-test cohorts: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_primary_plus_stress.png)
 
-### Descriptive-only task-design view
+### All-valid task-design view
 
-![Descriptive-only cohort: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_descriptive_only.png)
+![All valid cohorts: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_all_valid.png)
 
 ### Species-stratified all-valid description
 
