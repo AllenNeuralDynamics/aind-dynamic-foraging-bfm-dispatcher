@@ -2,7 +2,7 @@ PYTHON ?= python
 CACHE_ROOT ?= data-cache
 PYTHONPATH := ../../code
 
-.PHONY: all suite rebuild validate smoke-loaders freeze-matched examples freeze-embeddings freeze-generalization freeze-task-design r1 r2 r3
+.PHONY: all suite rebuild validate smoke-loaders freeze-matched freeze-authors examples freeze-embeddings freeze-generalization freeze-task-design r1 r2 r3
 
 all: r1 r2 r3
 
@@ -24,6 +24,9 @@ smoke-loaders:
 
 freeze-matched:
 	$(PYTHON) analysis/freeze_matched_half.py
+
+freeze-authors:
+	$(PYTHON) analysis/freeze_author_baselines.py
 
 examples:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) analysis/freeze_example_behavior_sessions.py --raw-root $(CACHE_ROOT)/raw
