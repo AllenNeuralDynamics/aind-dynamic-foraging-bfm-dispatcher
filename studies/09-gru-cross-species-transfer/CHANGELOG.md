@@ -2,9 +2,16 @@
 
 ## 2026-09-06
 
+- Quarantined Kwak (mouse) because the frozen manifest adapts on CNO sessions
+  and tests on DMSO sessions; documented a DMSO/control-only odd/even rerun and
+  excluded the current result from every plot and inference.
+- Added primary, stress-test, descriptive-only, and quarantined cohort tiers;
+  primary meta-analysis now uses eight cohorts, the all-valid sensitivity uses
+  12, and empirical schedule inference uses six.
+- Standardized paper labels as `Author (species)` throughout Study 09 reports.
 - Added an outcome-blind categorical task-design matrix, nearest-AIND-prototype
   distances, and subject-balanced empirical reward-schedule features for the
-  seven cohorts with complete arm probabilities.
+  six primary cohorts with complete arm probabilities.
 - Related categorical and empirical schedule distance to D=614 GRU advantage
   and adapted embedding displacement with permutation, bootstrap, leave-one-out,
   and feature-wise FDR sensitivity analyses.
@@ -32,23 +39,23 @@
 - Removed the obsolete first-round report after its GRU-versus-Q content was
   consolidated into the current Result 1, and updated all report-consumer
   references.
-- Added deterministic representative behavior-session plots for Grossman, Chen,
-  and Zid to the current Result 1 using the pinned basic-analysis session
+- Added deterministic representative behavior-session plots for Grossman (mouse),
+  Chen (mouse), and Zid (human) to the current Result 1 using the pinned basic-analysis session
   plotter.
 - Consolidated the first-round report into the current Result 1, fixed
   author-line styling, added task and
   subject-count panel labels, and added author-relative paired subject-level
   violin plots with Wilcoxon tests across common Q, published baselines, and
   every GRU source D.
-- Refit the Grossman, Chen, and Zid author-aligned models subject by subject on
+- Refit the Grossman (mouse), Chen (mouse), and Zid (human) author-aligned models subject by subject on
   the matched adaptation halves and added a frozen comparison against common Q
   and D=614 transferred GRU.
-- Added author-aligned Grossman meta-learning, Chen RLCK, and Zid traditional
+- Added author-aligned Grossman (mouse) meta-learning, Chen (mouse) RLCK, and Zid (human) traditional
   RLCK/history-kernel-2 foraging-RL model definitions and HPC variants.
 - Pinned the 15 H=128 Study 01 source GRUs and their committed W&B artifacts.
-- Added matched-half GPU grids for Grossman, Chen, and Zid.
+- Added matched-half GPU grids for Grossman (mouse), Chen (mouse), and Zid (human).
 - Added the matched subject-level Q-learning CPU runner and HPC SLURM array.
-- Kept Zid as one within-session prefix/suffix condition with no session-count K.
+- Kept Zid (human) as one within-session prefix/suffix condition with no session-count K.
 - Added a checksum-pinned pyarrow wheel mount for the current GPU image.
 - Completed all 45 GRU cells and three matched Q baselines with no failed jobs.
 - Added the frozen matched-half result, exact trial-alignment audit, D-scaling
@@ -56,11 +63,11 @@
 
 ## 2026-09-04
 
-- Created the top-three open-data starter suite for Grossman, Chen, and Zid.
+- Created the top-three open-data starter suite for Grossman (mouse), Chen (mouse), and Zid (human).
 - Pinned repository versions, public licenses, file identifiers, and checksums.
 - Added source-specific canonical adapters and exact release-count audits.
 - Emit canonical Parquet tables for an interoperable wrapper boundary.
-- Use Zid's official MATLAB representation with a locally pinned SHA-256,
+- Use Zid (human)'s official MATLAB representation with a locally pinned SHA-256,
   avoiding executable pickle deserialization.
 - Froze odd/even session manifests for the mouse cohorts and a state-preserving
   prefix/suffix manifest for the single-session human cohort.

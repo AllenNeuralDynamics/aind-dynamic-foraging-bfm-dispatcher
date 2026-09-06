@@ -14,6 +14,42 @@
     ],
     "distance_rule": "Equal-weight Gower/Hamming mismatch, minimized over the three source-task prototypes. A list-valued annotation matches when either task value overlaps the prototype value. No weights or annotations use GRU results."
   },
+  "analysis_tiers": {
+    "primary": [
+      "grossman",
+      "chen",
+      "zid",
+      "lebedeva",
+      "beron",
+      "miller",
+      "findling",
+      "eckstein"
+    ],
+    "stress_test": [
+      "alsio",
+      "costa",
+      "lopez_mouse"
+    ],
+    "descriptive_only": [
+      "tang"
+    ],
+    "quarantined": [
+      "kwak"
+    ]
+  },
+  "tier_reasons": {
+    "primary": "Complete retained cohorts with valid matched splits and adequate cross-cohort comparability.",
+    "stress_test": "Valid splits retained as scientifically useful boundary cases, but treatment, lesion, or strongly different task structure limits direct comparability.",
+    "descriptive_only": "Valid split, but the released sample is too small for cross-cohort inference.",
+    "quarantined": "The frozen result violates the intended within-condition transfer estimand and is excluded from every correlation, ranking, and direction count."
+  },
+  "required_reruns": {
+    "kwak": {
+      "status": "required before readmission",
+      "reason": "The current manifest adapts on CNO sessions and tests on DMSO sessions, confounding subject adaptation with treatment transfer.",
+      "split_contract": "Retain DMSO/control sessions only for every subject; adapt on chronological odd-indexed DMSO sessions and test on chronological even-indexed DMSO sessions. Never adapt on one treatment and score another treatment."
+    }
+  },
   "aind_source_prototypes": {
     "uncoupled_baiting": {
       "schedule_family": "blockwise",

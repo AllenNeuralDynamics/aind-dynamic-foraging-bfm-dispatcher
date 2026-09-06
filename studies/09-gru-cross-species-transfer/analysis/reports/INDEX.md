@@ -2,6 +2,6 @@
 
 | id | slug | status | one-line headline |
 |---|---|---|---|
-| [r1](r1-author-aligned-baselines.md) | external-transfer-all-baselines | live | Thirteen-cohort screen: GRU wins four subject-paired tests, Q wins five, four are unresolved, and every cohort improves from D=10 to D=614 |
-| [r2](r2-embedding-space.md) | transferred-subject-embedding-space | live | All external cohorts lie farther from the source distribution than held-out AIND mice in each seed; task and species remain confounded |
-| [r3](r3-generalization-drivers.md) | generalization-drivers | live | Task-design distance tracks adapted embedding geometry; among seven complete schedules, distance from Grossman is negatively associated with GRU advantage |
+| [r1](r1-author-aligned-baselines.md) | external-transfer-all-baselines | live | Twelve valid cohorts: GRU wins four subject-paired tests, Q wins four, four are unresolved; Kwak (mouse) is quarantined pending a within-DMSO rerun |
+| [r2](r2-embedding-space.md) | transferred-subject-embedding-space | live | All 12 valid external cohorts lie farther from the source distribution than held-out AIND mice in each seed; task and species remain confounded |
+| [r3](r3-generalization-drivers.md) | generalization-drivers | live | Eight-cohort primary inference plus a 12-cohort sensitivity; six valid schedules retain a negative distance-versus-GRU trend |

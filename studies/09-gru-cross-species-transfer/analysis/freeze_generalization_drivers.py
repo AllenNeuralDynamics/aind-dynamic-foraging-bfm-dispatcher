@@ -19,6 +19,7 @@ from _meta import build_meta  # noqa: E402
 
 MATCHED = STUDY / "analysis" / "matched_half_results.json"
 EMBEDDINGS = STUDY / "analysis" / "embedding_space_results.json"
+ANNOTATIONS = STUDY / "analysis" / "task_design_annotations.json"
 OUTPUT = STUDY / "analysis" / "generalization_drivers.json"
 DATASET_ORDER = (
     "grossman",
@@ -35,7 +36,7 @@ DATASET_ORDER = (
     "costa",
     "lopez_mouse",
 )
-LABELS = {
+BASE_LABELS = {
     "grossman": "Grossman",
     "chen": "Chen",
     "zid": "Zid",
@@ -103,8 +104,8 @@ def _correlation_summary(
 ) -> dict[str, float | int | list[float]]:
     x_values = np.asarray(x, dtype=float)
     y_values = np.asarray(y, dtype=float)
-    if len(x_values) != len(DATASET_ORDER):
-        raise AssertionError("Cross-cohort statistic must contain every cohort")
+    if len(x_values) < 3 or len(x_values) != len(y_values):
+        raise AssertionError("Cross-cohort statistic needs paired values for >=3 cohorts")
     observed = float(spearmanr(x_values, y_values).statistic)
 
     x_rank = rankdata(x_values)
@@ -252,6 +253,7 @@ def _mean_sd(records: list[dict], key: str) -> dict[str, float]:
 def main() -> None:
     matched = json.loads(MATCHED.read_text())
     embeddings = json.loads(EMBEDDINGS.read_text())
+    annotations = json.loads(ANNOTATIONS.read_text())
     if tuple(matched["datasets"]) != DATASET_ORDER:
         raise AssertionError("Matched-result cohort order drifted")
     if tuple(embeddings["groups"])[2:] != DATASET_ORDER:
@@ -259,6 +261,20 @@ def main() -> None:
     embedding_seeds = {int(row["seed"]): row for row in embeddings["seeds"]}
     if tuple(sorted(embedding_seeds)) != (0, 1, 2):
         raise AssertionError("Embedding seeds drifted")
+
+    tiers = annotations["analysis_tiers"]
+    tier_by_cohort = {
+        name: tier for tier, names in tiers.items() for name in names
+    }
+    if (
+        len(tier_by_cohort) != sum(len(names) for names in tiers.values())
+        or set(tier_by_cohort) != set(DATASET_ORDER)
+    ):
+        raise AssertionError("Analysis tiers must partition every cohort exactly once")
+    primary_names = tuple(tiers["primary"])
+    sensitivity_names = tuple(
+        tiers["primary"] + tiers["stress_test"] + tiers["descriptive_only"]
+    )
 
     cohorts = {}
     for dataset_name in DATASET_ORDER:
@@ -271,9 +287,11 @@ def main() -> None:
             )
             for seed in (0, 1, 2)
         ]
+        species = embeddings["groups"][dataset_name]["species"]
         cohorts[dataset_name] = {
-            "label": LABELS[dataset_name],
-            "species": embeddings["groups"][dataset_name]["species"],
+            "label": f"{BASE_LABELS[dataset_name]} ({species})",
+            "species": species,
+            "analysis_tier": tier_by_cohort[dataset_name],
             "n_subjects": records[0]["n_subjects"],
             "seeds": records,
             "summary": {
@@ -293,26 +311,29 @@ def main() -> None:
         }
 
     rng = np.random.default_rng(RNG_SEED)
-    centroid = [
-        cohorts[name]["summary"]["embedding_centroid_mahalanobis"]["mean"]
-        for name in DATASET_ORDER
-    ]
-    median_distance = [
-        cohorts[name]["summary"]["embedding_median_subject_mahalanobis"]["mean"]
-        for name in DATASET_ORDER
-    ]
-    q_predictability = [
-        cohorts[name]["summary"]["q_bits_above_chance"]["mean"]
-        for name in DATASET_ORDER
-    ]
-    delta = [
-        cohorts[name]["summary"]["gru_d614_minus_q_bits_per_trial"]["mean"]
-        for name in DATASET_ORDER
-    ]
-    scaling = [
-        cohorts[name]["summary"]["gru_d614_minus_d10_bits_per_trial"]["mean"]
-        for name in DATASET_ORDER
-    ]
+
+    def relationship_bundle(names: tuple[str, ...]) -> dict:
+        def values(key: str) -> list[float]:
+            return [cohorts[name]["summary"][key]["mean"] for name in names]
+
+        delta = values("gru_d614_minus_q_bits_per_trial")
+        centroid = values("embedding_centroid_mahalanobis")
+        return {
+            "gru_d614_minus_q_vs_embedding_centroid": _correlation_summary(
+                centroid, delta, rng
+            ),
+            "gru_d614_minus_q_vs_embedding_median_subject_distance": (
+                _correlation_summary(
+                    values("embedding_median_subject_mahalanobis"), delta, rng
+                )
+            ),
+            "gru_d614_minus_q_vs_common_q_predictability": _correlation_summary(
+                values("q_bits_above_chance"), delta, rng
+            ),
+            "gru_d614_minus_d10_vs_embedding_centroid": _correlation_summary(
+                centroid, values("gru_d614_minus_d10_bits_per_trial"), rng
+            ),
+        }
 
     groups = list(
         dict.fromkeys(
@@ -331,9 +352,15 @@ def main() -> None:
         "inputs": {
             str(MATCHED.relative_to(STUDY)): _sha256(MATCHED),
             str(EMBEDDINGS.relative_to(STUDY)): _sha256(EMBEDDINGS),
+            str(ANNOTATIONS.relative_to(STUDY)): _sha256(ANNOTATIONS),
         },
         "contract": {
             "cohort_order": list(DATASET_ORDER),
+            "analysis_tiers": tiers,
+            "tier_reasons": annotations["tier_reasons"],
+            "required_reruns": annotations["required_reruns"],
+            "primary_inference_cohorts": list(primary_names),
+            "all_valid_sensitivity_cohorts": list(sensitivity_names),
             "cross_cohort_unit": "one equal-weight cohort",
             "performance_unit": (
                 "mean held-out log likelihood across subjects, equal subject weight"
@@ -347,26 +374,15 @@ def main() -> None:
                 "the 614-source-mouse centroid, using source covariance per seed"
             ),
             "inference": (
-                "Spearman across 13 cohort means; deterministic two-sided "
-                "permutation p, cohort bootstrap CI, leave-one-cohort-out range"
+                "Primary Spearman inference across eight declared primary cohorts; "
+                "all-valid sensitivity across 12 non-quarantined cohorts; deterministic "
+                "two-sided permutation p, cohort bootstrap CI, and leave-one-cohort-out range"
             ),
             "rng_seed": RNG_SEED,
         },
         "cohorts": cohorts,
-        "relationships": {
-            "gru_d614_minus_q_vs_embedding_centroid": _correlation_summary(
-                centroid, delta, rng
-            ),
-            "gru_d614_minus_q_vs_embedding_median_subject_distance": (
-                _correlation_summary(median_distance, delta, rng)
-            ),
-            "gru_d614_minus_q_vs_common_q_predictability": _correlation_summary(
-                q_predictability, delta, rng
-            ),
-            "gru_d614_minus_d10_vs_embedding_centroid": _correlation_summary(
-                centroid, scaling, rng
-            ),
-        },
+        "relationships": relationship_bundle(primary_names),
+        "sensitivity_relationships": relationship_bundle(sensitivity_names),
     }
     OUTPUT.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n")
     print(f"Wrote {OUTPUT}")

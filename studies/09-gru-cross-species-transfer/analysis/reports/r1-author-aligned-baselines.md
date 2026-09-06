@@ -93,13 +93,13 @@ implementing any new author-selected model.
 
 ![GRU, common Q, and available author baselines](../fig_author_baseline_likelihood.png)
 
-Every model uses the same immutable adaptation and held-out observations. GRU points are the three source-training seeds; the curve is their mean ± SD. Common Q is fitted independently per target subject on the identical adaptation half. Existing author-model lines are retained for Grossman, Chen, and Zid, but no new author-selected model was implemented in Stage A.
+Every model uses the same immutable adaptation and held-out observations. GRU points are the three source-training seeds; the curve is their mean ± SD. Common Q is fitted independently per target subject on the identical adaptation half. Existing author-model lines are retained for Grossman (mouse), Chen (mouse), and Zid (human), but no new author-selected model was implemented in Stage A.
 
-For Kwak, both displayed model families come from the choice-orientation correction reruns. The release encodes `0=right, 1=left`; ingestion preserves that value as `source_choice` and converts it to canonical `0=left, 1=right`. The split manifest and trial membership are unchanged.
+Kwak (mouse) is omitted from every figure, table, direction count, and inference in this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, which confounds subject adaptation with treatment transfer. Readmission requires a new DMSO/control-only run using chronological odd DMSO sessions for adaptation and chronological even DMSO sessions for testing.
 
 ![Subject-level likelihood relative to the author-selected model](../fig_subject_baseline_likelihood.png)
 
-For Grossman, Chen, and Zid, every displayed subject likelihood is relative to that paper's author-selected model. The red zero line is the author reference; positive values favor the displayed model. The panel title reports the correlation between author-model likelihood and D=614 GRU improvement. This preserves the author-relative comparison from the completed first-round report.
+For Grossman (mouse), Chen (mouse), and Zid (human), every displayed subject likelihood is relative to that paper's author-selected model. The red zero line is the author reference; positive values favor the displayed model. The panel title reports the correlation between author-model likelihood and D=614 GRU improvement. This preserves the author-relative comparison from the completed first-round report.
 
 ![Paired subject-level GRU minus common-Q likelihood](../fig_subject_gru_minus_q_likelihood.png)
 
@@ -109,89 +109,83 @@ Each dot is a subject's normalized likelihood under the three-seed mean GRU minu
 
 | cohort | species | split | subjects | sessions | held-out trials | common Q | GRU D=10 | D=30 | D=100 | D=300 | D=614 |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Grossman — blockwise dynamic foraging | mouse | v1 | 48 | 754 | 101,877 | 0.73177 | 0.73775 ± 0.00210 | 0.74134 ± 0.00020 | 0.74410 ± 0.00042 | 0.74506 ± 0.00019 | 0.74535 ± 0.00017 |
-| Chen — restless random walk | mouse | v1 | 32 | 256 | 35,644 | 0.58747 | 0.58332 ± 0.00178 | 0.58593 ± 0.00369 | 0.59139 ± 0.00448 | 0.59310 ± 0.00181 | 0.59275 ± 0.00140 |
-| Zid — restless random walk | human | v2 | 258 | 258 | 38,700 | 0.70427 | 0.70858 ± 0.00457 | 0.70801 ± 0.00231 | 0.71547 ± 0.00399 | 0.71727 ± 0.00336 | 0.71363 ± 0.00192 |
-| Lebedeva — 80/20 probabilistic reversal | mouse | v1 | 10 | 254 | 63,993 | 0.75629 | 0.75881 ± 0.00257 | 0.76283 ± 0.00051 | 0.76554 ± 0.00019 | 0.76581 ± 0.00022 | 0.76634 ± 0.00040 |
-| Beron — nonstationary bandit | mouse | v1 | 6 | 525 | 188,926 | 0.82422 | 0.81765 ± 0.00059 | 0.81954 ± 0.00184 | 0.82257 ± 0.00343 | 0.82379 ± 0.00138 | 0.82296 ± 0.00056 |
-| Kwak — dynamic bandit under D1/D2 manipulation | mouse | v1 | 39 | 780 | 60,045 | 0.62608 | 0.61842 ± 0.00394 | 0.61941 ± 0.00244 | 0.62036 ± 0.00328 | 0.62046 ± 0.00063 | 0.62029 ± 0.00016 |
-| Miller — large dynamic bandit | rat | v1 | 20 | 1857 | 515,238 | 0.60945 | 0.59574 ± 0.00413 | 0.59605 ± 0.00237 | 0.60035 ± 0.00576 | 0.60101 ± 0.00396 | 0.60007 ± 0.00263 |
-| Findling — variable-volatility reversal | human | v1 | 22 | 132 | 11,706 | 0.69077 | 0.64021 ± 0.00243 | 0.64363 ± 0.00757 | 0.65358 ± 0.01002 | 0.65588 ± 0.00691 | 0.65473 ± 0.00424 |
-| Tang — blockwise action/object values | macaque | v1 | 2 | 8 | 7,728 | 0.55459 | 0.55217 ± 0.00228 | 0.55366 ± 0.00072 | 0.55353 ± 0.00168 | 0.55392 ± 0.00060 | 0.55416 ± 0.00036 |
-| Alsiö — discrimination and reversal | rat | v1 | 95 | 2334 | 225,751 | 0.52676 | 0.50868 ± 0.00332 | 0.51179 ± 0.00433 | 0.52292 ± 0.00270 | 0.52643 ± 0.00189 | 0.52710 ± 0.00098 |
-| Eckstein — developmental stochastic reversal | human | v2 | 306 | 306 | 20,248 | 0.63162 | 0.62018 ± 0.00401 | 0.62006 ± 0.00285 | 0.62991 ± 0.01490 | 0.62654 ± 0.01246 | 0.62596 ± 0.00871 |
-| Costa — stochastic stimulus reversal | macaque | v1 | 11 | 245 | 162,960 | 0.59186 | 0.57464 ± 0.00389 | 0.57989 ± 0.00815 | 0.58469 ± 0.00372 | 0.58879 ± 0.00721 | 0.58820 ± 0.00291 |
-| López-Yépez mouse — baited variable-interval matching | mouse | v1 | 8 | 218 | 77,662 | 0.53130 | 0.53790 ± 0.01493 | 0.56534 ± 0.02304 | 0.57473 ± 0.01429 | 0.58096 ± 0.01166 | 0.57554 ± 0.01322 |
+| Grossman (mouse) — blockwise dynamic foraging | mouse | v1 | 48 | 754 | 101,877 | 0.73177 | 0.73775 ± 0.00210 | 0.74134 ± 0.00020 | 0.74410 ± 0.00042 | 0.74506 ± 0.00019 | 0.74535 ± 0.00017 |
+| Chen (mouse) — restless random walk | mouse | v1 | 32 | 256 | 35,644 | 0.58747 | 0.58332 ± 0.00178 | 0.58593 ± 0.00369 | 0.59139 ± 0.00448 | 0.59310 ± 0.00181 | 0.59275 ± 0.00140 |
+| Zid (human) — restless random walk | human | v2 | 258 | 258 | 38,700 | 0.70427 | 0.70858 ± 0.00457 | 0.70801 ± 0.00231 | 0.71547 ± 0.00399 | 0.71727 ± 0.00336 | 0.71363 ± 0.00192 |
+| Lebedeva (mouse) — 80/20 probabilistic reversal | mouse | v1 | 10 | 254 | 63,993 | 0.75629 | 0.75881 ± 0.00257 | 0.76283 ± 0.00051 | 0.76554 ± 0.00019 | 0.76581 ± 0.00022 | 0.76634 ± 0.00040 |
+| Beron (mouse) — nonstationary bandit | mouse | v1 | 6 | 525 | 188,926 | 0.82422 | 0.81765 ± 0.00059 | 0.81954 ± 0.00184 | 0.82257 ± 0.00343 | 0.82379 ± 0.00138 | 0.82296 ± 0.00056 |
+| Miller (rat) — large dynamic bandit | rat | v1 | 20 | 1857 | 515,238 | 0.60945 | 0.59574 ± 0.00413 | 0.59605 ± 0.00237 | 0.60035 ± 0.00576 | 0.60101 ± 0.00396 | 0.60007 ± 0.00263 |
+| Findling (human) — variable-volatility reversal | human | v1 | 22 | 132 | 11,706 | 0.69077 | 0.64021 ± 0.00243 | 0.64363 ± 0.00757 | 0.65358 ± 0.01002 | 0.65588 ± 0.00691 | 0.65473 ± 0.00424 |
+| Tang (macaque) — blockwise action/object values | macaque | v1 | 2 | 8 | 7,728 | 0.55459 | 0.55217 ± 0.00228 | 0.55366 ± 0.00072 | 0.55353 ± 0.00168 | 0.55392 ± 0.00060 | 0.55416 ± 0.00036 |
+| Alsiö (rat) — discrimination and reversal | rat | v1 | 95 | 2334 | 225,751 | 0.52676 | 0.50868 ± 0.00332 | 0.51179 ± 0.00433 | 0.52292 ± 0.00270 | 0.52643 ± 0.00189 | 0.52710 ± 0.00098 |
+| Eckstein (human) — developmental stochastic reversal | human | v2 | 306 | 306 | 20,248 | 0.63162 | 0.62018 ± 0.00401 | 0.62006 ± 0.00285 | 0.62991 ± 0.01490 | 0.62654 ± 0.01246 | 0.62596 ± 0.00871 |
+| Costa (macaque) — stochastic stimulus reversal | macaque | v1 | 11 | 245 | 162,960 | 0.59186 | 0.57464 ± 0.00389 | 0.57989 ± 0.00815 | 0.58469 ± 0.00372 | 0.58879 ± 0.00721 | 0.58820 ± 0.00291 |
+| López-Yépez (mouse) — baited variable-interval matching | mouse | v1 | 8 | 218 | 77,662 | 0.53130 | 0.53790 ± 0.01493 | 0.56534 ± 0.02304 | 0.57473 ± 0.01429 | 0.58096 ± 0.01166 | 0.57554 ± 0.01322 |
 
 ### Paired GRU minus common-Q result
 
 | cohort | D | median Δ likelihood | mean Δ likelihood | subjects GRU better | Wilcoxon p |
 |---|---:|---:|---:|---:|---:|
-| Grossman | 10 | +0.00592 | +0.00638 | 90% (43/48) | 2.51e-08 |
-| Grossman | 30 | +0.00889 | +0.00969 | 94% (45/48) | 1.75e-10 |
-| Grossman | 100 | +0.01116 | +0.01252 | 96% (46/48) | 2.64e-12 |
-| Grossman | 300 | +0.01209 | +0.01357 | 96% (46/48) | 3.06e-13 |
-| Grossman | 614 | +0.01241 | +0.01386 | 96% (46/48) | 2.34e-13 |
-| Chen | 10 | -0.00396 | -0.00369 | 31% (10/32) | 0.0872 |
-| Chen | 30 | +0.00035 | -0.00124 | 56% (18/32) | 0.934 |
-| Chen | 100 | +0.00377 | +0.00387 | 66% (21/32) | 0.0148 |
-| Chen | 300 | +0.00484 | +0.00562 | 78% (25/32) | 0.000773 |
-| Chen | 614 | +0.00530 | +0.00532 | 75% (24/32) | 0.00144 |
-| Zid | 10 | -0.01243 | -0.00655 | 35% (91/258) | 3.48e-05 |
-| Zid | 30 | -0.01279 | -0.00702 | 38% (98/258) | 6.06e-05 |
-| Zid | 100 | -0.00852 | +0.00010 | 40% (103/258) | 0.0102 |
-| Zid | 300 | -0.00822 | +0.00199 | 40% (103/258) | 0.0511 |
-| Zid | 614 | -0.00870 | -0.00171 | 38% (99/258) | 0.00543 |
-| Lebedeva | 10 | +0.00022 | +0.00205 | 50% (5/10) | 0.432 |
-| Lebedeva | 30 | +0.00485 | +0.00586 | 80% (8/10) | 0.00977 |
-| Lebedeva | 100 | +0.00809 | +0.00864 | 100% (10/10) | 0.00195 |
-| Lebedeva | 300 | +0.00805 | +0.00891 | 100% (10/10) | 0.00195 |
-| Lebedeva | 614 | +0.00886 | +0.00939 | 100% (10/10) | 0.00195 |
-| Beron | 10 | -0.00636 | -0.00650 | 0% (0/6) | 0.0312 |
-| Beron | 30 | -0.00499 | -0.00464 | 17% (1/6) | 0.0625 |
-| Beron | 100 | -0.00203 | -0.00162 | 33% (2/6) | 0.312 |
-| Beron | 300 | -0.00119 | -0.00044 | 33% (2/6) | 0.844 |
-| Beron | 614 | -0.00206 | -0.00127 | 33% (2/6) | 0.438 |
-| Kwak | 10 | -0.00720 | -0.00759 | 5% (2/39) | 2.09e-08 |
-| Kwak | 30 | -0.00617 | -0.00666 | 10% (4/39) | 1.84e-07 |
-| Kwak | 100 | -0.00452 | -0.00581 | 10% (4/39) | 9.47e-07 |
-| Kwak | 300 | -0.00436 | -0.00569 | 15% (6/39) | 2.78e-06 |
-| Kwak | 614 | -0.00458 | -0.00587 | 13% (5/39) | 2.78e-06 |
-| Miller | 10 | -0.01579 | -0.01375 | 5% (1/20) | 3.62e-05 |
-| Miller | 30 | -0.01581 | -0.01333 | 5% (1/20) | 3.62e-05 |
-| Miller | 100 | -0.01075 | -0.00891 | 5% (1/20) | 0.000483 |
-| Miller | 300 | -0.00963 | -0.00831 | 5% (1/20) | 0.000483 |
-| Miller | 614 | -0.01003 | -0.00933 | 5% (1/20) | 0.000395 |
-| Findling | 10 | -0.05006 | -0.05230 | 0% (0/22) | 4.77e-07 |
-| Findling | 30 | -0.04509 | -0.04859 | 0% (0/22) | 4.77e-07 |
-| Findling | 100 | -0.03451 | -0.03848 | 0% (0/22) | 4.77e-07 |
-| Findling | 300 | -0.03140 | -0.03601 | 9% (2/22) | 3.34e-06 |
-| Findling | 614 | -0.03256 | -0.03718 | 5% (1/22) | 9.54e-07 |
-| Tang | 10 | -0.00245 | -0.00245 | 0% (0/2) | 0.5 |
-| Tang | 30 | -0.00099 | -0.00099 | 50% (1/2) | 1 |
-| Tang | 100 | -0.00112 | -0.00112 | 50% (1/2) | 1 |
-| Tang | 300 | -0.00074 | -0.00074 | 50% (1/2) | 1 |
-| Tang | 614 | -0.00050 | -0.00050 | 50% (1/2) | 1 |
-| Alsiö | 10 | -0.01889 | -0.01754 | 0% (0/95) | 2.6e-17 |
-| Alsiö | 30 | -0.01574 | -0.01451 | 0% (0/95) | 2.6e-17 |
-| Alsiö | 100 | -0.00467 | -0.00353 | 24% (23/95) | 1.58e-09 |
-| Alsiö | 300 | -0.00099 | +0.00001 | 36% (34/95) | 0.344 |
-| Alsiö | 614 | -0.00047 | +0.00065 | 45% (43/95) | 0.764 |
-| Eckstein | 10 | -0.04870 | -0.02585 | 19% (58/306) | 4.48e-16 |
-| Eckstein | 30 | -0.04694 | -0.02539 | 20% (60/306) | 1.45e-15 |
-| Eckstein | 100 | -0.03661 | -0.01491 | 23% (69/306) | 2.99e-13 |
-| Eckstein | 300 | -0.04071 | -0.01748 | 24% (73/306) | 1.82e-13 |
-| Eckstein | 614 | -0.03969 | -0.01815 | 23% (71/306) | 9.74e-14 |
-| Costa | 10 | -0.01795 | -0.01707 | 0% (0/11) | 0.000977 |
-| Costa | 30 | -0.01370 | -0.01207 | 0% (0/11) | 0.000977 |
-| Costa | 100 | -0.00584 | -0.00725 | 18% (2/11) | 0.00488 |
-| Costa | 300 | -0.00356 | -0.00291 | 27% (3/11) | 0.175 |
-| Costa | 614 | -0.00346 | -0.00362 | 27% (3/11) | 0.147 |
-| López-Yépez mouse | 10 | +0.00707 | +0.00964 | 88% (7/8) | 0.0781 |
-| López-Yépez mouse | 30 | +0.03775 | +0.03536 | 100% (8/8) | 0.00781 |
-| López-Yépez mouse | 100 | +0.04949 | +0.04310 | 100% (8/8) | 0.00781 |
-| López-Yépez mouse | 300 | +0.05351 | +0.05145 | 100% (8/8) | 0.00781 |
-| López-Yépez mouse | 614 | +0.04537 | +0.04689 | 100% (8/8) | 0.00781 |
+| Grossman (mouse) | 10 | +0.00592 | +0.00638 | 90% (43/48) | 2.51e-08 |
+| Grossman (mouse) | 30 | +0.00889 | +0.00969 | 94% (45/48) | 1.75e-10 |
+| Grossman (mouse) | 100 | +0.01116 | +0.01252 | 96% (46/48) | 2.64e-12 |
+| Grossman (mouse) | 300 | +0.01209 | +0.01357 | 96% (46/48) | 3.06e-13 |
+| Grossman (mouse) | 614 | +0.01241 | +0.01386 | 96% (46/48) | 2.34e-13 |
+| Chen (mouse) | 10 | -0.00396 | -0.00369 | 31% (10/32) | 0.0872 |
+| Chen (mouse) | 30 | +0.00035 | -0.00124 | 56% (18/32) | 0.934 |
+| Chen (mouse) | 100 | +0.00377 | +0.00387 | 66% (21/32) | 0.0148 |
+| Chen (mouse) | 300 | +0.00484 | +0.00562 | 78% (25/32) | 0.000773 |
+| Chen (mouse) | 614 | +0.00530 | +0.00532 | 75% (24/32) | 0.00144 |
+| Zid (human) | 10 | -0.01243 | -0.00655 | 35% (91/258) | 3.48e-05 |
+| Zid (human) | 30 | -0.01279 | -0.00702 | 38% (98/258) | 6.06e-05 |
+| Zid (human) | 100 | -0.00852 | +0.00010 | 40% (103/258) | 0.0102 |
+| Zid (human) | 300 | -0.00822 | +0.00199 | 40% (103/258) | 0.0511 |
+| Zid (human) | 614 | -0.00870 | -0.00171 | 38% (99/258) | 0.00543 |
+| Lebedeva (mouse) | 10 | +0.00022 | +0.00205 | 50% (5/10) | 0.432 |
+| Lebedeva (mouse) | 30 | +0.00485 | +0.00586 | 80% (8/10) | 0.00977 |
+| Lebedeva (mouse) | 100 | +0.00809 | +0.00864 | 100% (10/10) | 0.00195 |
+| Lebedeva (mouse) | 300 | +0.00805 | +0.00891 | 100% (10/10) | 0.00195 |
+| Lebedeva (mouse) | 614 | +0.00886 | +0.00939 | 100% (10/10) | 0.00195 |
+| Beron (mouse) | 10 | -0.00636 | -0.00650 | 0% (0/6) | 0.0312 |
+| Beron (mouse) | 30 | -0.00499 | -0.00464 | 17% (1/6) | 0.0625 |
+| Beron (mouse) | 100 | -0.00203 | -0.00162 | 33% (2/6) | 0.312 |
+| Beron (mouse) | 300 | -0.00119 | -0.00044 | 33% (2/6) | 0.844 |
+| Beron (mouse) | 614 | -0.00206 | -0.00127 | 33% (2/6) | 0.438 |
+| Miller (rat) | 10 | -0.01579 | -0.01375 | 5% (1/20) | 3.62e-05 |
+| Miller (rat) | 30 | -0.01581 | -0.01333 | 5% (1/20) | 3.62e-05 |
+| Miller (rat) | 100 | -0.01075 | -0.00891 | 5% (1/20) | 0.000483 |
+| Miller (rat) | 300 | -0.00963 | -0.00831 | 5% (1/20) | 0.000483 |
+| Miller (rat) | 614 | -0.01003 | -0.00933 | 5% (1/20) | 0.000395 |
+| Findling (human) | 10 | -0.05006 | -0.05230 | 0% (0/22) | 4.77e-07 |
+| Findling (human) | 30 | -0.04509 | -0.04859 | 0% (0/22) | 4.77e-07 |
+| Findling (human) | 100 | -0.03451 | -0.03848 | 0% (0/22) | 4.77e-07 |
+| Findling (human) | 300 | -0.03140 | -0.03601 | 9% (2/22) | 3.34e-06 |
+| Findling (human) | 614 | -0.03256 | -0.03718 | 5% (1/22) | 9.54e-07 |
+| Tang (macaque) | 10 | -0.00245 | -0.00245 | 0% (0/2) | 0.5 |
+| Tang (macaque) | 30 | -0.00099 | -0.00099 | 50% (1/2) | 1 |
+| Tang (macaque) | 100 | -0.00112 | -0.00112 | 50% (1/2) | 1 |
+| Tang (macaque) | 300 | -0.00074 | -0.00074 | 50% (1/2) | 1 |
+| Tang (macaque) | 614 | -0.00050 | -0.00050 | 50% (1/2) | 1 |
+| Alsiö (rat) | 10 | -0.01889 | -0.01754 | 0% (0/95) | 2.6e-17 |
+| Alsiö (rat) | 30 | -0.01574 | -0.01451 | 0% (0/95) | 2.6e-17 |
+| Alsiö (rat) | 100 | -0.00467 | -0.00353 | 24% (23/95) | 1.58e-09 |
+| Alsiö (rat) | 300 | -0.00099 | +0.00001 | 36% (34/95) | 0.344 |
+| Alsiö (rat) | 614 | -0.00047 | +0.00065 | 45% (43/95) | 0.764 |
+| Eckstein (human) | 10 | -0.04870 | -0.02585 | 19% (58/306) | 4.48e-16 |
+| Eckstein (human) | 30 | -0.04694 | -0.02539 | 20% (60/306) | 1.45e-15 |
+| Eckstein (human) | 100 | -0.03661 | -0.01491 | 23% (69/306) | 2.99e-13 |
+| Eckstein (human) | 300 | -0.04071 | -0.01748 | 24% (73/306) | 1.82e-13 |
+| Eckstein (human) | 614 | -0.03969 | -0.01815 | 23% (71/306) | 9.74e-14 |
+| Costa (macaque) | 10 | -0.01795 | -0.01707 | 0% (0/11) | 0.000977 |
+| Costa (macaque) | 30 | -0.01370 | -0.01207 | 0% (0/11) | 0.000977 |
+| Costa (macaque) | 100 | -0.00584 | -0.00725 | 18% (2/11) | 0.00488 |
+| Costa (macaque) | 300 | -0.00356 | -0.00291 | 27% (3/11) | 0.175 |
+| Costa (macaque) | 614 | -0.00346 | -0.00362 | 27% (3/11) | 0.147 |
+| López-Yépez (mouse) | 10 | +0.00707 | +0.00964 | 88% (7/8) | 0.0781 |
+| López-Yépez (mouse) | 30 | +0.03775 | +0.03536 | 100% (8/8) | 0.00781 |
+| López-Yépez (mouse) | 100 | +0.04949 | +0.04310 | 100% (8/8) | 0.00781 |
+| López-Yépez (mouse) | 300 | +0.05351 | +0.05145 | 100% (8/8) | 0.00781 |
+| López-Yépez (mouse) | 614 | +0.04537 | +0.04689 | 100% (8/8) | 0.00781 |
 
 ### Scaling benefit from D=10 to D=614
 
@@ -199,42 +193,41 @@ The subject-level value is D=614 GRU normalized likelihood minus D=10 GRU normal
 
 | cohort | trial-pooled Δ | subject median Δ | subject mean Δ | subjects improved | Wilcoxon p |
 |---|---:|---:|---:|---:|---:|
-| Grossman | +0.00760 | +0.00649 | +0.00748 | 100% | 7.11e-15 |
-| Chen | +0.00943 | +0.00920 | +0.00901 | 91% | 1.73e-07 |
-| Zid | +0.00505 | +0.00387 | +0.00484 | 60% | 0.000276 |
-| Lebedeva | +0.00753 | +0.00717 | +0.00735 | 100% | 0.00195 |
-| Beron | +0.00532 | +0.00531 | +0.00523 | 100% | 0.0312 |
-| Kwak | +0.00187 | +0.00184 | +0.00172 | 59% | 0.0111 |
-| Miller | +0.00432 | +0.00389 | +0.00442 | 100% | 1.91e-06 |
-| Findling | +0.01451 | +0.01207 | +0.01512 | 100% | 4.77e-07 |
-| Tang | +0.00199 | +0.00194 | +0.00194 | 100% | 0.5 |
-| Alsiö | +0.01842 | +0.01863 | +0.01819 | 100% | 2.6e-17 |
-| Eckstein | +0.00577 | +0.00791 | +0.00771 | 62% | 1.78e-07 |
-| Costa | +0.01356 | +0.01375 | +0.01345 | 100% | 0.000977 |
-| López-Yépez mouse | +0.03765 | +0.02407 | +0.03725 | 100% | 0.00781 |
+| Grossman (mouse) | +0.00760 | +0.00649 | +0.00748 | 100% | 7.11e-15 |
+| Chen (mouse) | +0.00943 | +0.00920 | +0.00901 | 91% | 1.73e-07 |
+| Zid (human) | +0.00505 | +0.00387 | +0.00484 | 60% | 0.000276 |
+| Lebedeva (mouse) | +0.00753 | +0.00717 | +0.00735 | 100% | 0.00195 |
+| Beron (mouse) | +0.00532 | +0.00531 | +0.00523 | 100% | 0.0312 |
+| Miller (rat) | +0.00432 | +0.00389 | +0.00442 | 100% | 1.91e-06 |
+| Findling (human) | +0.01451 | +0.01207 | +0.01512 | 100% | 4.77e-07 |
+| Tang (macaque) | +0.00199 | +0.00194 | +0.00194 | 100% | 0.5 |
+| Alsiö (rat) | +0.01842 | +0.01863 | +0.01819 | 100% | 2.6e-17 |
+| Eckstein (human) | +0.00577 | +0.00791 | +0.00771 | 62% | 1.78e-07 |
+| Costa (macaque) | +0.01356 | +0.01375 | +0.01345 | 100% | 0.000977 |
+| López-Yépez (mouse) | +0.03765 | +0.02407 | +0.03725 | 100% | 0.00781 |
 
 ### Stage-A scientific read
 
-At D=614, the exploratory unadjusted subject-paired Wilcoxon result favors GRU for **Grossman** (mean Δ=+0.01386, p=2.34e-13), **Chen** (mean Δ=+0.00532, p=0.00144), **Lebedeva** (mean Δ=+0.00939, p=0.00195), **López-Yépez mouse** (mean Δ=+0.04689, p=0.00781).
+At D=614, the exploratory unadjusted subject-paired Wilcoxon result favors GRU for **Grossman (mouse)** (mean Δ=+0.01386, p=2.34e-13), **Chen (mouse)** (mean Δ=+0.00532, p=0.00144), **Lebedeva (mouse)** (mean Δ=+0.00939, p=0.00195), **López-Yépez (mouse)** (mean Δ=+0.04689, p=0.00781).
 
-It favors common Q for **Zid** (mean Δ=-0.00171, p=0.00543), **Kwak** (mean Δ=-0.00587, p=2.78e-06), **Miller** (mean Δ=-0.00933, p=0.000395), **Findling** (mean Δ=-0.03718, p=9.54e-07), **Eckstein** (mean Δ=-0.01815, p=9.74e-14).
+It favors common Q for **Zid (human)** (mean Δ=-0.00171, p=0.00543), **Miller (rat)** (mean Δ=-0.00933, p=0.000395), **Findling (human)** (mean Δ=-0.03718, p=9.54e-07), **Eckstein (human)** (mean Δ=-0.01815, p=9.74e-14).
 
-The remaining cohorts are unresolved at the 0.05 level: **Beron** (mean Δ=-0.00127, p=0.438), **Tang** (mean Δ=-0.00050, p=1), **Alsiö** (mean Δ=+0.00065, p=0.764), **Costa** (mean Δ=-0.00362, p=0.147). Tang has only two subjects, so its inferential result is especially limited.
+The remaining cohorts are unresolved at the 0.05 level: **Beron (mouse)** (mean Δ=-0.00127, p=0.438), **Tang (macaque)** (mean Δ=-0.00050, p=1), **Alsiö (rat)** (mean Δ=+0.00065, p=0.764), **Costa (macaque)** (mean Δ=-0.00362, p=0.147). Tang (macaque) has only two subjects, so its inferential result is especially limited.
 
-Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614. The largest gains are **López-Yépez mouse** (+0.03765), **Alsiö** (+0.01842), **Findling** (+0.01451), **Costa** (+0.01356). Several curves peak at D=100 or D=300, so the evidence supports scaling the source population but not a universal optimum at the largest D.
+Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614. The largest gains are **López-Yépez (mouse)** (+0.03765), **Alsiö (rat)** (+0.01842), **Findling (human)** (+0.01451), **Costa (macaque)** (+0.01356). Several curves peak at D=100 or D=300, so the evidence supports scaling the source population but not a universal optimum at the largest D.
 
-**Aggregation warning — Zid.** The trial-pooled D=614 score favors GRU by +0.00936, while the arithmetic mean subject difference is -0.00171 (median -0.00870; 38% of subjects favor GRU; p=0.00543). All Zid subjects contribute the same 150 held-out trials, so this reversal is not unequal trial weighting. It reflects the nonlinear difference between a geometric pooled likelihood and arithmetic per-subject likelihood differences in the heterogeneous Zid distribution. The subject-paired result is primary for claims about a typical subject; the pooled score remains descriptive of total trial prediction.
+**Aggregation warning — Zid (human).** The trial-pooled D=614 score favors GRU by +0.00936, while the arithmetic mean subject difference is -0.00171 (median -0.00870; 38% of subjects favor GRU; p=0.00543). All Zid (human) subjects contribute the same 150 held-out trials, so this reversal is not unequal trial weighting. It reflects the nonlinear difference between a geometric pooled likelihood and arithmetic per-subject likelihood differences in the heterogeneous Zid (human) distribution. The subject-paired result is primary for claims about a typical subject; the pooled score remains descriptive of total trial prediction.
 
-This screen therefore supports broad transfer, but not universal superiority over a fitted subject-level Q model. López-Yépez, Grossman, Lebedeva, and Chen are the positive-transfer cases; Findling, Eckstein, Miller, Kwak, and subject-balanced Zid are the main stress tests for Stage-B model selection. No new author model is implemented until those candidates are explicitly chosen.
+This screen therefore supports broad transfer, but not universal superiority over a fitted subject-level Q model. López-Yépez (mouse), Grossman (mouse), Lebedeva (mouse), and Chen (mouse) are the positive-transfer cases; Findling (human), Eckstein (human), Miller (rat), and subject-balanced Zid (human) are the main valid stress tests for Stage-B model selection. No new author model is implemented until those candidates are explicitly chosen.
 
 ### Existing author-aligned baselines
 
 | cohort | published model | author-selected? | common Q | published model refit | GRU D=614 |
 |---|---|:---:|---:|---:|---:|
-| Grossman | meta-learning RL | yes | 0.73177 | 0.72976 | 0.74535 ± 0.00017 |
-| Chen | 4-parameter RLCK | yes | 0.58747 | 0.59138 | 0.59275 ± 0.00140 |
-| Zid | traditional RLCK | paper comparator | 0.70427 | 0.69322 | 0.71363 ± 0.00192 |
-| Zid | HK2 foraging RL | yes | 0.70427 | 0.68306 | 0.71363 ± 0.00192 |
+| Grossman (mouse) | meta-learning RL | yes | 0.73177 | 0.72976 | 0.74535 ± 0.00017 |
+| Chen (mouse) | 4-parameter RLCK | yes | 0.58747 | 0.59138 | 0.59275 ± 0.00140 |
+| Zid (human) | traditional RLCK | paper comparator | 0.70427 | 0.69322 | 0.71363 ± 0.00192 |
+| Zid (human) | HK2 foraging RL | yes | 0.70427 | 0.68306 | 0.71363 ± 0.00192 |
 
 ### Subject-level differences from the author-selected model
 
@@ -242,225 +235,211 @@ The reference is zero. Positive values favor the displayed comparison over the a
 
 | cohort | author reference | comparison | median Δ likelihood | mean Δ likelihood | Wilcoxon p |
 |---|---|---|---:|---:|---:|
-| Grossman | meta-learning RL | Common Q | +0.00265 | +0.00190 | 0.000147 |
-| Grossman | meta-learning RL | GRU D=10 | +0.00888 | +0.00828 | 1.05e-10 |
-| Grossman | meta-learning RL | GRU D=30 | +0.01265 | +0.01159 | 1.47e-12 |
-| Grossman | meta-learning RL | GRU D=100 | +0.01340 | +0.01442 | 7.11e-14 |
-| Grossman | meta-learning RL | GRU D=300 | +0.01510 | +0.01548 | 2.13e-14 |
-| Grossman | meta-learning RL | GRU D=614 | +0.01541 | +0.01576 | 2.13e-14 |
-| Chen | 4-parameter RLCK | Common Q | -0.00504 | -0.00397 | 0.0228 |
-| Chen | 4-parameter RLCK | GRU D=10 | -0.00650 | -0.00766 | 3.95e-05 |
-| Chen | 4-parameter RLCK | GRU D=30 | -0.00562 | -0.00521 | 0.0111 |
-| Chen | 4-parameter RLCK | GRU D=100 | -0.00115 | -0.00010 | 0.846 |
-| Chen | 4-parameter RLCK | GRU D=300 | +0.00038 | +0.00165 | 0.379 |
-| Chen | 4-parameter RLCK | GRU D=614 | +0.00045 | +0.00135 | 0.454 |
-| Zid | HK2 foraging RL | Common Q | +0.00184 | +0.01034 | 0.0741 |
-| Zid | HK2 foraging RL | traditional RLCK | +0.00098 | +0.00352 | 0.753 |
-| Zid | HK2 foraging RL | GRU D=10 | -0.00559 | +0.00379 | 0.0618 |
-| Zid | HK2 foraging RL | GRU D=30 | -0.00628 | +0.00332 | 0.0862 |
-| Zid | HK2 foraging RL | GRU D=100 | -0.00393 | +0.01043 | 0.651 |
-| Zid | HK2 foraging RL | GRU D=300 | -0.00204 | +0.01233 | 0.982 |
-| Zid | HK2 foraging RL | GRU D=614 | -0.00394 | +0.00863 | 0.532 |
+| Grossman (mouse) | meta-learning RL | Common Q | +0.00265 | +0.00190 | 0.000147 |
+| Grossman (mouse) | meta-learning RL | GRU D=10 | +0.00888 | +0.00828 | 1.05e-10 |
+| Grossman (mouse) | meta-learning RL | GRU D=30 | +0.01265 | +0.01159 | 1.47e-12 |
+| Grossman (mouse) | meta-learning RL | GRU D=100 | +0.01340 | +0.01442 | 7.11e-14 |
+| Grossman (mouse) | meta-learning RL | GRU D=300 | +0.01510 | +0.01548 | 2.13e-14 |
+| Grossman (mouse) | meta-learning RL | GRU D=614 | +0.01541 | +0.01576 | 2.13e-14 |
+| Chen (mouse) | 4-parameter RLCK | Common Q | -0.00504 | -0.00397 | 0.0228 |
+| Chen (mouse) | 4-parameter RLCK | GRU D=10 | -0.00650 | -0.00766 | 3.95e-05 |
+| Chen (mouse) | 4-parameter RLCK | GRU D=30 | -0.00562 | -0.00521 | 0.0111 |
+| Chen (mouse) | 4-parameter RLCK | GRU D=100 | -0.00115 | -0.00010 | 0.846 |
+| Chen (mouse) | 4-parameter RLCK | GRU D=300 | +0.00038 | +0.00165 | 0.379 |
+| Chen (mouse) | 4-parameter RLCK | GRU D=614 | +0.00045 | +0.00135 | 0.454 |
+| Zid (human) | HK2 foraging RL | Common Q | +0.00184 | +0.01034 | 0.0741 |
+| Zid (human) | HK2 foraging RL | traditional RLCK | +0.00098 | +0.00352 | 0.753 |
+| Zid (human) | HK2 foraging RL | GRU D=10 | -0.00559 | +0.00379 | 0.0618 |
+| Zid (human) | HK2 foraging RL | GRU D=30 | -0.00628 | +0.00332 | 0.0862 |
+| Zid (human) | HK2 foraging RL | GRU D=100 | -0.00393 | +0.01043 | 0.651 |
+| Zid (human) | HK2 foraging RL | GRU D=300 | -0.00204 | +0.01233 | 0.982 |
+| Zid (human) | HK2 foraging RL | GRU D=614 | -0.00394 | +0.00863 | 0.532 |
 
 The correlations below relate each subject's author-model normalized likelihood to that subject's D=614 GRU-minus-author improvement. Negative values mean GRU benefit is concentrated among subjects fit poorly by the author model.
 
 | cohort | author reference | subjects | Pearson r |
 |---|---|---:|---:|
-| Grossman | meta-learning RL | 48 | -0.30 |
-| Chen | 4-parameter RLCK | 32 | -0.06 |
-| Zid | HK2 foraging RL | 258 | -0.56 |
+| Grossman (mouse) | meta-learning RL | 48 | -0.30 |
+| Chen (mouse) | 4-parameter RLCK | 32 | -0.06 |
+| Zid (human) | HK2 foraging RL | 258 | -0.56 |
 
 ### Why common Q can beat an author-selected model
 
-This report tests held-out generalization after fitting the same adaptation half; it does not reproduce each paper's original model-selection objective. Grossman did compare against Q-learning, but our common Q includes forgetting, a one-step choice kernel, and side bias, while the Grossman refit omits the paper's hierarchical Stan fit and parameter-ordering constraint. Zid selected its model using all 300 trials and AIC on a smaller analysis cohort, whereas this benchmark fits trials 0–149 and scores 150–299 for all 258 released participants. A ranking reversal here therefore means that common Q generalizes better under this matched protocol; it is not evidence that the papers failed to test Q or selected the wrong model for their own analysis.
+This report tests held-out generalization after fitting the same adaptation half; it does not reproduce each paper's original model-selection objective. Grossman (mouse) did compare against Q-learning, but our common Q includes forgetting, a one-step choice kernel, and side bias, while the Grossman (mouse) refit omits the paper's hierarchical Stan fit and parameter-ordering constraint. Zid (human) selected its model using all 300 trials and AIC on a smaller analysis cohort, whereas this benchmark fits trials 0–149 and scores 150–299 for all 258 released participants. A ranking reversal here therefore means that common Q generalizes better under this matched protocol; it is not evidence that the papers failed to test Q or selected the wrong model for their own analysis.
 
 ### Representative held-out sessions
 
 Sessions are selected deterministically at neighboring ranks around the lower (10th percentile), median, and upper (90th percentile) session-level D=614 GRU-minus-Q likelihood distribution. For v2, the complete real session is shown with the adaptation/test boundary; for v1, only a real held-out session is shown. No pseudo-sessions are constructed.
 
-#### Grossman
+#### Grossman (mouse)
 
 ##### Lower tail
 
-![Lower tail Grossman held-out sessions](../fig_example_sessions_grossman_lower.png)
+![Lower tail Grossman (mouse) held-out sessions](../fig_example_sessions_grossman_lower.png)
 
 ##### Median
 
-![Median Grossman held-out sessions](../fig_example_sessions_grossman_median.png)
+![Median Grossman (mouse) held-out sessions](../fig_example_sessions_grossman_median.png)
 
 ##### Upper tail
 
-![Upper tail Grossman held-out sessions](../fig_example_sessions_grossman_upper.png)
+![Upper tail Grossman (mouse) held-out sessions](../fig_example_sessions_grossman_upper.png)
 
-#### Chen
+#### Chen (mouse)
 
 ##### Lower tail
 
-![Lower tail Chen held-out sessions](../fig_example_sessions_chen_lower.png)
+![Lower tail Chen (mouse) held-out sessions](../fig_example_sessions_chen_lower.png)
 
 ##### Median
 
-![Median Chen held-out sessions](../fig_example_sessions_chen_median.png)
+![Median Chen (mouse) held-out sessions](../fig_example_sessions_chen_median.png)
 
 ##### Upper tail
 
-![Upper tail Chen held-out sessions](../fig_example_sessions_chen_upper.png)
+![Upper tail Chen (mouse) held-out sessions](../fig_example_sessions_chen_upper.png)
 
-#### Zid
+#### Zid (human)
 
 ##### Lower tail
 
-![Lower tail Zid held-out sessions](../fig_example_sessions_zid_lower.png)
+![Lower tail Zid (human) held-out sessions](../fig_example_sessions_zid_lower.png)
 
 ##### Median
 
-![Median Zid held-out sessions](../fig_example_sessions_zid_median.png)
+![Median Zid (human) held-out sessions](../fig_example_sessions_zid_median.png)
 
 ##### Upper tail
 
-![Upper tail Zid held-out sessions](../fig_example_sessions_zid_upper.png)
+![Upper tail Zid (human) held-out sessions](../fig_example_sessions_zid_upper.png)
 
-#### Lebedeva
+#### Lebedeva (mouse)
 
 ##### Lower tail
 
-![Lower tail Lebedeva held-out sessions](../fig_example_sessions_lebedeva_lower.png)
+![Lower tail Lebedeva (mouse) held-out sessions](../fig_example_sessions_lebedeva_lower.png)
 
 ##### Median
 
-![Median Lebedeva held-out sessions](../fig_example_sessions_lebedeva_median.png)
+![Median Lebedeva (mouse) held-out sessions](../fig_example_sessions_lebedeva_median.png)
 
 ##### Upper tail
 
-![Upper tail Lebedeva held-out sessions](../fig_example_sessions_lebedeva_upper.png)
+![Upper tail Lebedeva (mouse) held-out sessions](../fig_example_sessions_lebedeva_upper.png)
 
-#### Beron
+#### Beron (mouse)
 
 ##### Lower tail
 
-![Lower tail Beron held-out sessions](../fig_example_sessions_beron_lower.png)
+![Lower tail Beron (mouse) held-out sessions](../fig_example_sessions_beron_lower.png)
 
 ##### Median
 
-![Median Beron held-out sessions](../fig_example_sessions_beron_median.png)
+![Median Beron (mouse) held-out sessions](../fig_example_sessions_beron_median.png)
 
 ##### Upper tail
 
-![Upper tail Beron held-out sessions](../fig_example_sessions_beron_upper.png)
+![Upper tail Beron (mouse) held-out sessions](../fig_example_sessions_beron_upper.png)
 
-#### Kwak
+#### Miller (rat)
 
 ##### Lower tail
 
-![Lower tail Kwak held-out sessions](../fig_example_sessions_kwak_lower.png)
+![Lower tail Miller (rat) held-out sessions](../fig_example_sessions_miller_lower.png)
 
 ##### Median
 
-![Median Kwak held-out sessions](../fig_example_sessions_kwak_median.png)
+![Median Miller (rat) held-out sessions](../fig_example_sessions_miller_median.png)
 
 ##### Upper tail
 
-![Upper tail Kwak held-out sessions](../fig_example_sessions_kwak_upper.png)
+![Upper tail Miller (rat) held-out sessions](../fig_example_sessions_miller_upper.png)
 
-#### Miller
+#### Findling (human)
 
 ##### Lower tail
 
-![Lower tail Miller held-out sessions](../fig_example_sessions_miller_lower.png)
+![Lower tail Findling (human) held-out sessions](../fig_example_sessions_findling_lower.png)
 
 ##### Median
 
-![Median Miller held-out sessions](../fig_example_sessions_miller_median.png)
+![Median Findling (human) held-out sessions](../fig_example_sessions_findling_median.png)
 
 ##### Upper tail
 
-![Upper tail Miller held-out sessions](../fig_example_sessions_miller_upper.png)
+![Upper tail Findling (human) held-out sessions](../fig_example_sessions_findling_upper.png)
 
-#### Findling
+#### Tang (macaque)
 
 ##### Lower tail
 
-![Lower tail Findling held-out sessions](../fig_example_sessions_findling_lower.png)
+![Lower tail Tang (macaque) held-out sessions](../fig_example_sessions_tang_lower.png)
 
 ##### Median
 
-![Median Findling held-out sessions](../fig_example_sessions_findling_median.png)
+![Median Tang (macaque) held-out sessions](../fig_example_sessions_tang_median.png)
 
 ##### Upper tail
 
-![Upper tail Findling held-out sessions](../fig_example_sessions_findling_upper.png)
+![Upper tail Tang (macaque) held-out sessions](../fig_example_sessions_tang_upper.png)
 
-#### Tang
+Tang (macaque) has only four held-out real sessions in the complete release. All four are shown once across the three rank regions; sessions are not duplicated to manufacture nine examples.
+
+#### Alsiö (rat)
 
 ##### Lower tail
 
-![Lower tail Tang held-out sessions](../fig_example_sessions_tang_lower.png)
+![Lower tail Alsiö (rat) held-out sessions](../fig_example_sessions_alsio_lower.png)
 
 ##### Median
 
-![Median Tang held-out sessions](../fig_example_sessions_tang_median.png)
+![Median Alsiö (rat) held-out sessions](../fig_example_sessions_alsio_median.png)
 
 ##### Upper tail
 
-![Upper tail Tang held-out sessions](../fig_example_sessions_tang_upper.png)
+![Upper tail Alsiö (rat) held-out sessions](../fig_example_sessions_alsio_upper.png)
 
-Tang has only four held-out real sessions in the complete release. All four are shown once across the three rank regions; sessions are not duplicated to manufacture nine examples.
-
-#### Alsiö
+#### Eckstein (human)
 
 ##### Lower tail
 
-![Lower tail Alsiö held-out sessions](../fig_example_sessions_alsio_lower.png)
+![Lower tail Eckstein (human) held-out sessions](../fig_example_sessions_eckstein_lower.png)
 
 ##### Median
 
-![Median Alsiö held-out sessions](../fig_example_sessions_alsio_median.png)
+![Median Eckstein (human) held-out sessions](../fig_example_sessions_eckstein_median.png)
 
 ##### Upper tail
 
-![Upper tail Alsiö held-out sessions](../fig_example_sessions_alsio_upper.png)
+![Upper tail Eckstein (human) held-out sessions](../fig_example_sessions_eckstein_upper.png)
 
-#### Eckstein
+#### Costa (macaque)
 
 ##### Lower tail
 
-![Lower tail Eckstein held-out sessions](../fig_example_sessions_eckstein_lower.png)
+![Lower tail Costa (macaque) held-out sessions](../fig_example_sessions_costa_lower.png)
 
 ##### Median
 
-![Median Eckstein held-out sessions](../fig_example_sessions_eckstein_median.png)
+![Median Costa (macaque) held-out sessions](../fig_example_sessions_costa_median.png)
 
 ##### Upper tail
 
-![Upper tail Eckstein held-out sessions](../fig_example_sessions_eckstein_upper.png)
+![Upper tail Costa (macaque) held-out sessions](../fig_example_sessions_costa_upper.png)
 
-#### Costa
+#### López-Yépez (mouse)
 
 ##### Lower tail
 
-![Lower tail Costa held-out sessions](../fig_example_sessions_costa_lower.png)
+![Lower tail López-Yépez (mouse) held-out sessions](../fig_example_sessions_lopez_mouse_lower.png)
 
 ##### Median
 
-![Median Costa held-out sessions](../fig_example_sessions_costa_median.png)
+![Median López-Yépez (mouse) held-out sessions](../fig_example_sessions_lopez_mouse_median.png)
 
 ##### Upper tail
 
-![Upper tail Costa held-out sessions](../fig_example_sessions_costa_upper.png)
-
-#### López-Yépez mouse
-
-##### Lower tail
-
-![Lower tail López-Yépez mouse held-out sessions](../fig_example_sessions_lopez_mouse_lower.png)
-
-##### Median
-
-![Median López-Yépez mouse held-out sessions](../fig_example_sessions_lopez_mouse_median.png)
-
-##### Upper tail
-
-![Upper tail López-Yépez mouse held-out sessions](../fig_example_sessions_lopez_mouse_upper.png)
+![Upper tail López-Yépez (mouse) held-out sessions](../fig_example_sessions_lopez_mouse_upper.png)
 
 Black and gray marks denote rewarded and unrewarded choices; the black trace is the nine-trial smoothed right-choice fraction. The reward-probability strip is shown only when that schedule is available in the public release. Plots use the pinned [`plot_foraging_session`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis/blob/590e5f085711a8ba99ca0d86e94471f347318daa/src/aind_dynamic_foraging_basic_analysis/plot/plot_foraging_session.py) implementation.
 
@@ -468,33 +447,33 @@ Black and gray marks denote rewarded and unrewarded choices; the black trace is 
 
 | Cohort | Raw-release audit | Status | Exact reason |
 |---|---|---|---|
-| López-Yépez et al. human | 19 subjects, 26 sessions, 4,335 valid binary choices; per-subject session counts range 1–4 | `skipped: requires unsupported split structure` | Mixed structure: 15 subjects have one session, two have two, one has three, and one has four. The complete cohort is neither v1 nor v2. |
-| Shin et al. rat | 383 released session matrices from 27 rats | `skipped: requires unsupported split structure` | The public release does not map each session matrix to a rat identity, so subject-level v1 adaptation/test membership cannot be reconstructed. |
-| Alsiö et al. cohort VI PRL | Complete PRL trial records, but dose/reversal labels do not define chronological sessions | `skipped: requires unsupported split structure` | Preserving real session state would require a new grouping rule or pseudo-sessions. |
-| Hattori et al. | Pinned Dryad derivative located; original Zenodo archive is about 6.5 GB | `skipped: data access blocked` | The smaller pinned Dryad behavior archive returned authorization/WAF failures during the audit. The available `Hattori2019` model remains a useful Stage-B positive-control candidate if data access is restored. |
-| Samejima et al. | No stable public trial-level choice/reward release located | `skipped: no public trial-level data` | Aggregate paper results are insufficient for an immutable held-out trial split. |
+| López-Yépez (human) | 19 subjects, 26 sessions, 4,335 valid binary choices; per-subject session counts range 1–4 | `skipped: requires unsupported split structure` | Mixed structure: 15 subjects have one session, two have two, one has three, and one has four. The complete cohort is neither v1 nor v2. |
+| Shin (rat) | 383 released session matrices from 27 rats | `skipped: requires unsupported split structure` | The public release does not map each session matrix to a rat identity, so subject-level v1 adaptation/test membership cannot be reconstructed. |
+| Alsiö (rat) cohort VI PRL | Complete PRL trial records, but dose/reversal labels do not define chronological sessions | `skipped: requires unsupported split structure` | Preserving real session state would require a new grouping rule or pseudo-sessions. |
+| Hattori (mouse) | Pinned Dryad derivative located; original Zenodo archive is about 6.5 GB | `skipped: data access blocked` | The smaller pinned Dryad behavior archive returned authorization/WAF failures during the audit. The available `Hattori2019` model remains a useful Stage-B positive-control candidate if data access is restored. |
+| Samejima (macaque) | No stable public trial-level choice/reward release located | `skipped: no public trial-level data` | Aggregate paper results are insufficient for an immutable held-out trial split. |
 
 ### Author-model feasibility — Stage-B stop gate
 
-No new author-selected model is implemented or launched in Stage A. Existing Grossman,
-Chen, Zid, and Hattori-family code may be displayed where an already frozen result exists.
+No new author-selected model is implemented or launched in Stage A. Existing Grossman (mouse),
+Chen (mouse), Zid (human), and Hattori (mouse)-family code may be displayed where an already frozen result exists.
 
 | Cohort | Candidate author family | Available code | Important missing or non-matching details | Estimated effort | Reproduction confidence |
 |---|---|---|---|---|---|
-| Grossman | uncertainty meta-learning RL | Existing Study 09 implementation | Original hierarchical Stan fit and parameter-order constraint are not reproduced | Existing | Moderate |
-| Chen | RLCK | Existing Study 09 implementation | Matched-half fitting differs from the paper's full-data selection protocol | Existing | High for equations; moderate for paper-level reproduction |
-| Zid | history-kernel-2 foraging RL | Existing Study 09 implementation | Matched-half fitting differs from the paper's full-data AIC cohort | Existing | High for equations; moderate for paper-level reproduction |
-| Lebedeva | PR model | No runnable code in the downloaded behavior archive | Need exact cross-validation/fitting parity and parameter bounds | 3–5 days | Moderate |
-| Beron | RFLR | Paper-associated analysis code appears available, not yet pinned | Need choose among mathematically related views and reproduce condition handling | 3–5 days | Moderate |
-| Kwak | simple RL | No maintained fit package found | Source-index chronology caveat and treatment pooling must match the paper | 2–3 days | Moderate |
-| Miller | three-timescale cognitive mixture | Dataset and manuscript, no maintained fit package found | Full likelihood/state reset and fit-bound details need reconstruction | 5–8 days | Low to moderate |
-| Findling | Weber-variability inference | Research code pinned with the data | Hierarchical model and latent-noise inference are substantially more complex | 8–15 days | Moderate |
-| Tang | none identified | Neural-analysis release | No selected behavioral baseline to reproduce | Not applicable | High confidence that Stage B needs a new scientific choice |
-| Alsiö | separate positive/negative-rate RL | Paper equations; no pinned package | Selected model was evaluated on excluded PRL cohort, not admitted II–V cohort | 3–5 days, but low scientific value | Low for a direct author-aligned claim |
-| Eckstein | hierarchical RL plus Bayesian inference | OSF research code | Two co-winners, developmental hierarchy, and 291-versus-306 cohort mismatch | 10–15 days | Moderate |
-| Costa | feedback-dependent RL | Published equations | Original optimization and phase-specific fitting details need reconstruction | 3–5 days | Moderate |
-| López mouse | double-trace RL | Published MATLAB equations | Original data fit code and exact parameter bounds are not in the release | 4–7 days | Moderate |
-| Hattori | `Hattori2019` Q family / Bayesian candidates | Existing model family in `aind-dynamic-foraging-models` | Dataset access is currently blocked; paper/model identity must be pinned before claiming parity | 1–3 days after data access | High for existing equations; low for paper-level parity until audited |
+| Grossman (mouse) | uncertainty meta-learning RL | Existing Study 09 implementation | Original hierarchical Stan fit and parameter-order constraint are not reproduced | Existing | Moderate |
+| Chen (mouse) | RLCK | Existing Study 09 implementation | Matched-half fitting differs from the paper's full-data selection protocol | Existing | High for equations; moderate for paper-level reproduction |
+| Zid (human) | history-kernel-2 foraging RL | Existing Study 09 implementation | Matched-half fitting differs from the paper's full-data AIC cohort | Existing | High for equations; moderate for paper-level reproduction |
+| Lebedeva (mouse) | PR model | No runnable code in the downloaded behavior archive | Need exact cross-validation/fitting parity and parameter bounds | 3–5 days | Moderate |
+| Beron (mouse) | RFLR | Paper-associated analysis code appears available, not yet pinned | Need choose among mathematically related views and reproduce condition handling | 3–5 days | Moderate |
+| Kwak (mouse) | simple RL | No maintained fit package found | DMSO/control-only odd/even session split must replace the invalid cross-treatment result | 2–3 days | Moderate |
+| Miller (rat) | three-timescale cognitive mixture | Dataset and manuscript, no maintained fit package found | Full likelihood/state reset and fit-bound details need reconstruction | 5–8 days | Low to moderate |
+| Findling (human) | Weber-variability inference | Research code pinned with the data | Hierarchical model and latent-noise inference are substantially more complex | 8–15 days | Moderate |
+| Tang (macaque) | none identified | Neural-analysis release | No selected behavioral baseline to reproduce | Not applicable | High confidence that Stage B needs a new scientific choice |
+| Alsiö (rat) | separate positive/negative-rate RL | Paper equations; no pinned package | Selected model was evaluated on excluded PRL cohort, not admitted II–V cohort | 3–5 days, but low scientific value | Low for a direct author-aligned claim |
+| Eckstein (human) | hierarchical RL plus Bayesian inference | OSF research code | Two co-winners, developmental hierarchy, and 291-versus-306 cohort mismatch | 10–15 days | Moderate |
+| Costa (macaque) | feedback-dependent RL | Published equations | Original optimization and phase-specific fitting details need reconstruction | 3–5 days | Moderate |
+| López-Yépez (mouse) | double-trace RL | Published MATLAB equations | Original data fit code and exact parameter bounds are not in the release | 4–7 days | Moderate |
+| Hattori (mouse) | `Hattori2019` Q family / Bayesian candidates | Existing model family in `aind-dynamic-foraging-models` | Dataset access is currently blocked; paper/model identity must be pinned before claiming parity | 1–3 days after data access | High for existing equations; low for paper-level parity until audited |
 
 Stage-B selection will occur only after the expanded GRU-versus-common-Q results are
 reviewed, using scientific value, effect size, sample/species coverage, code clarity,

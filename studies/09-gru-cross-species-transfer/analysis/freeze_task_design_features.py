@@ -283,8 +283,21 @@ def main() -> None:
     task_axes = annotations["contract"]["task_structure_axes"]
     all_axes = task_axes + annotations["contract"]["apparatus_axes"]
     prototypes = annotations["aind_source_prototypes"]
+    tiers = annotations["analysis_tiers"]
+    tier_by_cohort = {
+        name: tier for tier, names in tiers.items() for name in names
+    }
+    if (
+        len(tier_by_cohort) != sum(len(names) for names in tiers.values())
+        or set(tier_by_cohort) != set(cohort_order)
+    ):
+        raise AssertionError("Analysis tiers must partition every cohort exactly once")
+    primary_names = tuple(tiers["primary"])
+    sensitivity_names = tuple(
+        tiers["primary"] + tiers["stress_test"] + tiers["descriptive_only"]
+    )
     cohorts = {}
-    schedule_names = []
+    schedule_available_names = []
     for name in cohort_order:
         annotation = annotations["cohorts"][name]
         task_distances = {
@@ -316,10 +329,16 @@ def main() -> None:
         if probabilities_available:
             schedule_summary, subject_features = _cohort_schedule_features(df)
             schedule_status = "included: complete trial-wise arm probabilities"
-            schedule_names.append(name)
+            schedule_available_names.append(name)
+        if name in tiers["quarantined"] and probabilities_available:
+            schedule_status = (
+                "available but quarantined: outcome split crosses treatment; excluded "
+                "from schedule-distance inference until the within-DMSO rerun"
+            )
         cohorts[name] = {
             "label": generalization["cohorts"][name]["label"],
             "species": generalization["cohorts"][name]["species"],
+            "analysis_tier": tier_by_cohort[name],
             "n_subjects": int(df["subject_id"].nunique()),
             "n_sessions": int(df[["subject_id", "ses_idx"]].drop_duplicates().shape[0]),
             "n_trials": int(len(df)),
@@ -346,6 +365,9 @@ def main() -> None:
             },
         }
 
+    schedule_names = tuple(
+        name for name in primary_names if name in schedule_available_names
+    )
     schedule_matrix = np.asarray(
         [
             [
@@ -370,21 +392,48 @@ def main() -> None:
         )
 
     rng = np.random.default_rng(RNG_SEED)
-    delta = [cohorts[name]["outcomes"]["gru_d614_minus_q_bits_per_trial"] for name in cohort_order]
-    embedding = [cohorts[name]["outcomes"]["embedding_centroid_mahalanobis"] for name in cohort_order]
-    task_distance = [cohorts[name]["categorical_distance"]["task_structure"] for name in cohort_order]
-    full_distance = [cohorts[name]["categorical_distance"]["full_design"] for name in cohort_order]
-    schedule_distance = [cohorts[name]["empirical_schedule_distance_to_grossman"] for name in schedule_names]
-    schedule_delta = [cohorts[name]["outcomes"]["gru_d614_minus_q_bits_per_trial"] for name in schedule_names]
-    schedule_embedding = [cohorts[name]["outcomes"]["embedding_centroid_mahalanobis"] for name in schedule_names]
+    def categorical_relationships(names: tuple[str, ...]) -> dict:
+        delta = [
+            cohorts[name]["outcomes"]["gru_d614_minus_q_bits_per_trial"]
+            for name in names
+        ]
+        embedding = [
+            cohorts[name]["outcomes"]["embedding_centroid_mahalanobis"]
+            for name in names
+        ]
+        task_distance = [
+            cohorts[name]["categorical_distance"]["task_structure"]
+            for name in names
+        ]
+        full_distance = [
+            cohorts[name]["categorical_distance"]["full_design"]
+            for name in names
+        ]
+        return {
+            "gru_d614_minus_q_vs_task_structure_distance": _spearman_summary(task_distance, delta, rng),
+            "embedding_centroid_vs_task_structure_distance": _spearman_summary(task_distance, embedding, rng),
+            "gru_d614_minus_q_vs_full_design_distance": _spearman_summary(full_distance, delta, rng),
+            "embedding_centroid_vs_full_design_distance": _spearman_summary(full_distance, embedding, rng),
+        }
+
+    schedule_distance = [
+        cohorts[name]["empirical_schedule_distance_to_grossman"]
+        for name in schedule_names
+    ]
+    schedule_delta = [
+        cohorts[name]["outcomes"]["gru_d614_minus_q_bits_per_trial"]
+        for name in schedule_names
+    ]
+    schedule_embedding = [
+        cohorts[name]["outcomes"]["embedding_centroid_mahalanobis"]
+        for name in schedule_names
+    ]
     relationships = {
-        "gru_d614_minus_q_vs_task_structure_distance": _spearman_summary(task_distance, delta, rng),
-        "embedding_centroid_vs_task_structure_distance": _spearman_summary(task_distance, embedding, rng),
-        "gru_d614_minus_q_vs_full_design_distance": _spearman_summary(full_distance, delta, rng),
-        "embedding_centroid_vs_full_design_distance": _spearman_summary(full_distance, embedding, rng),
+        **categorical_relationships(primary_names),
         "gru_d614_minus_q_vs_empirical_schedule_distance": _spearman_summary(schedule_distance, schedule_delta, rng),
         "embedding_centroid_vs_empirical_schedule_distance": _spearman_summary(schedule_distance, schedule_embedding, rng),
     }
+    sensitivity_relationships = categorical_relationships(sensitivity_names)
 
     feature_screen = []
     for feature in SCHEDULE_FEATURES:
@@ -408,13 +457,19 @@ def main() -> None:
         },
         "contract": {
             "cohort_order": cohort_order,
-            "schedule_cohort_order": schedule_names,
+            "analysis_tiers": tiers,
+            "tier_reasons": annotations["tier_reasons"],
+            "required_reruns": annotations["required_reruns"],
+            "primary_inference_cohorts": list(primary_names),
+            "all_valid_sensitivity_cohorts": list(sensitivity_names),
+            "schedule_available_cohorts": schedule_available_names,
+            "schedule_cohort_order": list(schedule_names),
             "categorical_distance": annotations["contract"],
             "aind_source_prototypes": prototypes,
             "schedule_summary": "Compute within-session metrics per subject, then average subjects equally within each cohort.",
-            "empirical_schedule_distance": "Root-mean-square standardized Euclidean distance to Grossman across the declared distance features; standardization uses only the seven complete-probability cohorts.",
+            "empirical_schedule_distance": "Root-mean-square standardized Euclidean distance to Grossman across the declared distance features; standardization uses only the six primary, non-quarantined complete-probability cohorts.",
             "schedule_distance_features": list(DISTANCE_FEATURES),
-            "inference": "Spearman across equal-weight cohort means; exact two-sided permutation for n=7 and deterministic 100,000-draw permutation for n=13; 20,000 cohort bootstraps and leave-one-cohort-out range.",
+            "inference": "Primary Spearman inference uses eight primary cohorts for categorical distance and six primary complete-probability cohorts for schedule distance. The all-valid categorical sensitivity uses 12 non-quarantined cohorts. Exact two-sided permutation is used for n<=8; otherwise deterministic 100,000-draw permutation; all analyses use 20,000 cohort bootstraps and a leave-one-cohort-out range.",
             "rng_seed": RNG_SEED,
         },
         "schedule_standardization": {
@@ -423,6 +478,7 @@ def main() -> None:
         },
         "cohorts": cohorts,
         "relationships": relationships,
+        "sensitivity_relationships": sensitivity_relationships,
         "schedule_feature_screen_vs_gru_d614_minus_q": feature_screen,
     }
     OUTPUT.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n")

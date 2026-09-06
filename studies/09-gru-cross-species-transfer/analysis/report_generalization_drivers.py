@@ -30,6 +30,11 @@ SPECIES_COLORS = {
     "macaque": "#C44E52",
     "human": "#8172B3",
 }
+TIER_MARKERS = {
+    "primary": "o",
+    "stress_test": "s",
+    "descriptive_only": "^",
+}
 
 
 def _summary(cohort: dict, key: str) -> float:
@@ -67,13 +72,43 @@ def _species_legend() -> list[Line2D]:
     ]
 
 
+def _tier_legend() -> list[Line2D]:
+    labels = {
+        "primary": "Primary",
+        "stress_test": "Stress test",
+        "descriptive_only": "Descriptive only",
+    }
+    return [
+        Line2D(
+            [0],
+            [0],
+            marker=marker,
+            color="none",
+            markerfacecolor="#777777",
+            markeredgecolor="white",
+            markersize=9,
+            label=labels[tier],
+        )
+        for tier, marker in TIER_MARKERS.items()
+    ]
+
+
+def _valid_cohorts(data: dict) -> list[dict]:
+    return [
+        cohort
+        for cohort in data["cohorts"].values()
+        if cohort["analysis_tier"] != "quarantined"
+    ]
+
+
 def _plot_main(data: dict) -> None:
     apply_presentation_style()
     fig, axes = plt.subplots(1, 3, figsize=(18.5, 6.2), constrained_layout=True)
-    cohorts = data["cohorts"]
+    cohorts = _valid_cohorts(data)
 
-    for cohort in cohorts.values():
+    for cohort in cohorts:
         color = SPECIES_COLORS[cohort["species"]]
+        marker = TIER_MARKERS[cohort["analysis_tier"]]
         centroid = _seed_values(cohort, "embedding_centroid_mahalanobis")
         delta = _seed_values(cohort, "gru_d614_minus_q_bits_per_trial")
         q_likelihood = _summary(
@@ -85,7 +120,7 @@ def _plot_main(data: dict) -> None:
         q_predictability = _summary(cohort, "q_bits_above_chance")
 
         axes[0].plot(centroid, delta, color=color, alpha=0.20, linewidth=0.9)
-        axes[0].scatter(centroid, delta, color=color, alpha=0.32, s=24)
+        axes[0].scatter(centroid, delta, color=color, alpha=0.32, s=24, marker=marker)
         axes[0].scatter(
             centroid.mean(),
             delta.mean(),
@@ -93,6 +128,7 @@ def _plot_main(data: dict) -> None:
             edgecolor="white",
             linewidth=0.8,
             s=75,
+            marker=marker,
             zorder=4,
         )
         _annotate(
@@ -112,6 +148,7 @@ def _plot_main(data: dict) -> None:
             color=color,
             alpha=0.32,
             s=24,
+            marker=marker,
         )
         axes[1].scatter(
             q_likelihood,
@@ -120,6 +157,7 @@ def _plot_main(data: dict) -> None:
             edgecolor="white",
             linewidth=0.8,
             s=75,
+            marker=marker,
             zorder=4,
         )
         _annotate(
@@ -139,6 +177,7 @@ def _plot_main(data: dict) -> None:
             color=color,
             alpha=0.32,
             s=24,
+            marker=marker,
         )
         axes[2].scatter(
             q_predictability,
@@ -147,6 +186,7 @@ def _plot_main(data: dict) -> None:
             edgecolor="white",
             linewidth=0.8,
             s=75,
+            marker=marker,
             zorder=4,
         )
         _annotate(
@@ -167,7 +207,7 @@ def _plot_main(data: dict) -> None:
 
     all_likelihoods = [
         value
-        for cohort in cohorts.values()
+        for cohort in cohorts
         for value in [
             _summary(cohort, "q_subject_balanced_normalized_likelihood"),
             *_seed_values(
@@ -198,9 +238,9 @@ def _plot_main(data: dict) -> None:
     )
 
     fig.legend(
-        handles=_species_legend(),
+        handles=[*_species_legend(), *_tier_legend()],
         loc="outside lower center",
-        ncol=4,
+        ncol=7,
         frameon=False,
     )
     fig.suptitle(
@@ -214,10 +254,11 @@ def _plot_main(data: dict) -> None:
 def _plot_robustness(data: dict) -> None:
     apply_presentation_style()
     fig, axes = plt.subplots(1, 2, figsize=(13.2, 6.2), constrained_layout=True)
-    cohorts = data["cohorts"]
+    cohorts = _valid_cohorts(data)
 
-    for cohort in cohorts.values():
+    for cohort in cohorts:
         color = SPECIES_COLORS[cohort["species"]]
+        marker = TIER_MARKERS[cohort["analysis_tier"]]
         delta = _seed_values(cohort, "gru_d614_minus_q_bits_per_trial")
         median_distance = _seed_values(
             cohort, "embedding_median_subject_mahalanobis"
@@ -229,7 +270,7 @@ def _plot_robustness(data: dict) -> None:
             (axes[1], centroid, scaling),
         ):
             axis.plot(x, y, color=color, alpha=0.20, linewidth=0.9)
-            axis.scatter(x, y, color=color, alpha=0.32, s=24)
+            axis.scatter(x, y, color=color, alpha=0.32, s=24, marker=marker)
             axis.scatter(
                 x.mean(),
                 y.mean(),
@@ -237,6 +278,7 @@ def _plot_robustness(data: dict) -> None:
                 edgecolor="white",
                 linewidth=0.8,
                 s=75,
+                marker=marker,
                 zorder=4,
             )
             _annotate(axis, x.mean(), y.mean(), cohort["label"])
@@ -266,9 +308,9 @@ def _plot_robustness(data: dict) -> None:
     )
 
     fig.legend(
-        handles=_species_legend(),
+        handles=[*_species_legend(), *_tier_legend()],
         loc="outside lower center",
-        ncol=4,
+        ncol=7,
         frameon=False,
     )
     fig.suptitle("Embedding-distance robustness and source-D scaling")
@@ -292,7 +334,7 @@ def _plot_task_design(task_data: dict) -> None:
         ),
         (
             "empirical_schedule_distance_to_grossman",
-            "Empirical schedule distance from Grossman",
+            "Empirical schedule distance\nfrom Grossman (mouse)",
             "empirical_schedule_distance",
         ),
     )
@@ -320,11 +362,12 @@ def _plot_task_design(task_data: dict) -> None:
     for column, (x_path, x_label, relationship_x) in enumerate(columns):
         for row, (outcome, y_label, relationship_y) in enumerate(outcomes):
             axis = axes[row, column]
-            for cohort in task_data["cohorts"].values():
+            for cohort in _valid_cohorts(task_data):
                 x = nested(cohort, x_path)
                 if x is None:
                     continue
                 color = SPECIES_COLORS[cohort["species"]]
+                marker = TIER_MARKERS[cohort["analysis_tier"]]
                 y = float(cohort["outcomes"][outcome])
                 axis.scatter(
                     x,
@@ -333,6 +376,7 @@ def _plot_task_design(task_data: dict) -> None:
                     edgecolor="white",
                     linewidth=0.8,
                     s=78,
+                    marker=marker,
                     zorder=4,
                 )
                 _annotate(axis, x, y, cohort["label"])
@@ -350,9 +394,9 @@ def _plot_task_design(task_data: dict) -> None:
             )
 
     fig.legend(
-        handles=_species_legend(),
+        handles=[*_species_legend(), *_tier_legend()],
         loc="outside lower center",
-        ncol=4,
+        ncol=7,
         frameon=False,
     )
     fig.suptitle(
@@ -367,7 +411,7 @@ def _fmt_interval(values: list[float]) -> str:
     return f"[{values[0]:+.2f}, {values[1]:+.2f}]"
 
 
-def _relationship_rows(data: dict) -> list[str]:
+def _relationship_rows(relationships: dict) -> list[str]:
     labels = {
         "gru_d614_minus_q_vs_embedding_centroid": (
             "GRU614−Q vs embedding centroid distance"
@@ -384,9 +428,9 @@ def _relationship_rows(data: dict) -> list[str]:
     }
     rows = []
     for key, label in labels.items():
-        result = data["relationships"][key]
+        result = relationships[key]
         rows.append(
-            f"| {label} | {result['spearman_rho']:+.3f} | "
+            f"| {label} | {result['n_cohorts']} | {result['spearman_rho']:+.3f} | "
             f"{_fmt_interval(result['bootstrap_95_ci'])} | "
             f"{result['permutation_p_two_sided']:.4f} | "
             f"{_fmt_interval(result['leave_one_out_range'])} |"
@@ -396,9 +440,10 @@ def _relationship_rows(data: dict) -> list[str]:
 
 def _cohort_rows(data: dict) -> list[str]:
     rows = []
-    for cohort in data["cohorts"].values():
+    for cohort in _valid_cohorts(data):
         rows.append(
-            f"| {cohort['label']} | {cohort['species']} | {cohort['n_subjects']} | "
+            f"| {cohort['label']} | {cohort['analysis_tier'].replace('_', ' ')} | "
+            f"{cohort['n_subjects']} | "
             f"{_summary(cohort, 'q_subject_balanced_normalized_likelihood'):.4f} | "
             f"{_summary(cohort, 'gru_d614_subject_balanced_normalized_likelihood'):.4f} | "
             f"{_summary(cohort, 'gru_d614_minus_q_bits_per_trial'):+.4f} | "
@@ -424,7 +469,8 @@ def _task_rows(task_data: dict) -> list[str]:
         annotation = cohort["annotation"]
         rows.append(
             f"| [{cohort['label']}]({annotation['evidence_url']}) | "
-            f"{cohort['species']} | {_value_text(annotation['schedule_family'])} | "
+            f"{cohort['analysis_tier'].replace('_', ' ')} | "
+            f"{_value_text(annotation['schedule_family'])} | "
             f"{_value_text(annotation['arm_coupling'])} | "
             f"{_value_text(annotation['baiting'])} | "
             f"{_value_text(annotation['choice_target'])} | "
@@ -442,7 +488,7 @@ def _species_rows(task_data: dict) -> list[str]:
     for species in SPECIES_COLORS:
         cohorts = [
             cohort
-            for cohort in task_data["cohorts"].values()
+            for cohort in _valid_cohorts(task_data)
             if cohort["species"] == species
         ]
         delta = np.asarray(
@@ -500,7 +546,7 @@ def _schedule_rows(task_data: dict) -> list[str]:
     return rows
 
 
-def _task_relationship_rows(task_data: dict) -> list[str]:
+def _task_relationship_rows(relationships: dict) -> list[str]:
     labels = {
         "gru_d614_minus_q_vs_task_structure_distance": "GRU614−Q vs task-structure distance",
         "embedding_centroid_vs_task_structure_distance": "embedding vs task-structure distance",
@@ -511,7 +557,9 @@ def _task_relationship_rows(task_data: dict) -> list[str]:
     }
     rows = []
     for key, label in labels.items():
-        result = task_data["relationships"][key]
+        if key not in relationships:
+            continue
+        result = relationships[key]
         rows.append(
             f"| {label} | {result['n_cohorts']} | {result['spearman_rho']:+.3f} | "
             f"{_fmt_interval(result['bootstrap_95_ci'])} | "
@@ -540,11 +588,13 @@ def _feature_screen_rows(task_data: dict) -> list[str]:
 
 
 def _result_block(data: dict, task_data: dict) -> str:
+    primary_names = data["contract"]["primary_inference_cohorts"]
+    primary_cohorts = [data["cohorts"][name] for name in primary_names]
     deltas = {
         cohort["label"]: _summary(
             cohort, "gru_d614_minus_q_bits_per_trial"
         )
-        for cohort in data["cohorts"].values()
+        for cohort in primary_cohorts
     }
     positive = [name for name, value in deltas.items() if value > 0]
     negative = [name for name, value in deltas.items() if value < 0]
@@ -575,6 +625,9 @@ def _result_block(data: dict, task_data: dict) -> str:
     schedule_embedding = task_data["relationships"][
         "embedding_centroid_vs_empirical_schedule_distance"
     ]
+    valid_n = len(data["contract"]["all_valid_sensitivity_cohorts"])
+    primary_n = len(primary_names)
+    schedule_n = len(task_data["contract"]["schedule_cohort_order"])
     lines = [
         "[regenerated by `analysis/report_generalization_drivers.py` — do not edit by hand]",
         "",
@@ -582,24 +635,26 @@ def _result_block(data: dict, task_data: dict) -> str:
         "",
         "![Generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers.png)",
         "",
-        "Each cohort is one equal-weight cross-study unit. Performance is the arithmetic "
+        f"Primary inference uses {primary_n} equal-weight cross-study cohorts. Performance is the arithmetic "
         "mean held-out log likelihood across subjects, converted to bits per trial. "
         "Embedding distance is calculated in the full four-dimensional space, separately "
         "for each source seed. Large labeled points average the three paired seeds; small "
-        "points show the seed-specific values. Species is descriptive rather than an "
-        "inferential grouping because species, study, and task design are confounded.",
+        "points show the seed-specific values. Square stress-test and triangular descriptive-only "
+        f"cohorts are displayed but excluded from primary correlations; all {valid_n} valid cohorts "
+        "are included in the sensitivity table. Species is descriptive rather than an inferential "
+        "grouping because species, study, and task design are confounded.",
         "",
         f"The D=614 GRU has higher subject-balanced mean log likelihood than common Q in "
         f"{len(positive)} cohorts ({', '.join(positive)}) and lower mean log likelihood in "
         f"{len(negative)} ({', '.join(negative)}). This direction summary does not replace "
         "the paired subject tests in Result 1.",
         "",
-        "The additive log-score estimand is primary for cross-task comparison. Zid is the "
+        "The additive log-score estimand is primary for cross-task comparison. Zid (human) is the "
         "only direction reversal under the mean subject normalized-likelihood difference: "
         "its log-score difference is positive, whereas its mean normalized-likelihood "
         "difference is negative, consistent with Result 1. Both values are retained below.",
         "",
-        f"Across the 13 cohort means, GRU advantage and embedding-centroid distance have "
+        f"Across the {primary_n} primary cohort means, GRU advantage and embedding-centroid distance have "
         f"Spearman ρ={centroid['spearman_rho']:+.3f} "
         f"(bootstrap 95% CI {_fmt_interval(centroid['bootstrap_95_ci'])}; "
         f"two-sided permutation p={centroid['permutation_p_two_sided']:.4f}). "
@@ -620,9 +675,9 @@ def _result_block(data: dict, task_data: dict) -> str:
         f"{scaling['spearman_rho']:+.3f} "
         f"(permutation p={scaling['permutation_p_two_sided']:.4f}).",
         "",
-        "### Cohort estimates",
+        "### Valid cohort estimates",
         "",
-        "| cohort | species | subjects | common Q likelihood | GRU614 likelihood | GRU614−Q bits/trial | mean subject Δ likelihood | centroid distance | median subject distance | GRU614−GRU10 bits/trial |",
+        "| cohort | tier | subjects | common Q likelihood | GRU614 likelihood | GRU614−Q bits/trial | mean subject Δ likelihood | centroid distance | median subject distance | GRU614−GRU10 bits/trial |",
         "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
         *_cohort_rows(data),
         "",
@@ -630,11 +685,20 @@ def _result_block(data: dict, task_data: dict) -> str:
         "not trial-pooled values. This prevents large cohorts or long sessions from "
         "dominating a cross-study comparison.",
         "",
-        "### Cross-cohort sensitivity",
+        "### Primary cross-cohort inference",
         "",
-        "| relationship | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |",
-        "|---|---:|---:|---:|---:|",
-        *_relationship_rows(data),
+        "| relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |",
+        "|---|---:|---:|---:|---:|---:|",
+        *_relationship_rows(data["relationships"]),
+        "",
+        "### All-valid sensitivity",
+        "",
+        "This sensitivity adds Alsiö (rat), Costa (macaque), López-Yépez (mouse), and "
+        "descriptive-only Tang (macaque). It still excludes quarantined Kwak (mouse).",
+        "",
+        "| relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |",
+        "|---|---:|---:|---:|---:|---:|",
+        *_relationship_rows(data["sensitivity_relationships"]),
         "",
         "† The common-Q relationship shares Q between the horizontal axis and the "
         "GRU-minus-Q vertical axis. Its correlation is not an independent test of whether "
@@ -649,7 +713,7 @@ def _result_block(data: dict, task_data: dict) -> str:
         "Full-design distance adds physical context, response modality, and reward modality. "
         "Each cohort is scored against the nearest of the three task prototypes actually "
         "represented in the AIND source-training snapshot; this preserves source heterogeneity "
-        "and makes Grossman a zero-distance anchor.",
+        "and makes Grossman (mouse) a zero-distance anchor.",
         "",
         f"Task-structure distance is associated with adapted embedding-centroid displacement "
         f"(ρ={task_embedding['spearman_rho']:+.3f}, permutation "
@@ -663,7 +727,7 @@ def _result_block(data: dict, task_data: dict) -> str:
         "geometry carries an auditable task/apparatus-distance signal, but categorical closeness "
         "alone does not explain whether GRU beats common Q.",
         "",
-        "### Species-stratified description",
+        "### Species-stratified all-valid description",
         "",
         "| species | cohorts | mean GRU614−Q bits/trial | median | range | mean embedding distance | mean task distance |",
         "|---|---:|---:|---:|---:|---:|---:|",
@@ -674,20 +738,20 @@ def _result_block(data: dict, task_data: dict) -> str:
         "species. In particular, a species contrast would currently relabel the same design and "
         "apparatus contrasts rather than isolate biology.",
         "",
-        f"For the seven cohorts whose canonical adapters expose complete trial-wise probabilities "
-        f"for both arms, empirical schedule distance from Grossman is negatively associated with "
+        f"For the {schedule_n} primary cohorts whose canonical adapters expose complete trial-wise probabilities "
+        f"for both arms, empirical schedule distance from Grossman (mouse) is negatively associated with "
         f"GRU advantage (ρ={schedule_performance['spearman_rho']:+.3f}, exact permutation "
         f"p={schedule_performance['permutation_p_two_sided']:.4f}; bootstrap 95% CI "
         f"{_fmt_interval(schedule_performance['bootstrap_95_ci'])}; leave-one-out range "
         f"{_fmt_interval(schedule_performance['leave_one_out_range'])}). Its association with "
         f"embedding-centroid distance is weak (ρ={schedule_embedding['spearman_rho']:+.3f}, "
         f"p={schedule_embedding['permutation_p_two_sided']:.4f}). The performance result is "
-        "promising but small-sample: the bootstrap interval crosses zero, and Grossman defines "
+        "promising but small-sample: the bootstrap interval crosses zero, and Grossman (mouse) defines "
         "the schedule-distance origin.",
         "",
         "### Evidence-backed categorical matrix",
         "",
-        "| cohort | species | schedule | coupling | baited | choice target | context | response | reward | task distance | full distance |",
+        "| cohort | tier | schedule | coupling | baited | choice target | context | response | reward | task distance | full distance |",
         "|---|---|---|---|---|---|---|---|---|---:|---:|",
         *_task_rows(task_data),
         "",
@@ -697,7 +761,7 @@ def _result_block(data: dict, task_data: dict) -> str:
         "",
         "### Empirical reward-schedule features",
         "",
-        "| cohort | arm lag-1 | gap lag-1 | cross-arm | change rate | step size | mean abs(gap) | mean p(reward) | equal-p fraction | distance to Grossman |",
+        "| cohort | arm lag-1 | gap lag-1 | cross-arm | change rate | step size | mean abs(gap) | mean p(reward) | equal-p fraction | distance to Grossman (mouse) |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
         *_schedule_rows(task_data),
         "",
@@ -709,7 +773,13 @@ def _result_block(data: dict, task_data: dict) -> str:
         "",
         "| relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |",
         "|---|---:|---:|---:|---:|---:|",
-        *_task_relationship_rows(task_data),
+        *_task_relationship_rows(task_data["relationships"]),
+        "",
+        "### All-valid categorical sensitivity",
+        "",
+        "| relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |",
+        "|---|---:|---:|---:|---:|---:|",
+        *_task_relationship_rows(task_data["sensitivity_relationships"]),
         "",
         "### Individual schedule-feature screen",
         "",
@@ -725,10 +795,18 @@ def _result_block(data: dict, task_data: dict) -> str:
         "",
         "Embedding distance is measured after embedding-only adaptation, so it can reflect both "
         "task structure and cohort behavior. Species, study, apparatus, reward schedule, and data "
-        "volume remain confounded, and 13 cohorts are too few for a causal species effect or a "
+        f"volume remain confounded, and even the {valid_n}-cohort sensitivity set is too small for a causal species effect or a "
         "stable multivariable regression. Species colors are descriptive only.",
         "",
-        "The next defensible extension is to recover explicit schedules for the six currently "
+        "### Quarantined result",
+        "",
+        "Kwak (mouse) is excluded from every plot, correlation, ranking, direction count, and "
+        "species summary. The frozen split adapts on CNO sessions and tests on DMSO sessions, "
+        "so it mixes treatment transfer with subject adaptation. The required replacement keeps "
+        "only DMSO/control sessions, adapts on chronological odd DMSO sessions, and tests on "
+        "chronological even DMSO sessions. No rerun was launched in this cleanup.",
+        "",
+        "The next defensible extension is to recover explicit schedules for the remaining "
         "excluded adapters, then test whether the schedule-distance relationship replicates. An "
         "LLM pairwise closeness rank remains a blinded sensitivity analysis: prompts and Methods "
         "excerpts should be frozen before exposing the model to GRU outcomes, and agreement with "

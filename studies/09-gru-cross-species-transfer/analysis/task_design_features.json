@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_task_design_features.py",
-    "produced_at_pt": "2026-09-06T10:42:12-07:00",
-    "dispatcher_git_sha": "11bbd38771c1bd72387cd630e5268a1eb7dbffed",
+    "produced_at_pt": "2026-09-06T11:52:41-07:00",
+    "dispatcher_git_sha": "fc00e1ab7e0982468bf55297199e117d9bca158e",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
@@ -25,8 +25,8 @@
     ]
   },
   "inputs": {
-    "analysis/generalization_drivers.json": "ed6a24e87a31196368810128993f77ede4d7daf0af26d8e5ac62c5392962f9d9",
-    "analysis/task_design_annotations.json": "fb9ef6100449c2f914a97442fdefb573a9dc27b6e7e5f3722785f31541b28568",
+    "analysis/generalization_drivers.json": "7314a6cd3bc2480ec04e072ddb0016daa6554a13c62f8e1e4fae01f76c8ca8a5",
+    "analysis/task_design_annotations.json": "9b977aeeb22f4c2fd55380b16b71dd33dba650892ac60641667dc8e23427fd89",
     "code/config/data/mice_snapshot.yaml": "9c2b4855c1a7e2686e3059f736b279142ccabfea0447da54bc50ef4e0008632b",
     "code/config/data/task/uncoupled_block.yaml": "80a3f2153909eee9578d6649eae7d5b961c5143d0a169f0b5e7f0a5308ec18df",
     "code/config/data/task/coupled_block.yaml": "db644a0248676961c9e70211e4bd3191061779175d5aa4404df0b9ba439fbfcc"
@@ -47,13 +47,81 @@
       "costa",
       "lopez_mouse"
     ],
-    "schedule_cohort_order": [
+    "analysis_tiers": {
+      "primary": [
+        "grossman",
+        "chen",
+        "zid",
+        "lebedeva",
+        "beron",
+        "miller",
+        "findling",
+        "eckstein"
+      ],
+      "stress_test": [
+        "alsio",
+        "costa",
+        "lopez_mouse"
+      ],
+      "descriptive_only": [
+        "tang"
+      ],
+      "quarantined": [
+        "kwak"
+      ]
+    },
+    "tier_reasons": {
+      "primary": "Complete retained cohorts with valid matched splits and adequate cross-cohort comparability.",
+      "stress_test": "Valid splits retained as scientifically useful boundary cases, but treatment, lesion, or strongly different task structure limits direct comparability.",
+      "descriptive_only": "Valid split, but the released sample is too small for cross-cohort inference.",
+      "quarantined": "The frozen result violates the intended within-condition transfer estimand and is excluded from every correlation, ranking, and direction count."
+    },
+    "required_reruns": {
+      "kwak": {
+        "status": "required before readmission",
+        "reason": "The current manifest adapts on CNO sessions and tests on DMSO sessions, confounding subject adaptation with treatment transfer.",
+        "split_contract": "Retain DMSO/control sessions only for every subject; adapt on chronological odd-indexed DMSO sessions and test on chronological even-indexed DMSO sessions. Never adapt on one treatment and score another treatment."
+      }
+    },
+    "primary_inference_cohorts": [
+      "grossman",
+      "chen",
+      "zid",
+      "lebedeva",
+      "beron",
+      "miller",
+      "findling",
+      "eckstein"
+    ],
+    "all_valid_sensitivity_cohorts": [
+      "grossman",
+      "chen",
+      "zid",
+      "lebedeva",
+      "beron",
+      "miller",
+      "findling",
+      "eckstein",
+      "alsio",
+      "costa",
+      "lopez_mouse",
+      "tang"
+    ],
+    "schedule_available_cohorts": [
       "grossman",
       "chen",
       "zid",
       "lebedeva",
       "beron",
       "kwak",
+      "miller"
+    ],
+    "schedule_cohort_order": [
+      "grossman",
+      "chen",
+      "zid",
+      "lebedeva",
+      "beron",
       "miller"
     ],
     "categorical_distance": {
@@ -101,7 +169,7 @@
       }
     },
     "schedule_summary": "Compute within-session metrics per subject, then average subjects equally within each cohort.",
-    "empirical_schedule_distance": "Root-mean-square standardized Euclidean distance to Grossman across the declared distance features; standardization uses only the seven complete-probability cohorts.",
+    "empirical_schedule_distance": "Root-mean-square standardized Euclidean distance to Grossman across the declared distance features; standardization uses only the six primary, non-quarantined complete-probability cohorts.",
     "schedule_distance_features": [
       "mean_arm_lag1_autocorrelation",
       "cross_arm_correlation",
@@ -111,43 +179,44 @@
       "mean_reward_probability",
       "equal_probability_fraction"
     ],
-    "inference": "Spearman across equal-weight cohort means; exact two-sided permutation for n=7 and deterministic 100,000-draw permutation for n=13; 20,000 cohort bootstraps and leave-one-cohort-out range.",
+    "inference": "Primary Spearman inference uses eight primary cohorts for categorical distance and six primary complete-probability cohorts for schedule distance. The all-valid categorical sensitivity uses 12 non-quarantined cohorts. Exact two-sided permutation is used for n<=8; otherwise deterministic 100,000-draw permutation; all analyses use 20,000 cohort bootstraps and a leave-one-cohort-out range.",
     "rng_seed": 20260906
   },
   "schedule_standardization": {
     "mean_arm_lag1_autocorrelation": {
-      "mean": 0.9609174373648026,
-      "population_sd": 0.02114368995809363
+      "mean": 0.9609191090303768,
+      "population_sd": 0.022837794909390745
     },
     "cross_arm_correlation": {
-      "mean": -0.5503659619994341,
-      "population_sd": 0.419474655335192
+      "mean": -0.475454806050982,
+      "population_sd": 0.407435535041567
     },
     "probability_change_rate": {
-      "mean": 0.20193713841927055,
-      "population_sd": 0.3282874113439175
+      "mean": 0.2323348436850866,
+      "population_sd": 0.3453499458858801
     },
     "mean_absolute_arm_step_on_change": {
-      "mean": 0.3783344440936966,
-      "population_sd": 0.2377561292972158
+      "mean": 0.3413901847759793,
+      "population_sd": 0.2374766482113914
     },
     "mean_absolute_reward_gap": {
-      "mean": 0.46059372511030644,
-      "population_sd": 0.12764031591671418
+      "mean": 0.43736772148279224,
+      "population_sd": 0.12341499602425914
     },
     "mean_reward_probability": {
-      "mean": 0.49888562133327047,
-      "population_sd": 0.0381133351662984
+      "mean": 0.5120366344693622,
+      "population_sd": 0.022001969871099394
     },
     "equal_probability_fraction": {
-      "mean": 0.05685111697813492,
-      "population_sd": 0.06430709162667915
+      "mean": 0.06631234393987735,
+      "population_sd": 0.06479222172744127
     }
   },
   "cohorts": {
     "grossman": {
-      "label": "Grossman",
+      "label": "Grossman (mouse)",
       "species": "mouse",
+      "analysis_tier": "primary",
       "n_subjects": 48,
       "n_sessions": 754,
       "n_trials": 210159,
@@ -793,8 +862,9 @@
       "empirical_schedule_distance_to_grossman": 0.0
     },
     "chen": {
-      "label": "Chen",
+      "label": "Chen (mouse)",
       "species": "mouse",
+      "analysis_tier": "primary",
       "n_subjects": 32,
       "n_sessions": 256,
       "n_trials": 70778,
@@ -1261,11 +1331,12 @@
         "gru_d614_minus_d10_bits_per_trial": 0.0224656099829638,
         "embedding_centroid_mahalanobis": 7.125622528331783
       },
-      "empirical_schedule_distance_to_grossman": 1.2141495749716524
+      "empirical_schedule_distance_to_grossman": 1.416548470753058
     },
     "zid": {
-      "label": "Zid",
+      "label": "Zid (human)",
       "species": "human",
+      "analysis_tier": "primary",
       "n_subjects": 258,
       "n_sessions": 258,
       "n_trials": 77400,
@@ -4218,11 +4289,12 @@
         "gru_d614_minus_d10_bits_per_trial": 0.010264052084763517,
         "embedding_centroid_mahalanobis": 7.09263237802159
       },
-      "empirical_schedule_distance_to_grossman": 1.1023826141340314
+      "empirical_schedule_distance_to_grossman": 1.1007050492957582
     },
     "lebedeva": {
-      "label": "Lebedeva",
+      "label": "Lebedeva (mouse)",
       "species": "mouse",
+      "analysis_tier": "primary",
       "n_subjects": 10,
       "n_sessions": 254,
       "n_trials": 132494,
@@ -4449,11 +4521,12 @@
         "gru_d614_minus_d10_bits_per_trial": 0.01420835908868443,
         "embedding_centroid_mahalanobis": 2.154035834986089
       },
-      "empirical_schedule_distance_to_grossman": 1.3824764294744054
+      "empirical_schedule_distance_to_grossman": 1.3690783511842168
     },
     "beron": {
-      "label": "Beron",
+      "label": "Beron (mouse)",
       "species": "mouse",
+      "analysis_tier": "primary",
       "n_subjects": 6,
       "n_sessions": 525,
       "n_trials": 378351,
@@ -4636,11 +4709,12 @@
         "gru_d614_minus_d10_bits_per_trial": 0.009202197024419314,
         "embedding_centroid_mahalanobis": 2.4862243122623866
       },
-      "empirical_schedule_distance_to_grossman": 1.2082265036623332
+      "empirical_schedule_distance_to_grossman": 1.215746523725249
     },
     "kwak": {
-      "label": "Kwak",
+      "label": "Kwak (mouse)",
       "species": "mouse",
+      "analysis_tier": "quarantined",
       "n_subjects": 39,
       "n_sessions": 780,
       "n_trials": 121100,
@@ -4665,7 +4739,7 @@
           "uncoupled_no_baiting"
         ]
       },
-      "schedule_feature_status": "included: complete trial-wise arm probabilities",
+      "schedule_feature_status": "available but quarantined: outcome split crosses treatment; excluded from schedule-distance inference until the within-DMSO rerun",
       "schedule_features": {
         "mean_arm_lag1_autocorrelation": {
           "subject_balanced_mean": 0.9609074073713574,
@@ -5183,12 +5257,12 @@
         "gru_d614_minus_q_bits_per_trial": -0.013600056559072928,
         "gru_d614_minus_d10_bits_per_trial": 0.004161682406919532,
         "embedding_centroid_mahalanobis": 3.954249392014978
-      },
-      "empirical_schedule_distance_to_grossman": 1.5027912890828308
+      }
     },
     "miller": {
-      "label": "Miller",
+      "label": "Miller (rat)",
       "species": "rat",
+      "analysis_tier": "primary",
       "n_subjects": 20,
       "n_sessions": 1857,
       "n_trials": 1040731,
@@ -5523,11 +5597,12 @@
         "gru_d614_minus_d10_bits_per_trial": 0.010809246141684352,
         "embedding_centroid_mahalanobis": 5.905364554816845
       },
-      "empirical_schedule_distance_to_grossman": 1.7407160901660577
+      "empirical_schedule_distance_to_grossman": 1.7011642405562573
     },
     "findling": {
-      "label": "Findling",
+      "label": "Findling (human)",
       "species": "human",
+      "analysis_tier": "primary",
       "n_subjects": 22,
       "n_sessions": 132,
       "n_trials": 23275,
@@ -5634,8 +5709,9 @@
       }
     },
     "tang": {
-      "label": "Tang",
+      "label": "Tang (macaque)",
       "species": "macaque",
+      "analysis_tier": "descriptive_only",
       "n_subjects": 2,
       "n_sessions": 8,
       "n_trials": 15375,
@@ -5715,8 +5791,9 @@
       }
     },
     "alsio": {
-      "label": "Alsiö",
+      "label": "Alsiö (rat)",
       "species": "rat",
+      "analysis_tier": "stress_test",
       "n_subjects": 95,
       "n_sessions": 2334,
       "n_trials": 457007,
@@ -5799,8 +5876,9 @@
       }
     },
     "eckstein": {
-      "label": "Eckstein",
+      "label": "Eckstein (human)",
       "species": "human",
+      "analysis_tier": "primary",
       "n_subjects": 306,
       "n_sessions": 306,
       "n_trials": 40229,
@@ -5879,8 +5957,9 @@
       }
     },
     "costa": {
-      "label": "Costa",
+      "label": "Costa (macaque)",
       "species": "macaque",
+      "analysis_tier": "stress_test",
       "n_subjects": 11,
       "n_sessions": 245,
       "n_trials": 329840,
@@ -5957,8 +6036,9 @@
       }
     },
     "lopez_mouse": {
-      "label": "López-Yépez",
+      "label": "López-Yépez (mouse)",
       "species": "mouse",
+      "analysis_tier": "stress_test",
       "n_subjects": 8,
       "n_sessions": 218,
       "n_trials": 147726,
@@ -6037,246 +6117,312 @@
   },
   "relationships": {
     "gru_d614_minus_q_vs_task_structure_distance": {
-      "n_cohorts": 13,
-      "spearman_rho": 0.07466446517920453,
-      "permutation_p_two_sided": 0.8096919030809692,
-      "permutation_method": "monte_carlo",
-      "permutations": 100000,
+      "n_cohorts": 8,
+      "spearman_rho": -0.3849001794597505,
+      "permutation_p_two_sided": 0.40476190476190477,
+      "permutation_method": "exact",
+      "permutations": 40320,
       "bootstrap_95_ci": [
-        -0.5954469410143979,
-        0.7167306137196684
+        -0.9428090415820635,
+        0.779483762953957
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.09923953268977463,
-        0.2879006949618869
+        -0.8017837257372732,
+        0.0
       ]
     },
     "embedding_centroid_vs_task_structure_distance": {
-      "n_cohorts": 13,
-      "spearman_rho": 0.6839265010415134,
-      "permutation_p_two_sided": 0.012749872501274987,
-      "permutation_method": "monte_carlo",
-      "permutations": 100000,
+      "n_cohorts": 8,
+      "spearman_rho": 0.5773502691896257,
+      "permutation_p_two_sided": 0.15476190476190477,
+      "permutation_method": "exact",
+      "permutations": 40320,
       "bootstrap_95_ci": [
-        0.26908806866879237,
-        0.9083010207640528
+        -0.17541160386140583,
+        0.9607689228305227
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.6030352394471955,
-        0.8084398533175733
+        0.3162277660168379,
+        0.7768985960673558
       ]
     },
     "gru_d614_minus_q_vs_full_design_distance": {
-      "n_cohorts": 13,
-      "spearman_rho": -0.17105753461410028,
-      "permutation_p_two_sided": 0.5718742812571874,
-      "permutation_method": "monte_carlo",
-      "permutations": 100000,
+      "n_cohorts": 8,
+      "spearman_rho": -0.4910286161402363,
+      "permutation_p_two_sided": 0.22380952380952382,
+      "permutation_method": "exact",
+      "permutations": 40320,
       "bootstrap_95_ci": [
-        -0.7381327715197553,
-        0.4642568515700043
+        -1.0,
+        0.47807252552771823
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.33180314755063345,
-        0.01466865521916296
+        -0.8894991799933214,
+        -0.22454435656953592
       ]
     },
     "embedding_centroid_vs_full_design_distance": {
-      "n_cohorts": 13,
-      "spearman_rho": 0.7583550701225112,
-      "permutation_p_two_sided": 0.0035799642003579964,
-      "permutation_method": "monte_carlo",
-      "permutations": 100000,
-      "bootstrap_95_ci": [
-        0.28485242802742866,
-        0.9431035367836322
-      ],
-      "bootstraps": 20000,
-      "leave_one_out_range": [
-        0.6894267953006591,
-        0.8276847746592725
-      ]
-    },
-    "gru_d614_minus_q_vs_empirical_schedule_distance": {
-      "n_cohorts": 7,
-      "spearman_rho": -0.857142857142857,
-      "permutation_p_two_sided": 0.023809523809523808,
+      "n_cohorts": 8,
+      "spearman_rho": 0.785645785824378,
+      "permutation_p_two_sided": 0.025,
       "permutation_method": "exact",
-      "permutations": 5040,
+      "permutations": 40320,
       "bootstrap_95_ci": [
-        -1.0000000000000002,
-        0.06666666666666667
-      ],
-      "bootstraps": 20000,
-      "leave_one_out_range": [
-        -0.9428571428571428,
-        -0.7714285714285715
-      ]
-    },
-    "embedding_centroid_vs_empirical_schedule_distance": {
-      "n_cohorts": 7,
-      "spearman_rho": 0.24999999999999997,
-      "permutation_p_two_sided": 0.5948412698412698,
-      "permutation_method": "exact",
-      "permutations": 5040,
-      "bootstrap_95_ci": [
-        -0.6470588235294119,
+        0.09413160730419344,
         1.0
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.2,
-        0.5428571428571428
+        0.6736330697086078,
+        0.9092412093166349
+      ]
+    },
+    "gru_d614_minus_q_vs_empirical_schedule_distance": {
+      "n_cohorts": 6,
+      "spearman_rho": -0.8285714285714286,
+      "permutation_p_two_sided": 0.058333333333333334,
+      "permutation_method": "exact",
+      "permutations": 720,
+      "bootstrap_95_ci": [
+        -1.0,
+        0.0
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.9999999999999998,
+        -0.6999999999999998
+      ]
+    },
+    "embedding_centroid_vs_empirical_schedule_distance": {
+      "n_cohorts": 6,
+      "spearman_rho": 0.4857142857142857,
+      "permutation_p_two_sided": 0.35555555555555557,
+      "permutation_method": "exact",
+      "permutations": 720,
+      "bootstrap_95_ci": [
+        -0.7999999999999999,
+        0.9999999999999999
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        0.09999999999999998,
+        0.7999999999999998
+      ]
+    }
+  },
+  "sensitivity_relationships": {
+    "gru_d614_minus_q_vs_task_structure_distance": {
+      "n_cohorts": 12,
+      "spearman_rho": -0.05835824897876086,
+      "permutation_p_two_sided": 0.8587514124858752,
+      "permutation_method": "monte_carlo",
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -0.7223252512932091,
+        0.6332053313865279
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.280305955290694,
+        0.17320508075688773
+      ]
+    },
+    "embedding_centroid_vs_task_structure_distance": {
+      "n_cohorts": 12,
+      "spearman_rho": 0.6847367880174607,
+      "permutation_p_two_sided": 0.01955980440195598,
+      "permutation_method": "monte_carlo",
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        0.17300859166271382,
+        0.932091372259788
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        0.5773502691896258,
+        0.8542821429703302
+      ]
+    },
+    "gru_d614_minus_q_vs_full_design_distance": {
+      "n_cohorts": 12,
+      "spearman_rho": -0.28183015204312045,
+      "permutation_p_two_sided": 0.36951630483695164,
+      "permutation_method": "monte_carlo",
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -0.8339994432603272,
+        0.34332936731219377
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.4743416490252569,
+        -0.11104504640461155
+      ]
+    },
+    "embedding_centroid_vs_full_design_distance": {
+      "n_cohorts": 12,
+      "spearman_rho": 0.7210459734090224,
+      "permutation_p_two_sided": 0.00993990060099399,
+      "permutation_method": "monte_carlo",
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        0.12998296592064382,
+        0.9672041516493517
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        0.6324739599567005,
+        0.8145260639827644
       ]
     }
   },
   "schedule_feature_screen_vs_gru_d614_minus_q": [
     {
       "feature": "mean_arm_lag1_autocorrelation",
-      "n_cohorts": 7,
-      "spearman_rho": 0.3214285714285714,
-      "permutation_p_two_sided": 0.4976190476190476,
+      "n_cohorts": 6,
+      "spearman_rho": 0.2571428571428571,
+      "permutation_p_two_sided": 0.6583333333333333,
       "permutation_method": "exact",
-      "permutations": 5040,
+      "permutations": 720,
       "bootstrap_95_ci": [
-        -0.7647058823529412,
+        -0.9999999999999999,
         1.0
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.08571428571428572,
-        0.7714285714285715
+        -0.29999999999999993,
+        0.6999999999999998
       ],
-      "bh_fdr_q": 0.8895238095238096
+      "bh_fdr_q": 1.0
     },
     {
       "feature": "reward_gap_lag1_autocorrelation",
-      "n_cohorts": 7,
-      "spearman_rho": 0.3214285714285714,
-      "permutation_p_two_sided": 0.4976190476190476,
+      "n_cohorts": 6,
+      "spearman_rho": 0.2571428571428571,
+      "permutation_p_two_sided": 0.6583333333333333,
       "permutation_method": "exact",
-      "permutations": 5040,
+      "permutations": 720,
       "bootstrap_95_ci": [
-        -0.7647058823529412,
+        -0.9999999999999999,
         1.0
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.08571428571428572,
-        0.7714285714285715
+        -0.29999999999999993,
+        0.6999999999999998
       ],
-      "bh_fdr_q": 0.8895238095238096
+      "bh_fdr_q": 1.0
     },
     {
       "feature": "cross_arm_correlation",
-      "n_cohorts": 7,
-      "spearman_rho": -0.03571428571428571,
-      "permutation_p_two_sided": 0.9634920634920635,
+      "n_cohorts": 6,
+      "spearman_rho": -0.08571428571428572,
+      "permutation_p_two_sided": 0.9194444444444444,
       "permutation_method": "exact",
-      "permutations": 5040,
+      "permutations": 720,
       "bootstrap_95_ci": [
-        -0.9607843137254903,
-        0.8823529411764707
+        -0.9999999999999999,
+        0.9999999999999999
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.2571428571428571,
-        0.5428571428571428
+        -0.29999999999999993,
+        0.5999999999999999
       ],
-      "bh_fdr_q": 0.9634920634920635
+      "bh_fdr_q": 1.0
     },
     {
       "feature": "probability_change_rate",
-      "n_cohorts": 7,
-      "spearman_rho": -0.10714285714285712,
-      "permutation_p_two_sided": 0.8396825396825397,
+      "n_cohorts": 6,
+      "spearman_rho": -0.2571428571428571,
+      "permutation_p_two_sided": 0.6583333333333333,
       "permutation_method": "exact",
-      "permutations": 5040,
+      "permutations": 720,
       "bootstrap_95_ci": [
-        -0.8867924528301886,
-        0.9444444444444446
+        -0.9999999999999999,
+        0.9199999999999998
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.3142857142857143,
-        0.42857142857142855
+        -0.4999999999999999,
+        0.29999999999999993
       ],
-      "bh_fdr_q": 0.9596371882086168
+      "bh_fdr_q": 1.0
     },
     {
       "feature": "mean_absolute_arm_step_on_change",
-      "n_cohorts": 7,
-      "spearman_rho": -0.2857142857142857,
-      "permutation_p_two_sided": 0.555952380952381,
+      "n_cohorts": 6,
+      "spearman_rho": -0.08571428571428572,
+      "permutation_p_two_sided": 0.9194444444444444,
       "permutation_method": "exact",
-      "permutations": 5040,
+      "permutations": 720,
       "bootstrap_95_ci": [
-        -1.0,
-        0.6470588235294119
+        -0.9999999999999999,
+        0.9199999999999998
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.6,
-        -0.02857142857142857
+        -0.29999999999999993,
+        0.29999999999999993
       ],
-      "bh_fdr_q": 0.8895238095238096
+      "bh_fdr_q": 1.0
     },
     {
       "feature": "mean_absolute_reward_gap",
-      "n_cohorts": 7,
-      "spearman_rho": -0.10714285714285712,
-      "permutation_p_two_sided": 0.8396825396825397,
+      "n_cohorts": 6,
+      "spearman_rho": 0.02857142857142857,
+      "permutation_p_two_sided": 1.0,
       "permutation_method": "exact",
-      "permutations": 5040,
+      "permutations": 720,
       "bootstrap_95_ci": [
-        -0.8823529411764707,
-        0.7647058823529412
+        -0.7999999999999999,
+        0.9999999999999999
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.3142857142857143,
-        0.14285714285714285
+        -0.09999999999999998,
+        0.29999999999999993
       ],
-      "bh_fdr_q": 0.9596371882086168
+      "bh_fdr_q": 1.0
     },
     {
       "feature": "mean_reward_probability",
-      "n_cohorts": 7,
-      "spearman_rho": 0.6847124716486248,
-      "permutation_p_two_sided": 0.1,
+      "n_cohorts": 6,
+      "spearman_rho": 0.550782483869826,
+      "permutation_p_two_sided": 0.2722222222222222,
       "permutation_method": "exact",
-      "permutations": 5040,
+      "permutations": 720,
       "bootstrap_95_ci": [
-        -0.17647058823529413,
-        0.9901475429766744
+        -0.6363636363636362,
+        0.9999999999999999
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.5428571428571428,
-        0.8696565534786727
+        0.20519567041703082,
+        0.872081599272381
       ],
-      "bh_fdr_q": 0.8
+      "bh_fdr_q": 1.0
     },
     {
       "feature": "equal_probability_fraction",
-      "n_cohorts": 7,
-      "spearman_rho": 0.46848748060169065,
-      "permutation_p_two_sided": 0.2873015873015873,
+      "n_cohorts": 6,
+      "spearman_rho": 0.550782483869826,
+      "permutation_p_two_sided": 0.2722222222222222,
       "permutation_method": "exact",
-      "permutations": 5040,
+      "permutations": 720,
       "bootstrap_95_ci": [
-        -0.6389151433378877,
-        0.9607843137254903
+        -0.6,
+        0.9999999999999999
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.14494275891311212,
-        0.7142857142857143
+        0.20519567041703082,
+        0.7999999999999998
       ],
-      "bh_fdr_q": 0.8895238095238096
+      "bh_fdr_q": 1.0
     }
   ]
 }
