@@ -2,9 +2,9 @@ PYTHON ?= python
 CACHE_ROOT ?= data-cache
 PYTHONPATH := ../../code
 
-.PHONY: all suite rebuild validate smoke-loaders freeze-matched examples freeze-embeddings r1 r2
+.PHONY: all suite rebuild validate smoke-loaders freeze-matched examples freeze-embeddings freeze-generalization freeze-task-design r1 r2 r3
 
-all: r1 r2
+all: r1 r2 r3
 
 suite:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m external_bandit_datasets.cli all --cache-root $(CACHE_ROOT)
@@ -31,8 +31,17 @@ examples:
 freeze-embeddings:
 	$(PYTHON) analysis/freeze_embedding_space.py
 
+freeze-generalization:
+	$(PYTHON) analysis/freeze_generalization_drivers.py
+
+freeze-task-design:
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) analysis/freeze_task_design_features.py --raw-root $(CACHE_ROOT)/raw
+
 r1:
 	$(PYTHON) analysis/report_author_baselines.py
 
 r2:
 	$(PYTHON) analysis/report_embedding_space.py
+
+r3:
+	$(PYTHON) analysis/report_generalization_drivers.py
