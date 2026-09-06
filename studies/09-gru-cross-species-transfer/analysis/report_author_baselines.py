@@ -109,6 +109,13 @@ EXAMPLE_CATEGORIES = (
     ("median", "Median"),
     ("upper", "Upper tail"),
 )
+PRIMARY_AUTHOR_COHORTS = (
+    "lebedeva",
+    "beron",
+    "miller",
+    "findling",
+    "eckstein",
+)
 
 
 def _metric(record: dict) -> float:
@@ -700,6 +707,55 @@ def _author_subject_rows(author_data: dict, matched: dict) -> list[str]:
     return rows
 
 
+def _primary_author_read(author_data: dict, matched: dict) -> list[str]:
+    lines = [
+        "### Primary author-model scientific read",
+        "",
+        "Trial-pooled held-out ranking under the matched-half protocol:",
+        "",
+    ]
+    for dataset_name in PRIMARY_AUTHOR_COHORTS:
+        dataset = matched["datasets"][dataset_name]
+        scores = [
+            ("common Q", _metric(dataset["q"])),
+            (
+                "GRU D=614",
+                statistics.mean(_metric(row) for row in _gru_for_d(dataset, 614)),
+            ),
+        ]
+        scores.extend(
+            (AUTHOR_LABELS[key], _metric(record))
+            for key, record in author_data["records"].items()
+            if record["dataset"] == dataset_name and record["author_selected"]
+        )
+        ranking = " > ".join(
+            f"{label} ({value:.5f})"
+            for label, value in sorted(scores, key=lambda item: item[1], reverse=True)
+        )
+        lines.append(f"- **{LABELS[dataset_name]}:** {ranking}")
+
+    primary = _metric(author_data["records"]["findling-weber-imprecision"])
+    sensitivity = _metric(
+        author_data["records"]["findling-weber-imprecision-64p"]
+    )
+    q_score = _metric(matched["datasets"]["findling"]["q"])
+    lines += [
+        "",
+        "For Findling (human), increasing only the fit particle count from 2 to 64 "
+        f"raises held-out likelihood from {primary:.5f} to {sensitivity:.5f} "
+        f"(Δ={sensitivity - primary:+.5f}), nearly reaching common Q ({q_score:.5f}). "
+        "The released two-particle fitting objective therefore contributes material "
+        "Monte Carlo instability. The two-particle result remains the primary "
+        "author-code-parity reference; the 64-particle result is a sensitivity, not a "
+        "replacement author-selected model.",
+        "",
+        "These rankings concern held-out prediction after equal adaptation data. They do "
+        "not recreate the papers' original full-data, hierarchical, or information-criterion "
+        "model-selection analyses.",
+    ]
+    return lines
+
+
 def _stage_a_read(matched: dict) -> list[str]:
     results = {}
     for dataset_name in DATASET_ORDER:
@@ -932,6 +988,8 @@ def _result_block(
         "| cohort | published model | role | common Q | published model refit | GRU D=614 |",
         "|---|---|:---:|---:|---:|---:|",
         *author_rows,
+        "",
+        *_primary_author_read(author_data, matched),
         "",
         "### Subject-level differences from the author-selected model",
         "",
