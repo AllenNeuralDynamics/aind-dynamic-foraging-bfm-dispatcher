@@ -659,7 +659,7 @@ def _author_rows(author_data: dict, matched: dict) -> tuple[list[str], list[str]
         dataset = matched["datasets"][dataset_name]
         d614 = _gru_for_d(dataset, 614)
         role = (
-            "yes"
+            "author-selected"
             if record["author_selected"]
             else record.get("comparison_role", "paper comparator")
         )
