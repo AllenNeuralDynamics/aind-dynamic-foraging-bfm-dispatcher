@@ -2,6 +2,8 @@
 
 ## 2026-09-05
 
+- Added Result 3 relating subject-balanced GRU transfer advantage and source-D
+  scaling to external embedding displacement and common-Q predictability.
 - Renumbered the two live reports after removing the obsolete first-round
   report: the consolidated decision report is now Result 1 and the embedding
   analysis is Result 2.

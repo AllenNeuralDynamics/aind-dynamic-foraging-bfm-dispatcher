@@ -3,6 +3,7 @@
 Issues: dispatcher [#32](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/32),
 [#126](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/126),
 and [#127](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/127);
+generalization drivers [#140](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/140);
 Stage-A expansion [#134](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/134)
 through [#138](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/138);
 author-aligned baselines [#131](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/131),
@@ -210,3 +211,14 @@ source distribution; Zid, Eckstein, and López-Yépez mouse are farthest on
 average. Distance is descriptive: species, task structure, reward contingency,
 session duration, and adaptation-data volume vary together and cannot be
 isolated by this survey.
+
+## Generalization drivers
+
+[Result 3](analysis/reports/r3-generalization-drivers.md) is a first-pass
+cross-cohort meta-analysis using only the existing frozen GRU, common-Q, and
+embedding artifacts. It compares subject-balanced D=614 GRU improvement with
+full-4D source-centroid Mahalanobis distance and common-Q predictability, and
+tests whether D=614 versus D=10 scaling benefit varies with embedding distance.
+Species is shown descriptively because species, study, and task are confounded.
+Objective reward-schedule and categorical task-design distances are reserved
+for the next report revision.
