@@ -23,7 +23,7 @@ tasks:
     datasets:
       - mountPath: /external
         source:
-          beaker: 01M1TMMETY8M1V0F0E2V6XP146
+          beaker: 01M1VGY7MV148S9GWM2HW38FRQ
       - mountPath: /deps
         source:
           beaker: 01M1RDVWF18JF5QMEB618WJPSF
