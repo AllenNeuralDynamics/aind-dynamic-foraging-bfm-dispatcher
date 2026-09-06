@@ -1,0 +1,17 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25580843",
+  "wandb_group": "grossman-meta-learning@20260905-124420",
+  "wandb_run_id": "ti1b81e8",
+  "dispatcher_commit": "757484606ee15dde5314c3287312037bf49f73ff",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "a75ae23e0d5bce7985d3c4f5f7f30c7a971e0070",
+  "script": "studies/09-gru-cross-species-transfer/variants/grossman-meta-learning/grossman_meta_learning.slurm",
+  "dataset": "grossman",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-grossman-meta-25580843",
+  "submitted_at": "2026-09-05T12:44:20-07:00",
+  "started_at": "2026-09-05T12:44:37-07:00",
+  "settled_at": "2026-09-05T13:01:33-07:00",
+  "status": "completed"
+}

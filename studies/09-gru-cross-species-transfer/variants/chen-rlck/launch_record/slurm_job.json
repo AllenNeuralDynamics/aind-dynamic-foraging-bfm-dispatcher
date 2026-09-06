@@ -1,0 +1,17 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25580837",
+  "wandb_group": "chen-rlck@20260905-123624",
+  "wandb_run_id": "jzsgvam3",
+  "dispatcher_commit": "11fa6c141cdb42d1715fd81966c887d66937f5af",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "25f5f1ce64705edbf266feb8d57ff83a018b12c5",
+  "script": "studies/09-gru-cross-species-transfer/variants/chen-rlck/chen_rlck.slurm",
+  "dataset": "chen",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-chen-rlck-25580837",
+  "submitted_at": "2026-09-05T12:36:49-07:00",
+  "started_at": "2026-09-05T12:36:53-07:00",
+  "settled_at": "2026-09-05T12:42:38-07:00",
+  "status": "completed"
+}

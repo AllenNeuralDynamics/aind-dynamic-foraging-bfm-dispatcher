@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "produced_by": "launch_record.write_intervention",
+    "produced_at_pt": "2026-09-05T15:33:42-07:00",
+    "dispatcher_git_sha": "406d921c8a8ef99d47c67b42039f4d6ae32bba9d",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "zid-history-kernel@20260905-151851"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "hpc",
+  "wandb_group": "zid-history-kernel@20260905-151851",
+  "job_refs": [
+    {
+      "type": "slurm_job",
+      "id": "25580950_1"
+    },
+    {
+      "type": "slurm_job",
+      "id": "25580951_1"
+    }
+  ],
+  "supersedes": [
+    "25580838_1",
+    "xvtn1ewo",
+    "25580950_1",
+    "xap7wvxu"
+  ],
+  "trigger": {
+    "symptom": "Direct comparison with the authors' released MATLAB showed that the completed HK2 benchmark did not match first-trial value and history-kernel initialization in model_ForagingFlex.m.",
+    "cause": "The reimplementation treated the first observed choice as a switch and advanced the history kernel one trial early.",
+    "evidence": {
+      "author_code": "https://github.com/Mariemzd/HumansForageFoRwd_paper/blob/v1.0.0/modelling_matlab/model_ForagingFlex.m",
+      "original_slurm_job": "25580838_1",
+      "original_wandb_run": "xvtn1ewo",
+      "cancelled_intermediate_slurm_job": "25580950_1",
+      "cancelled_intermediate_wandb_run": "xap7wvxu"
+    }
+  },
+  "tasks": [
+    {
+      "orig_slurm_job": "25580838_1",
+      "new_slurm_job": "25580951_1",
+      "orig_wandb_run": "xvtn1ewo",
+      "new_wandb_run": "7xcefdqr"
+    }
+  ],
+  "deviations": {
+    "fresh_run_ids": true,
+    "fresh_group": true,
+    "evaluation_contract_changed": false,
+    "context_changed": {
+      "foraging_models_commit": {
+        "from": "25f5f1ce64705edbf266feb8d57ff83a018b12c5",
+        "to": "553d1a9eae919bcec5121dc747d09d5559c31bb6"
+      }
+    }
+  },
+  "cost": {
+    "cancelled_intermediate_wall_time_seconds": 181,
+    "successful_wall_time_seconds": 714
+  }
+}

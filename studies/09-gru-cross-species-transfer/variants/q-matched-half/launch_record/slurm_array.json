@@ -1,0 +1,17 @@
+{
+  "mode": "slurm-array",
+  "n_tasks": 3,
+  "slurm_array_job_id": "25580070",
+  "wandb_group": "q-matched-half@20260905-024031",
+  "dispatcher_commit": "409761e3204fbbd844eb0f544df1e4f1ee71b275",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "459c05c38332eb5c954e7cbca328f0a0fe370891",
+  "script": "studies/09-gru-cross-species-transfer/variants/q-matched-half/q_matched_half.slurm",
+  "datasets": [
+    "grossman",
+    "chen",
+    "zid"
+  ],
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-external-transfer",
+  "submitted_at": "2026-09-05T02:41:04-07:00"
+}

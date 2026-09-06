@@ -1,0 +1,20 @@
+{
+  "mode": "slurm-array",
+  "n_tasks": 2,
+  "slurm_array_job_id": "25580838",
+  "wandb_group": "zid-history-kernel@20260905-123624",
+  "wandb_runs": {
+    "zid-traditional-rlck": "7qk36y7z",
+    "zid-history-kernel-foraging": "xvtn1ewo"
+  },
+  "dispatcher_commit": "11fa6c141cdb42d1715fd81966c887d66937f5af",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "25f5f1ce64705edbf266feb8d57ff83a018b12c5",
+  "script": "studies/09-gru-cross-species-transfer/variants/zid-history-kernel/zid_history_kernel.slurm",
+  "dataset": "zid",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-zid-models-25580838",
+  "submitted_at": "2026-09-05T12:36:49-07:00",
+  "started_at": "2026-09-05T12:36:53-07:00",
+  "settled_at": "2026-09-05T12:45:11-07:00",
+  "status": "completed"
+}

@@ -1,0 +1,796 @@
+version: v2
+description: "gru-chen-matched-half@20260905-024731 \u2014 15 resumable grid tasks\
+  \ (autoResume)"
+tasks:
+- name: gru-chen-matched-half-20260905-024731-000
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d10-s0
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-a433efd0
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - &id001
+    name: BFM_META_STUDY
+    value: 09-gru-cross-species-transfer
+  - &id002
+    name: BFM_META_VARIANT
+    value: gru-chen-matched-half
+  - &id003
+    name: BFM_META_LAUNCH_ID
+    value: 20260905-024731
+  - &id004
+    name: BFM_META_CONFIG_HASH
+    value: a5bdbd34
+  - &id005
+    name: BFM_META_LABEL
+    value: matched-half
+  - &id006
+    name: BFM_META_NOTE
+    value: Chen matched-half transfer across pinned H128 GRU source sizes
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-001
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d10-s1
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-d5849f6d
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-002
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d10-s2
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-08525d2d
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-003
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d30-s0
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-1fa21c86
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-004
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d30-s1
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-51990f4c
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-005
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d30-s2
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-5b71da9e
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-006
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d100-s0
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-6a99e0fd
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-007
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d100-s1
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-394d9597
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-008
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d100-s2
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-209b44b4
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-009
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d300-s0
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-af0ddf46
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-010
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d300-s1
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-fdb34fa5
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-011
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d300-s2
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-c11c5b81
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-012
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d614-s0
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-5ae04883
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-013
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d614-s1
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-1cb7ef49
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: gru-chen-matched-half-20260905-024731-014
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - --source-key=d614-s2
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-aws-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  datasets:
+  - mountPath: /external
+    source:
+      beaker: 01M1RC0MMA9SX0FF87S1V3YPTQ
+  - mountPath: /deps
+    source:
+      beaker: 01M1RDVWF18JF5QMEB618WJPSF
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 409761e3204fbbd844eb0f544df1e4f1ee71b275
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: gru-chen-matched-half-20260905-024731-94c97219
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: gru-chen-matched-half@20260905-024731
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results

@@ -48,13 +48,16 @@ def _git_sha() -> str | None:
 def _wrapper_sha(study_root: Path) -> str | None:
     """Wrapper commit pinned in the study's environment.lock, or None.
 
-    This is the version of aind-disrnn-wrapper whose post_training_analysis
-    produced the W&B keys these analyses read (the producer side of the
-    contract in each study's analysis/wandb_keys.py).
+    This is the version of aind-dynamic-foraging-bfm-wrapper (or its legacy
+    aind-disrnn-wrapper name) whose post_training_analysis produced the W&B
+    keys these analyses read.
     """
     lock = Path(study_root) / "environment.lock"
     try:
-        m = re.search(r"aind-disrnn-wrapper\.git@([0-9a-f]{7,40})", lock.read_text())
+        m = re.search(
+            r"aind-(?:disrnn|dynamic-foraging-bfm)-wrapper\.git@([0-9a-f]{7,40})",
+            lock.read_text(),
+        )
         return m.group(1) if m else None
     except Exception:
         return None

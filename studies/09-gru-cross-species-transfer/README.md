@@ -3,6 +3,9 @@
 Issues: dispatcher [#32](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/32),
 [#126](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/126),
 and [#127](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/127);
+author-aligned baselines [#131](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/131),
+[#132](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/132),
+and [#133](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/133);
 wrapper [#91](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/91)
 and [#92](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/92).
 
@@ -88,3 +91,67 @@ paired by subject. Report normalized likelihood, Brier score, accuracy, and
 calibration as descriptive secondary metrics. Fit preprocessing, hyperparameters,
 random seeds, split manifests, source checksums, and model checkpoints are part
 of the run provenance.
+
+## Current consolidated report
+
+Issue #126 first evaluates the fully matched half-data condition. The GRU panel
+uses the fixed H=128 Study 01 source models at
+`D={10,30,100,300,614}` with seeds 0--2. For every cell, only the new-subject
+embedding is optimized for 500 steps at learning rate 0.001; the GRU core stays
+frozen and the target test partition never selects a checkpoint. Source run IDs
+and immutable W&B artifact digests are recorded in `source_runs.json`.
+
+The three `gru-*-matched-half` variants run as GPU-only Beaker grids. The
+`q-matched-half` variant runs as a CPU-only SLURM array on Allen HPC. Both model
+families consume the same generated Parquet table and split manifest, and both
+emit the wrapper's canonical `test_trial_predictions.csv` and
+`test_metrics.json` outputs for an exact trial-key parity check.
+
+The current GPU image predates the wrapper's declared `pyarrow` dependency.
+GPU tasks therefore mount committed Beaker dataset
+`01M1RDVWF18JF5QMEB618WJPSF`, verify the pinned wheel's SHA-256, and install
+`pyarrow==21.0.0` inside the task before reading the canonical Parquet table.
+
+The common-Q comparison is consolidated into
+[Result 2](analysis/reports/r2-author-aligned-baselines.md).
+At D=614, trial-pooled GRU normalized likelihood exceeds Q-learning by 0.01358
+on Grossman, 0.00528 on Chen, and 0.00936 on Zid. The frozen input also proves
+exact ordered trial-key equality between every GRU cell and its Q baseline.
+
+## Author-aligned baselines
+
+The common Q-learning model remains the controlled baseline across datasets.
+Three additional variants test whether that conclusion depends on using a
+generic family instead of the model selected by each dataset's authors:
+
+- `grossman-meta-learning`: uncertainty-dependent asymmetric meta-learning;
+- `chen-rlck`: the selected four-parameter RL plus choice-kernel model;
+- `zid-history-kernel`: both the best traditional RLCK model and the best
+  overall history-kernel-2 foraging-RL model.
+
+They use the same subject-level adaptation observations and identical held-out
+trial keys as the GRU and common-Q comparisons in Result 2. These fits are
+CPU-only SLURM jobs on Allen HPC; they must not be sent to Beaker.
+
+The completed consolidated comparison is
+[Result 2](analysis/reports/r2-author-aligned-baselines.md).
+The author-selected model beats common Q only for Chen (+0.00392 normalized
+likelihood). The D=614 transferred GRU remains above the author-selected model
+by +0.01559 on Grossman, +0.00136 on Chen, and +0.03057 on Zid.
+
+## Subject embedding space
+
+[Result 3](analysis/reports/r3-embedding-space.md) uses the three D=614 source
+seeds to ask where unseen subjects land after embedding-only adaptation. PCA is
+fit separately to the 614 source-training AIND mice in each seed; the primary
+control is the 149 held-out AIND mice, which were also unseen by the frozen GRU
+core. A full four-dimensional Mahalanobis-distance analysis accompanies the 2D
+PC views.
+
+Held-out AIND mice remain calibrated to the source distribution, with only
+4.0%--5.4% outside its empirical 95th percentile. Grossman mice are moderately
+shifted (14.6%--22.9%), whereas Chen mice (100%) and Zid humans
+(97.3%--98.1%) are strongly displaced in all three seeds. Because Chen and Zid
+share the restless random-walk task while Grossman is a mouse blockwise task
+closer to AIND dynamic foraging, task structure is a better first explanation
+than species alone; the datasets do not isolate those factors experimentally.
