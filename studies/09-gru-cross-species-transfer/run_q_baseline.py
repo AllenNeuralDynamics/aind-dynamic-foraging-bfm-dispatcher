@@ -9,11 +9,35 @@ import sys
 from pathlib import Path
 
 
-DATASETS = ("grossman", "chen", "zid")
+DATASETS = (
+    "grossman",
+    "chen",
+    "zid",
+    "lebedeva",
+    "beron",
+    "kwak",
+    "miller",
+    "findling",
+    "tang",
+    "alsio",
+    "eckstein",
+    "costa",
+    "lopez_mouse",
+)
 DATASET_IDS = {
     "grossman": "grossman-bari-cohen-2021",
     "chen": "chen-et-al-2021",
     "zid": "zid-et-al-2026-experiment-1",
+    "lebedeva": "lebedeva-et-al-2026",
+    "beron": "beron-et-al-2022",
+    "kwak": "kwak-jung-2019-tab",
+    "miller": "miller-et-al-2022-tab",
+    "findling": "findling-et-al-volnoise",
+    "tang": "tang-bartolo-averbeck-2021",
+    "alsio": "alsio-et-al-2019-vpvd-tsvr",
+    "eckstein": "eckstein-et-al-2022",
+    "costa": "costa-averbeck-2016-stochastic",
+    "lopez_mouse": "lopez-yepez-et-al-2021-mouse",
 }
 
 
@@ -23,6 +47,10 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--data-root", type=Path, required=True)
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--subject-workers", type=int, default=6)
+    parser.add_argument(
+        "--subject-id",
+        help="Optional one-subject execution used only for preflight smoke tests.",
+    )
     return parser
 
 
@@ -52,11 +80,12 @@ def main() -> None:
             "dataset": args.dataset,
             "audit": audit,
             "condition": "matched_half",
+            "subject_id": args.subject_id,
         },
         "seed": 0,
         "meta": {
             "study": "09-gru-cross-species-transfer",
-            "variant": "q-matched-half",
+            "variant": os.environ.get("BFM_META_VARIANT", "q-matched-half"),
             "dispatcher_commit": os.environ.get("DISPATCHER_COMMIT"),
             "wrapper_commit": os.environ.get("WRAPPER_COMMIT"),
             "foraging_models_commit": os.environ.get("FORAGING_MODELS_COMMIT"),
@@ -78,6 +107,7 @@ def main() -> None:
         file_path=args.data_root / f"{args.dataset}.parquet",
         split_manifest_path=args.data_root / f"{args.dataset}.split.json",
         dataset_id=DATASET_IDS[args.dataset],
+        subject_ids=[args.subject_id] if args.subject_id else None,
         batch_size=None,
         batch_mode="single",
         adapt_sessions_per_subject=None,

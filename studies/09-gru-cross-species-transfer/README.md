@@ -3,18 +3,27 @@
 Issues: dispatcher [#32](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/32),
 [#126](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/126),
 and [#127](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/127);
+Stage-A expansion [#134](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/134)
+through [#138](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/138);
 author-aligned baselines [#131](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/131),
 [#132](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/132),
 and [#133](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/133);
 wrapper [#91](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/91)
 and [#92](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/92).
 
-This starter suite tests whether the GRU core learned from AIND dynamic
-foraging transfers to external two-arm bandit behavior. The priority order is:
+This suite tests whether the GRU core learned from AIND dynamic foraging
+transfers to external binary two-arm-bandit behavior. The completed starter
+panel is:
 
 1. Grossman, Bari & Cohen: 48 mice, blockwise independent reward probabilities.
 2. Chen et al.: 32 mice, eight restless-bandit sessions.
 3. Zid et al. Experiment 1: 258 humans, schedule-matched to Chen.
+
+Stage A expands that panel only with complete cohorts that fit the existing v1
+or v2 split contracts. The cohort-by-cohort admission audit, exact counts,
+licenses, author-selected models, and reproduction feasibility are frozen in
+[`DATASET_SURVEY.md`](DATASET_SURVEY.md). Mixed split structures are skipped;
+schema v3 is intentionally not implemented.
 
 ## Build the suite
 
@@ -31,9 +40,16 @@ checksum-verified local source files.
 
 Generated files are:
 
-- $CACHE_ROOT/canonical/{grossman,chen,zid}.parquet: one row per valid decision trial;
-- $CACHE_ROOT/canonical/{grossman,chen,zid}.split.json: the immutable adaptation/test split;
-- $CACHE_ROOT/canonical/{grossman,chen,zid}.audit.json: provenance, checksums, and counts.
+- `$CACHE_ROOT/canonical/<dataset>.parquet`: one row per valid decision trial;
+- `$CACHE_ROOT/canonical/<dataset>.split.json`: the immutable adaptation/test split;
+- `$CACHE_ROOT/canonical/<dataset>.audit.json`: provenance, checksums, and counts.
+
+The admitted dataset keys are `grossman`, `chen`, `zid`, `lebedeva`, `beron`,
+`kwak`, `miller`, `findling`, `tang`, `alsio`, `eckstein`, `costa`, and
+`lopez_mouse`. Run `make validate` after generation to verify the exact release
+counts, binary choices/rewards, v1/v2 contract, deterministic manifest
+regeneration, and non-empty adaptation/test partitions. Its committed summary
+is `analysis/dataset_suite_validation.json`.
 
 With the Makefile default, `$CACHE_ROOT` is `data-cache` relative to this study directory.
 
@@ -43,6 +59,10 @@ source trial numbers, reward probabilities, and available cohort metadata as
 additional columns.
 
 ## Cohort-specific decisions
+
+The complete expansion audit is in [`DATASET_SURVEY.md`](DATASET_SURVEY.md).
+The starter decisions below remain frozen because their completed cells are
+reused rather than rerun.
 
 Grossman uses only the dynamicForaging/behavior branch. This is the curated
 48-mouse behavior cohort and avoids duplicate sessions also present under neural
@@ -66,7 +86,7 @@ the current GRU study convention (eval_every_n=2). Therefore a K-session
 few-shot run takes the first K sessions *within that odd-positioned adaptation
 sequence*, not the first K sessions before the odd/even split.
 
-Zid has one main session per person, so inventing pseudo-sessions would reset
+Zid and Eckstein have one main session per person, so inventing pseudo-sessions would reset
 the recurrent and Q-learning states at an artificial boundary. Instead, the
 manifest assigns trials 0-149 to an adaptation prefix and 150-299 to a test
 suffix. Evaluation runs the prefix to establish the state at the boundary, then
@@ -86,6 +106,10 @@ Each external dataset is held out from foundation-model training. Evaluate:
 - subject-level Q-learning: fit parameters on the identical adaptation
   observations and score the identical test observations.
 
+Stage A runs the full matched adaptation half only. There is no K condition for
+v2: the complete first-half prefix adapts the embedding or Q parameters, and the
+second-half suffix is scored after replaying the prefix to establish the state.
+
 The primary comparison is mean per-trial log likelihood on the test partition,
 paired by subject. Report normalized likelihood, Brier score, accuracy, and
 calibration as descriptive secondary metrics. Fit preprocessing, hyperparameters,
@@ -101,8 +125,9 @@ embedding is optimized for 500 steps at learning rate 0.001; the GRU core stays
 frozen and the target test partition never selects a checkpoint. Source run IDs
 and immutable W&B artifact digests are recorded in `source_runs.json`.
 
-The three `gru-*-matched-half` variants run as GPU-only Beaker grids. The
-`q-matched-half` variant runs as a CPU-only SLURM array on Allen HPC. Both model
+The starter `gru-*-matched-half` variants and expansion dataset variants run as
+GPU-only Beaker grids. The common-Q variants run as CPU-only SLURM arrays on
+Allen HPC. Both model
 families consume the same generated Parquet table and split manifest, and both
 emit the wrapper's canonical `test_trial_predictions.csv` and
 `test_metrics.json` outputs for an exact trial-key parity check.
@@ -138,6 +163,11 @@ The completed consolidated comparison is
 The author-selected model beats common Q only for Chen (+0.00392 normalized
 likelihood). The D=614 transferred GRU remains above the author-selected model
 by +0.01559 on Grossman, +0.00136 on Chen, and +0.03057 on Zid.
+
+No new author-selected model is implemented or run during Stage A. The
+feasibility table in `DATASET_SURVEY.md` is the explicit stop gate before Stage
+B; new model families require a dataset-by-dataset decision after reviewing the
+expanded GRU-versus-common-Q result.
 
 ## Subject embedding space
 

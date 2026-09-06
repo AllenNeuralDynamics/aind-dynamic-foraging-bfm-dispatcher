@@ -1,0 +1,40 @@
+version: v2
+description: Study 09 Lebedeva matched-half GRU transfer
+tasks:
+  - name: study09-gru-lebedeva
+    image:
+      beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+    command:
+      - bash
+      - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+      - bash
+      - -c
+      - 'echo "Launcher-only template: use code/launch_beaker_resumable.py" >&2; exit 2'
+    context:
+      priority: normal
+      preemptible: false
+    constraints:
+      cluster:
+        - ai1/octo-hub-onprem-h200
+    resources:
+      gpuCount: 1
+      cpuCount: 12
+      memory: 90GiB
+    datasets:
+      - mountPath: /external
+        source:
+          beaker: 01M1TMMETY8M1V0F0E2V6XP146
+      - mountPath: /deps
+        source:
+          beaker: 01M1RDVWF18JF5QMEB618WJPSF
+    envVars:
+      - name: WANDB_API_KEY
+        secret: han-wandb-api-key
+      - name: WRAPPER_REF
+        value: main
+      - name: DISPATCHER_REF
+        value: study/09-top10-expansion-32
+      - name: FORAGING_MODELS_REF
+        value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+    result:
+      path: /results

@@ -2,6 +2,11 @@
 
 ## 2026-09-05
 
+- Expanded the checksum-pinned binary dataset suite to 13 admitted cohorts
+  using only the existing v1/v2 contracts; documented five skipped cohorts.
+- Added exact held-out-count/digest validation, one-subject loader and Q
+  preflights, a frozen Beaker input bundle, ten GPU-only GRU variants, and one
+  CPU-only HPC common-Q array. New author-model work remains behind Stage B.
 - Distinguished subject-level means from medians in the consolidated figure
   and reported, for every dataset, how D=614 GRU improvement correlates with
   author-model likelihood.

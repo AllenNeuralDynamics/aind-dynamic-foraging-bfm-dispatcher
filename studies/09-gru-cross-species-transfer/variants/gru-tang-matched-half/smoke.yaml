@@ -1,0 +1,12 @@
+entity: AIND-disRNN
+project: gru_cross_species_transfer
+name: gru-tang-matched-half-smoke
+method: grid
+command:
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=tang
+  - ${args_no_hyphens}
+parameters:
+  --source-key:
+    value: d614-s0
