@@ -25,15 +25,36 @@ WANDB_GROUPS = [
     "gru-grossman-matched-half@20260905-022602",
     "gru-chen-matched-half@20260905-024731",
     "gru-zid-matched-half@20260905-025752",
+    "gru-lebedeva-matched-half@20260905-232924",
+    "gru-beron-matched-half@20260905-232924",
+    "gru-kwak-matched-half@20260905-232924",
+    "gru-miller-matched-half@20260905-232924",
+    "gru-findling-matched-half@20260905-232924",
+    "gru-tang-matched-half@20260905-232924",
+    "gru-alsio-matched-half@20260905-232925",
+    "gru-eckstein-matched-half@20260905-232924",
+    "gru-costa-matched-half@20260905-232924",
+    "gru-lopez-mouse-matched-half@20260905-232924",
     "q-matched-half@20260905-024031",
 ]
 GRU_LAUNCHES = {
     "grossman": (WANDB_GROUPS[0], "01M1RE7RE42MHTHFDDRYJWTWHV"),
     "chen": (WANDB_GROUPS[1], "01M1RFF0YVREC2924A9Z2Y13XF"),
     "zid": (WANDB_GROUPS[2], "01M1RG1X3W0VK8ZBYQ8ZB4V4BR"),
+    "lebedeva": (WANDB_GROUPS[3], "01M1TPMMP0HY1F03AKFKEJSK4S"),
+    "beron": (WANDB_GROUPS[4], "01M1TPMFZM1GYD60REY6JHTQSR"),
+    "kwak": (WANDB_GROUPS[5], "01M1TPMPJJNBHT2RT5WHR8KRJS"),
+    "miller": (WANDB_GROUPS[6], "01M1TPMHVARYQ17AYFSSTFCACS"),
+    "findling": (WANDB_GROUPS[7], "01M1TPMS3BQPDYNEV1K98PY43X"),
+    "tang": (WANDB_GROUPS[8], "01M1TPMY71W6PEGRPTRHMYQQDM"),
+    "alsio": (WANDB_GROUPS[9], "01M1TPNT60G2REHV0BS2JYJH32"),
+    "eckstein": (WANDB_GROUPS[10], "01M1TPN53SDJYVN9TE5YQ6ZEXY"),
+    "costa": (WANDB_GROUPS[11], "01M1TPN1PNEMN6Q1036ZAXDCNV"),
+    "lopez_mouse": (WANDB_GROUPS[12], "01M1TPMW5BXV82QQ0MS3AWWZE3"),
 }
-Q_GROUP = WANDB_GROUPS[3]
-Q_SLURM_ARRAY_JOB_ID = "25580070"
+Q_LAUNCHES = [
+    (WANDB_GROUPS[13], "25580070"),
+]
 CACHE = STUDY / "analysis" / "_cache_matched_half"
 OUTPUT = STUDY / "analysis" / "matched_half_results.json"
 
@@ -137,19 +158,33 @@ def _cached_wandb_report_files(artifact: dict, destination: Path) -> dict[str, b
     return output
 
 
-def _trial_key_digest(data: bytes) -> tuple[str, int]:
+def _prediction_summary(data: bytes) -> tuple[str, int, list[dict]]:
     digest = hashlib.sha256()
     rows = 0
+    sessions: dict[tuple[str, str], list[float]] = {}
     text = data.decode("utf-8").splitlines()
     for row in csv.DictReader(text):
         digest.update(
             f"{row['subject_id']}\t{row['ses_idx']}\t{row['trial']}\t{row['choice']}\n".encode()
         )
+        key = (row["subject_id"], row["ses_idx"])
+        aggregate = sessions.setdefault(key, [0.0, 0])
+        aggregate[0] += float(row["log_likelihood_nats"])
+        aggregate[1] += 1
         rows += 1
-    return digest.hexdigest(), rows
+    per_session = [
+        {
+            "subject_id": subject_id,
+            "ses_idx": ses_idx,
+            "n_trials": int(count),
+            "mean_log_likelihood_nats": total / count,
+        }
+        for (subject_id, ses_idx), (total, count) in sorted(sessions.items())
+    ]
+    return digest.hexdigest(), rows, per_session
 
 
-def _report_metrics(metrics: dict) -> dict:
+def _report_metrics(metrics: dict, per_session: list[dict]) -> dict:
     """Keep only the likelihood values consumed by the committed report."""
     return {
         "n_trials": metrics["n_trials"],
@@ -159,6 +194,7 @@ def _report_metrics(metrics: dict) -> dict:
             item["subject_id"]: item["mean_log_likelihood_nats"]
             for item in metrics["per_subject"]
         },
+        "per_session": per_session,
     }
 
 
@@ -227,7 +263,9 @@ def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]
             selected["test_trial_predictions.csv"][0],
             CACHE / "gru" / dataset_name / source_key / "test_trial_predictions.csv",
         )
-        trial_digest, n_prediction_rows = _trial_key_digest(predictions_bytes)
+        trial_digest, n_prediction_rows, per_session = _prediction_summary(
+            predictions_bytes
+        )
         metrics = json.loads(metrics_bytes)
         summary = json.loads(node["summaryMetrics"] or "{}")
         if not abs(
@@ -250,7 +288,7 @@ def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]
                 "predictions_sha256": hashlib.sha256(predictions_bytes).hexdigest(),
                 "ordered_trial_key_sha256": trial_digest,
                 "n_prediction_rows": n_prediction_rows,
-                "metrics": _report_metrics(metrics),
+                "metrics": _report_metrics(metrics, per_session),
             }
         )
     if runs:
@@ -258,8 +296,8 @@ def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]
     return sorted(records, key=lambda row: (row["nominal_D"], row["seed"]))
 
 
-def _freeze_q() -> dict[str, dict]:
-    runs = _wandb_runs(Q_GROUP)
+def _freeze_q(group: str, slurm_array_job_id: str) -> dict[str, dict]:
+    runs = _wandb_runs(group)
     records = {}
     for run_id, node in runs.items():
         if node["state"] != "finished":
@@ -273,7 +311,9 @@ def _freeze_q() -> dict[str, dict]:
         files = _cached_wandb_report_files(artifact, root)
         metrics_bytes = files["test_metrics.json"]
         predictions_bytes = files["test_trial_predictions.csv"]
-        trial_digest, n_prediction_rows = _trial_key_digest(predictions_bytes)
+        trial_digest, n_prediction_rows, per_session = _prediction_summary(
+            predictions_bytes
+        )
         metrics = json.loads(metrics_bytes)
         summary = json.loads(node["summaryMetrics"] or "{}")
         if not abs(
@@ -285,12 +325,12 @@ def _freeze_q() -> dict[str, dict]:
             "wandb_run_id": run_id,
             "wandb_url": f"https://wandb.ai/{ENTITY}/{PROJECT}/runs/{run_id}",
             "training_artifact": artifact,
-            "slurm_array_job_id": Q_SLURM_ARRAY_JOB_ID,
+            "slurm_array_job_id": slurm_array_job_id,
             "metrics_sha256": hashlib.sha256(metrics_bytes).hexdigest(),
             "predictions_sha256": hashlib.sha256(predictions_bytes).hexdigest(),
             "ordered_trial_key_sha256": trial_digest,
             "n_prediction_rows": n_prediction_rows,
-            "metrics": _report_metrics(metrics),
+            "metrics": _report_metrics(metrics, per_session),
         }
     return records
 
@@ -306,7 +346,12 @@ def main() -> None:
         }
         for name, (group, experiment_id) in GRU_LAUNCHES.items()
     }
-    q_records = _freeze_q()
+    q_records = {}
+    for group, slurm_array_job_id in Q_LAUNCHES:
+        for name, record in _freeze_q(group, slurm_array_job_id).items():
+            if name in q_records:
+                raise AssertionError(f"Q launches contain duplicate dataset {name}")
+            q_records[name] = record
     if set(q_records) != set(datasets):
         raise AssertionError(f"Q datasets differ from GRU datasets: {sorted(q_records)}")
     for name, dataset in datasets.items():
@@ -341,7 +386,7 @@ def main() -> None:
             "q_model": "ForagerQLearning_L1F1_CK1_softmax",
         },
         "wandb_project": f"https://wandb.ai/{ENTITY}/{PROJECT}",
-        "q_group": Q_GROUP,
+        "q_groups": [group for group, _ in Q_LAUNCHES],
         "datasets": datasets,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)

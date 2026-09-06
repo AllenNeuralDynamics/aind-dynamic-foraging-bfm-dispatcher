@@ -26,9 +26,22 @@ from external_bandit_datasets.sources import (  # noqa: E402
 
 
 MATCHED_DATA = STUDY / "analysis" / "matched_half_results.json"
-AUTHOR_DATA = STUDY / "analysis" / "author_baseline_results.json"
 OUTPUT = STUDY / "analysis" / "example_behavior_sessions.json"
-DATASETS = ("grossman", "chen", "zid")
+DATASETS = (
+    "grossman",
+    "chen",
+    "zid",
+    "lebedeva",
+    "beron",
+    "kwak",
+    "miller",
+    "findling",
+    "tang",
+    "alsio",
+    "eckstein",
+    "costa",
+    "lopez_mouse",
+)
 QUANTILES = (
     (0.1, "lower tail", "lower"),
     (0.5, "median", "median"),
@@ -48,44 +61,71 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _author_record(author_data: dict, dataset_name: str) -> tuple[str, dict]:
-    selected = [
-        (name, record)
-        for name, record in author_data["records"].items()
-        if record["dataset"] == dataset_name and record["author_selected"]
-    ]
-    if len(selected) != 1:
-        raise AssertionError(f"Expected one author-selected model for {dataset_name}")
-    return selected[0]
-
-
-def _subject_deltas(
-    dataset_name: str, author_data: dict, matched_data: dict
-) -> tuple[str, list[tuple[float, str]]]:
-    baseline_name, reference_record = _author_record(author_data, dataset_name)
+def _session_deltas(
+    dataset_name: str, matched_data: dict
+) -> list[tuple[float, str, str]]:
     dataset = matched_data["datasets"][dataset_name]
     gru_rows = [row for row in dataset["gru"] if int(row["nominal_D"]) == 614]
     if len(gru_rows) != 3:
         raise AssertionError(f"Expected three D=614 GRU seeds for {dataset_name}")
-    reference = reference_record["metrics"]["per_subject_mean_log_likelihood_nats"]
-    gru = [row["metrics"]["per_subject_mean_log_likelihood_nats"] for row in gru_rows]
-    if any(set(seed) != set(reference) for seed in gru):
-        raise AssertionError(f"Subject keys do not align for {dataset_name}")
+    q = {
+        (row["subject_id"], row["ses_idx"]): row["mean_log_likelihood_nats"]
+        for row in dataset["q"]["metrics"]["per_session"]
+    }
+    gru = [
+        {
+            (row["subject_id"], row["ses_idx"]): row["mean_log_likelihood_nats"]
+            for row in seed["metrics"]["per_session"]
+        }
+        for seed in gru_rows
+    ]
+    if any(set(seed) != set(q) for seed in gru):
+        raise AssertionError(f"Session keys do not align for {dataset_name}")
     deltas = []
-    for subject_id in reference:
-        gru_log_likelihood = statistics.mean(float(seed[subject_id]) for seed in gru)
-        delta = math.exp(gru_log_likelihood) - math.exp(float(reference[subject_id]))
-        deltas.append((delta, subject_id))
-    return baseline_name, sorted(deltas, key=lambda item: (item[0], item[1]))
+    for subject_id, ses_idx in q:
+        gru_log_likelihood = statistics.mean(
+            float(seed[(subject_id, ses_idx)]) for seed in gru
+        )
+        delta = math.exp(gru_log_likelihood) - math.exp(
+            float(q[(subject_id, ses_idx)])
+        )
+        deltas.append((delta, subject_id, ses_idx))
+    return sorted(deltas, key=lambda item: (item[0], item[1], item[2]))
 
 
-def _select_examples(sorted_deltas: list[tuple[float, str]]) -> list[dict]:
+def _select_examples(sorted_deltas: list[tuple[float, str, str]]) -> list[dict]:
     examples = []
+    if len(sorted_deltas) < 9:
+        if len(sorted_deltas) != 4:
+            raise AssertionError(
+                f"Need at least nine held-out sessions for ranked examples, got {len(sorted_deltas)}"
+            )
+        selections = (
+            ("lower tail", "lower", [0]),
+            ("median", "median", [1, 2]),
+            ("upper tail", "upper", [3]),
+        )
+        for label, slug, ranks in selections:
+            for category_index, rank in enumerate(ranks, start=1):
+                delta, subject_id, session_id = sorted_deltas[rank]
+                examples.append(
+                    {
+                        "selection_label": label,
+                        "selection_slug": slug,
+                        "category_index": category_index,
+                        "target_quantile": None,
+                        "rank_zero_based": rank,
+                        "subject_id": subject_id,
+                        "session_id": session_id,
+                        "gru_d614_minus_q_normalized_likelihood": delta,
+                    }
+                )
+        return examples
     for quantile, label, slug in QUANTILES:
         center_rank = round(quantile * (len(sorted_deltas) - 1))
         ranks = range(center_rank - 1, center_rank + 2)
         for category_index, rank in enumerate(ranks, start=1):
-            delta, subject_id = sorted_deltas[rank]
+            delta, subject_id, session_id = sorted_deltas[rank]
             examples.append(
                 {
                     "selection_label": label,
@@ -94,11 +134,13 @@ def _select_examples(sorted_deltas: list[tuple[float, str]]) -> list[dict]:
                     "target_quantile": quantile,
                     "rank_zero_based": rank,
                     "subject_id": subject_id,
-                    "gru_d614_minus_author_normalized_likelihood": delta,
+                    "session_id": session_id,
+                    "gru_d614_minus_q_normalized_likelihood": delta,
                 }
             )
-    if len({example["subject_id"] for example in examples}) != len(examples):
-        raise AssertionError("Example subject selection contains duplicates")
+    keys = {(example["subject_id"], example["session_id"]) for example in examples}
+    if len(keys) != len(examples):
+        raise AssertionError("Example session selection contains duplicates")
     return examples
 
 
@@ -111,22 +153,32 @@ def _manifest_subject(manifest: dict, subject_id: str) -> dict:
 
 def _session_record(df, manifest: dict, example: dict, dataset_name: str) -> dict:
     split = _manifest_subject(manifest, example["subject_id"])
-    if dataset_name == "zid":
-        session_id = split["session_id"]
+    session_id = example["session_id"]
+    if "adapt_prefix_trials" in split:
+        if str(split["session_id"]) != str(session_id):
+            raise AssertionError(f"Manifest session mismatch for {example['subject_id']}")
         partition = "full session; adaptation prefix then held-out suffix"
         adapt_prefix_trials = int(split["adapt_prefix_trials"])
     else:
-        session_id = split["test_session_ids"][0]
-        partition = "first held-out session"
+        if str(session_id) not in {str(value) for value in split["test_session_ids"]}:
+            raise AssertionError(f"Selected session is not held out for {example['subject_id']}")
+        partition = "held-out session"
         adapt_prefix_trials = None
     rows = df[
         (df["subject_id"] == example["subject_id"]) & (df["ses_idx"] == session_id)
     ].sort_values("trial")
     if rows.empty:
         raise AssertionError(f"No rows for {example['subject_id']} / {session_id}")
-    required = ["reward_probability_arm_0", "reward_probability_arm_1"]
-    if rows[required].isna().any().any():
-        raise AssertionError(f"Reward probabilities are incomplete for {dataset_name}")
+    probability_columns = ["reward_probability_arm_0", "reward_probability_arm_1"]
+    probabilities_available = all(column in rows for column in probability_columns)
+    if probabilities_available:
+        probabilities_available = not rows[probability_columns].isna().any().any()
+    if probabilities_available:
+        probability_0 = [float(value) for value in rows[probability_columns[0]]]
+        probability_1 = [float(value) for value in rows[probability_columns[1]]]
+    else:
+        probability_0 = [None] * len(rows)
+        probability_1 = [None] * len(rows)
     return {
         **example,
         "session_id": str(session_id),
@@ -136,12 +188,9 @@ def _session_record(df, manifest: dict, example: dict, dataset_name: str) -> dic
         "trial": [int(value) for value in rows["trial"]],
         "choice": [int(value) for value in rows["animal_response"]],
         "reward": [int(value) for value in rows["earned_reward"]],
-        "reward_probability_arm_0": [
-            float(value) for value in rows["reward_probability_arm_0"]
-        ],
-        "reward_probability_arm_1": [
-            float(value) for value in rows["reward_probability_arm_1"]
-        ],
+        "reward_probability_available": probabilities_available,
+        "reward_probability_arm_0": probability_0,
+        "reward_probability_arm_1": probability_1,
     }
 
 
@@ -166,23 +215,19 @@ def _plot_source() -> dict[str, str]:
 def main() -> None:
     args = _parser().parse_args()
     matched_data = json.loads(MATCHED_DATA.read_text())
-    author_data = json.loads(AUTHOR_DATA.read_text())
-    groups = sorted(
-        set(matched_data["_meta"]["wandb_groups"])
-        | set(author_data["_meta"]["wandb_groups"])
-    )
+    groups = sorted(set(matched_data["_meta"]["wandb_groups"]))
     datasets = {}
     for dataset_name in DATASETS:
         source = SOURCES[dataset_name]
         source_path = args.raw_root / dataset_name / source.filename
         df, manifest, audit = build_dataset(dataset_name, source_path)
-        baseline_name, deltas = _subject_deltas(dataset_name, author_data, matched_data)
+        deltas = _session_deltas(dataset_name, matched_data)
         examples = [
             _session_record(df, manifest, example, dataset_name)
             for example in _select_examples(deltas)
         ]
         datasets[dataset_name] = {
-            "author_reference": baseline_name,
+            "reference": "common Q",
             "source": asdict(source),
             "verified_source_digest": file_digest(source_path, source.digest_algorithm),
             "audit": audit,
@@ -198,11 +243,15 @@ def main() -> None:
         "selection": {
             "criterion": (
                 "three neighboring ranks centered on the 10th, 50th, and 90th percentiles "
-                "of subject-level D=614 GRU minus author-selected normalized likelihood"
+                "of held-out-session D=614 GRU minus common-Q normalized likelihood"
             ),
             "gru_source_seeds": 3,
-            "multi_session_example": "first held-out session",
-            "zid_example": "full session with adaptation/test boundary at trial 150",
+            "multi_session_example": "ranked held-out real session",
+            "within_session_example": "full session with the adaptation/test boundary shown",
+            "small_cohort_exception": (
+                "Tang has only four held-out real sessions; all four are shown once "
+                "instead of duplicating sessions to manufacture three per category"
+            ),
         },
         "plotting": _plot_source(),
         "datasets": datasets,

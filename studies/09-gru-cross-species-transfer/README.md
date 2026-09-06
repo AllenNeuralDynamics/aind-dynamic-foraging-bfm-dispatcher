@@ -88,9 +88,11 @@ sequence*, not the first K sessions before the odd/even split.
 
 Zid and Eckstein have one main session per person, so inventing pseudo-sessions would reset
 the recurrent and Q-learning states at an artificial boundary. Instead, the
-manifest assigns trials 0-149 to an adaptation prefix and 150-299 to a test
-suffix. Evaluation runs the prefix to establish the state at the boundary, then
-scores the suffix without changing fitted parameters. Observed choices and
+manifest assigns each subject's complete first half to an adaptation prefix and
+the second half to a test suffix. Zid therefore uses trials 0–149 and 150–299;
+Eckstein uses the analogous subject-specific midpoint because released session
+lengths vary. Evaluation runs the prefix to establish the state at the boundary,
+then scores the suffix without changing fitted parameters. Observed choices and
 outcomes still update the recurrent or Q state online during the suffix; only
 the learned parameters remain frozen.
 
@@ -132,10 +134,12 @@ families consume the same generated Parquet table and split manifest, and both
 emit the wrapper's canonical `test_trial_predictions.csv` and
 `test_metrics.json` outputs for an exact trial-key parity check.
 
-The current GPU image predates the wrapper's declared `pyarrow` dependency.
-GPU tasks therefore mount committed Beaker dataset
-`01M1RDVWF18JF5QMEB618WJPSF`, verify the pinned wheel's SHA-256, and install
-`pyarrow==21.0.0` inside the task before reading the canonical Parquet table.
+GPU tasks mount the checksum-backed canonical dataset
+`study09-external-v1v2-20260905`
+(`01M1TMMETY8M1V0F0E2V6XP146`). The current GPU image predates the wrapper's
+declared `pyarrow` dependency, so tasks also mount dependency bundle
+`01M1RDVWF18JF5QMEB618WJPSF`, verify the wheel checksum, and install
+`pyarrow==21.0.0` before reading the canonical Parquet table.
 
 The common-Q comparison is consolidated into
 [Result 2](analysis/reports/r2-author-aligned-baselines.md).
