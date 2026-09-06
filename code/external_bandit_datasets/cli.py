@@ -59,7 +59,7 @@ def main() -> None:
     parser.add_argument(
         "dataset",
         type=_names,
-        help="grossman, chen, zid, or all",
+        help=f"one of {list(SOURCES)}, or all",
     )
     parser.add_argument("--cache-root", type=Path, required=True)
     parser.add_argument(
