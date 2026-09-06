@@ -15,7 +15,7 @@ DISPATCHER_ROOT="${DISPATCHER_ROOT:?DISPATCHER_ROOT is required}"
 WRAPPER_ROOT="${WRAPPER_ROOT:?WRAPPER_ROOT is required}"
 MODELS_ROOT="${MODELS_ROOT:?MODELS_ROOT is required}"
 RUN_ROOT="${BFM_OUTPUT_DIR:?BFM_OUTPUT_DIR is required}/study09-eckstein-bi-${SLURM_JOB_ID}"
-DATA_ROOT="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}/study09-external"
+CACHE_ROOT="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}/study09-external"
 
 export WANDB_RUN_GROUP="${WANDB_RUN_GROUP:-eckstein-bi@slurm-${SLURM_JOB_ID}}"
 export BFM_META_VARIANT="eckstein-bi"
@@ -28,9 +28,14 @@ DISPATCHER_COMMIT="$(git -C "${DISPATCHER_ROOT}" rev-parse HEAD)"
 WRAPPER_COMMIT="$(git -C "${WRAPPER_ROOT}" rev-parse HEAD)"
 FORAGING_MODELS_COMMIT="$(git -C "${MODELS_ROOT}" rev-parse HEAD)"
 
-python -m external_bandit_datasets.cli eckstein --cache-root "${DATA_ROOT}"
+if [[ -n "${BFM_CANONICAL_DATA_ROOT:-}" ]]; then
+  DATA_ROOT="${BFM_CANONICAL_DATA_ROOT}"
+else
+  python -m external_bandit_datasets.cli eckstein --cache-root "${CACHE_ROOT}"
+  DATA_ROOT="${CACHE_ROOT}/canonical"
+fi
 python "${DISPATCHER_ROOT}/studies/09-gru-cross-species-transfer/run_published_baseline.py" \
   --baseline eckstein-bi \
-  --data-root "${DATA_ROOT}/canonical" \
+  --data-root "${DATA_ROOT}" \
   --output-root "${RUN_ROOT}" \
   --subject-workers 12
