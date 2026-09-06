@@ -57,8 +57,8 @@ GRU_LAUNCHES = {
     "lopez_mouse": (WANDB_GROUPS[12], "01M1TPMW5BXV82QQ0MS3AWWZE3"),
 }
 Q_LAUNCHES = [
-    (WANDB_GROUPS[13], "25580070"),
-    (WANDB_GROUPS[14], "25581304"),
+    (WANDB_GROUPS[13], "25580070", set()),
+    (WANDB_GROUPS[14], "25581304", {"kwak"}),
 ]
 Q_OVERRIDES = {
     "kwak": (WANDB_GROUPS[15], "25581496"),
@@ -318,7 +318,9 @@ def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]
     return sorted(records, key=lambda row: (row["nominal_D"], row["seed"]))
 
 
-def _freeze_q(group: str, slurm_array_job_id: str) -> dict[str, dict]:
+def _freeze_q(
+    group: str, slurm_array_job_id: str, excluded_datasets: set[str] | None = None
+) -> dict[str, dict]:
     runs = _wandb_runs(group)
     records = {}
     for run_id, node in runs.items():
@@ -326,6 +328,8 @@ def _freeze_q(group: str, slurm_array_job_id: str) -> dict[str, dict]:
             raise AssertionError(f"W&B run {run_id} is {node['state']}, not finished")
         config = json.loads(node["config"] or "{}")
         dataset_name = _unwrapped(config, "target")["dataset"]
+        if dataset_name in (excluded_datasets or set()):
+            continue
         if dataset_name in records:
             raise AssertionError(f"Q group contains duplicate runs for {dataset_name}")
         artifact = _artifact(node, "baseline-rl-output-")
@@ -369,8 +373,10 @@ def main() -> None:
         for name, (group, experiment_id) in GRU_LAUNCHES.items()
     }
     q_records = {}
-    for group, slurm_array_job_id in Q_LAUNCHES:
-        for name, record in _freeze_q(group, slurm_array_job_id).items():
+    for group, slurm_array_job_id, excluded_datasets in Q_LAUNCHES:
+        for name, record in _freeze_q(
+            group, slurm_array_job_id, excluded_datasets
+        ).items():
             if name in q_records:
                 raise AssertionError(f"Q launches contain duplicate dataset {name}")
             q_records[name] = record
@@ -416,7 +422,7 @@ def main() -> None:
         },
         "wandb_project": f"https://wandb.ai/{ENTITY}/{PROJECT}",
         "q_groups": [
-            *[group for group, _ in Q_LAUNCHES],
+            *[group for group, _, _ in Q_LAUNCHES],
             *[group for group, _ in Q_OVERRIDES.values()],
         ],
         "datasets": datasets,

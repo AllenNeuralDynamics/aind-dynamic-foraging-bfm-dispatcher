@@ -13,3 +13,16 @@
 **Feeds.** Results 2 and 3
 
 **Notes.** The canonical data directory was staged to HPC scratch and verified with an rsync checksum dry run. This CPU-only work was not submitted to Beaker. Frozen result artifacts and per-trial prediction digests are recorded in `analysis/matched_half_results.json`.
+
+## Kwak choice-orientation correction
+
+- **W&B group:** `q-expanded-matched-half@20260906-kwak-choicefix`
+- **SLURM array:** `25581496`, index 2 only (CPU-only)
+- **Pinned refs:** dispatcher `8159f83`, wrapper `9595dd3`, models `459c05c`
+- **Status:** success
+- **Supersedes:** Kwak task `25581304_2` only
+
+The corrected fit uses source `0=right, 1=left` converted to canonical
+`0=left, 1=right`. Its held-out normalized likelihood is `0.62607851`, only
+`9.7e-8` above the superseded value, as expected from arm-swap symmetry. Exact
+ordered trial-key parity passes against every corrected Kwak GRU cell.

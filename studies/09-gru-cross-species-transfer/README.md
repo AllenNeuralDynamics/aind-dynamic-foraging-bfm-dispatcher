@@ -136,7 +136,11 @@ emit the wrapper's canonical `test_trial_predictions.csv` and
 
 GPU tasks mount the checksum-backed canonical dataset
 `study09-external-v1v2-20260905`
-(`01M1TMMETY8M1V0F0E2V6XP146`). The current GPU image predates the wrapper's
+(`01M1TMMETY8M1V0F0E2V6XP146`). The corrected Kwak rerun instead mounts the
+immutable replacement `study09-kwak-choicefix-20260906`
+(`01M1VGY7MV148S9GWM2HW38FRQ`), which inverts the released `0=right, 1=left`
+choice bit to the canonical `0=left, 1=right` convention while retaining the
+same split manifest. The current GPU image predates the wrapper's
 declared `pyarrow` dependency, so tasks also mount dependency bundle
 `01M1RDVWF18JF5QMEB618WJPSF`, verify the wheel checksum, and install
 `pyarrow==21.0.0` before reading the canonical Parquet table.
@@ -150,6 +154,12 @@ López-Yépez mouse; it favors common Q for Zid, Kwak, Miller, Findling, and
 Eckstein; Beron, Tang, Alsiö, and Costa are unresolved at the unadjusted 0.05
 level. Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614,
 although several curves peak at D=100 or D=300.
+
+Kwak was rerun after correcting the release's reversed left/right choice labels.
+The common-Q score is invariant to numerical precision (`0.62607851`), while
+the three-seed D=614 GRU mean changes by `-0.00036` to `0.62028581`. The paired
+conclusion remains common Q over GRU (mean subject difference `-0.00587`,
+Wilcoxon `p=2.78e-6`).
 
 Zid is the one aggregation reversal: its trial-pooled D=614 score favors GRU by
 0.00936, but its arithmetic mean subject difference favors Q by 0.00171 and its

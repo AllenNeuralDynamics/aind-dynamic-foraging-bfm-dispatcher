@@ -303,6 +303,11 @@ embedding mean, and adapted for the same 500 steps at learning rate 0.001 while
 the core remained frozen. The 614 source-training mice define the coordinate
 system but are not treated as the transfer control.
 
+Kwak uses the corrected canonical choice orientation (`0=left, 1=right`),
+converted from the release's `0=right, 1=left` encoding. Its embedding points
+therefore come from the corrected D=614 reruns rather than the superseded
+2026-09-05 launch.
+
 PCA is fit independently to each seed's source-training mice; raw coordinates
 are never pooled across seeds. The first three PCs explain
 {min(explained) * 100:.1f}%–{max(explained) * 100:.1f}% of source variance. The

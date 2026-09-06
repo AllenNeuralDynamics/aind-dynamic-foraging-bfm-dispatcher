@@ -9,7 +9,7 @@ wandb_groups:
   - gru-zid-matched-half@20260905-025752
   - gru-lebedeva-matched-half@20260905-232924
   - gru-beron-matched-half@20260905-232924
-  - gru-kwak-matched-half@20260905-232924
+  - gru-kwak-matched-half@20260906-071413
   - gru-miller-matched-half@20260905-232924
   - gru-findling-matched-half@20260905-232924
   - gru-tang-matched-half@20260905-232924
@@ -19,6 +19,7 @@ wandb_groups:
   - gru-lopez-mouse-matched-half@20260905-232924
   - q-matched-half@20260905-024031
   - q-expanded-matched-half@20260906-001656
+  - q-expanded-matched-half@20260906-kwak-choicefix
   - grossman-meta-learning@20260905-124420
   - chen-rlck@20260905-123624
   - zid-history-kernel@20260905-123624
@@ -30,6 +31,7 @@ inputs:
     - analysis/matched_half_results.json
     - analysis/example_behavior_sessions.json
     - analysis/dataset_suite_validation.json
+    - analysis/kwak_choicefix_bundle.json
     - DATASET_SURVEY.md
   figures:
     - analysis/fig_author_baseline_likelihood.png
@@ -93,6 +95,8 @@ implementing any new author-selected model.
 
 Every model uses the same immutable adaptation and held-out observations. GRU points are the three source-training seeds; the curve is their mean ± SD. Common Q is fitted independently per target subject on the identical adaptation half. Existing author-model lines are retained for Grossman, Chen, and Zid, but no new author-selected model was implemented in Stage A.
 
+For Kwak, both displayed model families come from the choice-orientation correction reruns. The release encodes `0=right, 1=left`; ingestion preserves that value as `source_choice` and converts it to canonical `0=left, 1=right`. The split manifest and trial membership are unchanged.
+
 ![Subject-level likelihood relative to the author-selected model](../fig_subject_baseline_likelihood.png)
 
 For Grossman, Chen, and Zid, every displayed subject likelihood is relative to that paper's author-selected model. The red zero line is the author reference; positive values favor the displayed model. The panel title reports the correlation between author-model likelihood and D=614 GRU improvement. This preserves the author-relative comparison from the completed first-round report.
@@ -110,7 +114,7 @@ Each dot is a subject's normalized likelihood under the three-seed mean GRU minu
 | Zid — restless random walk | human | v2 | 258 | 258 | 38,700 | 0.70427 | 0.70858 ± 0.00457 | 0.70801 ± 0.00231 | 0.71547 ± 0.00399 | 0.71727 ± 0.00336 | 0.71363 ± 0.00192 |
 | Lebedeva — 80/20 probabilistic reversal | mouse | v1 | 10 | 254 | 63,993 | 0.75629 | 0.75881 ± 0.00257 | 0.76283 ± 0.00051 | 0.76554 ± 0.00019 | 0.76581 ± 0.00022 | 0.76634 ± 0.00040 |
 | Beron — nonstationary bandit | mouse | v1 | 6 | 525 | 188,926 | 0.82422 | 0.81765 ± 0.00059 | 0.81954 ± 0.00184 | 0.82257 ± 0.00343 | 0.82379 ± 0.00138 | 0.82296 ± 0.00056 |
-| Kwak — dynamic bandit under D1/D2 manipulation | mouse | v1 | 39 | 780 | 60,045 | 0.62608 | 0.61887 ± 0.00356 | 0.61992 ± 0.00213 | 0.62068 ± 0.00314 | 0.62083 ± 0.00084 | 0.62065 ± 0.00012 |
+| Kwak — dynamic bandit under D1/D2 manipulation | mouse | v1 | 39 | 780 | 60,045 | 0.62608 | 0.61842 ± 0.00394 | 0.61941 ± 0.00244 | 0.62036 ± 0.00328 | 0.62046 ± 0.00063 | 0.62029 ± 0.00016 |
 | Miller — large dynamic bandit | rat | v1 | 20 | 1857 | 515,238 | 0.60945 | 0.59574 ± 0.00413 | 0.59605 ± 0.00237 | 0.60035 ± 0.00576 | 0.60101 ± 0.00396 | 0.60007 ± 0.00263 |
 | Findling — variable-volatility reversal | human | v1 | 22 | 132 | 11,706 | 0.69077 | 0.64021 ± 0.00243 | 0.64363 ± 0.00757 | 0.65358 ± 0.01002 | 0.65588 ± 0.00691 | 0.65473 ± 0.00424 |
 | Tang — blockwise action/object values | macaque | v1 | 2 | 8 | 7,728 | 0.55459 | 0.55217 ± 0.00228 | 0.55366 ± 0.00072 | 0.55353 ± 0.00168 | 0.55392 ± 0.00060 | 0.55416 ± 0.00036 |
@@ -148,11 +152,11 @@ Each dot is a subject's normalized likelihood under the three-seed mean GRU minu
 | Beron | 100 | -0.00203 | -0.00162 | 33% (2/6) | 0.312 |
 | Beron | 300 | -0.00119 | -0.00044 | 33% (2/6) | 0.844 |
 | Beron | 614 | -0.00206 | -0.00127 | 33% (2/6) | 0.438 |
-| Kwak | 10 | -0.00650 | -0.00715 | 8% (3/39) | 3.62e-08 |
-| Kwak | 30 | -0.00608 | -0.00624 | 10% (4/39) | 5.62e-07 |
-| Kwak | 100 | -0.00475 | -0.00546 | 15% (6/39) | 1.42e-06 |
-| Kwak | 300 | -0.00430 | -0.00534 | 15% (6/39) | 3.05e-06 |
-| Kwak | 614 | -0.00434 | -0.00552 | 15% (6/39) | 3.05e-06 |
+| Kwak | 10 | -0.00720 | -0.00759 | 5% (2/39) | 2.09e-08 |
+| Kwak | 30 | -0.00617 | -0.00666 | 10% (4/39) | 1.84e-07 |
+| Kwak | 100 | -0.00452 | -0.00581 | 10% (4/39) | 9.47e-07 |
+| Kwak | 300 | -0.00436 | -0.00569 | 15% (6/39) | 2.78e-06 |
+| Kwak | 614 | -0.00458 | -0.00587 | 13% (5/39) | 2.78e-06 |
 | Miller | 10 | -0.01579 | -0.01375 | 5% (1/20) | 3.62e-05 |
 | Miller | 30 | -0.01581 | -0.01333 | 5% (1/20) | 3.62e-05 |
 | Miller | 100 | -0.01075 | -0.00891 | 5% (1/20) | 0.000483 |
@@ -200,7 +204,7 @@ The subject-level value is D=614 GRU normalized likelihood minus D=10 GRU normal
 | Zid | +0.00505 | +0.00387 | +0.00484 | 60% | 0.000276 |
 | Lebedeva | +0.00753 | +0.00717 | +0.00735 | 100% | 0.00195 |
 | Beron | +0.00532 | +0.00531 | +0.00523 | 100% | 0.0312 |
-| Kwak | +0.00177 | +0.00164 | +0.00162 | 64% | 0.00429 |
+| Kwak | +0.00187 | +0.00184 | +0.00172 | 59% | 0.0111 |
 | Miller | +0.00432 | +0.00389 | +0.00442 | 100% | 1.91e-06 |
 | Findling | +0.01451 | +0.01207 | +0.01512 | 100% | 4.77e-07 |
 | Tang | +0.00199 | +0.00194 | +0.00194 | 100% | 0.5 |
@@ -213,7 +217,7 @@ The subject-level value is D=614 GRU normalized likelihood minus D=10 GRU normal
 
 At D=614, the exploratory unadjusted subject-paired Wilcoxon result favors GRU for **Grossman** (mean Δ=+0.01386, p=2.34e-13), **Chen** (mean Δ=+0.00532, p=0.00144), **Lebedeva** (mean Δ=+0.00939, p=0.00195), **López-Yépez mouse** (mean Δ=+0.04689, p=0.00781).
 
-It favors common Q for **Zid** (mean Δ=-0.00171, p=0.00543), **Kwak** (mean Δ=-0.00552, p=3.05e-06), **Miller** (mean Δ=-0.00933, p=0.000395), **Findling** (mean Δ=-0.03718, p=9.54e-07), **Eckstein** (mean Δ=-0.01815, p=9.74e-14).
+It favors common Q for **Zid** (mean Δ=-0.00171, p=0.00543), **Kwak** (mean Δ=-0.00587, p=2.78e-06), **Miller** (mean Δ=-0.00933, p=0.000395), **Findling** (mean Δ=-0.03718, p=9.54e-07), **Eckstein** (mean Δ=-0.01815, p=9.74e-14).
 
 The remaining cohorts are unresolved at the 0.05 level: **Beron** (mean Δ=-0.00127, p=0.438), **Tang** (mean Δ=-0.00050, p=1), **Alsiö** (mean Δ=+0.00065, p=0.764), **Costa** (mean Δ=-0.00362, p=0.147). Tang has only two subjects, so its inferential result is especially limited.
 

@@ -777,6 +777,11 @@ def _result_block(
         "Existing author-model lines are retained for Grossman, Chen, and Zid, but no new "
         "author-selected model was implemented in Stage A.",
         "",
+        "For Kwak, both displayed model families come from the choice-orientation correction "
+        "reruns. The release encodes `0=right, 1=left`; ingestion preserves that value as "
+        "`source_choice` and converts it to canonical `0=left, 1=right`. The split manifest "
+        "and trial membership are unchanged.",
+        "",
         "![Subject-level likelihood relative to the author-selected model](../fig_subject_baseline_likelihood.png)",
         "",
         "For Grossman, Chen, and Zid, every displayed subject likelihood is relative to "

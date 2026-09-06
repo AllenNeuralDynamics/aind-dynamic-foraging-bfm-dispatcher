@@ -14,7 +14,7 @@ wandb_groups:
   - gru-zid-matched-half@20260905-025752
   - gru-lebedeva-matched-half@20260905-232924
   - gru-beron-matched-half@20260905-232924
-  - gru-kwak-matched-half@20260905-232924
+  - gru-kwak-matched-half@20260906-071413
   - gru-miller-matched-half@20260905-232924
   - gru-findling-matched-half@20260905-232924
   - gru-tang-matched-half@20260905-232924
@@ -42,6 +42,11 @@ embedding mean, and adapted for the same 500 steps at learning rate 0.001 while
 the core remained frozen. The 614 source-training mice define the coordinate
 system but are not treated as the transfer control.
 
+Kwak uses the corrected canonical choice orientation (`0=left, 1=right`),
+converted from the release's `0=right, 1=left` encoding. Its embedding points
+therefore come from the corrected D=614 reruns rather than the superseded
+2026-09-05 launch.
+
 PCA is fit independently to each seed's source-training mice; raw coordinates
 are never pooled across seeds. The first three PCs explain
 93.4%–98.0% of source variance. The
@@ -62,7 +67,7 @@ Grossman mouse (3/3 seeds); Chen mouse (3/3 seeds); Zid human (3/3 seeds); Lebed
 | 0 | Zid human | human | 258 | 11.38 | 7.84 | 97.3% |
 | 0 | Lebedeva mouse | mouse | 10 | 2.54 | 1.88 | 0.0% |
 | 0 | Beron mouse | mouse | 6 | 2.82 | 2.64 | 0.0% |
-| 0 | Kwak mouse | mouse | 39 | 3.79 | 4.66 | 56.4% |
+| 0 | Kwak mouse | mouse | 39 | 4.33 | 4.80 | 66.7% |
 | 0 | Miller rat | rat | 20 | 6.62 | 6.83 | 95.0% |
 | 0 | Findling human | human | 22 | 10.04 | 9.72 | 100.0% |
 | 0 | Tang macaque | macaque | 2 | 2.59 | 2.57 | 0.0% |
@@ -76,7 +81,7 @@ Grossman mouse (3/3 seeds); Chen mouse (3/3 seeds); Zid human (3/3 seeds); Lebed
 | 1 | Zid human | human | 258 | 9.27 | 5.68 | 97.3% |
 | 1 | Lebedeva mouse | mouse | 10 | 2.41 | 1.69 | 0.0% |
 | 1 | Beron mouse | mouse | 6 | 2.50 | 2.36 | 16.7% |
-| 1 | Kwak mouse | mouse | 39 | 3.13 | 3.09 | 41.0% |
+| 1 | Kwak mouse | mouse | 39 | 3.40 | 3.02 | 53.8% |
 | 1 | Miller rat | rat | 20 | 4.36 | 4.28 | 75.0% |
 | 1 | Findling human | human | 22 | 6.15 | 5.60 | 100.0% |
 | 1 | Tang macaque | macaque | 2 | 2.35 | 2.33 | 0.0% |
@@ -90,7 +95,7 @@ Grossman mouse (3/3 seeds); Chen mouse (3/3 seeds); Zid human (3/3 seeds); Lebed
 | 2 | Zid human | human | 258 | 10.74 | 7.75 | 98.1% |
 | 2 | Lebedeva mouse | mouse | 10 | 3.39 | 2.90 | 50.0% |
 | 2 | Beron mouse | mouse | 6 | 2.59 | 2.46 | 0.0% |
-| 2 | Kwak mouse | mouse | 39 | 3.79 | 3.97 | 66.7% |
+| 2 | Kwak mouse | mouse | 39 | 4.07 | 4.04 | 69.2% |
 | 2 | Miller rat | rat | 20 | 6.05 | 6.61 | 95.0% |
 | 2 | Findling human | human | 22 | 8.00 | 8.29 | 100.0% |
 | 2 | Tang macaque | macaque | 2 | 3.61 | 3.54 | 50.0% |
@@ -108,7 +113,7 @@ to farthest, is:
 2. **Beron mouse** — 2.64
 3. **Lebedeva mouse** — 2.78
 4. **Tang macaque** — 2.85
-5. **Kwak mouse** — 3.57
+5. **Kwak mouse** — 3.93
 6. **Miller rat** — 5.67
 7. **Costa macaque** — 7.51
 8. **Findling human** — 8.06
