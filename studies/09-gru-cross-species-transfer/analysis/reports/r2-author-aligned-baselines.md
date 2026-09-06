@@ -18,6 +18,7 @@ wandb_groups:
   - gru-costa-matched-half@20260905-232924
   - gru-lopez-mouse-matched-half@20260905-232924
   - q-matched-half@20260905-024031
+  - q-expanded-matched-half@20260906-001656
   - grossman-meta-learning@20260905-124420
   - chen-rlck@20260905-123624
   - zid-history-kernel@20260905-123624

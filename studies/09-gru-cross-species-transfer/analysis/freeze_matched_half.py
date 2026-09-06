@@ -37,6 +37,7 @@ WANDB_GROUPS = [
     "gru-costa-matched-half@20260905-232924",
     "gru-lopez-mouse-matched-half@20260905-232924",
     "q-matched-half@20260905-024031",
+    "q-expanded-matched-half@20260906-001656",
 ]
 GRU_LAUNCHES = {
     "grossman": (WANDB_GROUPS[0], "01M1RE7RE42MHTHFDDRYJWTWHV"),
@@ -55,6 +56,7 @@ GRU_LAUNCHES = {
 }
 Q_LAUNCHES = [
     (WANDB_GROUPS[13], "25580070"),
+    (WANDB_GROUPS[14], "25581304"),
 ]
 CACHE = STUDY / "analysis" / "_cache_matched_half"
 OUTPUT = STUDY / "analysis" / "matched_half_results.json"
