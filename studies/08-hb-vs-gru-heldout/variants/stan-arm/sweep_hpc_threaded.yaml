@@ -9,24 +9,27 @@
 # STAN_NUM_THREADS was unset. Its D≈29 rung is still running and will produce a usable
 # posterior, so keeping that grid intact leaves it identifiable in W&B.
 #
-# D≈29 IS NOT IN THIS GRID. It was, briefly: a threaded D≈29 would have measured the speedup
-# directly on identical data. It was dropped after the first attempt put both threaded tasks
-# on the same node as another running job — 8 chain processes, 32 TBB threads each, load 149
-# on an 88-core box. Re-running a rung that is already 64% done, to contend for cores with
-# the run that will actually deliver the D≈29 number, buys a nice-to-have at the cost of the
-# deliverable. The threading speedup can be read later from D≈99, or from a D≈29 rerun once
-# nothing else is in flight.
+# BOTH RUNGS, and D≈29 is here on purpose even though it already has a completed fit.
+# That fit (launch 20260905-020928, 53001 s) ran the pre-reslice model, whose reduce_sum
+# copied its parameter arrays into every partial sum. Its POSTERIOR is valid — same target
+# density — so its ESS and r_hat stand, but its wall time is a floor rather than Stan's
+# speed, and the ESS/second comparison against NumPyro is built on it. Re-running D≈29 here
+# converts that floor into a measurement and prices the reslice on identical data and seed.
 #
-# --exclusive is not optional here for the same reason: Stan's TBB threads busy-wait, so a
-# threaded job that shares a node inflates load well past its core count and slows every
-# neighbour, including itself.
+# --exclusive is not optional: Stan's TBB threads busy-wait, so a threaded job sharing a node
+# inflates load far past its core count and slows every neighbour including itself. The first
+# threaded attempt put both tasks on one node alongside a third job — 8 chain processes, 32
+# threads each, load 149 on an 88-core box. With --exclusive each array task gets its own
+# node, which is what makes running both rungs at once safe.
 #
 # CPUs: 64 = 4 chains x 16 reduce_sum threads, on an exclusive 88-core node. HBStanTrainer derives the split from
 # SLURM_CPUS_PER_TASK // num_chains, so changing --cpus-per-task changes the threading and
 # nothing else needs editing.
 #
-# The single-threaded rates this replaces, for reference: D≈29 ~1300 iter/h, D≈99 ~53 iter/h
-# (the latter projects past 300 h against a 72 h wall clock, which is why it was cancelled).
+# Rates this replaces, for reference. Single-threaded: D≈29 ~1300 iter/h (completed in 14.7 h),
+# D≈99 ~53 iter/h. Threaded but pre-reslice: D≈99 managed under 160 iterations in 3 h on 92
+# busy cores — no better than one thread, because reduce_sum was copying ~3.7M autodiff
+# variables per gradient rather than computing. That is the fix this sweep tests.
 
 entity: AIND-disRNN
 project: mice_data_scaling
@@ -48,4 +51,4 @@ command:
 
 parameters:
   data.subject_ratio:
-    values: [0.163]        # D≈99 only — see the D≈29 note above
+    values: [0.049, 0.163]     # D≈29 (reslice rerun) and D≈99
