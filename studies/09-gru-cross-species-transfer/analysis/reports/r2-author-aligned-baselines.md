@@ -34,6 +34,7 @@ inputs:
   figures:
     - analysis/fig_author_baseline_likelihood.png
     - analysis/fig_subject_baseline_likelihood.png
+    - analysis/fig_subject_gru_minus_q_likelihood.png
     - analysis/fig_example_sessions_grossman_lower.png
     - analysis/fig_example_sessions_grossman_median.png
     - analysis/fig_example_sessions_grossman_upper.png

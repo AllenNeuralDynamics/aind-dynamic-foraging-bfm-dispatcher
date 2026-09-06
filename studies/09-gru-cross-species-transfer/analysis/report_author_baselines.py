@@ -29,6 +29,9 @@ VALIDATION_DATA = STUDY / "analysis" / "dataset_suite_validation.json"
 SURVEY = STUDY / "DATASET_SURVEY.md"
 FIGURE = STUDY / "analysis" / "fig_author_baseline_likelihood.png"
 SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_baseline_likelihood.png"
+GRU_Q_SUBJECT_FIGURE = (
+    STUDY / "analysis" / "fig_subject_gru_minus_q_likelihood.png"
+)
 REPORT = STUDY / "analysis" / "reports" / "r2-author-aligned-baselines.md"
 START = "<!-- BEGIN result-2 -->"
 END = "<!-- END result-2 -->"
@@ -196,7 +199,188 @@ def _plot_summary(author_data: dict, matched: dict, validation: dict[str, dict])
     plt.close(fig)
 
 
-def _plot_subjects(matched: dict, validation: dict[str, dict]) -> None:
+def _author_subject_conditions(
+    dataset_name: str, author_data: dict, dataset: dict
+) -> tuple[str, list[str], list[list[float]], list[str], list[float], float]:
+    records = [
+        (key, record)
+        for key, record in author_data["records"].items()
+        if record["dataset"] == dataset_name
+    ]
+    selected = [(key, record) for key, record in records if record["author_selected"]]
+    if len(selected) != 1:
+        raise AssertionError("Expected exactly one author-selected model per dataset")
+    selected_baseline, selected_record = selected[0]
+    comparators = sorted(
+        (key, record) for key, record in records if not record["author_selected"]
+    )
+    q = dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"]
+    subjects = sorted(q)
+    reference = selected_record["metrics"]["per_subject_mean_log_likelihood_nats"]
+    if set(reference) != set(q):
+        raise AssertionError("Author and Q per-subject metric sets do not align")
+
+    labels = ["Common Q"]
+    log_values = [[float(q[subject]) for subject in subjects]]
+    colors = ["#666666"]
+    for baseline, record in comparators:
+        values = record["metrics"]["per_subject_mean_log_likelihood_nats"]
+        if set(values) != set(q):
+            raise AssertionError("Author and Q per-subject metric sets do not align")
+        labels.append(AUTHOR_LABELS[baseline])
+        log_values.append([float(values[subject]) for subject in subjects])
+        colors.append("#DD8452")
+    for d in DS:
+        seeds = [
+            row["metrics"]["per_subject_mean_log_likelihood_nats"]
+            for row in _gru_for_d(dataset, d)
+        ]
+        if any(set(seed) != set(reference) for seed in seeds):
+            raise AssertionError("Author and GRU per-subject metric sets do not align")
+        labels.append(f"GRU D={d}")
+        log_values.append(
+            [
+                statistics.mean(float(seed[subject]) for seed in seeds)
+                for subject in subjects
+            ]
+        )
+        colors.append("#4C72B0")
+
+    reference_likelihood = [math.exp(float(reference[subject])) for subject in subjects]
+    differences = [
+        [
+            math.exp(value) - reference_value
+            for value, reference_value in zip(values, reference_likelihood)
+        ]
+        for values in log_values
+    ]
+    p_values = [_wilcoxon(values) for values in differences]
+    correlation = float(np.corrcoef(reference_likelihood, differences[-1])[0, 1])
+    return (
+        AUTHOR_LABELS[selected_baseline],
+        labels,
+        differences,
+        colors,
+        p_values,
+        correlation,
+    )
+
+
+def _plot_author_subjects(author_data: dict, matched: dict) -> None:
+    apply_presentation_style()
+    fig, axes = plt.subplots(1, 3, figsize=(16.2, 6.2), constrained_layout=True)
+    for axis, dataset_name in zip(axes, ("grossman", "chen", "zid")):
+        reference_label, labels, values, colors, p_values, correlation = (
+            _author_subject_conditions(
+                dataset_name, author_data, matched["datasets"][dataset_name]
+            )
+        )
+        positions = np.arange(len(labels))
+        n_subjects = len(values[0])
+        jitter = np.asarray([((index % 17) - 8) / 80 for index in range(n_subjects)])
+        for subject_index in range(n_subjects):
+            axis.plot(
+                positions + jitter[subject_index],
+                [condition[subject_index] for condition in values],
+                color="#777777",
+                alpha=0.08,
+                linewidth=0.45,
+                zorder=1,
+            )
+        violins = axis.violinplot(
+            values,
+            positions=positions,
+            widths=0.72,
+            showmedians=True,
+            showextrema=False,
+        )
+        for body, color in zip(violins["bodies"], colors):
+            body.set_facecolor(color)
+            body.set_edgecolor(color)
+            body.set_alpha(0.22)
+        violins["cmedians"].set_color(colors)
+        violins["cmedians"].set_linewidth(1.8)
+        for position, condition, color, p_value in zip(
+            positions, values, colors, p_values
+        ):
+            axis.scatter(
+                position + jitter,
+                condition,
+                s=8,
+                color=color,
+                alpha=0.34,
+                linewidths=0,
+                zorder=3,
+            )
+            axis.scatter(
+                position,
+                statistics.mean(condition),
+                s=38,
+                marker="D",
+                facecolor="white",
+                edgecolor=color,
+                linewidth=1.5,
+                zorder=5,
+            )
+            axis.text(
+                position,
+                0.985,
+                f"p{_p(p_value)}",
+                transform=axis.get_xaxis_transform(),
+                ha="center",
+                va="top",
+                fontsize=7.5,
+                bbox={
+                    "facecolor": "white",
+                    "edgecolor": "none",
+                    "alpha": 0.72,
+                    "pad": 1,
+                },
+            )
+        tick_labels = [
+            label.replace("4-parameter ", "4-param\n")
+            .replace("traditional ", "traditional\n")
+            .replace("GRU ", "GRU\n")
+            for label in labels
+        ]
+        axis.set_xticks(positions, tick_labels)
+        axis.tick_params(axis="x", labelsize=8)
+        axis.set_title(
+            f"{LABELS[dataset_name]} (n={n_subjects})\n"
+            f"{TASKS[dataset_name]}\n"
+            f"Reference: {reference_label}\n"
+            f"D=614 corr(author likelihood, GRU Δ): r={correlation:+.2f}"
+        )
+        axis.axhline(0, color="#C44E52", linewidth=1.6, alpha=0.8, zorder=0)
+        axis.set_yscale("symlog", linthresh=0.01)
+        axis.set_ylabel("Δ subject held-out normalized likelihood")
+        axis.grid(axis="y", alpha=0.2)
+    fig.legend(
+        handles=[
+            Line2D([0], [0], color="#333333", linewidth=1.8, label="median"),
+            Line2D(
+                [0],
+                [0],
+                marker="D",
+                markerfacecolor="white",
+                markeredgecolor="#333333",
+                color="none",
+                label="mean",
+            ),
+        ],
+        loc="outside lower center",
+        ncol=2,
+        frameon=False,
+    )
+    fig.suptitle(
+        "Subject likelihood relative to each paper's author-selected model",
+        fontsize=17,
+    )
+    fig.savefig(SUBJECT_FIGURE, bbox_inches="tight", dpi=180)
+    plt.close(fig)
+
+
+def _plot_gru_q_subjects(matched: dict, validation: dict[str, dict]) -> None:
     apply_presentation_style()
     fig, axes = plt.subplots(4, 4, figsize=(18, 16), constrained_layout=True)
     rng = np.random.default_rng(29)
@@ -264,7 +448,8 @@ def _plot_subjects(matched: dict, validation: dict[str, dict]) -> None:
         axis.set_xticks(positions, [str(value) for value in DS])
         axis.set_title(
             f"{LABELS[dataset_name]} · {audit['species']} · "
-            f"v{audit['schema_version']} · n={n_subjects}",
+            f"v{audit['schema_version']} · n={n_subjects}\n"
+            f"{textwrap.fill(TASKS[dataset_name], 34)}",
             fontsize=9,
         )
         axis.set_xlabel("Source subjects D")
@@ -294,7 +479,7 @@ def _plot_subjects(matched: dict, validation: dict[str, dict]) -> None:
         "Dots are subjects; thin lines connect the same subject across D",
         fontsize=17,
     )
-    fig.savefig(SUBJECT_FIGURE, bbox_inches="tight", dpi=180)
+    fig.savefig(GRU_Q_SUBJECT_FIGURE, bbox_inches="tight", dpi=180)
     plt.close(fig)
 
 
@@ -447,6 +632,21 @@ def _author_rows(author_data: dict, matched: dict) -> tuple[list[str], list[str]
     return rows, correlations
 
 
+def _author_subject_rows(author_data: dict, matched: dict) -> list[str]:
+    rows = []
+    for dataset_name in ("grossman", "chen", "zid"):
+        reference_label, labels, values, _, p_values, _ = _author_subject_conditions(
+            dataset_name, author_data, matched["datasets"][dataset_name]
+        )
+        for label, differences, p_value in zip(labels, values, p_values):
+            rows.append(
+                f"| {LABELS[dataset_name]} | {reference_label} | {label} | "
+                f"{statistics.median(differences):+.5f} | "
+                f"{statistics.mean(differences):+.5f} | {p_value:.3g} |"
+            )
+    return rows
+
+
 def _result_block(
     author_data: dict,
     matched: dict,
@@ -454,6 +654,7 @@ def _result_block(
     validation: dict[str, dict],
 ) -> str:
     author_rows, correlations = _author_rows(author_data, matched)
+    author_subject_rows = _author_subject_rows(author_data, matched)
     lines = [
         "[regenerated by `analysis/report_author_baselines.py` — do not edit by hand]",
         "",
@@ -467,7 +668,15 @@ def _result_block(
         "Existing author-model lines are retained for Grossman, Chen, and Zid, but no new "
         "author-selected model was implemented in Stage A.",
         "",
-        "![Paired subject-level GRU minus common-Q likelihood](../fig_subject_baseline_likelihood.png)",
+        "![Subject-level likelihood relative to the author-selected model](../fig_subject_baseline_likelihood.png)",
+        "",
+        "For Grossman, Chen, and Zid, every displayed subject likelihood is relative to "
+        "that paper's author-selected model. The red zero line is the author reference; "
+        "positive values favor the displayed model. The panel title reports the correlation "
+        "between author-model likelihood and D=614 GRU improvement. This preserves the "
+        "author-relative comparison from the completed first-round report.",
+        "",
+        "![Paired subject-level GRU minus common-Q likelihood](../fig_subject_gru_minus_q_likelihood.png)",
         "",
         "Each dot is a subject's normalized likelihood under the three-seed mean GRU minus "
         "that subject's common-Q likelihood. Thin lines connect the same subject across D; "
@@ -557,6 +766,15 @@ def _result_block(
         "|---|---|:---:|---:|---:|---:|",
         *author_rows,
         "",
+        "### Subject-level differences from the author-selected model",
+        "",
+        "The reference is zero. Positive values favor the displayed comparison over the "
+        "author-selected model. P-values are unadjusted two-sided paired Wilcoxon tests.",
+        "",
+        "| cohort | author reference | comparison | median Δ likelihood | mean Δ likelihood | Wilcoxon p |",
+        "|---|---|---|---:|---:|---:|",
+        *author_subject_rows,
+        "",
         "The correlations below relate each subject's author-model normalized likelihood "
         "to that subject's D=614 GRU-minus-author improvement. Negative values mean GRU "
         "benefit is concentrated among subjects fit poorly by the author model.",
@@ -564,6 +782,19 @@ def _result_block(
         "| cohort | author reference | subjects | Pearson r |",
         "|---|---|---:|---:|",
         *correlations,
+        "",
+        "### Why common Q can beat an author-selected model",
+        "",
+        "This report tests held-out generalization after fitting the same adaptation half; "
+        "it does not reproduce each paper's original model-selection objective. Grossman "
+        "did compare against Q-learning, but our common Q includes forgetting, a one-step "
+        "choice kernel, and side bias, while the Grossman refit omits the paper's hierarchical "
+        "Stan fit and parameter-ordering constraint. Zid selected its model using all 300 "
+        "trials and AIC on a smaller analysis cohort, whereas this benchmark fits trials "
+        "0–149 and scores 150–299 for all 258 released participants. A ranking reversal here "
+        "therefore means that common Q generalizes better under this matched protocol; it is "
+        "not evidence that the papers failed to test Q or selected the wrong model for their "
+        "own analysis.",
         "",
         "### Representative held-out sessions",
         "",
@@ -635,7 +866,8 @@ def main() -> None:
     if tuple(examples["datasets"]) != DATASET_ORDER:
         raise AssertionError("Frozen example dataset membership drifted")
     _plot_summary(author_data, matched, validation)
-    _plot_subjects(matched, validation)
+    _plot_author_subjects(author_data, matched)
+    _plot_gru_q_subjects(matched, validation)
     example_paths = _plot_examples(examples)
     block = _result_block(author_data, matched, examples, validation)
     text = REPORT.read_text()
@@ -643,7 +875,8 @@ def main() -> None:
     end_start = text.index(END, start_end)
     REPORT.write_text(text[:start_end] + "\n" + block + "\n" + text[end_start:])
     print(
-        f"Wrote {FIGURE}, {SUBJECT_FIGURE}, {len(example_paths)} example figures, "
+        f"Wrote {FIGURE}, {SUBJECT_FIGURE}, {GRU_Q_SUBJECT_FIGURE}, "
+        f"{len(example_paths)} example figures, "
         f"and {REPORT}"
     )
 
