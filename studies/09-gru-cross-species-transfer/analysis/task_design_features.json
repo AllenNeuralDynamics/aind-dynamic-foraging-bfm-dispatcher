@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_task_design_features.py",
-    "produced_at_pt": "2026-09-06T10:36:07-07:00",
-    "dispatcher_git_sha": null,
+    "produced_at_pt": "2026-09-06T10:42:12-07:00",
+    "dispatcher_git_sha": "11bbd38771c1bd72387cd630e5268a1eb7dbffed",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
