@@ -2,6 +2,9 @@
 
 ## 2026-09-06
 
+- Implemented and ran the primary-set author-selected models for Lebedeva
+  (mouse), Beron (mouse), Miller (rat), Findling (human), and both Eckstein
+  (human) co-winners; added a 64-particle Findling fitting sensitivity.
 - Split the generalization, robustness/scaling, and task-design figures into
   cumulative primary-only, primary-plus-stress-test, and all-valid views so
   each inclusion criterion remains visually legible.
