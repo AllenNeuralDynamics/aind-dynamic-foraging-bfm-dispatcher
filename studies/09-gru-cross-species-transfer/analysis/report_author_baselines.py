@@ -338,8 +338,10 @@ def _result_block(author_data: dict, matched: dict) -> str:
         "unadjusted two-sided paired Wilcoxon signed-rank p-values versus the author model. The "
         "symmetric-log y-axis is linear within ±0.01 and retains the large Zid outliers while resolving "
         "the central distribution.",
-        "The five-parameter common Q has one reward learning rate, unchosen-value forgetting, "
-        "a one-step choice kernel, side bias, and softmax inverse temperature.",
+        "The common Q fits five parameters: one reward learning rate, unchosen-value forgetting, "
+        "one-step choice-kernel weight, side bias, and softmax inverse temperature. The "
+        "`ForagerQLearning` parameter generator always adds `biasL`; the one-step kernel's step size "
+        "is fixed at 1 and is not counted as a fitted parameter.",
         "",
         "### Subject-level likelihood differences from the author model",
         "",

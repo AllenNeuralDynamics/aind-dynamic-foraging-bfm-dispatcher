@@ -38,7 +38,7 @@ All models use the same subject-level adaptation/test split and score the exact 
 ![Subject-level held-out likelihood distributions with paired trajectories](../fig_subject_baseline_likelihood.png)
 
 Each value is that model's subject-level normalized likelihood minus the same subject's author-selected-model likelihood. Thus the red zero line is the author-model reference; positive values favor the displayed model. Dots are subjects, thin lines connect each subject across models, and violins show the distributions. GRU subject log likelihood is averaged across the three source seeds before conversion to normalized likelihood. Panel annotations report unadjusted two-sided paired Wilcoxon signed-rank p-values versus the author model. The symmetric-log y-axis is linear within ±0.01 and retains the large Zid outliers while resolving the central distribution.
-The five-parameter common Q has one reward learning rate, unchosen-value forgetting, a one-step choice kernel, side bias, and softmax inverse temperature.
+The common Q fits five parameters: one reward learning rate, unchosen-value forgetting, one-step choice-kernel weight, side bias, and softmax inverse temperature. The `ForagerQLearning` parameter generator always adds `biasL`; the one-step kernel's step size is fixed at 1 and is not counted as a fitted parameter.
 
 ### Subject-level likelihood differences from the author model
 
