@@ -6,8 +6,8 @@
 - **Cluster:** `ai1/octo-hub-onprem-h200`
 - **Grid:** `D={10,30,100,300,614}` × three source seeds (15 GPU tasks)
 - **Pinned refs:** dispatcher `0008314`, wrapper `9595dd3`, models `459c05c`
-- **Status:** running
+- **Status:** success (15/15 clean finished GPU runs; frozen artifact validation passed)
 
-**Headline.** Alsiö Stage-A embedding-only transfer is running on the complete admitted cohort. Only the external subject embedding is adapted for 500 steps at learning rate 0.001; the source GRU core is frozen.
+**Headline.** Alsiö Stage-A embedding-only transfer completed on the complete admitted cohort. Only the external subject embedding was adapted for 500 steps at learning rate 0.001; the source GRU core remained frozen.
 
 **Feeds.** Results 2 and 3 after Beaker/W&B reconciliation and frozen-file validation
