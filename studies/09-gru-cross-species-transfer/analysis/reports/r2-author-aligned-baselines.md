@@ -47,7 +47,7 @@ All models use the same subject-level adaptation/test split and score the exact 
 
 ![Subject-level held-out likelihood distributions with paired trajectories](../fig_subject_baseline_likelihood.png)
 
-Each value is that model's subject-level normalized likelihood minus the same subject's author-selected-model likelihood. Thus the red zero line is the author-model reference; positive values favor the displayed model. Dots are subjects, thin lines connect each subject across models, and violins show the distributions. GRU subject log likelihood is averaged across the three source seeds before conversion to normalized likelihood. Panel annotations report unadjusted two-sided paired Wilcoxon signed-rank p-values versus the author model. The symmetric-log y-axis is linear within ±0.01 and retains the large Zid outliers while resolving the central distribution.
+Each value is that model's subject-level normalized likelihood minus the same subject's author-selected-model likelihood. Thus the red zero line is the author-model reference; positive values favor the displayed model. Dots are subjects, thin lines connect each subject across models, violins show the distributions, the short horizontal bar is the median, and the hollow diamond is the arithmetic mean. GRU subject log likelihood is averaged across the three source seeds before conversion to normalized likelihood. Panel annotations report unadjusted two-sided paired Wilcoxon signed-rank p-values versus the author model. The panel title also reports the D=614 Pearson correlation between author-model likelihood and GRU-minus-author improvement. The symmetric-log y-axis is linear within ±0.01 and retains the large Zid outliers while resolving the central distribution.
 The common Q fits five parameters: one reward learning rate, unchosen-value forgetting, one-step choice-kernel weight, side bias, and softmax inverse temperature. The `ForagerQLearning` parameter generator always adds `biasL`; the one-step kernel's step size is fixed at 1 and is not counted as a fitted parameter.
 
 ### Representative behavior sessions
@@ -132,6 +132,16 @@ The median uses normalized-likelihood differences shown in the figure. P-values 
 | Zid human | HK2 foraging RL | GRU D=100 | -0.00393 | 0.65 |
 | Zid human | HK2 foraging RL | GRU D=300 | -0.00204 | 0.98 |
 | Zid human | HK2 foraging RL | GRU D=614 | -0.00394 | 0.53 |
+
+### Does GRU improvement depend on author-model fit?
+
+Pearson r relates each subject's author-model normalized likelihood to that subject's D=614 GRU-minus-author normalized-likelihood difference. A negative value means the GRU tends to help subjects that the author-selected model fits poorly. This association is descriptive and is not an independent model-comparison test.
+
+| target | author reference | n subjects | Pearson r |
+|---|---|---:|---:|
+| Grossman mouse | meta-learning RL | 48 | -0.30 |
+| Chen mouse | 4-parameter RLCK | 32 | -0.06 |
+| Zid human | HK2 foraging RL | 258 | -0.56 |
 
 ### Trial-pooled held-out likelihood
 

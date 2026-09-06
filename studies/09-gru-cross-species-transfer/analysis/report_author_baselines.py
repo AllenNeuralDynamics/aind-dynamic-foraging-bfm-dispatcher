@@ -12,6 +12,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.lines import Line2D
 from scipy.stats import wilcoxon
 
 
@@ -125,7 +126,7 @@ def _gru_q_comparison(dataset: dict, d: int) -> dict:
 
 def _subject_conditions(
     dataset_name: str, author_data: dict, dataset: dict
-) -> tuple[str, list[str], list[list[float]], list[str], list[float]]:
+) -> tuple[str, list[str], list[list[float]], list[str], list[float], float]:
     records = [
         (key, record)
         for key, record in author_data["records"].items()
@@ -179,7 +180,17 @@ def _subject_conditions(
         float(wilcoxon(values, alternative="two-sided").pvalue)
         for values in differences
     ]
-    return BASELINE_LABELS[selected_baseline], labels, differences, colors, p_values
+    if labels[-1] != "GRU D=614":
+        raise AssertionError("Expected D=614 GRU to be the final subject condition")
+    correlation = float(np.corrcoef(reference_likelihood, differences[-1])[0, 1])
+    return (
+        BASELINE_LABELS[selected_baseline],
+        labels,
+        differences,
+        colors,
+        p_values,
+        correlation,
+    )
 
 
 def _plot(author_data: dict, matched: dict) -> None:
@@ -251,8 +262,8 @@ def _plot_subjects(author_data: dict, matched: dict) -> None:
     fig, axes = plt.subplots(1, 3, figsize=(16.2, 5.8), constrained_layout=True)
     for axis, dataset_name in zip(axes, ("grossman", "chen", "zid")):
         dataset = matched["datasets"][dataset_name]
-        reference_label, labels, values, colors, p_values = _subject_conditions(
-            dataset_name, author_data, dataset
+        reference_label, labels, values, colors, p_values, correlation = (
+            _subject_conditions(dataset_name, author_data, dataset)
         )
         positions = list(range(len(labels)))
         n_subjects = len(values[0])
@@ -285,6 +296,16 @@ def _plot_subjects(author_data: dict, matched: dict) -> None:
                 linewidths=0,
                 zorder=3,
             )
+            axis.scatter(
+                position,
+                statistics.mean(condition),
+                s=38,
+                marker="D",
+                facecolor="white",
+                edgecolor=color,
+                linewidth=1.5,
+                zorder=5,
+            )
         tick_labels = [
             label.replace("4-parameter ", "4-param\n")
             .replace("traditional ", "traditional\n")
@@ -296,6 +317,7 @@ def _plot_subjects(author_data: dict, matched: dict) -> None:
         axis.set_title(
             f"{LABELS[dataset_name]} (n_subject={n_subjects})\n"
             f"{TASK_DETAILS[dataset_name]}\nReference: {reference_label}"
+            f"\nD=614 corr(author likelihood, GRU Δ): r={correlation:+.2f}"
         )
         axis.axhline(0, color="#C44E52", linewidth=1.6, alpha=0.8, zorder=0)
         axis.set_yscale("symlog", linthresh=0.01)
@@ -317,6 +339,23 @@ def _plot_subjects(author_data: dict, matched: dict) -> None:
                     "pad": 1,
                 },
             )
+    fig.legend(
+        handles=[
+            Line2D([0], [0], color="#333333", linewidth=1.8, label="median"),
+            Line2D(
+                [0],
+                [0],
+                marker="D",
+                markerfacecolor="white",
+                markeredgecolor="#333333",
+                color="none",
+                label="mean",
+            ),
+        ],
+        loc="outside lower center",
+        ncol=2,
+        frameon=False,
+    )
     fig.savefig(SUBJECT_FIGURE, bbox_inches="tight")
     plt.close(fig)
 
@@ -453,9 +492,12 @@ def _result_block(author_data: dict, matched: dict, example_data: dict) -> str:
         "Each value is that model's subject-level normalized likelihood minus the same subject's "
         "author-selected-model likelihood. Thus the red zero line is the author-model reference; "
         "positive values favor the displayed model. Dots are subjects, thin lines connect each subject "
-        "across models, and violins show the distributions. GRU subject log likelihood is averaged "
+        "across models, violins show the distributions, the short horizontal bar is the median, and "
+        "the hollow diamond is the arithmetic mean. GRU subject log likelihood is averaged "
         "across the three source seeds before conversion to normalized likelihood. Panel annotations report "
         "unadjusted two-sided paired Wilcoxon signed-rank p-values versus the author model. The "
+        "panel title also reports the D=614 Pearson correlation between author-model likelihood and "
+        "GRU-minus-author improvement. The "
         "symmetric-log y-axis is linear within ±0.01 and retains the large Zid outliers while resolving "
         "the central distribution.",
         "The common Q fits five parameters: one reward learning rate, unchosen-value forgetting, "
@@ -511,16 +553,35 @@ def _result_block(author_data: dict, matched: dict, example_data: dict) -> str:
         "| target | author reference | comparison | median Δ likelihood | Wilcoxon p |",
         "|---|---|---|---:|---:|",
     ]
+    correlations = []
     for dataset_name in ("grossman", "chen", "zid"):
         dataset = matched["datasets"][dataset_name]
-        reference_label, labels, values, _, p_values = _subject_conditions(
-            dataset_name, author_data, dataset
+        reference_label, labels, values, _, p_values, correlation = (
+            _subject_conditions(dataset_name, author_data, dataset)
         )
+        correlations.append((dataset_name, reference_label, correlation, len(values[0])))
         for label, differences, p_value in zip(labels, values, p_values):
             lines.append(
                 f"| {LABELS[dataset_name]} | {reference_label} | {label} | "
                 f"{statistics.median(differences):+.5f} | {_p_value(p_value)} |"
             )
+    lines += [
+        "",
+        "### Does GRU improvement depend on author-model fit?",
+        "",
+        "Pearson r relates each subject's author-model normalized likelihood to that subject's "
+        "D=614 GRU-minus-author normalized-likelihood difference. A negative value means the GRU "
+        "tends to help subjects that the author-selected model fits poorly. This association is "
+        "descriptive and is not an independent model-comparison test.",
+        "",
+        "| target | author reference | n subjects | Pearson r |",
+        "|---|---|---:|---:|",
+    ]
+    for dataset_name, reference_label, correlation, n_subjects in correlations:
+        lines.append(
+            f"| {LABELS[dataset_name]} | {reference_label} | {n_subjects} | "
+            f"{correlation:+.2f} |"
+        )
     lines += [
         "",
         "### Trial-pooled held-out likelihood",

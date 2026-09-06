@@ -2,6 +2,9 @@
 
 ## 2026-09-05
 
+- Distinguished subject-level means from medians in the consolidated figure
+  and reported, for every dataset, how D=614 GRU improvement correlates with
+  author-model likelihood.
 - Added a source-fitted, seed-separated PCA analysis of D=614 embeddings for
   source and held-out AIND mice plus all three external cohorts, with a full-4D
   source-distance audit and immutable artifact/file provenance.
