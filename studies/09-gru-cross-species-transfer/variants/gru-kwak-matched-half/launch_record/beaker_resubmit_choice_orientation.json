@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "produced_by": "launch_record.write_intervention",
+    "produced_at_pt": "2026-09-06T07:22:50-07:00",
+    "dispatcher_git_sha": "8159f838afdbad0984b2a79a42d34accf4cf8c1d",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "gru-kwak-matched-half@20260906-071413"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "beaker",
+  "wandb_group": "gru-kwak-matched-half@20260906-071413",
+  "job_refs": [
+    {
+      "type": "beaker_experiment",
+      "id": "01M1VH47Q8M8N75FKM2F5NX7AT"
+    }
+  ],
+  "supersedes": [
+    "01M1TPMPJJNBHT2RT5WHR8KRJS"
+  ],
+  "trigger": {
+    "symptom": "Kwak release choice labels were reversed relative to the canonical choice contract",
+    "cause": "the adapter copied source 0=right,1=left directly into canonical 0=left,1=right",
+    "evidence": {
+      "corrected_beaker_dataset": "01M1VGY7MV148S9GWM2HW38FRQ",
+      "corrected_table_sha256": "e1639965875189986d0a8fef26a0e43cba74c341879927a2680fd1bed96de3b6",
+      "unchanged_split_sha256": "f876fce2fa913aaa6da76ccc5b913d1a2c5b867f6e68f00c330e6bbf33563f5b"
+    }
+  },
+  "tasks": [],
+  "deviations": {
+    "fresh_run_ids": true,
+    "corrected_choice_orientation": true,
+    "dataset_mount_changed": true
+  },
+  "cost": {
+    "superseded_gru_cells": 15
+  }
+}

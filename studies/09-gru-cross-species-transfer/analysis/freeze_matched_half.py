@@ -29,7 +29,7 @@ WANDB_GROUPS = [
     "gru-zid-matched-half@20260905-025752",
     "gru-lebedeva-matched-half@20260905-232924",
     "gru-beron-matched-half@20260905-232924",
-    "gru-kwak-matched-half@20260905-232924",
+    "gru-kwak-matched-half@20260906-071413",
     "gru-miller-matched-half@20260905-232924",
     "gru-findling-matched-half@20260905-232924",
     "gru-tang-matched-half@20260905-232924",
@@ -39,6 +39,7 @@ WANDB_GROUPS = [
     "gru-lopez-mouse-matched-half@20260905-232924",
     "q-matched-half@20260905-024031",
     "q-expanded-matched-half@20260906-001656",
+    "q-expanded-matched-half@20260906-kwak-choicefix",
 ]
 GRU_LAUNCHES = {
     "grossman": (WANDB_GROUPS[0], "01M1RE7RE42MHTHFDDRYJWTWHV"),
@@ -46,7 +47,7 @@ GRU_LAUNCHES = {
     "zid": (WANDB_GROUPS[2], "01M1RG1X3W0VK8ZBYQ8ZB4V4BR"),
     "lebedeva": (WANDB_GROUPS[3], "01M1TPMMP0HY1F03AKFKEJSK4S"),
     "beron": (WANDB_GROUPS[4], "01M1TPMFZM1GYD60REY6JHTQSR"),
-    "kwak": (WANDB_GROUPS[5], "01M1TPMPJJNBHT2RT5WHR8KRJS"),
+    "kwak": (WANDB_GROUPS[5], "01M1VH47Q8M8N75FKM2F5NX7AT"),
     "miller": (WANDB_GROUPS[6], "01M1TPMHVARYQ17AYFSSTFCACS"),
     "findling": (WANDB_GROUPS[7], "01M1TPMS3BQPDYNEV1K98PY43X"),
     "tang": (WANDB_GROUPS[8], "01M1TPMY71W6PEGRPTRHMYQQDM"),
@@ -59,6 +60,9 @@ Q_LAUNCHES = [
     (WANDB_GROUPS[13], "25580070"),
     (WANDB_GROUPS[14], "25581304"),
 ]
+Q_OVERRIDES = {
+    "kwak": (WANDB_GROUPS[15], "25581496"),
+}
 CACHE = STUDY / "analysis" / "_cache_matched_half"
 OUTPUT = STUDY / "analysis" / "matched_half_results.json"
 
@@ -370,6 +374,13 @@ def main() -> None:
             if name in q_records:
                 raise AssertionError(f"Q launches contain duplicate dataset {name}")
             q_records[name] = record
+    for name, (group, slurm_array_job_id) in Q_OVERRIDES.items():
+        corrected = _freeze_q(group, slurm_array_job_id)
+        if set(corrected) != {name}:
+            raise AssertionError(
+                f"Q override for {name} contains datasets {sorted(corrected)}"
+            )
+        q_records[name] = corrected[name]
     if set(q_records) != set(datasets):
         raise AssertionError(f"Q datasets differ from GRU datasets: {sorted(q_records)}")
     for name, dataset in datasets.items():
@@ -404,7 +415,10 @@ def main() -> None:
             "q_model": "ForagerQLearning_L1F1_CK1_softmax",
         },
         "wandb_project": f"https://wandb.ai/{ENTITY}/{PROJECT}",
-        "q_groups": [group for group, _ in Q_LAUNCHES],
+        "q_groups": [
+            *[group for group, _ in Q_LAUNCHES],
+            *[group for group, _ in Q_OVERRIDES.values()],
+        ],
         "datasets": datasets,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
