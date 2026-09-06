@@ -377,6 +377,7 @@ def _plot_author_subjects(author_data: dict, matched: dict) -> None:
         tick_labels = [
             label.replace("4-parameter ", "4-param\n")
             .replace("traditional ", "traditional\n")
+            .replace("Weber BI (64-particle fit)", "Weber BI\n(64-particle fit)")
             .replace("GRU ", "GRU\n")
             for label in labels
         ]
