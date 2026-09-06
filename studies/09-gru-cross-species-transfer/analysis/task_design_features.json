@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_task_design_features.py",
-    "produced_at_pt": "2026-09-06T11:52:41-07:00",
-    "dispatcher_git_sha": "fc00e1ab7e0982468bf55297199e117d9bca158e",
+    "produced_at_pt": "2026-09-06T12:03:52-07:00",
+    "dispatcher_git_sha": "e96f47bdf154062fc928218a6a88addcf32ca9e9",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
@@ -25,7 +25,7 @@
     ]
   },
   "inputs": {
-    "analysis/generalization_drivers.json": "7314a6cd3bc2480ec04e072ddb0016daa6554a13c62f8e1e4fae01f76c8ca8a5",
+    "analysis/generalization_drivers.json": "ea02ec6693d1d8bfc0acee73535b61c0821b1236178438def8f342599a64000a",
     "analysis/task_design_annotations.json": "9b977aeeb22f4c2fd55380b16b71dd33dba650892ac60641667dc8e23427fd89",
     "code/config/data/mice_snapshot.yaml": "9c2b4855c1a7e2686e3059f736b279142ccabfea0447da54bc50ef4e0008632b",
     "code/config/data/task/uncoupled_block.yaml": "80a3f2153909eee9578d6649eae7d5b961c5143d0a169f0b5e7f0a5308ec18df",
