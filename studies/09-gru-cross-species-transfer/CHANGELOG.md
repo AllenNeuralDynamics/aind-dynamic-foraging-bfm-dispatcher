@@ -2,6 +2,9 @@
 
 ## 2026-09-05
 
+- Added a source-fitted, seed-separated PCA analysis of D=614 embeddings for
+  source and held-out AIND mice plus all three external cohorts, with a full-4D
+  source-distance audit and immutable artifact/file provenance.
 - Require any preinstalled pyarrow to match the pinned 21.0.0 runtime instead
   of bypassing the wheel-version contract.
 - Removed the obsolete Result 1 pointer after its GRU-versus-Q content was

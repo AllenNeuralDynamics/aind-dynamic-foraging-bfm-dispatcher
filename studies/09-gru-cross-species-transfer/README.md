@@ -138,3 +138,20 @@ The completed consolidated comparison is
 The author-selected model beats common Q only for Chen (+0.00392 normalized
 likelihood). The D=614 transferred GRU remains above the author-selected model
 by +0.01559 on Grossman, +0.00136 on Chen, and +0.03057 on Zid.
+
+## Subject embedding space
+
+[Result 3](analysis/reports/r3-embedding-space.md) uses the three D=614 source
+seeds to ask where unseen subjects land after embedding-only adaptation. PCA is
+fit separately to the 614 source-training AIND mice in each seed; the primary
+control is the 149 held-out AIND mice, which were also unseen by the frozen GRU
+core. A full four-dimensional Mahalanobis-distance analysis accompanies the 2D
+PC views.
+
+Held-out AIND mice remain calibrated to the source distribution, with only
+4.0%--5.4% outside its empirical 95th percentile. Grossman mice are moderately
+shifted (14.6%--22.9%), whereas Chen mice (100%) and Zid humans
+(97.3%--98.1%) are strongly displaced in all three seeds. Because Chen and Zid
+share the restless random-walk task while Grossman is a mouse blockwise task
+closer to AIND dynamic foraging, task structure is a better first explanation
+than species alone; the datasets do not isolate those factors experimentally.

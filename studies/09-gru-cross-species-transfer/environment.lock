@@ -10,3 +10,6 @@ q_dispatcher_git_commit=409761e3204fbbd844eb0f544df1e4f1ee71b275
 # Runtime dependency for the author-aligned baseline variants.
 author_baselines_wrapper_git_commit=9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
 author_baselines_models_git_commit=a75ae23e0d5bce7985d3c4f5f7f30c7a971e0070
+
+# Original D=614 source and held-out-AIND embedding producer.
+source_embedding_wrapper_git_commit=65c3350d801c7596f88f57adef6f4d7e435b9c35
