@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import importlib
 import json
 import math
 import statistics
@@ -9,6 +11,7 @@ import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy.stats import wilcoxon
 
 
@@ -19,8 +22,21 @@ from plot_style import apply_presentation_style, t975  # noqa: E402
 
 AUTHOR_DATA = STUDY / "analysis" / "author_baseline_results.json"
 MATCHED_DATA = STUDY / "analysis" / "matched_half_results.json"
+EXAMPLE_DATA = STUDY / "analysis" / "example_behavior_sessions.json"
 FIGURE = STUDY / "analysis" / "fig_author_baseline_likelihood.png"
 SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_baseline_likelihood.png"
+EXAMPLE_CATEGORIES = (
+    ("lower", "Lower tail"),
+    ("median", "Median"),
+    ("upper", "Upper tail"),
+)
+EXAMPLE_FIGURES = {
+    (dataset_name, category): STUDY
+    / "analysis"
+    / f"fig_example_sessions_{dataset_name}_{category}.png"
+    for dataset_name in ("grossman", "chen", "zid")
+    for category, _ in EXAMPLE_CATEGORIES
+}
 REPORT = STUDY / "analysis" / "reports" / "r2-author-aligned-baselines.md"
 START = "<!-- BEGIN result-2 -->"
 END = "<!-- END result-2 -->"
@@ -102,8 +118,7 @@ def _gru_q_comparison(dataset: dict, d: int) -> dict:
     if any(set(seed) != set(q) for seed in gru):
         raise AssertionError("Q and GRU per-subject metric sets do not align")
     differences = [
-        statistics.mean(float(seed[key]) for seed in gru) - float(q[key])
-        for key in q
+        statistics.mean(float(seed[key]) for seed in gru) - float(q[key]) for key in q
     ]
     return _paired(differences)
 
@@ -120,7 +135,9 @@ def _subject_conditions(
     if len(selected) != 1:
         raise AssertionError("Expected exactly one author-selected model per dataset")
     selected_baseline, selected_record = selected[0]
-    records = [(key, record) for key, record in records if not record["author_selected"]]
+    records = [
+        (key, record) for key, record in records if not record["author_selected"]
+    ]
     records.sort(key=lambda item: item[0])
     q = dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"]
     subjects = sorted(q)
@@ -144,7 +161,10 @@ def _subject_conditions(
         ]
         labels.append(f"GRU D={d}")
         log_values.append(
-            [statistics.mean(float(seed[subject]) for seed in seeds) for subject in subjects]
+            [
+                statistics.mean(float(seed[subject]) for seed in seeds)
+                for subject in subjects
+            ]
         )
         colors.append("#4C72B0")
     reference_likelihood = [math.exp(float(reference[subject])) for subject in subjects]
@@ -155,7 +175,10 @@ def _subject_conditions(
         ]
         for values in log_values
     ]
-    p_values = [float(wilcoxon(values, alternative="two-sided").pvalue) for values in differences]
+    p_values = [
+        float(wilcoxon(values, alternative="two-sided").pvalue)
+        for values in differences
+    ]
     return BASELINE_LABELS[selected_baseline], labels, differences, colors, p_values
 
 
@@ -208,7 +231,9 @@ def _plot(author_data: dict, matched: dict) -> None:
             )
         axis.set_xscale("log")
         axis.set_xticks(DS, [str(d) for d in DS])
-        n_subjects = len(dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"])
+        n_subjects = len(
+            dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"]
+        )
         axis.set_title(
             f"{LABELS[dataset_name]}\n{TASK_DETAILS[dataset_name]} · n_subject={n_subjects}"
         )
@@ -296,6 +321,101 @@ def _plot_subjects(author_data: dict, matched: dict) -> None:
     plt.close(fig)
 
 
+def _plot_examples(example_data: dict) -> None:
+    module = importlib.import_module(
+        "aind_dynamic_foraging_basic_analysis.plot.plot_foraging_session"
+    )
+    source_digest = hashlib.sha256(Path(module.__file__).read_bytes()).hexdigest()
+    if source_digest != example_data["plotting"]["source_sha256"]:
+        raise AssertionError(
+            "Installed plot_foraging_session.py does not match the frozen source digest"
+        )
+    plot_foraging_session = module.plot_foraging_session
+    apply_presentation_style()
+    for dataset_name in ("grossman", "chen", "zid"):
+        all_examples = example_data["datasets"][dataset_name]["examples"]
+        for category, category_label in EXAMPLE_CATEGORIES:
+            examples = [
+                example
+                for example in all_examples
+                if example["selection_slug"] == category
+            ]
+            if len(examples) != 3:
+                raise AssertionError(
+                    f"Expected three {dataset_name} / {category} examples"
+                )
+            plt.close("all")
+            fig, holders = plt.subplots(3, 1, figsize=(15, 8.6), dpi=160)
+            legend_handles = None
+            legend_labels = None
+            for holder, example in zip(holders, examples):
+                _, axes = plot_foraging_session(
+                    choice_history=np.asarray(example["choice"], dtype=float),
+                    reward_history=np.asarray(example["reward"], dtype=bool),
+                    p_reward=np.asarray(
+                        [
+                            example["reward_probability_arm_0"],
+                            example["reward_probability_arm_1"],
+                        ],
+                        dtype=float,
+                    ),
+                    smooth_factor=9,
+                    ax=holder,
+                    vertical=False,
+                    plot_list=["choice", "reward_prob"],
+                )
+                if legend_handles is None:
+                    legend_handles, legend_labels = axes[0].get_legend_handles_labels()
+                axes[0].get_legend().remove()
+                delta = example["gru_d614_minus_author_normalized_likelihood"]
+                axes[0].set_title(
+                    f"{example['subject_id']} · {example['session_id']} · "
+                    f"Δ={delta:+.3f}",
+                    fontsize=10,
+                    loc="left",
+                )
+                boundary = example["adapt_prefix_trials"]
+                if boundary is not None:
+                    for axis in axes:
+                        axis.axvline(
+                            boundary + 0.5,
+                            color="#7B3294",
+                            linestyle="--",
+                            lw=1.2,
+                        )
+                    axes[0].text(
+                        boundary + 2,
+                        1.19,
+                        "held-out suffix",
+                        color="#7B3294",
+                        fontsize=8,
+                        va="top",
+                    )
+            fig.legend(
+                legend_handles,
+                legend_labels,
+                fontsize=7,
+                loc="upper center",
+                bbox_to_anchor=(0.5, 0.955),
+                ncol=5,
+                frameon=True,
+            )
+            fig.suptitle(
+                f"{LABELS[dataset_name]}: {category_label} examples",
+                fontsize=15,
+                y=0.995,
+            )
+            fig.subplots_adjust(
+                left=0.1,
+                right=0.98,
+                bottom=0.06,
+                top=0.88,
+                hspace=0.55,
+            )
+            fig.savefig(EXAMPLE_FIGURES[(dataset_name, category)])
+            plt.close(fig)
+
+
 def _interval(stats: dict) -> str:
     return f"{stats['mean']:+.5f} [{stats['low']:+.5f}, {stats['high']:+.5f}]"
 
@@ -308,7 +428,7 @@ def _p_axis_label(value: float) -> str:
     return "p<.001" if value < 0.001 else f"p={value:.3f}".replace("0.", ".")
 
 
-def _result_block(author_data: dict, matched: dict) -> str:
+def _result_block(author_data: dict, matched: dict, example_data: dict) -> str:
     actual_ds = {
         d: sorted(
             {
@@ -342,6 +462,46 @@ def _result_block(author_data: dict, matched: dict) -> str:
         "one-step choice-kernel weight, side bias, and softmax inverse temperature. The "
         "`ForagerQLearning` parameter generator always adds `biasL`; the one-step kernel's step size "
         "is fixed at 1 and is not counted as a fitted parameter.",
+        "",
+        "### Representative behavior sessions",
+        "",
+        "These examples were selected deterministically, not by visual inspection: each category "
+        "contains the three subjects at neighboring ranks around the 10th, 50th, or 90th "
+        "percentile of the subject-level D=614 GRU minus author-selected-model "
+        "normalized-likelihood difference. "
+        "Negative values favor the author model; positive values favor the GRU.",
+        "",
+    ]
+    for dataset_name in ("grossman", "chen", "zid"):
+        lines += [f"#### {LABELS[dataset_name]}", ""]
+        for category, category_label in EXAMPLE_CATEGORIES:
+            lines += [
+                f"##### {category_label}",
+                "",
+                f"![{category_label} {LABELS[dataset_name]} behavior sessions]"
+                f"(../{EXAMPLE_FIGURES[(dataset_name, category)].name})",
+                "",
+            ]
+        if dataset_name == "zid":
+            lines.append(
+                "The full 300-trial session is shown; the purple dashed line separates the "
+                "150-trial adaptation prefix from the held-out suffix."
+            )
+        else:
+            lines.append(
+                "For each selected subject, the plot shows the first chronologically held-out "
+                "session from the frozen odd/even session split."
+            )
+        lines += [
+            "Black and gray choice marks denote rewarded and unrewarded trials, the black line "
+            "is the nine-trial smoothed right-choice fraction, and the lower strip shows the "
+            "left/right reward probabilities.",
+            "",
+        ]
+    lines += [
+        "Plots use the pinned [`plot_foraging_session`]("
+        + example_data["plotting"]["source_url"]
+        + ") implementation from `aind-dynamic-foraging-basic-analysis`.",
         "",
         "### Subject-level likelihood differences from the author model",
         "",
@@ -381,9 +541,7 @@ def _result_block(author_data: dict, matched: dict) -> str:
             f"| {LABELS[record['dataset']]} | {BASELINE_LABELS[baseline]} | "
             f"{'yes' if record['author_selected'] else 'no — paper comparator'} | "
             f"{PARAM_COUNTS[baseline]} | {_metric(dataset['q']):.5f} | "
-            f"**{_metric(record):.5f}** | "
-            + " | ".join(gru_cells)
-            + " |"
+            f"**{_metric(record):.5f}** | " + " | ".join(gru_cells) + " |"
         )
         comparisons.append((baseline, record, *_paired_comparisons(record, dataset)))
 
@@ -509,14 +667,17 @@ def _result_block(author_data: dict, matched: dict) -> str:
 def main() -> None:
     author_data = json.loads(AUTHOR_DATA.read_text())
     matched = json.loads(MATCHED_DATA.read_text())
+    example_data = json.loads(EXAMPLE_DATA.read_text())
     _plot(author_data, matched)
     _plot_subjects(author_data, matched)
-    block = _result_block(author_data, matched)
+    _plot_examples(example_data)
+    block = _result_block(author_data, matched, example_data)
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
     end_start = text.index(END, start_end)
     REPORT.write_text(text[:start_end] + "\n" + block + "\n" + text[end_start:])
-    print(f"Wrote {FIGURE}, {SUBJECT_FIGURE}, and {REPORT}")
+    figure_paths = ", ".join(str(path) for path in EXAMPLE_FIGURES.values())
+    print(f"Wrote {FIGURE}, {SUBJECT_FIGURE}, {figure_paths}, and {REPORT}")
 
 
 if __name__ == "__main__":

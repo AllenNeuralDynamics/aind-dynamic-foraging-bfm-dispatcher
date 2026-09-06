@@ -2,6 +2,8 @@
 
 ## 2026-09-05
 
+- Added deterministic representative behavior-session plots for Grossman, Chen,
+  and Zid to Result 2 using the pinned basic-analysis session plotter.
 - Consolidated Result 1 into Result 2, fixed author-line styling, added task and
   subject-count panel labels, and added author-relative paired subject-level
   violin plots with Wilcoxon tests across common Q, published baselines, and

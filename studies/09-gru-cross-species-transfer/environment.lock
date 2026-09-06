@@ -1,6 +1,7 @@
 # Runtime commits that produced the matched-half result.
 -e git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper.git@9595dd371ab87de49c281d8ca4bb6ae8af7c32e4#egg=aind_dynamic_foraging_bfm_wrapper
 aind-dynamic-foraging-models @ git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-models.git@459c05c38332eb5c954e7cbca328f0a0fe370891
+aind-dynamic-foraging-basic-analysis @ git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis.git@590e5f085711a8ba99ca0d86e94471f347318daa
 grossman_dispatcher_git_commit=604ecadf4f683ed3654b634edbde0f7fe7b30fbb
 chen_dispatcher_git_commit=409761e3204fbbd844eb0f544df1e4f1ee71b275
 zid_dispatcher_git_commit=4e45011460c6f7aa8d6b95c6ad484ff4ee1b1a04
