@@ -12,13 +12,24 @@ wandb_groups:
   - gru-grossman-matched-half@20260905-022602
   - gru-chen-matched-half@20260905-024731
   - gru-zid-matched-half@20260905-025752
+  - gru-lebedeva-matched-half@20260905-232924
+  - gru-beron-matched-half@20260905-232924
+  - gru-kwak-matched-half@20260905-232924
+  - gru-miller-matched-half@20260905-232924
+  - gru-findling-matched-half@20260905-232924
+  - gru-tang-matched-half@20260905-232924
+  - gru-alsio-matched-half@20260905-232925
+  - gru-eckstein-matched-half@20260905-232924
+  - gru-costa-matched-half@20260905-232924
+  - gru-lopez-mouse-matched-half@20260905-232924
 reproduce: make r3
 ---
 
 # Result 3: where transferred subjects land in the GRU embedding space
 
-This result asks whether unseen AIND mice and external two-arm-bandit subjects
-occupy the same subject-embedding manifold learned from the 614 source mice.
+This result asks where unseen held-out AIND mice and every admitted external
+two-arm-bandit cohort land in the subject-embedding manifold learned from the
+614 source mice.
 
 <!-- BEGIN result-3 -->
 ## Result

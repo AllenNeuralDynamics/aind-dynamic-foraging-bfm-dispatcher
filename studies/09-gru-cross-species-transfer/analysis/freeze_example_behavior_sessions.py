@@ -165,7 +165,8 @@ def _session_record(df, manifest: dict, example: dict, dataset_name: str) -> dic
         partition = "held-out session"
         adapt_prefix_trials = None
     rows = df[
-        (df["subject_id"] == example["subject_id"]) & (df["ses_idx"] == session_id)
+        (df["subject_id"].astype(str) == str(example["subject_id"]))
+        & (df["ses_idx"].astype(str) == str(session_id))
     ].sort_values("trial")
     if rows.empty:
         raise AssertionError(f"No rows for {example['subject_id']} / {session_id}")

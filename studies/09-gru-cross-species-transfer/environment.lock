@@ -13,3 +13,9 @@ author_baselines_models_git_commit=a75ae23e0d5bce7985d3c4f5f7f30c7a971e0070
 
 # Original D=614 source and held-out-AIND embedding producer.
 source_embedding_wrapper_git_commit=65c3350d801c7596f88f57adef6f4d7e435b9c35
+
+# Stage-A expansion GRU producer and canonical dataset.
+stage_a_gru_dispatcher_git_commit=000831451aca5400344efdba23a989a39d2cbc03
+stage_a_gru_wrapper_git_commit=9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+stage_a_gru_models_git_commit=459c05c38332eb5c954e7cbca328f0a0fe370891
+stage_a_canonical_beaker_dataset=01M1TMMETY8M1V0F0E2V6XP146
