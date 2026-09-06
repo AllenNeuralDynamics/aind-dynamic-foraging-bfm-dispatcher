@@ -43,6 +43,36 @@ inputs:
     - analysis/fig_example_sessions_zid_lower.png
     - analysis/fig_example_sessions_zid_median.png
     - analysis/fig_example_sessions_zid_upper.png
+    - analysis/fig_example_sessions_lebedeva_lower.png
+    - analysis/fig_example_sessions_lebedeva_median.png
+    - analysis/fig_example_sessions_lebedeva_upper.png
+    - analysis/fig_example_sessions_beron_lower.png
+    - analysis/fig_example_sessions_beron_median.png
+    - analysis/fig_example_sessions_beron_upper.png
+    - analysis/fig_example_sessions_kwak_lower.png
+    - analysis/fig_example_sessions_kwak_median.png
+    - analysis/fig_example_sessions_kwak_upper.png
+    - analysis/fig_example_sessions_miller_lower.png
+    - analysis/fig_example_sessions_miller_median.png
+    - analysis/fig_example_sessions_miller_upper.png
+    - analysis/fig_example_sessions_findling_lower.png
+    - analysis/fig_example_sessions_findling_median.png
+    - analysis/fig_example_sessions_findling_upper.png
+    - analysis/fig_example_sessions_tang_lower.png
+    - analysis/fig_example_sessions_tang_median.png
+    - analysis/fig_example_sessions_tang_upper.png
+    - analysis/fig_example_sessions_alsio_lower.png
+    - analysis/fig_example_sessions_alsio_median.png
+    - analysis/fig_example_sessions_alsio_upper.png
+    - analysis/fig_example_sessions_eckstein_lower.png
+    - analysis/fig_example_sessions_eckstein_median.png
+    - analysis/fig_example_sessions_eckstein_upper.png
+    - analysis/fig_example_sessions_costa_lower.png
+    - analysis/fig_example_sessions_costa_median.png
+    - analysis/fig_example_sessions_costa_upper.png
+    - analysis/fig_example_sessions_lopez_mouse_lower.png
+    - analysis/fig_example_sessions_lopez_mouse_median.png
+    - analysis/fig_example_sessions_lopez_mouse_upper.png
 reproduce: make -C studies/09-gru-cross-species-transfer r2
 ---
 
