@@ -3,7 +3,7 @@ CACHE_ROOT ?= data-cache
 SOURCE_DIMENSION ?=
 PYTHONPATH := ../../code
 
-.PHONY: all suite rebuild validate smoke-loaders freeze-matched freeze-authors examples freeze-embeddings freeze-generalization freeze-task-design freeze-source-embedding-manifests freeze-embedding-dimension r1 r2 r3 r4
+.PHONY: all suite rebuild validate smoke-loaders freeze-matched freeze-authors examples freeze-embeddings freeze-generalization freeze-task-design freeze-source-embedding-manifests freeze-embedding-dimension freeze-embedding-dimension-expansion r1 r2 r3 r4
 
 all: r1 r2 r3
 
@@ -46,6 +46,9 @@ freeze-source-embedding-manifests:
 
 freeze-embedding-dimension:
 	$(PYTHON) analysis/freeze_embedding_dimension.py
+
+freeze-embedding-dimension-expansion:
+	$(PYTHON) analysis/freeze_embedding_dimension_expansion.py
 
 r1:
 	$(PYTHON) analysis/report_author_baselines.py
