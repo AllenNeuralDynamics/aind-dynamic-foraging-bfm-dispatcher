@@ -120,7 +120,18 @@ def main() -> None:
         heldout = summary.get("heldout/final/eval_likelihood")
         if heldout is None:
             raise AssertionError(f"{run_id} lacks heldout/final/eval_likelihood")
+        heldout_train = summary.get("heldout/final/train_likelihood")
+        if heldout_train is None:
+            raise AssertionError(f"{run_id} lacks heldout/final/train_likelihood")
         artifact = _artifact(node, "gru-output-")
+        heldout_table = _artifact(
+            node,
+            f"run-{run_id}-heldoutper_subject_likelihood-",
+        )
+        if heldout_table["file_count"] != 1:
+            raise AssertionError(
+                f"{run_id} held-out per-subject table must contain exactly one file"
+            )
         resolved = _unwrapped(config, "resolved_subject_ids")
         actual_n = len(resolved) if isinstance(resolved, list) else 614
         key = f"e{dimension}-d614-s{seed}"
@@ -135,9 +146,12 @@ def main() -> None:
             "wandb_url": f"https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/{run_id}",
             "artifact_id": artifact["id"],
             "artifact_digest": artifact["digest"],
+            "heldout_table_artifact_id": heldout_table["id"],
+            "heldout_table_artifact_digest": heldout_table["digest"],
             "beaker_job_id": job["id"],
             "beaker_result_dataset_id": job["result"]["beaker"],
             "heldout_final_eval_likelihood": float(heldout),
+            "heldout_final_train_likelihood": float(heldout_train),
         }
     if selected_dimensions == set(MANIFESTS) and runs:
         raise AssertionError(f"W&B group has runs absent from Beaker: {sorted(runs)}")
