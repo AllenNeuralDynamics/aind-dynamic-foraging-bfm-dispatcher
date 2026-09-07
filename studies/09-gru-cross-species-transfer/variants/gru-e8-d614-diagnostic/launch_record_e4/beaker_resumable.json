@@ -1,0 +1,17 @@
+{
+  "mode": "resumable-grid",
+  "submission_mode": "beaker-cli-from-rendered-spec",
+  "n_tasks": 15,
+  "experiment_id": "01M1YBQERTCR0HF6Y749X7M5HT",
+  "experiment_url": "https://beaker.org/ex/01M1YBQERTCR0HF6Y749X7M5HT",
+  "dispatcher_commit": "8746e608726964a5b4bc8407be8b6c2700cae8f6",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "wandb_group": "gru-e8-d614-diagnostic@20260907-093646",
+  "clusters": [
+    "ai1/octo-hub-onprem-h200",
+    "ai1/octo-hub-aws-h200"
+  ],
+  "sweep_file": "studies/09-gru-cross-species-transfer/variants/gru-e8-d614-diagnostic/sweep_e4_pair.yaml",
+  "created_utc": "2026-09-07T16:36:47.243190+00:00"
+}

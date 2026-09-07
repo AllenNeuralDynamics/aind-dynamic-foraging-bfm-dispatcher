@@ -22,4 +22,7 @@ a software-drift reference.
 
 Status: E=8 source provenance frozen; 15-task transfer launched as Beaker
 experiment `01M1Y3NHNHGZBXYYZQSW6JD9T2` and W&B group
-`gru-e8-d614-diagnostic@20260907-071400`.
+`gru-e8-d614-diagnostic@20260907-071400`. The paired E=4 source provenance is
+also frozen, and its 15-task transfer is running as Beaker experiment
+`01M1YBQERTCR0HF6Y749X7M5HT`, W&B group
+`gru-e8-d614-diagnostic@20260907-093646` (label `e4-pair-d614`).

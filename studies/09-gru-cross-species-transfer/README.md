@@ -240,3 +240,5 @@ training recipe, and the same external 500-step embedding adaptation. The
 diagnostic panel covers Grossman (mouse), Lebedeva (mouse), Miller (rat),
 Findling (human), and Eckstein (human). Historical E=4 transfer remains a drift
 reference; the primary comparison uses the newly paired E=4 source runs.
+The E=8 screen is complete, and the paired E=4 screen is running in Beaker
+experiment `01M1YBQERTCR0HF6Y749X7M5HT`.

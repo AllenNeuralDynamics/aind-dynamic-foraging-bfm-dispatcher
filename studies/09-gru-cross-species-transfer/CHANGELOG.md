@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-07
+
+- Froze all six paired source artifacts, completed the E=8 diagnostic transfer,
+  and launched the matched 15-cell E=4 transfer as Beaker experiment
+  `01M1YBQERTCR0HF6Y749X7M5HT`.
+
 ## 2026-09-06
 
 - Prepared the paired current-code E=4 versus E=8 D=614 transfer ablation for
