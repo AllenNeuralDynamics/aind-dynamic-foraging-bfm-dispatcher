@@ -1,0 +1,376 @@
+version: v2
+description: "e4-e8-d614-source@20260906-195409 \u2014 6 resumable grid tasks (autoResume)"
+tasks:
+- name: e4-e8-d614-source-20260906-195409-000
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=gru_scaling
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=1.0
+  - model.architecture.hidden_size=128
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.n_steps=150000
+  - model.training.lr=1e-5
+  - model.training.checkpoint_run_heldout_eval=false
+  - model.training.length_bucketing=true
+  - model.training.early_stopping.enabled=true
+  - model.training.early_stopping.start_after_step=70000
+  - model.architecture.subject_embedding_size=4
+  - seed=0
+  context:
+    priority: low
+    preemptible: true
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: ab399a50a736add59fcc189d0ac14e2dc6687279
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: e4-e8-d614-source-20260906-195409-c160507b
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: e4-e8-d614-source@20260906-195409
+  - &id001
+    name: BFM_META_STUDY
+    value: 01-gru-scaling-law
+  - &id002
+    name: BFM_META_VARIANT
+    value: e4-e8-d614-source
+  - &id003
+    name: BFM_META_LAUNCH_ID
+    value: 20260906-195409
+  - &id004
+    name: BFM_META_CONFIG_HASH
+    value: 93ab8cbf
+  - &id005
+    name: BFM_META_LABEL
+    value: e4-e8-d614-source
+  - &id006
+    name: BFM_META_NOTE
+    value: 'Issue #148 paired current-code E=4 versus E=8 D=614 source-core capacity
+      ablation; same source data, H=128 recipe, and three seeds per embedding dimension.'
+  result:
+    path: /results
+- name: e4-e8-d614-source-20260906-195409-001
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=gru_scaling
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=1.0
+  - model.architecture.hidden_size=128
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.n_steps=150000
+  - model.training.lr=1e-5
+  - model.training.checkpoint_run_heldout_eval=false
+  - model.training.length_bucketing=true
+  - model.training.early_stopping.enabled=true
+  - model.training.early_stopping.start_after_step=70000
+  - model.architecture.subject_embedding_size=4
+  - seed=1
+  context:
+    priority: low
+    preemptible: true
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: ab399a50a736add59fcc189d0ac14e2dc6687279
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: e4-e8-d614-source-20260906-195409-c3820c43
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: e4-e8-d614-source@20260906-195409
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: e4-e8-d614-source-20260906-195409-002
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=gru_scaling
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=1.0
+  - model.architecture.hidden_size=128
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.n_steps=150000
+  - model.training.lr=1e-5
+  - model.training.checkpoint_run_heldout_eval=false
+  - model.training.length_bucketing=true
+  - model.training.early_stopping.enabled=true
+  - model.training.early_stopping.start_after_step=70000
+  - model.architecture.subject_embedding_size=4
+  - seed=2
+  context:
+    priority: low
+    preemptible: true
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: ab399a50a736add59fcc189d0ac14e2dc6687279
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: e4-e8-d614-source-20260906-195409-464e627f
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: e4-e8-d614-source@20260906-195409
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: e4-e8-d614-source-20260906-195409-003
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=gru_scaling
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=1.0
+  - model.architecture.hidden_size=128
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.n_steps=150000
+  - model.training.lr=1e-5
+  - model.training.checkpoint_run_heldout_eval=false
+  - model.training.length_bucketing=true
+  - model.training.early_stopping.enabled=true
+  - model.training.early_stopping.start_after_step=70000
+  - model.architecture.subject_embedding_size=8
+  - seed=0
+  context:
+    priority: low
+    preemptible: true
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: ab399a50a736add59fcc189d0ac14e2dc6687279
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: e4-e8-d614-source-20260906-195409-4413e385
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: e4-e8-d614-source@20260906-195409
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: e4-e8-d614-source-20260906-195409-004
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=gru_scaling
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=1.0
+  - model.architecture.hidden_size=128
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.n_steps=150000
+  - model.training.lr=1e-5
+  - model.training.checkpoint_run_heldout_eval=false
+  - model.training.length_bucketing=true
+  - model.training.early_stopping.enabled=true
+  - model.training.early_stopping.start_after_step=70000
+  - model.architecture.subject_embedding_size=8
+  - seed=1
+  context:
+    priority: low
+    preemptible: true
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: ab399a50a736add59fcc189d0ac14e2dc6687279
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: e4-e8-d614-source-20260906-195409-849b588d
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: e4-e8-d614-source@20260906-195409
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+- name: e4-e8-d614-source-20260906-195409-005
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=gru_scaling
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=1.0
+  - model.architecture.hidden_size=128
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.n_steps=150000
+  - model.training.lr=1e-5
+  - model.training.checkpoint_run_heldout_eval=false
+  - model.training.length_bucketing=true
+  - model.training.early_stopping.enabled=true
+  - model.training.early_stopping.start_after_step=70000
+  - model.architecture.subject_embedding_size=8
+  - seed=2
+  context:
+    priority: low
+    preemptible: true
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: ab399a50a736add59fcc189d0ac14e2dc6687279
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: e4-e8-d614-source-20260906-195409-5c1c0d2c
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: e4-e8-d614-source@20260906-195409
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results

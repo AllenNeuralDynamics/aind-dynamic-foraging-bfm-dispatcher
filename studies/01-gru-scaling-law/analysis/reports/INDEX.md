@@ -24,6 +24,7 @@ Study cover (TL;DR, Design, Verdict, Status, Provenance): [../../README.md](../.
 | [r8](r8-gru-vs-rl-baseline.md) | gru-vs-rl-baseline | live | GRU beats **all three** per-mouse RL models at every (variant, D); vs best (CTT) v2 D=614 **+0.0113** (100% mice) — the old Bari-only +0.0136 overstated it by 20% |
 | [r9](r9-generative-behavioral-match.md) | generative-behavioral-match | live | 2nd-order: switch-curve corr 0.96→0.98 vs D; 3-trial-back history corr 0.94→0.99 (detailed n=3); saturates by D≈100 |
 | [r10](r10-embedding-decodes-rl-params.md) | embedding-decodes-rl-params | live | **subject embedding decodes classical-RL params**: biasL R²≈0.72, learn_rate ≈0.66 — consistent across CTT *and* Bari; curriculum-only ≈0 (not a task artifact); near-blind to forget_rate (0.08) |
+| [r11](r11-embedding-dimension-capacity.md) | embedding-dimension-capacity | live | E8 gives a statistically detectable but tiny source gain (+0.00029); PCs 5–8 carry 18.7% of embedding covariance |
 
 ## Conventions
 
