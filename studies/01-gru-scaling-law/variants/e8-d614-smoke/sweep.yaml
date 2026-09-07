@@ -1,0 +1,39 @@
+# One-task plumbing smoke for the Study 01 E=8 subject-embedding ablation.
+# This compressed run is not a scientific result. It verifies the full D=614
+# loader, the wider source embedding table, checkpointing, and held-out
+# embedding adaptation before the paired six-task E={4,8} launch.
+
+entity: AIND-disRNN
+project: mice_data_scaling
+name: e8-d614-smoke
+method: grid
+metric:
+  name: heldout/final/eval_likelihood
+  goal: maximize
+
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=gru_scaling
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=1.0
+  - model.architecture.hidden_size=128
+  - model.architecture.subject_embedding_size=8
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=300
+  - model.architecture.session_n_warmup_steps=200
+  - model.training.n_steps=1000
+  - model.training.lr=1e-5
+  - model.training.checkpoint_every_n_steps=500
+  - model.training.checkpoint_run_heldout_eval=false
+  - model.training.length_bucketing=true
+  - model.training.early_stopping.enabled=false
+  - model.training.auto_heldout_finetune.n_steps=10
+  - model.training.auto_heldout_finetune.checkpoint_every_n_steps=10
+  - ${args_no_hyphens}
+
+parameters:
+  seed:
+    values: [0]

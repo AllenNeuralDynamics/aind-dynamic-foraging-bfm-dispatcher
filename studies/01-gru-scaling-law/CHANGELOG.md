@@ -4,6 +4,14 @@ Per-study log per [`docs/posthoc-analysis.md`](../../docs/posthoc-analysis.md). 
 entry per merged PR (or coherent unreleased batch). Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — paired subject-embedding dimension ablation
+
+**2026-09-06.** Added issue #148's paired `E={4,8}, D=614` source-core
+variant and a one-task E=8 plumbing smoke. Study 01 owns source training and
+held-out AIND comparison; Study 09 will consume the resulting immutable
+checkpoints for external transfer. The new E=4 bridge arm isolates embedding
+dimension from software and execution drift relative to the historical runs.
+
 ## [Unreleased] — r9 gets the GRU side of the history-pattern scatter
 
 **2026-08-31.** The GRU counterpart of the RL scatter, recovered from Beaker rather than
