@@ -242,4 +242,8 @@ Findling (human), and Eckstein (human). Historical E=4 transfer remains a drift
 reference; the primary comparison uses the newly paired E=4 source runs.
 Both paired screens are complete. E8 is neutral on Grossman (mouse) and
 Lebedeva (mouse), but improves Miller (rat), Findling (human), and Eckstein
-(human), supporting expansion to every non-quarantined valid cohort.
+(human), supporting expansion to every non-quarantined valid cohort. The
+`gru-e8-d614-expansion` variant extends E8 to the remaining cohorts in Report 1
+order: Zid (human), Chen (mouse), and Beron (mouse) as primary cohorts;
+López-Yépez (mouse), Alsiö (rat), and Costa (macaque) as stress tests; and Tang
+(macaque) as descriptive. Kwak (mouse) remains quarantined and is not run.
