@@ -9,4 +9,5 @@ dimension relative to the established H=128 Study 01 GRU architecture. A success
 run licenses the paired `e4-e8-d614-source` launch; its likelihood must not enter a
 scientific report.
 
-Status: planned under #148.
+Status: running under #148. W&B group `e8-d614-smoke@20260906-192034`;
+Beaker experiment [`01M1WTNQSMRKSKCWD1Q6CXRPHT`](https://beaker.org/ex/01M1WTNQSMRKSKCWD1Q6CXRPHT).
