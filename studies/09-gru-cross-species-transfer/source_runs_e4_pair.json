@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "awaiting_source_runs",
+  "status": "complete",
   "entity": "AIND-disRNN",
   "project": "mice_data_scaling",
   "group": "e4-e8-d614-source@20260906-195409",
@@ -19,5 +19,55 @@
     "lr": 0.001,
     "selection_policy": "fixed_final"
   },
-  "runs": {}
+  "runs": {
+    "e4-d614-s0": {
+      "nominal_D": 614,
+      "actual_n_source_subjects": 614,
+      "seed": 0,
+      "subject_embedding_size": 4,
+      "run_id": "e4-e8-d614-source-20260906-195409-c160507b",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-c160507b",
+      "artifact_id": "QXJ0aWZhY3Q6MzU1NTk3MzcxMQ==",
+      "artifact_digest": "2a127fc6148883d9514879615dec1a79",
+      "heldout_table_artifact_id": "QXJ0aWZhY3Q6MzU1NjA5NzYyNA==",
+      "heldout_table_artifact_digest": "1a3f3ecf462e9f961b23d65e92f45b9e",
+      "beaker_job_id": "01M1WWK9NE0M7WJPWH0RS2CFZV",
+      "beaker_result_dataset_id": "01M1WWK9HZ597B06GBKQ2N31X0",
+      "heldout_final_eval_likelihood": 0.7289683818817139,
+      "heldout_final_train_likelihood": 0.7264866828918457
+    },
+    "e4-d614-s1": {
+      "nominal_D": 614,
+      "actual_n_source_subjects": 614,
+      "seed": 1,
+      "subject_embedding_size": 4,
+      "run_id": "e4-e8-d614-source-20260906-195409-c3820c43",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-c3820c43",
+      "artifact_id": "QXJ0aWZhY3Q6MzU1NDY5Nzg1MQ==",
+      "artifact_digest": "2cd3fd7613dce6ff43e4df9a5658ff88",
+      "heldout_table_artifact_id": "QXJ0aWZhY3Q6MzU1NDgwNTgxMQ==",
+      "heldout_table_artifact_digest": "afa6189652222ba61add44b5f8688a1c",
+      "beaker_job_id": "01M1WWK9RVGPNXKVAK5GZGY1TQ",
+      "beaker_result_dataset_id": "01M1WWK9NNHV7592T2MZ8R0VZ0",
+      "heldout_final_eval_likelihood": 0.7288877367973328,
+      "heldout_final_train_likelihood": 0.7263257503509521
+    },
+    "e4-d614-s2": {
+      "nominal_D": 614,
+      "actual_n_source_subjects": 614,
+      "seed": 2,
+      "subject_embedding_size": 4,
+      "run_id": "e4-e8-d614-source-20260906-195409-464e627f",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-464e627f",
+      "artifact_id": "QXJ0aWZhY3Q6MzU1NDY1MjY2MQ==",
+      "artifact_digest": "17f148b7da45a6cd1b79a393a44eb951",
+      "heldout_table_artifact_id": "QXJ0aWZhY3Q6MzU1NDc1MTk5NA==",
+      "heldout_table_artifact_digest": "0c4520d1446f262f225b0f1ddfe0a656",
+      "beaker_job_id": "01M1WWK9W98JKJRNDASECSAXZH",
+      "beaker_result_dataset_id": "01M1WWK9S1WDAZY35Z98VS69SZ",
+      "heldout_final_eval_likelihood": 0.7288655638694763,
+      "heldout_final_train_likelihood": 0.726438581943512
+    }
+  },
+  "frozen_at_pt": "2026-09-07T09:28:32-07:00"
 }
