@@ -58,8 +58,10 @@ def _subject_deltas(dataset: dict) -> list[float]:
     if any(set(row) != keys for row in e4 + e8):
         raise AssertionError("E=4 and E=8 subject keys do not align")
     return [
-        math.exp(statistics.mean(float(row[key]) for row in e8))
-        - math.exp(statistics.mean(float(row[key]) for row in e4))
+        statistics.mean(
+            math.exp(float(e8[seed][key])) - math.exp(float(e4[seed][key]))
+            for seed in range(3)
+        )
         for key in sorted(keys)
     ]
 
