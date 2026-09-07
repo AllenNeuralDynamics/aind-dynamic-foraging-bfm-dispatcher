@@ -11,6 +11,9 @@ variant and a one-task E=8 plumbing smoke. Study 01 owns source training and
 held-out AIND comparison; Study 09 will consume the resulting immutable
 checkpoints for external transfer. The new E=4 bridge arm isolates embedding
 dimension from software and execution drift relative to the historical runs.
+Added the planned r11 producer and report for paired held-out likelihood,
+adaptation/test gaps, subject-level differences, and the source-embedding
+covariance spectrum.
 
 ## [Unreleased] — r9 gets the GRU side of the history-pattern scatter
 
