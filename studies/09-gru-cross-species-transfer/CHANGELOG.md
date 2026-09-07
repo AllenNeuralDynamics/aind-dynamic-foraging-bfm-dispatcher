@@ -1,7 +1,26 @@
 # Changelog
 
+## 2026-09-07
+
+- Regenerated every dimension-dependent Result 1--4 figure with both E4 and E8
+  wherever the frozen artifacts support it, including subject-level GRU-Q and
+  author-relative comparisons, source-fitted embedding geometry, cross-cohort
+  drivers, task-design relationships, and the 12-cohort capacity comparison.
+- Extended E=8 D=614 transfer to the seven remaining valid cohorts in 21
+  GPU-only Beaker tasks; froze all artifacts with exact historical-E4 trial-key
+  parity and updated Report 1 so every displayed cohort has an E8 overlay.
+- Froze all six paired source artifacts, completed the E=8 diagnostic transfer,
+  and launched the matched 15-cell E=4 transfer as Beaker experiment
+  `01M1YBQERTCR0HF6Y749X7M5HT`.
+- Completed the E=4 transfer, verified exact E4/E8/historical held-out trial-key
+  parity, and published Result 4. E8 is neutral on Grossman (mouse) and
+  Lebedeva (mouse), but improves Miller (rat), Findling (human), and Eckstein
+  (human), supporting expansion to the remaining non-quarantined cohorts.
+
 ## 2026-09-06
 
+- Prepared the paired current-code E=4 versus E=8 D=614 transfer ablation for
+  five diagnostic cohorts and reserved Result 4 for its subject-level report.
 - Implemented and ran the primary-set author-selected models for Lebedeva
   (mouse), Beron (mouse), Miller (rat), Findling (human), and both Eckstein
   (human) co-winners; added a 64-particle Findling fitting sensitivity.

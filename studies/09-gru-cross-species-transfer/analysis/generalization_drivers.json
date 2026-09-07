@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_generalization_drivers.py",
-    "produced_at_pt": "2026-09-06T12:01:12-07:00",
-    "dispatcher_git_sha": "e96f47bdf154062fc928218a6a88addcf32ca9e9",
+    "produced_at_pt": "2026-09-07T14:59:02-07:00",
+    "dispatcher_git_sha": "6b04a3ab4d6828638351877a3d8cfe5d46327220",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
@@ -26,7 +26,7 @@
   },
   "inputs": {
     "analysis/matched_half_results.json": "9a9f93ce2c66d7e4e87b43e137eeb92c3c847e59be337fe0c77fb44dac822888",
-    "analysis/embedding_space_results.json": "7c066836de1a2f38df161afe7efdd8c0119238550e709c4da3a1c8cc2ee1e977",
+    "analysis/embedding_space_results.json": "34d41252a9118ec07085c43683a96558a1b5722344cbc16b6b44c0b418289d90",
     "analysis/task_design_annotations.json": "9b977aeeb22f4c2fd55380b16b71dd33dba650892ac60641667dc8e23427fd89"
   },
   "contract": {
@@ -36,7 +36,6 @@
       "zid",
       "lebedeva",
       "beron",
-      "kwak",
       "miller",
       "findling",
       "tang",
@@ -45,6 +44,7 @@
       "costa",
       "lopez_mouse"
     ],
+    "subject_embedding_size": 4,
     "analysis_tiers": {
       "primary": [
         "grossman",
@@ -129,20 +129,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.7480594946704269,
           "gru_d614_minus_q_bits_per_trial": 0.027163266821565422,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.013624719916360618,
-          "gru_d614_minus_d10_bits_per_trial": 0.01588216164603776,
           "embedding_centroid_mahalanobis": 0.6132394205248289,
           "embedding_median_subject_mahalanobis": 2.5550155899897327,
           "embedding_fraction_outside_source_95pct": 0.14583333333333334,
           "gru_d614_wandb_run_id": "gru-grossman-matched-half-20260905-022602-b2549a1d",
           "gru_d614_artifact_digest": "b54d6203b28019482291062de3c90946",
-          "gru_d10_wandb_run_id": "gru-grossman-matched-half-20260905-022602-b23b4f29",
-          "gru_d10_artifact_digest": "7b012ce56cc2e1d43419491d6ae7a8b5",
           "q_wandb_run_id": "0strufys",
           "q_artifact_digest": "8e797eea615f9bdaa7cac7b95b07d79a",
           "embedding_wandb_run_id": "gru-grossman-matched-half-20260905-022602-b2549a1d",
           "embedding_artifact_digest": "b54d6203b28019482291062de3c90946",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.01588216164603776,
+          "gru_d10_wandb_run_id": "gru-grossman-matched-half-20260905-022602-b23b4f29",
+          "gru_d10_artifact_digest": "7b012ce56cc2e1d43419491d6ae7a8b5"
         },
         {
           "seed": 1,
@@ -154,20 +154,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.7483857685372041,
           "gru_d614_minus_q_bits_per_trial": 0.027792375962545458,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.013962398542028973,
-          "gru_d614_minus_d10_bits_per_trial": 0.010637956830567319,
           "embedding_centroid_mahalanobis": 0.6021772909195384,
           "embedding_median_subject_mahalanobis": 2.4505071499463567,
           "embedding_fraction_outside_source_95pct": 0.22916666666666666,
           "gru_d614_wandb_run_id": "gru-grossman-matched-half-20260905-022602-e8427c97",
           "gru_d614_artifact_digest": "8220dd5a4d5cb6897bca47839ea7dc67",
-          "gru_d10_wandb_run_id": "gru-grossman-matched-half-20260905-022602-310d658a",
-          "gru_d10_artifact_digest": "3c7515204257a623dce6eed8abd3caac",
           "q_wandb_run_id": "0strufys",
           "q_artifact_digest": "8e797eea615f9bdaa7cac7b95b07d79a",
           "embedding_wandb_run_id": "gru-grossman-matched-half-20260905-022602-e8427c97",
           "embedding_artifact_digest": "8220dd5a4d5cb6897bca47839ea7dc67",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.010637956830567319,
+          "gru_d10_wandb_run_id": "gru-grossman-matched-half-20260905-022602-310d658a",
+          "gru_d10_artifact_digest": "3c7515204257a623dce6eed8abd3caac"
         },
         {
           "seed": 2,
@@ -179,20 +179,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.7484098575971931,
           "gru_d614_minus_q_bits_per_trial": 0.027838812719551097,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.013983094150803989,
-          "gru_d614_minus_d10_bits_per_trial": 0.017930906672846927,
           "embedding_centroid_mahalanobis": 0.528204299846055,
           "embedding_median_subject_mahalanobis": 2.305264084621126,
           "embedding_fraction_outside_source_95pct": 0.20833333333333334,
           "gru_d614_wandb_run_id": "gru-grossman-matched-half-20260905-022602-dd860bb0",
           "gru_d614_artifact_digest": "343fb34fe456d935ec9b94560940817d",
-          "gru_d10_wandb_run_id": "gru-grossman-matched-half-20260905-022602-1ad27665",
-          "gru_d10_artifact_digest": "1f8d919382a53e20b1d5c06a8c9ae129",
           "q_wandb_run_id": "0strufys",
           "q_artifact_digest": "8e797eea615f9bdaa7cac7b95b07d79a",
           "embedding_wandb_run_id": "gru-grossman-matched-half-20260905-022602-dd860bb0",
           "embedding_artifact_digest": "343fb34fe456d935ec9b94560940817d",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.017930906672846927,
+          "gru_d10_wandb_run_id": "gru-grossman-matched-half-20260905-022602-1ad27665",
+          "gru_d10_artifact_digest": "1f8d919382a53e20b1d5c06a8c9ae129"
         }
       ],
       "summary": {
@@ -216,10 +216,6 @@
           "mean": 0.01385673753639786,
           "sd_across_source_seeds": 0.0002011994260962282
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.014817008383150669,
-          "sd_across_source_seeds": 0.0037613419088911347
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 0.5812070037634741,
           "sd_across_source_seeds": 0.04623372843249027
@@ -231,6 +227,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 0.19444444444444445,
           "sd_across_source_seeds": 0.04336804165554442
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.014817008383150669,
+          "sd_across_source_seeds": 0.0037613419088911347
         }
       }
     },
@@ -250,20 +250,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5914070183901259,
           "gru_d614_minus_q_bits_per_trial": 0.013107278893728619,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.005266434791394353,
-          "gru_d614_minus_d10_bits_per_trial": 0.02342627348463768,
           "embedding_centroid_mahalanobis": 8.763181902160284,
           "embedding_median_subject_mahalanobis": 10.508243582452744,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-chen-matched-half-20260905-024731-5ae04883",
           "gru_d614_artifact_digest": "e28ec502a5eff48ca378189071f9a6a2",
-          "gru_d10_wandb_run_id": "gru-chen-matched-half-20260905-024731-a433efd0",
-          "gru_d10_artifact_digest": "38b6eaf262da68c746113a3bf0518ba7",
           "q_wandb_run_id": "0labmnnx",
           "q_artifact_digest": "3dbd7e6198db0f9794880cd3d48cf1c7",
           "embedding_wandb_run_id": "gru-chen-matched-half-20260905-024731-5ae04883",
           "embedding_artifact_digest": "e28ec502a5eff48ca378189071f9a6a2",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.02342627348463768,
+          "gru_d10_wandb_run_id": "gru-chen-matched-half-20260905-024731-a433efd0",
+          "gru_d10_artifact_digest": "38b6eaf262da68c746113a3bf0518ba7"
         },
         {
           "seed": 1,
@@ -275,20 +275,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5901140294272026,
           "gru_d614_minus_q_bits_per_trial": 0.009949671988909359,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.004131452498304669,
-          "gru_d614_minus_d10_bits_per_trial": 0.014752718856361289,
           "embedding_centroid_mahalanobis": 5.540162959236731,
           "embedding_median_subject_mahalanobis": 6.561174351356685,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-chen-matched-half-20260905-024731-1cb7ef49",
           "gru_d614_artifact_digest": "eeaf5f83392dc371f95e1813bf73d24f",
-          "gru_d10_wandb_run_id": "gru-chen-matched-half-20260905-024731-d5849f6d",
-          "gru_d10_artifact_digest": "c8965ed7516d15456307f6810ae00203",
           "q_wandb_run_id": "0labmnnx",
           "q_artifact_digest": "3dbd7e6198db0f9794880cd3d48cf1c7",
           "embedding_wandb_run_id": "gru-chen-matched-half-20260905-024731-1cb7ef49",
           "embedding_artifact_digest": "eeaf5f83392dc371f95e1813bf73d24f",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.014752718856361289,
+          "gru_d10_wandb_run_id": "gru-chen-matched-half-20260905-024731-d5849f6d",
+          "gru_d10_artifact_digest": "c8965ed7516d15456307f6810ae00203"
         },
         {
           "seed": 2,
@@ -300,20 +300,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5927020101133842,
           "gru_d614_minus_q_bits_per_trial": 0.016262864801813846,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.006602769713077054,
-          "gru_d614_minus_d10_bits_per_trial": 0.029217837607892424,
           "embedding_centroid_mahalanobis": 7.073522723598334,
           "embedding_median_subject_mahalanobis": 8.453311563500295,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-chen-matched-half-20260905-024731-94c97219",
           "gru_d614_artifact_digest": "e704179f5a68d4e655f5a0ab451dcd00",
-          "gru_d10_wandb_run_id": "gru-chen-matched-half-20260905-024731-08525d2d",
-          "gru_d10_artifact_digest": "17e47e2330f36498da0a9bbc50f4e348",
           "q_wandb_run_id": "0labmnnx",
           "q_artifact_digest": "3dbd7e6198db0f9794880cd3d48cf1c7",
           "embedding_wandb_run_id": "gru-chen-matched-half-20260905-024731-94c97219",
           "embedding_artifact_digest": "e704179f5a68d4e655f5a0ab451dcd00",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.029217837607892424,
+          "gru_d10_wandb_run_id": "gru-chen-matched-half-20260905-024731-08525d2d",
+          "gru_d10_artifact_digest": "17e47e2330f36498da0a9bbc50f4e348"
         }
       ],
       "summary": {
@@ -337,10 +337,6 @@
           "mean": 0.005333552334258692,
           "sd_across_source_seeds": 0.0012370249663720186
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.0224656099829638,
-          "sd_across_source_seeds": 0.007280252117650917
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 7.125622528331783,
           "sd_across_source_seeds": 1.6121409891355536
@@ -352,6 +348,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 1.0,
           "sd_across_source_seeds": 0.0
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.0224656099829638,
+          "sd_across_source_seeds": 0.007280252117650917
         }
       }
     },
@@ -371,20 +371,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.7144405197305428,
           "gru_d614_minus_q_bits_per_trial": 0.020685301848352523,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0005919778473502027,
-          "gru_d614_minus_d10_bits_per_trial": 0.003344957600711969,
           "embedding_centroid_mahalanobis": 7.841609972664571,
           "embedding_median_subject_mahalanobis": 11.377555281444652,
           "embedding_fraction_outside_source_95pct": 0.9728682170542635,
           "gru_d614_wandb_run_id": "gru-zid-matched-half-20260905-025752-39eea37f",
           "gru_d614_artifact_digest": "66409894b5f57307686d90098429f1e8",
-          "gru_d10_wandb_run_id": "gru-zid-matched-half-20260905-025752-c0f17ec7",
-          "gru_d10_artifact_digest": "9cb506d8258940e1cdcd2c1f705cd95e",
           "q_wandb_run_id": "0kxiw1tk",
           "q_artifact_digest": "95a463c5b7cfde00cdedd7eec58e85a0",
           "embedding_wandb_run_id": "gru-zid-matched-half-20260905-025752-39eea37f",
           "embedding_artifact_digest": "66409894b5f57307686d90098429f1e8",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.003344957600711969,
+          "gru_d10_wandb_run_id": "gru-zid-matched-half-20260905-025752-c0f17ec7",
+          "gru_d10_artifact_digest": "9cb506d8258940e1cdcd2c1f705cd95e"
         },
         {
           "seed": 1,
@@ -396,20 +396,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.7114417133526603,
           "gru_d614_minus_q_bits_per_trial": 0.014616961324457197,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0034205025360943783,
-          "gru_d614_minus_d10_bits_per_trial": 0.004461681611108578,
           "embedding_centroid_mahalanobis": 5.683083672492276,
           "embedding_median_subject_mahalanobis": 9.272139744462166,
           "embedding_fraction_outside_source_95pct": 0.9728682170542635,
           "gru_d614_wandb_run_id": "gru-zid-matched-half-20260905-025752-5f3c4f65",
           "gru_d614_artifact_digest": "a8ed8496a3cb33b366ce85809d34f530",
-          "gru_d10_wandb_run_id": "gru-zid-matched-half-20260905-025752-fd3d6072",
-          "gru_d10_artifact_digest": "d52b6c04775ae14ef1d537ab440b9d62",
           "q_wandb_run_id": "0kxiw1tk",
           "q_artifact_digest": "95a463c5b7cfde00cdedd7eec58e85a0",
           "embedding_wandb_run_id": "gru-zid-matched-half-20260905-025752-5f3c4f65",
           "embedding_artifact_digest": "a8ed8496a3cb33b366ce85809d34f530",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.004461681611108578,
+          "gru_d10_wandb_run_id": "gru-zid-matched-half-20260905-025752-fd3d6072",
+          "gru_d10_artifact_digest": "d52b6c04775ae14ef1d537ab440b9d62"
         },
         {
           "seed": 2,
@@ -421,20 +421,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.7150149679647819,
           "gru_d614_minus_q_bits_per_trial": 0.021844839407278185,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0004858337967250508,
-          "gru_d614_minus_d10_bits_per_trial": 0.02298551704247,
           "embedding_centroid_mahalanobis": 7.75320348890792,
           "embedding_median_subject_mahalanobis": 10.740802440658538,
           "embedding_fraction_outside_source_95pct": 0.9806201550387597,
           "gru_d614_wandb_run_id": "gru-zid-matched-half-20260905-025752-d6cedfeb",
           "gru_d614_artifact_digest": "6057d5ab3d41a3fc8f4b04040cd45a69",
-          "gru_d10_wandb_run_id": "gru-zid-matched-half-20260905-025752-986d11a5",
-          "gru_d10_artifact_digest": "b9ea8bf521655fd8a98bf72c6b05be99",
           "q_wandb_run_id": "0kxiw1tk",
           "q_artifact_digest": "95a463c5b7cfde00cdedd7eec58e85a0",
           "embedding_wandb_run_id": "gru-zid-matched-half-20260905-025752-d6cedfeb",
           "embedding_artifact_digest": "6057d5ab3d41a3fc8f4b04040cd45a69",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.02298551704247,
+          "gru_d10_wandb_run_id": "gru-zid-matched-half-20260905-025752-986d11a5",
+          "gru_d10_artifact_digest": "b9ea8bf521655fd8a98bf72c6b05be99"
         }
       ],
       "summary": {
@@ -458,10 +458,6 @@
           "mean": -0.0014994380600565442,
           "sd_across_source_seeds": 0.001664536926803268
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.010264052084763517,
-          "sd_across_source_seeds": 0.011031252020122857
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 7.09263237802159,
           "sd_across_source_seeds": 1.2215050517853274
@@ -473,6 +469,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 0.9754521963824289,
           "sd_across_source_seeds": 0.00447558348209013
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.010264052084763517,
+          "sd_across_source_seeds": 0.011031252020122857
         }
       }
     },
@@ -492,20 +492,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.7596276493867071,
           "gru_d614_minus_q_bits_per_trial": 0.01714527845902625,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.009011601752087683,
-          "gru_d614_minus_d10_bits_per_trial": 0.01895458803189077,
           "embedding_centroid_mahalanobis": 1.878608853957882,
           "embedding_median_subject_mahalanobis": 2.535624511520072,
           "embedding_fraction_outside_source_95pct": 0.0,
           "gru_d614_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-cc077819",
           "gru_d614_artifact_digest": "687b03d59e0439975d37c2802686e6c3",
-          "gru_d10_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-23ab7c2a",
-          "gru_d10_artifact_digest": "950f4f48542b4a106d2a2555c0a5e0b1",
           "q_wandb_run_id": "qscv52cu",
           "q_artifact_digest": "6f27d0127f3a8f7dcc44db2f78f6e960",
           "embedding_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-cc077819",
           "embedding_artifact_digest": "687b03d59e0439975d37c2802686e6c3",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.01895458803189077,
+          "gru_d10_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-23ab7c2a",
+          "gru_d10_artifact_digest": "950f4f48542b4a106d2a2555c0a5e0b1"
         },
         {
           "seed": 1,
@@ -517,20 +517,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.7600364985227456,
           "gru_d614_minus_q_bits_per_trial": 0.01792156134505375,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.009434324457667065,
-          "gru_d614_minus_d10_bits_per_trial": 0.010700148261920955,
           "embedding_centroid_mahalanobis": 1.6880030857839434,
           "embedding_median_subject_mahalanobis": 2.4057030538794213,
           "embedding_fraction_outside_source_95pct": 0.0,
           "gru_d614_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-4a9ec1a0",
           "gru_d614_artifact_digest": "536120df47ab649447ae09de1551c23d",
-          "gru_d10_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-a2d5c989",
-          "gru_d10_artifact_digest": "58578d3fc5356e9681251132371dd456",
           "q_wandb_run_id": "qscv52cu",
           "q_artifact_digest": "6f27d0127f3a8f7dcc44db2f78f6e960",
           "embedding_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-4a9ec1a0",
           "embedding_artifact_digest": "536120df47ab649447ae09de1551c23d",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.010700148261920955,
+          "gru_d10_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-a2d5c989",
+          "gru_d10_artifact_digest": "58578d3fc5356e9681251132371dd456"
         },
         {
           "seed": 2,
@@ -542,20 +542,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.7603538624011195,
           "gru_d614_minus_q_bits_per_trial": 0.018523853114200364,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.009736700042919011,
-          "gru_d614_minus_d10_bits_per_trial": 0.012970340972241564,
           "embedding_centroid_mahalanobis": 2.8954955652164407,
           "embedding_median_subject_mahalanobis": 3.3898529430277877,
           "embedding_fraction_outside_source_95pct": 0.5,
           "gru_d614_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-e773e100",
           "gru_d614_artifact_digest": "f3cdf67add0c970302dc9302989e740c",
-          "gru_d10_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-c0c494e0",
-          "gru_d10_artifact_digest": "b7362bac1a7fb8d808453325b6764b8f",
           "q_wandb_run_id": "qscv52cu",
           "q_artifact_digest": "6f27d0127f3a8f7dcc44db2f78f6e960",
           "embedding_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-e773e100",
           "embedding_artifact_digest": "f3cdf67add0c970302dc9302989e740c",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.012970340972241564,
+          "gru_d10_wandb_run_id": "gru-lebedeva-matched-half-20260905-232924-c0c494e0",
+          "gru_d10_artifact_digest": "b7362bac1a7fb8d808453325b6764b8f"
         }
       ],
       "summary": {
@@ -579,10 +579,6 @@
           "mean": 0.009394208750891253,
           "sd_across_source_seeds": 0.00036420987807749054
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.01420835908868443,
-          "sd_across_source_seeds": 0.004264206915886633
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 2.154035834986089,
           "sd_across_source_seeds": 0.6491567902904845
@@ -594,6 +590,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 0.16666666666666666,
           "sd_across_source_seeds": 0.2886751345948129
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.01420835908868443,
+          "sd_across_source_seeds": 0.004264206915886633
         }
       }
     },
@@ -613,20 +613,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.8214383082945447,
           "gru_d614_minus_q_bits_per_trial": -0.002217551678038878,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0012010164237501082,
-          "gru_d614_minus_d10_bits_per_trial": 0.009435657960512224,
           "embedding_centroid_mahalanobis": 2.637452826151727,
           "embedding_median_subject_mahalanobis": 2.8221197491564762,
           "embedding_fraction_outside_source_95pct": 0.0,
           "gru_d614_wandb_run_id": "gru-beron-matched-half-20260905-232924-1b1563f7",
           "gru_d614_artifact_digest": "f87b8720c31077cc41ce134f5efeda52",
-          "gru_d10_wandb_run_id": "gru-beron-matched-half-20260905-232924-d2002c1b",
-          "gru_d10_artifact_digest": "ae1c2247331aa2d5b9456e0db1875f8b",
           "q_wandb_run_id": "fkls1rkm",
           "q_artifact_digest": "f089c757414c802dc2c79d268f66db55",
           "embedding_wandb_run_id": "gru-beron-matched-half-20260905-232924-1b1563f7",
           "embedding_artifact_digest": "f87b8720c31077cc41ce134f5efeda52",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.009435657960512224,
+          "gru_d10_wandb_run_id": "gru-beron-matched-half-20260905-232924-d2002c1b",
+          "gru_d10_artifact_digest": "ae1c2247331aa2d5b9456e0db1875f8b"
         },
         {
           "seed": 1,
@@ -638,20 +638,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.8207516685052426,
           "gru_d614_minus_q_bits_per_trial": -0.0034240039041845104,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0018815639674095903,
-          "gru_d614_minus_d10_bits_per_trial": 0.006979092252390212,
           "embedding_centroid_mahalanobis": 2.3641995684330146,
           "embedding_median_subject_mahalanobis": 2.4988929697399564,
           "embedding_fraction_outside_source_95pct": 0.16666666666666666,
           "gru_d614_wandb_run_id": "gru-beron-matched-half-20260905-232924-efa9983f",
           "gru_d614_artifact_digest": "0cf60d5fbad4d917d4621560d794406b",
-          "gru_d10_wandb_run_id": "gru-beron-matched-half-20260905-232924-0141ae03",
-          "gru_d10_artifact_digest": "3158fbc8adf493bdb8a10bead3809fc9",
           "q_wandb_run_id": "fkls1rkm",
           "q_artifact_digest": "f089c757414c802dc2c79d268f66db55",
           "embedding_wandb_run_id": "gru-beron-matched-half-20260905-232924-efa9983f",
           "embedding_artifact_digest": "0cf60d5fbad4d917d4621560d794406b",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.006979092252390212,
+          "gru_d10_wandb_run_id": "gru-beron-matched-half-20260905-232924-0141ae03",
+          "gru_d10_artifact_digest": "3158fbc8adf493bdb8a10bead3809fc9"
         },
         {
           "seed": 2,
@@ -663,20 +663,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.8219330306909625,
           "gru_d614_minus_q_bits_per_trial": -0.001348930505747879,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0007171568612267162,
-          "gru_d614_minus_d10_bits_per_trial": 0.011191840860355502,
           "embedding_centroid_mahalanobis": 2.4570205422024185,
           "embedding_median_subject_mahalanobis": 2.5948016231245443,
           "embedding_fraction_outside_source_95pct": 0.0,
           "gru_d614_wandb_run_id": "gru-beron-matched-half-20260905-232924-af6830e0",
           "gru_d614_artifact_digest": "79867c2b79e83e33b5d7129dead13489",
-          "gru_d10_wandb_run_id": "gru-beron-matched-half-20260905-232924-3b7cfa36",
-          "gru_d10_artifact_digest": "d7dc8c6b25f01925d90014daf329818d",
           "q_wandb_run_id": "fkls1rkm",
           "q_artifact_digest": "f089c757414c802dc2c79d268f66db55",
           "embedding_wandb_run_id": "gru-beron-matched-half-20260905-232924-af6830e0",
           "embedding_artifact_digest": "79867c2b79e83e33b5d7129dead13489",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.011191840860355502,
+          "gru_d10_wandb_run_id": "gru-beron-matched-half-20260905-232924-3b7cfa36",
+          "gru_d10_artifact_digest": "d7dc8c6b25f01925d90014daf329818d"
         }
       ],
       "summary": {
@@ -700,10 +700,6 @@
           "mean": -0.001266579084128805,
           "sd_across_source_seeds": 0.0005849656605812371
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.009202197024419314,
-          "sd_across_source_seeds": 0.0021160554612271875
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 2.4862243122623866,
           "sd_across_source_seeds": 0.13894776303618173
@@ -715,127 +711,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 0.05555555555555555,
           "sd_across_source_seeds": 0.09622504486493763
-        }
-      }
-    },
-    "kwak": {
-      "label": "Kwak (mouse)",
-      "species": "mouse",
-      "analysis_tier": "quarantined",
-      "n_subjects": 39,
-      "seeds": [
-        {
-          "seed": 0,
-          "n_subjects": 39,
-          "q_subject_mean_log_likelihood_nats": -0.465837896339856,
-          "q_subject_balanced_normalized_likelihood": 0.627609013519989,
-          "q_bits_above_chance": 0.32793797709234274,
-          "gru_d614_subject_mean_log_likelihood_nats": -0.47525044884584916,
-          "gru_d614_subject_balanced_normalized_likelihood": 0.6217293255725027,
-          "gru_d614_minus_q_bits_per_trial": -0.013579442822503309,
-          "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.005886143679306775,
-          "gru_d614_minus_d10_bits_per_trial": -4.318178303313755e-05,
-          "embedding_centroid_mahalanobis": 4.801249769139569,
-          "embedding_median_subject_mahalanobis": 4.3311083085044,
-          "embedding_fraction_outside_source_95pct": 0.6666666666666666,
-          "gru_d614_wandb_run_id": "gru-kwak-matched-half-20260906-071413-a497403c",
-          "gru_d614_artifact_digest": "56e95e2da89f9bb3572895308687a796",
-          "gru_d10_wandb_run_id": "gru-kwak-matched-half-20260906-071413-a75fe9ec",
-          "gru_d10_artifact_digest": "3e63e3ed1227d89fb21c0b50898676f1",
-          "q_wandb_run_id": "4ki9tfvv",
-          "q_artifact_digest": "0c4ac811312ea4057e352e75504e0fe6",
-          "embedding_wandb_run_id": "gru-kwak-matched-half-20260906-071413-a497403c",
-          "embedding_artifact_digest": "56e95e2da89f9bb3572895308687a796",
-          "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
-        },
-        {
-          "seed": 1,
-          "n_subjects": 39,
-          "q_subject_mean_log_likelihood_nats": -0.465837896339856,
-          "q_subject_balanced_normalized_likelihood": 0.627609013519989,
-          "q_bits_above_chance": 0.32793797709234274,
-          "gru_d614_subject_mean_log_likelihood_nats": -0.47502840137808217,
-          "gru_d614_subject_balanced_normalized_likelihood": 0.6218673943232236,
-          "gru_d614_minus_q_bits_per_trial": -0.013259096041913915,
-          "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0057144548653877345,
-          "gru_d614_minus_d10_bits_per_trial": -0.0017523712170589426,
-          "embedding_centroid_mahalanobis": 3.0200208763933203,
-          "embedding_median_subject_mahalanobis": 3.3961724558018824,
-          "embedding_fraction_outside_source_95pct": 0.5384615384615384,
-          "gru_d614_wandb_run_id": "gru-kwak-matched-half-20260906-071413-5e77ca76",
-          "gru_d614_artifact_digest": "d77c618a13a11f546fa08baa07dc6b6c",
-          "gru_d10_wandb_run_id": "gru-kwak-matched-half-20260906-071413-2c7f5895",
-          "gru_d10_artifact_digest": "3cab259f3d097c8162f7c08f97e5c494",
-          "q_wandb_run_id": "4ki9tfvv",
-          "q_artifact_digest": "0c4ac811312ea4057e352e75504e0fe6",
-          "embedding_wandb_run_id": "gru-kwak-matched-half-20260906-071413-5e77ca76",
-          "embedding_artifact_digest": "d77c618a13a11f546fa08baa07dc6b6c",
-          "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
-        },
-        {
-          "seed": 2,
-          "n_subjects": 39,
-          "q_subject_mean_log_likelihood_nats": -0.465837896339856,
-          "q_subject_balanced_normalized_likelihood": 0.627609013519989,
-          "q_bits_above_chance": 0.32793797709234274,
-          "gru_d614_subject_mean_log_likelihood_nats": -0.47551536137376826,
-          "gru_d614_subject_balanced_normalized_likelihood": 0.6215646434993192,
-          "gru_d614_minus_q_bits_per_trial": -0.01396163081280156,
-          "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0060050294758227435,
-          "gru_d614_minus_d10_bits_per_trial": 0.014280600220850674,
-          "embedding_centroid_mahalanobis": 4.041477530512046,
-          "embedding_median_subject_mahalanobis": 4.070025779899619,
-          "embedding_fraction_outside_source_95pct": 0.6923076923076923,
-          "gru_d614_wandb_run_id": "gru-kwak-matched-half-20260906-071413-61107751",
-          "gru_d614_artifact_digest": "d2e5f652a8c8cbeba1b5b2e012a80ff7",
-          "gru_d10_wandb_run_id": "gru-kwak-matched-half-20260906-071413-07346820",
-          "gru_d10_artifact_digest": "5835fdf49f8a3f99c87367bece6d7160",
-          "q_wandb_run_id": "4ki9tfvv",
-          "q_artifact_digest": "0c4ac811312ea4057e352e75504e0fe6",
-          "embedding_wandb_run_id": "gru-kwak-matched-half-20260906-071413-61107751",
-          "embedding_artifact_digest": "d2e5f652a8c8cbeba1b5b2e012a80ff7",
-          "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
-        }
-      ],
-      "summary": {
-        "q_subject_balanced_normalized_likelihood": {
-          "mean": 0.627609013519989,
-          "sd_across_source_seeds": 0.0
-        },
-        "q_bits_above_chance": {
-          "mean": 0.32793797709234274,
-          "sd_across_source_seeds": 0.0
-        },
-        "gru_d614_subject_balanced_normalized_likelihood": {
-          "mean": 0.6217204544650151,
-          "sd_across_source_seeds": 0.0001515702403334548
-        },
-        "gru_d614_minus_q_bits_per_trial": {
-          "mean": -0.013600056559072928,
-          "sd_across_source_seeds": 0.0003517207282462325
-        },
-        "gru_d614_minus_q_mean_subject_normalized_likelihood": {
-          "mean": -0.005868542673505751,
-          "sd_across_source_seeds": 0.0001460847275086279
         },
         "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.004161682406919532,
-          "sd_across_source_seeds": 0.00880481149282403
-        },
-        "embedding_centroid_mahalanobis": {
-          "mean": 3.954249392014978,
-          "sd_across_source_seeds": 0.8938124261822246
-        },
-        "embedding_median_subject_mahalanobis": {
-          "mean": 3.932435514735301,
-          "sd_across_source_seeds": 0.48241535316378203
-        },
-        "embedding_fraction_outside_source_95pct": {
-          "mean": 0.6324786324786325,
-          "sd_across_source_seeds": 0.08242436547857226
+          "mean": 0.009202197024419314,
+          "sd_across_source_seeds": 0.0021160554612271875
         }
       }
     },
@@ -855,20 +734,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.6019884787596975,
           "gru_d614_minus_q_bits_per_trial": -0.019931935105161846,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.008423451459341124,
-          "gru_d614_minus_d10_bits_per_trial": 0.004923367023271456,
           "embedding_centroid_mahalanobis": 6.8255441217184165,
           "embedding_median_subject_mahalanobis": 6.61686415643041,
           "embedding_fraction_outside_source_95pct": 0.95,
           "gru_d614_wandb_run_id": "gru-miller-matched-half-20260905-232924-b8c22849",
           "gru_d614_artifact_digest": "5ce4a14c50a2751deee2a0f73e81ecf6",
-          "gru_d10_wandb_run_id": "gru-miller-matched-half-20260905-232924-1f20c0a1",
-          "gru_d10_artifact_digest": "f0a43345af605c84f37c6bbebea55199",
           "q_wandb_run_id": "p1pspbh8",
           "q_artifact_digest": "d4b5edeb4491477f149aceb08fe01bd1",
           "embedding_wandb_run_id": "gru-miller-matched-half-20260905-232924-b8c22849",
           "embedding_artifact_digest": "5ce4a14c50a2751deee2a0f73e81ecf6",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.004923367023271456,
+          "gru_d10_wandb_run_id": "gru-miller-matched-half-20260905-232924-1f20c0a1",
+          "gru_d10_artifact_digest": "f0a43345af605c84f37c6bbebea55199"
         },
         {
           "seed": 1,
@@ -880,20 +759,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5980709568531476,
           "gru_d614_minus_q_bits_per_trial": -0.0293511510802798,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.012255520394902802,
-          "gru_d614_minus_d10_bits_per_trial": 0.0012411260544854799,
           "embedding_centroid_mahalanobis": 4.277319657351485,
           "embedding_median_subject_mahalanobis": 4.357466289129663,
           "embedding_fraction_outside_source_95pct": 0.75,
           "gru_d614_wandb_run_id": "gru-miller-matched-half-20260905-232924-307a3875",
           "gru_d614_artifact_digest": "3ca776ce454e79b26a7488b357357abf",
-          "gru_d10_wandb_run_id": "gru-miller-matched-half-20260905-232924-c116a81b",
-          "gru_d10_artifact_digest": "6f99294fc286d3f82075d04f9e82e135",
           "q_wandb_run_id": "p1pspbh8",
           "q_artifact_digest": "d4b5edeb4491477f149aceb08fe01bd1",
           "embedding_wandb_run_id": "gru-miller-matched-half-20260905-232924-307a3875",
           "embedding_artifact_digest": "3ca776ce454e79b26a7488b357357abf",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.0012411260544854799,
+          "gru_d10_wandb_run_id": "gru-miller-matched-half-20260905-232924-c116a81b",
+          "gru_d10_artifact_digest": "6f99294fc286d3f82075d04f9e82e135"
         },
         {
           "seed": 2,
@@ -905,20 +784,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.6031171513514019,
           "gru_d614_minus_q_bits_per_trial": -0.017229548216804315,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.007290552805363943,
-          "gru_d614_minus_d10_bits_per_trial": 0.026263245347296117,
           "embedding_centroid_mahalanobis": 6.613229885380634,
           "embedding_median_subject_mahalanobis": 6.048050264634593,
           "embedding_fraction_outside_source_95pct": 0.95,
           "gru_d614_wandb_run_id": "gru-miller-matched-half-20260905-232924-f7feb1fa",
           "gru_d614_artifact_digest": "8f1eeef90b18f05340e48f5a4e5d8f6c",
-          "gru_d10_wandb_run_id": "gru-miller-matched-half-20260905-232924-2ecc628e",
-          "gru_d10_artifact_digest": "23d1c1804815f27415da0850cd06c870",
           "q_wandb_run_id": "p1pspbh8",
           "q_artifact_digest": "d4b5edeb4491477f149aceb08fe01bd1",
           "embedding_wandb_run_id": "gru-miller-matched-half-20260905-232924-f7feb1fa",
           "embedding_artifact_digest": "8f1eeef90b18f05340e48f5a4e5d8f6c",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.026263245347296117,
+          "gru_d10_wandb_run_id": "gru-miller-matched-half-20260905-232924-2ecc628e",
+          "gru_d10_artifact_digest": "23d1c1804815f27415da0850cd06c870"
         }
       ],
       "summary": {
@@ -942,10 +821,6 @@
           "mean": -0.009323174886535958,
           "sd_across_source_seeds": 0.002601894016937515
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.010809246141684352,
-          "sd_across_source_seeds": 0.013509600039354914
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 5.905364554816845,
           "sd_across_source_seeds": 1.4139190128363686
@@ -957,6 +832,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 0.8833333333333333,
           "sd_across_source_seeds": 0.11547005383792512
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.010809246141684352,
+          "sd_across_source_seeds": 0.013509600039354914
         }
       }
     },
@@ -976,20 +855,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.6560706257522256,
           "gru_d614_minus_q_bits_per_trial": -0.07423637810898162,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.035765190104862184,
-          "gru_d614_minus_d10_bits_per_trial": 0.03207152081515269,
           "embedding_centroid_mahalanobis": 9.71736488425409,
           "embedding_median_subject_mahalanobis": 10.042052154429634,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-findling-matched-half-20260905-232924-1d49f8d2",
           "gru_d614_artifact_digest": "65f812c4ba7f41ec4b88d4567c72787f",
-          "gru_d10_wandb_run_id": "gru-findling-matched-half-20260905-232924-724399f9",
-          "gru_d10_artifact_digest": "2d239416ab47373d9747f7d21edca6d4",
           "q_wandb_run_id": "5ylyz41t",
           "q_artifact_digest": "8d92c08628d1c881c06b119a1de167ac",
           "embedding_wandb_run_id": "gru-findling-matched-half-20260905-232924-1d49f8d2",
           "embedding_artifact_digest": "65f812c4ba7f41ec4b88d4567c72787f",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.03207152081515269,
+          "gru_d10_wandb_run_id": "gru-findling-matched-half-20260905-232924-724399f9",
+          "gru_d10_artifact_digest": "2d239416ab47373d9747f7d21edca6d4"
         },
         {
           "seed": 1,
@@ -1001,20 +880,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.6497639234743792,
           "gru_d614_minus_q_bits_per_trial": -0.08817186304475846,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.04184839175823517,
-          "gru_d614_minus_d10_bits_per_trial": 0.028054747640145074,
           "embedding_centroid_mahalanobis": 5.602731854156389,
           "embedding_median_subject_mahalanobis": 6.14721086608815,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-findling-matched-half-20260905-232924-87ec659c",
           "gru_d614_artifact_digest": "5095d3ae7c9fe93500d301eee490f8fe",
-          "gru_d10_wandb_run_id": "gru-findling-matched-half-20260905-232924-85dec7f5",
-          "gru_d10_artifact_digest": "0a4706f85f4fd4a30b9ad3d13343b808",
           "q_wandb_run_id": "5ylyz41t",
           "q_artifact_digest": "8d92c08628d1c881c06b119a1de167ac",
           "embedding_wandb_run_id": "gru-findling-matched-half-20260905-232924-87ec659c",
           "embedding_artifact_digest": "5095d3ae7c9fe93500d301eee490f8fe",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.028054747640145074,
+          "gru_d10_wandb_run_id": "gru-findling-matched-half-20260905-232924-85dec7f5",
+          "gru_d10_artifact_digest": "0a4706f85f4fd4a30b9ad3d13343b808"
         },
         {
           "seed": 2,
@@ -1026,20 +905,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.6578865229245839,
           "gru_d614_minus_q_bits_per_trial": -0.070248748046852,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.03388366878032087,
-          "gru_d614_minus_d10_bits_per_trial": 0.03689444278624784,
           "embedding_centroid_mahalanobis": 8.287150862426326,
           "embedding_median_subject_mahalanobis": 8.00219944024824,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-findling-matched-half-20260905-232924-68f0b272",
           "gru_d614_artifact_digest": "ba1837fc109c5e29a5c09f35e492b1ef",
-          "gru_d10_wandb_run_id": "gru-findling-matched-half-20260905-232924-532c35dc",
-          "gru_d10_artifact_digest": "bb177df5772dc2b1b339b1f3caea983e",
           "q_wandb_run_id": "5ylyz41t",
           "q_artifact_digest": "8d92c08628d1c881c06b119a1de167ac",
           "embedding_wandb_run_id": "gru-findling-matched-half-20260905-232924-68f0b272",
           "embedding_artifact_digest": "ba1837fc109c5e29a5c09f35e492b1ef",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.03689444278624784,
+          "gru_d10_wandb_run_id": "gru-findling-matched-half-20260905-232924-532c35dc",
+          "gru_d10_artifact_digest": "bb177df5772dc2b1b339b1f3caea983e"
         }
       ],
       "summary": {
@@ -1063,10 +942,6 @@
           "mean": -0.03716575021447274,
           "sd_across_source_seeds": 0.004162977239212731
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.0323402370805152,
-          "sd_across_source_seeds": 0.00442596982507348
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 7.869082533612269,
           "sd_across_source_seeds": 2.088932045031811
@@ -1078,6 +953,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 1.0,
           "sd_across_source_seeds": 0.0
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.0323402370805152,
+          "sd_across_source_seeds": 0.00442596982507348
         }
       }
     },
@@ -1097,20 +976,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5546553872776852,
           "gru_d614_minus_q_bits_per_trial": -7.570445139111423e-05,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -7.202341408180102e-05,
-          "gru_d614_minus_d10_bits_per_trial": 0.008876362649866673,
           "embedding_centroid_mahalanobis": 2.5681127036191596,
           "embedding_median_subject_mahalanobis": 2.5917081487924314,
           "embedding_fraction_outside_source_95pct": 0.0,
           "gru_d614_wandb_run_id": "gru-tang-matched-half-20260905-232924-337195be",
           "gru_d614_artifact_digest": "7747965925f5301898c5b977418aad52",
-          "gru_d10_wandb_run_id": "gru-tang-matched-half-20260905-232924-b81728e8",
-          "gru_d10_artifact_digest": "86480617a3bb3f47f0f8cfd7e786b15c",
           "q_wandb_run_id": "uir1dqa9",
           "q_artifact_digest": "ff564cdf7fe90ed8a7fd760e6d77bf81",
           "embedding_wandb_run_id": "gru-tang-matched-half-20260905-232924-337195be",
           "embedding_artifact_digest": "7747965925f5301898c5b977418aad52",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.008876362649866673,
+          "gru_d10_wandb_run_id": "gru-tang-matched-half-20260905-232924-b81728e8",
+          "gru_d10_artifact_digest": "86480617a3bb3f47f0f8cfd7e786b15c"
         },
         {
           "seed": 1,
@@ -1122,20 +1001,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5540594519332109,
           "gru_d614_minus_q_bits_per_trial": -0.0016266046802932916,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0006996905958526201,
-          "gru_d614_minus_d10_bits_per_trial": -0.0020913047644206466,
           "embedding_centroid_mahalanobis": 2.3255837277755527,
           "embedding_median_subject_mahalanobis": 2.3536635977052027,
           "embedding_fraction_outside_source_95pct": 0.0,
           "gru_d614_wandb_run_id": "gru-tang-matched-half-20260905-232924-1b0ce323",
           "gru_d614_artifact_digest": "1368526e16b2ae62093aa555841e0e3e",
-          "gru_d10_wandb_run_id": "gru-tang-matched-half-20260905-232924-5b7fead3",
-          "gru_d10_artifact_digest": "bc28efc4a5ce71997173a72b428e8f5a",
           "q_wandb_run_id": "uir1dqa9",
           "q_artifact_digest": "ff564cdf7fe90ed8a7fd760e6d77bf81",
           "embedding_wandb_run_id": "gru-tang-matched-half-20260905-232924-1b0ce323",
           "embedding_artifact_digest": "1368526e16b2ae62093aa555841e0e3e",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": -0.0020913047644206466,
+          "gru_d10_wandb_run_id": "gru-tang-matched-half-20260905-232924-5b7fead3",
+          "gru_d10_artifact_digest": "bc28efc4a5ce71997173a72b428e8f5a"
         },
         {
           "seed": 2,
@@ -1147,20 +1026,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5540088714705269,
           "gru_d614_minus_q_bits_per_trial": -0.0017583152999176553,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0007421462420757474,
-          "gru_d614_minus_d10_bits_per_trial": 0.008760383075719752,
           "embedding_centroid_mahalanobis": 3.5404328967648757,
           "embedding_median_subject_mahalanobis": 3.6110001902447793,
           "embedding_fraction_outside_source_95pct": 0.5,
           "gru_d614_wandb_run_id": "gru-tang-matched-half-20260905-232924-ca5dcbe9",
           "gru_d614_artifact_digest": "c72900b7ef92fe3054391a36c9d46c41",
-          "gru_d10_wandb_run_id": "gru-tang-matched-half-20260905-232924-273e3835",
-          "gru_d10_artifact_digest": "6a7622be2ec6f7daa98d5d37c1a4781e",
           "q_wandb_run_id": "uir1dqa9",
           "q_artifact_digest": "ff564cdf7fe90ed8a7fd760e6d77bf81",
           "embedding_wandb_run_id": "gru-tang-matched-half-20260905-232924-ca5dcbe9",
           "embedding_artifact_digest": "c72900b7ef92fe3054391a36c9d46c41",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.008760383075719752,
+          "gru_d10_wandb_run_id": "gru-tang-matched-half-20260905-232924-273e3835",
+          "gru_d10_artifact_digest": "6a7622be2ec6f7daa98d5d37c1a4781e"
         }
       ],
       "summary": {
@@ -1184,10 +1063,6 @@
           "mean": -0.0005046200840033895,
           "sd_across_source_seeds": 0.00037524062892295077
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.005181813653721926,
-          "sd_across_source_seeds": 0.006298972254157686
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 2.811376442719863,
           "sd_across_source_seeds": 0.642921115627301
@@ -1199,6 +1074,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 0.16666666666666666,
           "sd_across_source_seeds": 0.2886751345948129
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.005181813653721926,
+          "sd_across_source_seeds": 0.006298972254157686
         }
       }
     },
@@ -1218,20 +1097,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5302450865958804,
           "gru_d614_minus_q_bits_per_trial": 0.0015040616391821637,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.0006150125205795772,
-          "gru_d614_minus_d10_bits_per_trial": 0.06146039887440623,
           "embedding_centroid_mahalanobis": 9.419218053997543,
           "embedding_median_subject_mahalanobis": 10.090202904032699,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-alsio-matched-half-20260905-232925-aa345a27",
           "gru_d614_artifact_digest": "af64ee6581bb43cb4e19bf14905ede06",
-          "gru_d10_wandb_run_id": "gru-alsio-matched-half-20260905-232925-edea1244",
-          "gru_d10_artifact_digest": "927b7bca4565e09f993cdf4aba83625a",
           "q_wandb_run_id": "xup0lx5g",
           "q_artifact_digest": "3a93456e1d24f95f1be5b1e2e295348b",
           "embedding_wandb_run_id": "gru-alsio-matched-half-20260905-232925-aa345a27",
           "embedding_artifact_digest": "af64ee6581bb43cb4e19bf14905ede06",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.06146039887440623,
+          "gru_d10_wandb_run_id": "gru-alsio-matched-half-20260905-232925-edea1244",
+          "gru_d10_artifact_digest": "927b7bca4565e09f993cdf4aba83625a"
         },
         {
           "seed": 1,
@@ -1243,20 +1122,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5292674041906348,
           "gru_d614_minus_q_bits_per_trial": -0.0011584798036478616,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0003220952136101056,
-          "gru_d614_minus_d10_bits_per_trial": 0.040516078063507995,
           "embedding_centroid_mahalanobis": 6.528906193345529,
           "embedding_median_subject_mahalanobis": 7.43111182511036,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-alsio-matched-half-20260905-232925-143325aa",
           "gru_d614_artifact_digest": "b052fdf549dbcbf5ef817fd99d376b84",
-          "gru_d10_wandb_run_id": "gru-alsio-matched-half-20260905-232925-d063a425",
-          "gru_d10_artifact_digest": "b065a0785031ead651753f1d310b3bd9",
           "q_wandb_run_id": "xup0lx5g",
           "q_artifact_digest": "3a93456e1d24f95f1be5b1e2e295348b",
           "embedding_wandb_run_id": "gru-alsio-matched-half-20260905-232925-143325aa",
           "embedding_artifact_digest": "b052fdf549dbcbf5ef817fd99d376b84",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.040516078063507995,
+          "gru_d10_wandb_run_id": "gru-alsio-matched-half-20260905-232925-d063a425",
+          "gru_d10_artifact_digest": "b065a0785031ead651753f1d310b3bd9"
         },
         {
           "seed": 2,
@@ -1268,20 +1147,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5312667335783327,
           "gru_d614_minus_q_bits_per_trial": 0.004281092402684554,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.0016644303448892783,
-          "gru_d614_minus_d10_bits_per_trial": 0.050875886093873494,
           "embedding_centroid_mahalanobis": 8.284074176529352,
           "embedding_median_subject_mahalanobis": 9.12134149144777,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-alsio-matched-half-20260905-232925-2de26895",
           "gru_d614_artifact_digest": "12541fd16afd28b7bd865bbce2d49e28",
-          "gru_d10_wandb_run_id": "gru-alsio-matched-half-20260905-232925-14f2807c",
-          "gru_d10_artifact_digest": "7b7ee97de739057cb64075976e6d295c",
           "q_wandb_run_id": "xup0lx5g",
           "q_artifact_digest": "3a93456e1d24f95f1be5b1e2e295348b",
           "embedding_wandb_run_id": "gru-alsio-matched-half-20260905-232925-2de26895",
           "embedding_artifact_digest": "12541fd16afd28b7bd865bbce2d49e28",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.050875886093873494,
+          "gru_d10_wandb_run_id": "gru-alsio-matched-half-20260905-232925-14f2807c",
+          "gru_d10_artifact_digest": "7b7ee97de739057cb64075976e6d295c"
         }
       ],
       "summary": {
@@ -1305,10 +1184,6 @@
           "mean": 0.00065244921728625,
           "sd_across_source_seeds": 0.0009937917680973478
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.05095078767726258,
-          "sd_across_source_seeds": 0.010472361302153963
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 8.077399474624142,
           "sd_across_source_seeds": 1.4561976127099414
@@ -1320,6 +1195,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 1.0,
           "sd_across_source_seeds": 0.0
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.05095078767726258,
+          "sd_across_source_seeds": 0.010472361302153963
         }
       }
     },
@@ -1339,20 +1218,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.6299915732275827,
           "gru_d614_minus_q_bits_per_trial": -0.003410443774672671,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.014183691329065658,
-          "gru_d614_minus_d10_bits_per_trial": 0.012049307184260253,
           "embedding_centroid_mahalanobis": 12.159235023612306,
           "embedding_median_subject_mahalanobis": 12.64351471618799,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-e398f399",
           "gru_d614_artifact_digest": "83468c18e6311e30a7cee24b8cc280dc",
-          "gru_d10_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-40cbadcc",
-          "gru_d10_artifact_digest": "770d6a8c5e3a3e79391971dcdfbe0a79",
           "q_wandb_run_id": "2bo9u327",
           "q_artifact_digest": "c92db61ef9ee3d1fcb667784fae0e674",
           "embedding_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-e398f399",
           "embedding_artifact_digest": "83468c18e6311e30a7cee24b8cc280dc",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.012049307184260253,
+          "gru_d10_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-40cbadcc",
+          "gru_d10_artifact_digest": "770d6a8c5e3a3e79391971dcdfbe0a79"
         },
         {
           "seed": 1,
@@ -1364,20 +1243,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.6159786972749208,
           "gru_d614_minus_q_bits_per_trial": -0.03586251673713808,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.02728580092243388,
-          "gru_d614_minus_d10_bits_per_trial": -0.004117727796086846,
           "embedding_centroid_mahalanobis": 8.216400378721941,
           "embedding_median_subject_mahalanobis": 9.227891960224515,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-1d8f5924",
           "gru_d614_artifact_digest": "2ce4f37335478e45eaa93a6643152d99",
-          "gru_d10_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-b1eb4744",
-          "gru_d10_artifact_digest": "70160ed9c72cf1e63d9f5435fb2d9250",
           "q_wandb_run_id": "2bo9u327",
           "q_artifact_digest": "c92db61ef9ee3d1fcb667784fae0e674",
           "embedding_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-1d8f5924",
           "embedding_artifact_digest": "2ce4f37335478e45eaa93a6643152d99",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": -0.004117727796086846,
+          "gru_d10_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-b1eb4744",
+          "gru_d10_artifact_digest": "70160ed9c72cf1e63d9f5435fb2d9250"
         },
         {
           "seed": 2,
@@ -1389,20 +1268,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.631860886846794,
           "gru_d614_minus_q_bits_per_trial": 0.0008639885324831394,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.01263624292424404,
-          "gru_d614_minus_d10_bits_per_trial": 0.032374892843914115,
           "embedding_centroid_mahalanobis": 10.266426765155854,
           "embedding_median_subject_mahalanobis": 10.72402051181761,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-eefec206",
           "gru_d614_artifact_digest": "ec04b64a36a6c1003d7b71f0b8f9da20",
-          "gru_d10_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-6b7a07df",
-          "gru_d10_artifact_digest": "af83ebbb81462f4ac538962bbe056823",
           "q_wandb_run_id": "2bo9u327",
           "q_artifact_digest": "c92db61ef9ee3d1fcb667784fae0e674",
           "embedding_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-eefec206",
           "embedding_artifact_digest": "ec04b64a36a6c1003d7b71f0b8f9da20",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.032374892843914115,
+          "gru_d10_wandb_run_id": "gru-eckstein-matched-half-20260905-232924-6b7a07df",
+          "gru_d10_artifact_digest": "af83ebbb81462f4ac538962bbe056823"
         }
       ],
       "summary": {
@@ -1426,10 +1305,6 @@
           "mean": -0.018035245058581194,
           "sd_across_source_seeds": 0.008048492839289278
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.013435490744029175,
-          "sd_across_source_seeds": 0.018285758637250637
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 10.2140207224967,
           "sd_across_source_seeds": 1.971939667996292
@@ -1441,6 +1316,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 1.0,
           "sd_across_source_seeds": 0.0
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.013435490744029175,
+          "sd_across_source_seeds": 0.018285758637250637
         }
       }
     },
@@ -1460,20 +1339,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.583055457672101,
           "gru_d614_minus_q_bits_per_trial": -0.008606842100916444,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0037641132317862095,
-          "gru_d614_minus_d10_bits_per_trial": 0.02719675921525438,
           "embedding_centroid_mahalanobis": 6.0779654933143705,
           "embedding_median_subject_mahalanobis": 5.582570742932712,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-costa-matched-half-20260905-232924-2678bb16",
           "gru_d614_artifact_digest": "ebd573b15d7f1e739ca28b0d8ea837de",
-          "gru_d10_wandb_run_id": "gru-costa-matched-half-20260905-232924-f27be247",
-          "gru_d10_artifact_digest": "2d5cbe7e00ee17f08c28a1177b6a2fb9",
           "q_wandb_run_id": "pp4b5fal",
           "q_artifact_digest": "17c97706686de46f1fca7be08aeac651",
           "embedding_wandb_run_id": "gru-costa-matched-half-20260905-232924-2678bb16",
           "embedding_artifact_digest": "ebd573b15d7f1e739ca28b0d8ea837de",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.02719675921525438,
+          "gru_d10_wandb_run_id": "gru-costa-matched-half-20260905-232924-f27be247",
+          "gru_d10_artifact_digest": "2d5cbe7e00ee17f08c28a1177b6a2fb9"
         },
         {
           "seed": 1,
@@ -1485,20 +1364,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5803930823063098,
           "gru_d614_minus_q_bits_per_trial": -0.015209630810093404,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.006511653589776284,
-          "gru_d614_minus_d10_bits_per_trial": 0.03949190447826235,
           "embedding_centroid_mahalanobis": 6.589382910243261,
           "embedding_median_subject_mahalanobis": 6.511858320436885,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-costa-matched-half-20260905-232924-2eca5bc1",
           "gru_d614_artifact_digest": "9341bb31b63b3a3c8f36593c10cc9bc6",
-          "gru_d10_wandb_run_id": "gru-costa-matched-half-20260905-232924-8c3b37cd",
-          "gru_d10_artifact_digest": "356c86d6caf9a320e617a645e9f3c83e",
           "q_wandb_run_id": "pp4b5fal",
           "q_artifact_digest": "17c97706686de46f1fca7be08aeac651",
           "embedding_wandb_run_id": "gru-costa-matched-half-20260905-232924-2eca5bc1",
           "embedding_artifact_digest": "9341bb31b63b3a3c8f36593c10cc9bc6",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.03949190447826235,
+          "gru_d10_wandb_run_id": "gru-costa-matched-half-20260905-232924-8c3b37cd",
+          "gru_d10_artifact_digest": "356c86d6caf9a320e617a645e9f3c83e"
         },
         {
           "seed": 2,
@@ -1510,20 +1389,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.586121338509585,
           "gru_d614_minus_q_bits_per_trial": -0.0010405933815919256,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0005702061896300666,
-          "gru_d614_minus_d10_bits_per_trial": 0.03745627105638225,
           "embedding_centroid_mahalanobis": 10.190012176099668,
           "embedding_median_subject_mahalanobis": 10.437872769986202,
           "embedding_fraction_outside_source_95pct": 1.0,
           "gru_d614_wandb_run_id": "gru-costa-matched-half-20260905-232924-2cb7006b",
           "gru_d614_artifact_digest": "1b389b8cb7cf9b7204b25849d085b428",
-          "gru_d10_wandb_run_id": "gru-costa-matched-half-20260905-232924-2176ff5e",
-          "gru_d10_artifact_digest": "c5dd6d1f3ba8a07dccace2552b7c2093",
           "q_wandb_run_id": "pp4b5fal",
           "q_artifact_digest": "17c97706686de46f1fca7be08aeac651",
           "embedding_wandb_run_id": "gru-costa-matched-half-20260905-232924-2cb7006b",
           "embedding_artifact_digest": "1b389b8cb7cf9b7204b25849d085b428",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.03745627105638225,
+          "gru_d10_wandb_run_id": "gru-costa-matched-half-20260905-232924-2176ff5e",
+          "gru_d10_artifact_digest": "c5dd6d1f3ba8a07dccace2552b7c2093"
         }
       ],
       "summary": {
@@ -1547,10 +1426,6 @@
           "mean": -0.003615324337064187,
           "sd_across_source_seeds": 0.0029735169250519685
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.034714978249966326,
-          "sd_across_source_seeds": 0.006590042787986857
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 7.6191201932191,
           "sd_across_source_seeds": 2.2410937361730854
@@ -1562,6 +1437,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 1.0,
           "sd_across_source_seeds": 0.0
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.034714978249966326,
+          "sd_across_source_seeds": 0.006590042787986857
         }
       }
     },
@@ -1581,20 +1460,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.584910628791812,
           "gru_d614_minus_q_bits_per_trial": 0.1499368931059376,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.05743389576665161,
-          "gru_d614_minus_d10_bits_per_trial": 0.11959153671918717,
           "embedding_centroid_mahalanobis": 15.34472125162659,
           "embedding_median_subject_mahalanobis": 17.238246741710867,
           "embedding_fraction_outside_source_95pct": 0.875,
           "gru_d614_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-ac82500e",
           "gru_d614_artifact_digest": "df35b00dfb57e4736e7b9098b94ae193",
-          "gru_d10_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-29d5c034",
-          "gru_d10_artifact_digest": "9fdab3ff650e79fe59b83b3ee3589faa",
           "q_wandb_run_id": "kx67hbnx",
           "q_artifact_digest": "c3f374fcefc465506ef7ea123968744e",
           "embedding_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-ac82500e",
           "embedding_artifact_digest": "df35b00dfb57e4736e7b9098b94ae193",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
-          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+          "source_embedding_artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77",
+          "gru_d614_minus_d10_bits_per_trial": 0.11959153671918717,
+          "gru_d10_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-29d5c034",
+          "gru_d10_artifact_digest": "9fdab3ff650e79fe59b83b3ee3589faa"
         },
         {
           "seed": 1,
@@ -1606,20 +1485,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.5779941472016118,
           "gru_d614_minus_q_bits_per_trial": 0.13277557163430598,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.05068115344586387,
-          "gru_d614_minus_d10_bits_per_trial": 0.06983766984999108,
           "embedding_centroid_mahalanobis": 9.30209011030111,
           "embedding_median_subject_mahalanobis": 10.333561506484665,
           "embedding_fraction_outside_source_95pct": 0.875,
           "gru_d614_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-30233e2c",
           "gru_d614_artifact_digest": "31e0d7f7c9c0a21ba15d8f6a725f3de7",
-          "gru_d10_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-ceb03d38",
-          "gru_d10_artifact_digest": "ec0940192baca782935b4d7af91002b9",
           "q_wandb_run_id": "kx67hbnx",
           "q_artifact_digest": "c3f374fcefc465506ef7ea123968744e",
           "embedding_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-30233e2c",
           "embedding_artifact_digest": "31e0d7f7c9c0a21ba15d8f6a725f3de7",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-3603897b",
-          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+          "source_embedding_artifact_digest": "08e27c94c5308f48d7c4dca284a0a428",
+          "gru_d614_minus_d10_bits_per_trial": 0.06983766984999108,
+          "gru_d10_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-ceb03d38",
+          "gru_d10_artifact_digest": "ec0940192baca782935b4d7af91002b9"
         },
         {
           "seed": 2,
@@ -1631,20 +1510,20 @@
           "gru_d614_subject_balanced_normalized_likelihood": 0.561236046101346,
           "gru_d614_minus_q_bits_per_trial": 0.09032835850215704,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.03334688670704982,
-          "gru_d614_minus_d10_bits_per_trial": 0.1034858637280195,
           "embedding_centroid_mahalanobis": 8.972579074603889,
           "embedding_median_subject_mahalanobis": 10.056717056848562,
           "embedding_fraction_outside_source_95pct": 0.875,
           "gru_d614_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-c5f041a6",
           "gru_d614_artifact_digest": "2ae9993dde9d407551f77d544f4f0d74",
-          "gru_d10_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-f2ef4b4a",
-          "gru_d10_artifact_digest": "22cadd80ca74e8b51d59c5b43aacbcfc",
           "q_wandb_run_id": "kx67hbnx",
           "q_artifact_digest": "c3f374fcefc465506ef7ea123968744e",
           "embedding_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-c5f041a6",
           "embedding_artifact_digest": "2ae9993dde9d407551f77d544f4f0d74",
           "source_embedding_run_id": "v2-sc-active-20260622-144622-d6462060",
-          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+          "source_embedding_artifact_digest": "c2a992ec6a687a094e955850807a03c0",
+          "gru_d614_minus_d10_bits_per_trial": 0.1034858637280195,
+          "gru_d10_wandb_run_id": "gru-lopez-mouse-matched-half-20260905-232924-f2ef4b4a",
+          "gru_d10_artifact_digest": "22cadd80ca74e8b51d59c5b43aacbcfc"
         }
       ],
       "summary": {
@@ -1668,10 +1547,6 @@
           "mean": 0.0471539786398551,
           "sd_across_source_seeds": 0.012424842974598992
         },
-        "gru_d614_minus_d10_bits_per_trial": {
-          "mean": 0.09763835676573258,
-          "sd_across_source_seeds": 0.025387138877095178
-        },
         "embedding_centroid_mahalanobis": {
           "mean": 11.206463478843864,
           "sd_across_source_seeds": 3.587621416225387
@@ -1683,6 +1558,10 @@
         "embedding_fraction_outside_source_95pct": {
           "mean": 0.875,
           "sd_across_source_seeds": 0.0
+        },
+        "gru_d614_minus_d10_bits_per_trial": {
+          "mean": 0.09763835676573258,
+          "sd_across_source_seeds": 0.025387138877095178
         }
       }
     }

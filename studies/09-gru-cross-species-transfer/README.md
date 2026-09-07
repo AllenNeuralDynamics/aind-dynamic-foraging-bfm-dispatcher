@@ -4,6 +4,7 @@ Issues: dispatcher [#32](https://github.com/AllenNeuralDynamics/aind-dynamic-for
 [#126](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/126),
 and [#127](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/127);
 generalization drivers [#140](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/140);
+embedding capacity [#148](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/148);
 Stage-A expansion [#134](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/134)
 through [#138](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/138);
 author-aligned baselines [#131](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/131),
@@ -206,27 +207,44 @@ expanded GRU-versus-common-Q result.
 seeds to ask where unseen subjects land after embedding-only adaptation. PCA is
 fit separately to the 614 source-training AIND mice in each seed; the primary
 control is the 149 held-out AIND mice, which were also unseen by the frozen GRU
-core. A full four-dimensional Mahalanobis-distance analysis accompanies the 2D
-PC views.
+core. Separate source-fitted PCA views and full-dimensional Mahalanobis analyses
+are reported for E=4 and E=8.
 
 Held-out AIND mice remain calibrated to the source distribution, with only
-4.0%--5.4% outside its empirical 95th percentile. Every external cohort's
-median four-dimensional Mahalanobis distance exceeds the held-out-AIND median
-in all three seeds. Grossman (mouse), Beron (mouse), Lebedeva (mouse), and
-Tang (macaque) are nearest to the source distribution; Zid (human), Eckstein (human),
-and López-Yépez (mouse) are farthest on
-average. Distance is descriptive: species, task structure, reward contingency,
-session duration, and adaptation-data volume vary together and cannot be
-isolated by this survey.
+4.0%--5.4% outside the E=4 empirical 95th percentile and 6.0%--7.4% outside the
+E=8 threshold. Every external cohort's median distance exceeds the held-out-AIND
+median in all three seeds in both spaces. Raw E4 and E8 distances are not
+directly comparable, but the external-cohort distance ranks are strongly stable
+(Spearman rho=0.909). Distance is descriptive: species, task structure, reward
+contingency, session duration, and adaptation-data volume vary together and
+cannot be isolated by this survey.
 
 ## Generalization drivers
 
 [Result 3](analysis/reports/r3-generalization-drivers.md) is a cross-cohort
 meta-analysis of the frozen GRU, common-Q, embedding, and task-design artifacts.
-It compares subject-balanced D=614 GRU improvement and embedding displacement
-with an evidence-backed categorical distance from the AIND source tasks. For
+It compares subject-balanced E4 and E8 D=614 GRU improvement and
+dimension-specific embedding displacement with an evidence-backed categorical
+distance from the AIND source tasks. For
 the six primary cohorts with complete trial-wise arm probabilities, it also tests
 an empirical reward-schedule distance from Grossman (mouse). Primary categorical
 inference uses eight cohorts; a separate all-valid sensitivity uses 12 and still
 excludes quarantined Kwak (mouse). Species remains descriptive
 because species, study, apparatus, and task design are confounded.
+
+## Subject-embedding capacity ablation
+
+[Result 4](analysis/reports/r4-embedding-dimension-transfer.md) compares E=4
+versus E=8 transfer in issue #148. Both
+source dimensions use D=614, H=128, three seeds, the same source snapshot and
+training recipe, and the same external 500-step embedding adaptation. The
+strict paired current-code comparison covers Grossman (mouse), Lebedeva
+(mouse), Miller (rat), Findling (human), and Eckstein (human). The remaining
+seven cohorts compare current E8 with the frozen historical E4 screen on exactly
+the same held-out trial keys. The two E8 expansion shards completed as Beaker experiments
+`01M1YRP7ASQRQN4Y7MZ2HEQAXG` and `01M1YRT8B20NMJ3JAHNVC0RMF4`. Kwak (mouse)
+remains quarantined and was not run. All 21 expansion tasks succeeded, their
+W&B artifacts were frozen, and exact held-out trial-key parity passed. Across
+all 12 valid cohorts, E8 has higher mean held-out likelihood in 10 and lower in
+Grossman (mouse) and Zid (human). The seven historical-E4 comparisons remain a
+weaker causal dimension ablation than the five paired current-code reruns.

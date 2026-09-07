@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import math
@@ -18,16 +19,25 @@ from _meta import build_meta  # noqa: E402
 
 
 MATCHED = STUDY / "analysis" / "matched_half_results.json"
-EMBEDDINGS = STUDY / "analysis" / "embedding_space_results.json"
+EMBEDDINGS = {
+    4: STUDY / "analysis" / "embedding_space_results.json",
+    8: STUDY / "analysis" / "embedding_space_results_e8.json",
+}
+E8_PERFORMANCE = (
+    STUDY / "analysis" / "embedding_dimension_results.json",
+    STUDY / "analysis" / "embedding_dimension_expansion_results.json",
+)
 ANNOTATIONS = STUDY / "analysis" / "task_design_annotations.json"
-OUTPUT = STUDY / "analysis" / "generalization_drivers.json"
+OUTPUTS = {
+    4: STUDY / "analysis" / "generalization_drivers.json",
+    8: STUDY / "analysis" / "generalization_drivers_e8.json",
+}
 DATASET_ORDER = (
     "grossman",
     "chen",
     "zid",
     "lebedeva",
     "beron",
-    "kwak",
     "miller",
     "findling",
     "tang",
@@ -42,7 +52,6 @@ BASE_LABELS = {
     "zid": "Zid",
     "lebedeva": "Lebedeva",
     "beron": "Beron",
-    "kwak": "Kwak",
     "miller": "Miller",
     "findling": "Findling",
     "tang": "Tang",
@@ -54,6 +63,28 @@ BASE_LABELS = {
 N_PERMUTATIONS = 100_000
 N_BOOTSTRAPS = 20_000
 RNG_SEED = 20260906
+
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dimension", type=int, choices=(4, 8), default=4)
+    return parser
+
+
+def _performance_by_dataset(
+    dimension: int, matched: dict
+) -> tuple[dict[str, dict], list[Path]]:
+    if dimension == 4:
+        return {name: matched["datasets"][name] for name in DATASET_ORDER}, [MATCHED]
+    documents = [json.loads(path.read_text()) for path in E8_PERFORMANCE]
+    datasets = {
+        name: dataset
+        for document in documents
+        for name, dataset in document["datasets"].items()
+    }
+    if set(datasets) != set(DATASET_ORDER):
+        raise AssertionError("E8 performance cohort membership drifted")
+    return datasets, list(E8_PERFORMANCE)
 
 
 def _sha256(path: Path) -> str:
@@ -156,20 +187,24 @@ def _correlation_summary(
 def _seed_record(
     dataset_name: str,
     seed: int,
-    dataset: dict,
+    matched_dataset: dict,
+    performance_dataset: dict,
     embedding_seed: dict,
+    dimension: int,
 ) -> dict:
-    q_record = dataset["q"]
-    d10 = _gru_by_seed(dataset, 10)[seed]
-    d614 = _gru_by_seed(dataset, 614)[seed]
+    q_record = matched_dataset["q"]
+    d614 = (
+        _gru_by_seed(performance_dataset, 614)[seed]
+        if dimension == 4
+        else {int(row["seed"]): row for row in performance_dataset["e8"]}[seed]
+    )
     q = _subject_ll(q_record)
-    gru10 = _subject_ll(d10)
     gru614 = _subject_ll(d614)
 
     source = _embedding_map(embedding_seed["groups"]["aind_source"])
     target = _embedding_map(embedding_seed["groups"][dataset_name])
     subject_ids = sorted(q)
-    if set(subject_ids) != set(gru10) or set(subject_ids) != set(gru614):
+    if set(subject_ids) != set(gru614):
         raise AssertionError(f"GRU/Q subject mismatch for {dataset_name}, seed {seed}")
     if set(subject_ids) != set(target):
         raise AssertionError(
@@ -195,15 +230,13 @@ def _seed_record(
     )
 
     q_values = np.asarray([q[subject] for subject in subject_ids])
-    gru10_values = np.asarray([gru10[subject] for subject in subject_ids])
     gru614_values = np.asarray([gru614[subject] for subject in subject_ids])
     q_mean = float(q_values.mean())
-    gru10_mean = float(gru10_values.mean())
     gru614_mean = float(gru614_values.mean())
     log_two = math.log(2)
     embedding_provenance = embedding_seed["groups"][dataset_name]["provenance"]
 
-    return {
+    record = {
         "seed": seed,
         "n_subjects": len(subject_ids),
         "q_subject_mean_log_likelihood_nats": q_mean,
@@ -215,9 +248,6 @@ def _seed_record(
         "gru_d614_minus_q_mean_subject_normalized_likelihood": float(
             np.mean(np.exp(gru614_values) - np.exp(q_values))
         ),
-        "gru_d614_minus_d10_bits_per_trial": (
-            gru614_mean - gru10_mean
-        ) / log_two,
         "embedding_centroid_mahalanobis": centroid_distance,
         "embedding_median_subject_mahalanobis": float(
             np.median(target_distances)
@@ -227,8 +257,6 @@ def _seed_record(
         ),
         "gru_d614_wandb_run_id": d614["wandb_run_id"],
         "gru_d614_artifact_digest": d614["evaluation_artifact"]["digest"],
-        "gru_d10_wandb_run_id": d10["wandb_run_id"],
-        "gru_d10_artifact_digest": d10["evaluation_artifact"]["digest"],
         "q_wandb_run_id": q_record["wandb_run_id"],
         "q_artifact_digest": q_record["training_artifact"]["digest"],
         "embedding_wandb_run_id": embedding_provenance["wandb_run_id"],
@@ -240,6 +268,25 @@ def _seed_record(
             "aind_source"
         ]["provenance"]["artifact_digest"],
     }
+    if dimension == 4:
+        d10 = _gru_by_seed(performance_dataset, 10)[seed]
+        gru10 = _subject_ll(d10)
+        if set(subject_ids) != set(gru10):
+            raise AssertionError(f"D10/D614 subject mismatch for {dataset_name}, seed {seed}")
+        gru10_mean = float(
+            np.mean([gru10[subject] for subject in subject_ids])
+        )
+        record.update(
+            {
+                "gru_d614_minus_d10_bits_per_trial": (
+                    gru614_mean - gru10_mean
+                )
+                / log_two,
+                "gru_d10_wandb_run_id": d10["wandb_run_id"],
+                "gru_d10_artifact_digest": d10["evaluation_artifact"]["digest"],
+            }
+        )
+    return record
 
 
 def _mean_sd(records: list[dict], key: str) -> dict[str, float]:
@@ -251,11 +298,15 @@ def _mean_sd(records: list[dict], key: str) -> dict[str, float]:
 
 
 def main() -> None:
+    dimension = _parser().parse_args().dimension
+    output_path = OUTPUTS[dimension]
     matched = json.loads(MATCHED.read_text())
-    embeddings = json.loads(EMBEDDINGS.read_text())
+    embedding_path = EMBEDDINGS[dimension]
+    embeddings = json.loads(embedding_path.read_text())
+    performance, performance_paths = _performance_by_dataset(dimension, matched)
     annotations = json.loads(ANNOTATIONS.read_text())
-    if tuple(matched["datasets"]) != DATASET_ORDER:
-        raise AssertionError("Matched-result cohort order drifted")
+    if not set(DATASET_ORDER).issubset(matched["datasets"]):
+        raise AssertionError("Matched-result cohort membership drifted")
     if tuple(embeddings["groups"])[2:] != DATASET_ORDER:
         raise AssertionError("Embedding cohort order drifted")
     embedding_seeds = {int(row["seed"]): row for row in embeddings["seeds"]}
@@ -268,7 +319,7 @@ def main() -> None:
     }
     if (
         len(tier_by_cohort) != sum(len(names) for names in tiers.values())
-        or set(tier_by_cohort) != set(DATASET_ORDER)
+        or set(DATASET_ORDER) != set(tier_by_cohort) - set(tiers["quarantined"])
     ):
         raise AssertionError("Analysis tiers must partition every cohort exactly once")
     primary_names = tuple(tiers["primary"])
@@ -283,7 +334,9 @@ def main() -> None:
                 dataset_name,
                 seed,
                 matched["datasets"][dataset_name],
+                performance[dataset_name],
                 embedding_seeds[seed],
+                dimension,
             )
             for seed in (0, 1, 2)
         ]
@@ -302,10 +355,14 @@ def main() -> None:
                     "gru_d614_subject_balanced_normalized_likelihood",
                     "gru_d614_minus_q_bits_per_trial",
                     "gru_d614_minus_q_mean_subject_normalized_likelihood",
-                    "gru_d614_minus_d10_bits_per_trial",
                     "embedding_centroid_mahalanobis",
                     "embedding_median_subject_mahalanobis",
                     "embedding_fraction_outside_source_95pct",
+                    *(
+                        ("gru_d614_minus_d10_bits_per_trial",)
+                        if dimension == 4
+                        else ()
+                    ),
                 )
             },
         }
@@ -318,7 +375,7 @@ def main() -> None:
 
         delta = values("gru_d614_minus_q_bits_per_trial")
         centroid = values("embedding_centroid_mahalanobis")
-        return {
+        relationships = {
             "gru_d614_minus_q_vs_embedding_centroid": _correlation_summary(
                 centroid, delta, rng
             ),
@@ -330,10 +387,14 @@ def main() -> None:
             "gru_d614_minus_q_vs_common_q_predictability": _correlation_summary(
                 values("q_bits_above_chance"), delta, rng
             ),
-            "gru_d614_minus_d10_vs_embedding_centroid": _correlation_summary(
-                centroid, values("gru_d614_minus_d10_bits_per_trial"), rng
-            ),
         }
+        if dimension == 4:
+            relationships["gru_d614_minus_d10_vs_embedding_centroid"] = (
+                _correlation_summary(
+                    centroid, values("gru_d614_minus_d10_bits_per_trial"), rng
+                )
+            )
+        return relationships
 
     groups = list(
         dict.fromkeys(
@@ -351,11 +412,17 @@ def main() -> None:
         ),
         "inputs": {
             str(MATCHED.relative_to(STUDY)): _sha256(MATCHED),
-            str(EMBEDDINGS.relative_to(STUDY)): _sha256(EMBEDDINGS),
+            str(embedding_path.relative_to(STUDY)): _sha256(embedding_path),
             str(ANNOTATIONS.relative_to(STUDY)): _sha256(ANNOTATIONS),
+            **{
+                str(path.relative_to(STUDY)): _sha256(path)
+                for path in performance_paths
+                if path != MATCHED
+            },
         },
         "contract": {
             "cohort_order": list(DATASET_ORDER),
+            "subject_embedding_size": dimension,
             "analysis_tiers": tiers,
             "tier_reasons": annotations["tier_reasons"],
             "required_reruns": annotations["required_reruns"],
@@ -370,7 +437,7 @@ def main() -> None:
                 "average only after seed-specific estimates"
             ),
             "embedding_distance": (
-                "full-4D Mahalanobis distance from external cohort centroid to "
+                f"full-{dimension}D Mahalanobis distance from external cohort centroid to "
                 "the 614-source-mouse centroid, using source covariance per seed"
             ),
             "inference": (
@@ -384,8 +451,8 @@ def main() -> None:
         "relationships": relationship_bundle(primary_names),
         "sensitivity_relationships": relationship_bundle(sensitivity_names),
     }
-    OUTPUT.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n")
-    print(f"Wrote {OUTPUT}")
+    output_path.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n")
+    print(f"Wrote {output_path}")
 
 
 if __name__ == "__main__":
