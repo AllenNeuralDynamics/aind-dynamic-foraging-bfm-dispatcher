@@ -6,6 +6,7 @@ authors: [han, codex]
 wandb_groups: []
 inputs:
   script: analysis/report_embedding_dimension.py
+  freezer: analysis/freeze_embedding_dimension.py
   data:
     - analysis/embedding_dimension_results.json
     - source_runs_e4_pair.json
