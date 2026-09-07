@@ -2,6 +2,8 @@
 
 ## 2026-09-06
 
+- Prepared the paired current-code E=4 versus E=8 D=614 transfer ablation for
+  five diagnostic cohorts and reserved Result 4 for its subject-level report.
 - Implemented and ran the primary-set author-selected models for Lebedeva
   (mouse), Beron (mouse), Miller (rat), Findling (human), and both Eckstein
   (human) co-winners; added a 64-particle Findling fitting sensitivity.

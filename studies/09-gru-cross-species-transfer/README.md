@@ -230,3 +230,13 @@ an empirical reward-schedule distance from Grossman (mouse). Primary categorical
 inference uses eight cohorts; a separate all-valid sensitivity uses 12 and still
 excludes quarantined Kwak (mouse). Species remains descriptive
 because species, study, apparatus, and task design are confounded.
+
+## Subject-embedding capacity ablation
+
+[Result 4](analysis/reports/r4-embedding-dimension-transfer.md) is reserved for
+the paired current-code E=4 versus E=8 transfer comparison in issue #148. Both
+source dimensions use D=614, H=128, three seeds, the same source snapshot and
+training recipe, and the same external 500-step embedding adaptation. The
+diagnostic panel covers Grossman (mouse), Lebedeva (mouse), Miller (rat),
+Findling (human), and Eckstein (human). Historical E=4 transfer remains a drift
+reference; the primary comparison uses the newly paired E=4 source runs.

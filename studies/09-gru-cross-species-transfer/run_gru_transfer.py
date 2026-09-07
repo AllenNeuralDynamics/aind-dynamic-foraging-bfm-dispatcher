@@ -84,6 +84,7 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", required=True, choices=DATASETS)
     parser.add_argument("--source-key", required=True)
+    parser.add_argument("--source-manifest", default="source_runs.json")
     parser.add_argument("--data-root", type=Path, default=Path("/external"))
     parser.add_argument("--output-root", type=Path, default=Path("/results"))
     return parser
@@ -106,7 +107,10 @@ def main() -> None:
     )
     from post_training_analysis.wandb_model_dir import hydrate_model_dir
 
-    source_manifest = json.loads((STUDY_DIR / "source_runs.json").read_text())
+    source_manifest_path = Path(args.source_manifest)
+    if not source_manifest_path.is_absolute():
+        source_manifest_path = STUDY_DIR / source_manifest_path
+    source_manifest = json.loads(source_manifest_path.read_text())
     try:
         source = source_manifest["runs"][args.source_key]
     except KeyError as exc:
@@ -135,6 +139,10 @@ def main() -> None:
         "source": {
             **source,
             "key": args.source_key,
+            "manifest": source_manifest_path.name,
+            "manifest_sha256": hashlib.sha256(
+                source_manifest_path.read_bytes()
+            ).hexdigest(),
             "wandb_project": source_manifest["project"],
             "wandb_group": source_manifest["group"],
             "checkpoint_policy": source_manifest["checkpoint_policy"],

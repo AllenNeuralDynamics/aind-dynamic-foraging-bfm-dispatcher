@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "awaiting_source_runs",
+  "entity": "AIND-disRNN",
+  "project": "mice_data_scaling",
+  "group": "e4-e8-d614-source@20260906-195409",
+  "source_beaker_experiment_id": "01M1WWK9HP269XQS440Y29631F",
+  "architecture": {
+    "model": "gru",
+    "hidden_size": 128,
+    "subject_embedding_size": 4
+  },
+  "source_dispatcher_commit": "ab399a50a736add59fcc189d0ac14e2dc6687279",
+  "source_wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "source_foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "checkpoint_policy": "best_eval",
+  "embedding_finetuning": {
+    "n_steps": 500,
+    "lr": 0.001,
+    "selection_policy": "fixed_final"
+  },
+  "runs": {}
+}

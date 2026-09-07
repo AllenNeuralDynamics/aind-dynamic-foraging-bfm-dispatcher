@@ -2,7 +2,7 @@ PYTHON ?= python
 CACHE_ROOT ?= data-cache
 PYTHONPATH := ../../code
 
-.PHONY: all suite rebuild validate smoke-loaders freeze-matched freeze-authors examples freeze-embeddings freeze-generalization freeze-task-design r1 r2 r3
+.PHONY: all suite rebuild validate smoke-loaders freeze-matched freeze-authors examples freeze-embeddings freeze-generalization freeze-task-design r1 r2 r3 r4
 
 all: r1 r2 r3
 
@@ -48,3 +48,6 @@ r2:
 
 r3:
 	$(PYTHON) analysis/report_generalization_drivers.py
+
+r4:
+	$(PYTHON) analysis/report_embedding_dimension.py
