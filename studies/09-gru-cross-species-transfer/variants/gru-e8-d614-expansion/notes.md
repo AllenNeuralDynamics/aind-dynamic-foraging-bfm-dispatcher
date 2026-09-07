@@ -24,7 +24,7 @@ stress/descriptive shard to remain below the resumable launcher's approximate
 15-task payload limit. Both shards are GPU-only Beaker launches on hub H200
 clusters using low-priority preemptible tasks with automatic resume.
 
-Status: launched after verifying 22 schedulable GPUs on AWS H200 and 15 on
+Status: complete. The launch followed verification of 22 schedulable GPUs on AWS H200 and 15 on
 on-prem H200. The primary shard is Beaker experiment
 `01M1YRP7ASQRQN4Y7MZ2HEQAXG`, W&B group
 `gru-e8-d614-expansion@20260907-132415`. The stress/descriptive shard is Beaker
@@ -32,3 +32,10 @@ experiment `01M1YRT8B20NMJ3JAHNVC0RMF4`, W&B group
 `gru-e8-d614-expansion@20260907-132625`. An initial boundary submission returned
 a retryable Beaker database conflict; no partial experiment was created, and
 the clean retry succeeded.
+
+All 21 tasks finished successfully. The frozen result reconciles all 21 with
+finished W&B runs, pins every evaluation-artifact digest, and confirms exact
+held-out trial-key parity with the historical E4 screen. Relative to that
+historical E4 reference, E8 is higher in six of seven expansion cohorts and
+lower in Zid (human); this is descriptive because only the original five-cohort
+diagnostic has a paired current-code E4 transfer.

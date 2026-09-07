@@ -27,6 +27,9 @@ MATCHED_DATA = STUDY / "analysis" / "matched_half_results.json"
 EXAMPLE_DATA = STUDY / "analysis" / "example_behavior_sessions.json"
 VALIDATION_DATA = STUDY / "analysis" / "dataset_suite_validation.json"
 EMBEDDING_DIMENSION_DATA = STUDY / "analysis" / "embedding_dimension_results.json"
+EMBEDDING_DIMENSION_EXPANSION_DATA = (
+    STUDY / "analysis" / "embedding_dimension_expansion_results.json"
+)
 TASK_DESIGN_DATA = STUDY / "analysis" / "task_design_annotations.json"
 SURVEY = STUDY / "DATASET_SURVEY.md"
 FIGURE = STUDY / "analysis" / "fig_author_baseline_likelihood.png"
@@ -969,8 +972,11 @@ def _result_block(
         "author-selected model. Stress-test and descriptive cohorts without a reproduced "
         "author model use common Q as the ordering reference. Panel-title color encodes "
         "species using the same palette as the task-design figures. Light-blue GRU points "
-        "and curves are E4; dark-blue D=614 overlays are E8 and appear only for Grossman "
-        "(mouse), Lebedeva (mouse), Miller (rat), Findling (human), and Eckstein (human). "
+        "and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now "
+        "appear for every displayed cohort. The five-cohort diagnostic E8 values have a "
+        "paired current-code E4 comparator in Result 4; the seven expansion values are "
+        "shown against historical E4 here and should not be interpreted as an isolated "
+        "embedding-dimension effect. "
         "GRU points are the three source-training seeds; summaries are their mean ± SD. "
         "Common Q is fitted independently per target subject on the identical adaptation half. "
         "Author-model lines include the existing Grossman (mouse), Chen (mouse), and "
@@ -1184,11 +1190,20 @@ def main() -> None:
     examples = json.loads(EXAMPLE_DATA.read_text())
     validation = _validation_map(json.loads(VALIDATION_DATA.read_text()))
     embedding_dimension = json.loads(EMBEDDING_DIMENSION_DATA.read_text())
+    embedding_expansion = json.loads(EMBEDDING_DIMENSION_EXPANSION_DATA.read_text())
     task_design = json.loads(TASK_DESIGN_DATA.read_text())
     if tuple(matched["datasets"]) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen matched-result dataset membership drifted")
     if tuple(examples["datasets"]) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen example dataset membership drifted")
+    overlap = set(embedding_dimension["datasets"]) & set(
+        embedding_expansion["datasets"]
+    )
+    if overlap:
+        raise AssertionError(f"Duplicate E8 datasets across frozen inputs: {sorted(overlap)}")
+    embedding_dimension["datasets"].update(embedding_expansion["datasets"])
+    if set(embedding_dimension["datasets"]) != set(DATASET_ORDER):
+        raise AssertionError("E8 frozen inputs do not cover every displayed dataset")
     _plot_summary(
         author_data,
         matched,

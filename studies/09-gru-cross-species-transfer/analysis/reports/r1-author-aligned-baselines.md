@@ -33,6 +33,8 @@ wandb_groups:
   - eckstein-bi@slurm-25582240
   - gru-e8-d614-diagnostic@20260907-071400
   - gru-e8-d614-diagnostic@20260907-093646
+  - gru-e8-d614-expansion@20260907-132415
+  - gru-e8-d614-expansion@20260907-132625
 inputs:
   script: analysis/report_author_baselines.py
   data:
@@ -41,6 +43,7 @@ inputs:
     - analysis/example_behavior_sessions.json
     - analysis/dataset_suite_validation.json
     - analysis/embedding_dimension_results.json
+    - analysis/embedding_dimension_expansion_results.json
     - analysis/task_design_annotations.json
     - analysis/kwak_choicefix_bundle.json
     - DATASET_SURVEY.md
@@ -104,7 +107,7 @@ particle-count sensitivity and the paper comparators retained from round one.
 
 ![GRU, common Q, and available author baselines](../fig_author_baseline_likelihood.png)
 
-Every model uses the same immutable adaptation and held-out observations. Panels are grouped as primary, stress test, and descriptive, then ordered within each tier by descending E4 D=614 GRU advantage over the strongest available author-selected model. Stress-test and descriptive cohorts without a reproduced author model use common Q as the ordering reference. Panel-title color encodes species using the same palette as the task-design figures. Light-blue GRU points and curves are E4; dark-blue D=614 overlays are E8 and appear only for Grossman (mouse), Lebedeva (mouse), Miller (rat), Findling (human), and Eckstein (human). GRU points are the three source-training seeds; summaries are their mean ± SD. Common Q is fitted independently per target subject on the identical adaptation half. Author-model lines include the existing Grossman (mouse), Chen (mouse), and Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), and both Eckstein (human) co-winners.
+Every model uses the same immutable adaptation and held-out observations. Panels are grouped as primary, stress test, and descriptive, then ordered within each tier by descending E4 D=614 GRU advantage over the strongest available author-selected model. Stress-test and descriptive cohorts without a reproduced author model use common Q as the ordering reference. Panel-title color encodes species using the same palette as the task-design figures. Light-blue GRU points and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now appear for every displayed cohort. The five-cohort diagnostic E8 values have a paired current-code E4 comparator in Result 4; the seven expansion values are shown against historical E4 here and should not be interpreted as an isolated embedding-dimension effect. GRU points are the three source-training seeds; summaries are their mean ± SD. Common Q is fitted independently per target subject on the identical adaptation half. Author-model lines include the existing Grossman (mouse), Chen (mouse), and Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), and both Eckstein (human) co-winners.
 
 Kwak (mouse) is omitted from every figure, table, direction count, and inference in this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, which confounds subject adaptation with treatment transfer. Readmission requires a new DMSO/control-only run using chronological odd DMSO sessions for adaptation and chronological even DMSO sessions for testing.
 

@@ -246,6 +246,10 @@ Lebedeva (mouse), but improves Miller (rat), Findling (human), and Eckstein
 `gru-e8-d614-expansion` variant extends E8 to the remaining cohorts in Report 1
 order: Zid (human), Chen (mouse), and Beron (mouse) as primary cohorts;
 López-Yépez (mouse), Alsiö (rat), and Costa (macaque) as stress tests; and Tang
-(macaque) as descriptive. The two GPU shards are running as Beaker experiments
+(macaque) as descriptive. The two GPU shards completed as Beaker experiments
 `01M1YRP7ASQRQN4Y7MZ2HEQAXG` and `01M1YRT8B20NMJ3JAHNVC0RMF4`. Kwak (mouse)
-remains quarantined and is not run.
+remains quarantined and was not run. All 21 expansion tasks succeeded, their
+W&B artifacts were frozen, and exact held-out trial-key parity passed. Compared
+descriptively with historical E4, E8 is higher in six of the seven added
+cohorts and lower in Zid (human); only the original five-cohort diagnostic has
+a paired current-code E4 transfer.

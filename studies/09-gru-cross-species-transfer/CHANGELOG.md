@@ -2,6 +2,9 @@
 
 ## 2026-09-07
 
+- Extended E=8 D=614 transfer to the seven remaining valid cohorts in 21
+  GPU-only Beaker tasks; froze all artifacts with exact historical-E4 trial-key
+  parity and updated Report 1 so every displayed cohort has an E8 overlay.
 - Froze all six paired source artifacts, completed the E=8 diagnostic transfer,
   and launched the matched 15-cell E=4 transfer as Beaker experiment
   `01M1YBQERTCR0HF6Y749X7M5HT`.
