@@ -24,9 +24,15 @@ from external_bandit_datasets.adapters import build_dataset  # noqa: E402
 from external_bandit_datasets.sources import SOURCES, file_digest  # noqa: E402
 
 
-GENERALIZATION = STUDY / "analysis" / "generalization_drivers.json"
+GENERALIZATION = {
+    4: STUDY / "analysis" / "generalization_drivers.json",
+    8: STUDY / "analysis" / "generalization_drivers_e8.json",
+}
 ANNOTATIONS = STUDY / "analysis" / "task_design_annotations.json"
-OUTPUT = STUDY / "analysis" / "task_design_features.json"
+OUTPUT = {
+    4: STUDY / "analysis" / "task_design_features.json",
+    8: STUDY / "analysis" / "task_design_features_e8.json",
+}
 AIND_CONFIGS = (
     REPO / "code" / "config" / "data" / "mice_snapshot.yaml",
     REPO / "code" / "config" / "data" / "task" / "uncoupled_block.yaml",
@@ -62,6 +68,7 @@ RNG_SEED = 20260906
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dimension", type=int, choices=(4, 8), default=4)
     parser.add_argument(
         "--raw-root",
         type=Path,
@@ -274,16 +281,23 @@ def _bh_q_values(p_values: list[float]) -> list[float]:
 
 def main() -> None:
     args = _parser().parse_args()
-    generalization = json.loads(GENERALIZATION.read_text())
+    generalization_path = GENERALIZATION[args.dimension]
+    output_path = OUTPUT[args.dimension]
+    generalization = json.loads(generalization_path.read_text())
+    if int(generalization["contract"]["subject_embedding_size"]) != args.dimension:
+        raise AssertionError("Generalization embedding-dimension contract drifted")
     annotations = json.loads(ANNOTATIONS.read_text())
     cohort_order = list(generalization["contract"]["cohort_order"])
-    if list(annotations["cohorts"]) != cohort_order:
+    if [name for name in annotations["cohorts"] if name in cohort_order] != cohort_order:
         raise AssertionError("Task annotations must follow the frozen cohort order")
 
     task_axes = annotations["contract"]["task_structure_axes"]
     all_axes = task_axes + annotations["contract"]["apparatus_axes"]
     prototypes = annotations["aind_source_prototypes"]
-    tiers = annotations["analysis_tiers"]
+    tiers = {
+        tier: [name for name in names if name in cohort_order]
+        for tier, names in annotations["analysis_tiers"].items()
+    }
     tier_by_cohort = {
         name: tier for tier, names in tiers.items() for name in names
     }
@@ -360,8 +374,18 @@ def main() -> None:
             "adapter_audit": audit,
             "outcomes": {
                 "gru_d614_minus_q_bits_per_trial": generalization["cohorts"][name]["summary"]["gru_d614_minus_q_bits_per_trial"]["mean"],
-                "gru_d614_minus_d10_bits_per_trial": generalization["cohorts"][name]["summary"]["gru_d614_minus_d10_bits_per_trial"]["mean"],
                 "embedding_centroid_mahalanobis": generalization["cohorts"][name]["summary"]["embedding_centroid_mahalanobis"]["mean"],
+                **(
+                    {
+                        "gru_d614_minus_d10_bits_per_trial": generalization[
+                            "cohorts"
+                        ][name]["summary"]["gru_d614_minus_d10_bits_per_trial"][
+                            "mean"
+                        ]
+                    }
+                    if args.dimension == 4
+                    else {}
+                ),
             },
         }
 
@@ -451,12 +475,15 @@ def main() -> None:
             study_root=STUDY,
         ),
         "inputs": {
-            str(GENERALIZATION.relative_to(STUDY)): _sha256(GENERALIZATION),
+            str(generalization_path.relative_to(STUDY)): _sha256(
+                generalization_path
+            ),
             str(ANNOTATIONS.relative_to(STUDY)): _sha256(ANNOTATIONS),
             **{str(path.relative_to(REPO)): _sha256(path) for path in AIND_CONFIGS},
         },
         "contract": {
             "cohort_order": cohort_order,
+            "subject_embedding_size": args.dimension,
             "analysis_tiers": tiers,
             "tier_reasons": annotations["tier_reasons"],
             "required_reruns": annotations["required_reruns"],
@@ -481,8 +508,8 @@ def main() -> None:
         "sensitivity_relationships": sensitivity_relationships,
         "schedule_feature_screen_vs_gru_d614_minus_q": feature_screen,
     }
-    OUTPUT.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n")
-    print(f"Wrote {OUTPUT}")
+    output_path.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n")
+    print(f"Wrote {output_path}")
 
 
 if __name__ == "__main__":

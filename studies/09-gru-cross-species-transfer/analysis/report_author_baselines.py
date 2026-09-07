@@ -314,7 +314,15 @@ def _author_subject_conditions(
     selected_baseline: str,
     author_data: dict,
     dataset: dict,
-) -> tuple[str, list[str], list[list[float]], list[str], list[float], float]:
+    embedding_dataset: dict,
+) -> tuple[
+    str,
+    list[str],
+    list[list[float]],
+    list[str],
+    list[float],
+    tuple[float, float],
+]:
     records = [
         (key, record)
         for key, record in author_data["records"].items()
@@ -358,7 +366,22 @@ def _author_subject_conditions(
                 for subject in subjects
             ]
         )
-        colors.append("#4C72B0")
+        colors.append(E4_COLOR)
+
+    e8_seeds = [
+        row["metrics"]["per_subject_mean_log_likelihood_nats"]
+        for row in embedding_dataset["e8"]
+    ]
+    if any(set(seed) != set(reference) for seed in e8_seeds):
+        raise AssertionError("Author and E8 GRU per-subject metric sets do not align")
+    labels.append("E8 GRU D=614")
+    log_values.append(
+        [
+            statistics.mean(float(seed[subject]) for seed in e8_seeds)
+            for subject in subjects
+        ]
+    )
+    colors.append(E8_COLOR)
 
     reference_likelihood = [math.exp(float(reference[subject])) for subject in subjects]
     differences = [
@@ -369,29 +392,37 @@ def _author_subject_conditions(
         for values in log_values
     ]
     p_values = [_wilcoxon(values) for values in differences]
-    correlation = float(np.corrcoef(reference_likelihood, differences[-1])[0, 1])
+    correlations = (
+        float(np.corrcoef(reference_likelihood, differences[-2])[0, 1]),
+        float(np.corrcoef(reference_likelihood, differences[-1])[0, 1]),
+    )
     return (
         AUTHOR_LABELS[selected_baseline],
         labels,
         differences,
         colors,
         p_values,
-        correlation,
+        correlations,
     )
 
 
-def _plot_author_subjects(author_data: dict, matched: dict) -> None:
+def _plot_author_subjects(
+    author_data: dict,
+    matched: dict,
+    embedding_dimension: dict,
+) -> None:
     apply_presentation_style()
     fig, axes = plt.subplots(3, 3, figsize=(18, 16), constrained_layout=True)
     for axis, (dataset_name, selected_baseline) in zip(
         axes.flat, AUTHOR_REFERENCE_PANELS
     ):
-        reference_label, labels, values, colors, p_values, correlation = (
+        reference_label, labels, values, colors, p_values, correlations = (
             _author_subject_conditions(
                 dataset_name,
                 selected_baseline,
                 author_data,
                 matched["datasets"][dataset_name],
+                embedding_dimension["datasets"][dataset_name],
             )
         )
         positions = np.arange(len(labels))
@@ -472,7 +503,9 @@ def _plot_author_subjects(author_data: dict, matched: dict) -> None:
             f"{LABELS[dataset_name]} (n={n_subjects})\n"
             f"{TASKS[dataset_name]}\n"
             f"Reference: {reference_label}\n"
-            f"D=614 corr(author likelihood, GRU Δ): r={correlation:+.2f}"
+            "D=614 corr(author likelihood, GRU Δ)\n"
+            f"E4 r={correlations[0]:+.2f}, E8 r={correlations[1]:+.2f}",
+            fontsize=10,
         )
         axis.axhline(0, color="#C44E52", linewidth=1.6, alpha=0.8, zorder=0)
         axis.set_yscale("symlog", linthresh=0.01)
@@ -503,14 +536,32 @@ def _plot_author_subjects(author_data: dict, matched: dict) -> None:
     plt.close(fig)
 
 
-def _plot_gru_q_subjects(matched: dict, validation: dict[str, dict]) -> None:
+def _plot_gru_q_subjects(
+    matched: dict,
+    validation: dict[str, dict],
+    embedding_dimension: dict,
+) -> None:
     apply_presentation_style()
     fig, axes = plt.subplots(3, 4, figsize=(18, 13), constrained_layout=True)
     rng = np.random.default_rng(29)
     for axis, dataset_name in zip(axes.flat, DATASET_ORDER):
         dataset = matched["datasets"][dataset_name]
-        values = [_subject_differences(dataset, d) for d in DS]
-        positions = np.arange(len(DS))
+        q = dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"]
+        subjects = sorted(q)
+        e8_seeds = [
+            row["metrics"]["per_subject_mean_log_likelihood_nats"]
+            for row in embedding_dimension["datasets"][dataset_name]["e8"]
+        ]
+        if any(set(seed) != set(q) for seed in e8_seeds):
+            raise AssertionError("E8 GRU/Q subject keys do not align")
+        e8_values = [
+            math.exp(statistics.mean(float(seed[subject]) for seed in e8_seeds))
+            - math.exp(float(q[subject]))
+            for subject in subjects
+        ]
+        values = [_subject_differences(dataset, d) for d in DS] + [e8_values]
+        colors = [E4_COLOR] * len(DS) + [E8_COLOR]
+        positions = np.arange(len(values))
         n_subjects = len(values[0])
         for subject_index in range(n_subjects):
             axis.plot(
@@ -529,19 +580,19 @@ def _plot_gru_q_subjects(matched: dict, validation: dict[str, dict]) -> None:
             showmedians=True,
             showextrema=False,
         )
-        for body in violins["bodies"]:
-            body.set_facecolor("#4C72B0")
-            body.set_edgecolor("#4C72B0")
+        for body, color in zip(violins["bodies"], colors):
+            body.set_facecolor(color)
+            body.set_edgecolor(color)
             body.set_alpha(0.22)
-        violins["cmedians"].set_color("#17365D")
+        violins["cmedians"].set_color(colors)
         violins["cmedians"].set_linewidth(1.5)
-        for position, condition in zip(positions, values):
+        for position, condition, color in zip(positions, values, colors):
             jitter = rng.uniform(-0.15, 0.15, len(condition))
             axis.scatter(
                 position + jitter,
                 condition,
                 s=6,
-                color="#4C72B0",
+                color=color,
                 alpha=min(0.38, 12 / n_subjects),
                 linewidths=0,
                 zorder=2,
@@ -552,7 +603,7 @@ def _plot_gru_q_subjects(matched: dict, validation: dict[str, dict]) -> None:
                 s=30,
                 marker="D",
                 facecolor="white",
-                edgecolor="#17365D",
+                edgecolor=color,
                 linewidth=1.2,
                 zorder=4,
             )
@@ -573,38 +624,41 @@ def _plot_gru_q_subjects(matched: dict, validation: dict[str, dict]) -> None:
             )
         audit = validation[dataset_name]
         axis.axhline(0, color="#222222", linewidth=1)
-        axis.set_xticks(positions, [str(value) for value in DS])
+        axis.set_xticks(
+            positions,
+            [f"E4\n{value}" for value in DS] + ["E8\n614"],
+        )
         axis.set_title(
             f"{LABELS[dataset_name]} · "
             f"v{audit['schema_version']} · n={n_subjects}\n"
             f"{textwrap.fill(TASKS[dataset_name], 34)}",
             fontsize=9,
         )
-        axis.set_xlabel("Source subjects D")
         axis.set_ylabel("Subject GRU − Q likelihood")
         axis.grid(axis="y", alpha=0.2)
     for axis in axes.flat[len(DATASET_ORDER) :]:
         axis.set_visible(False)
     fig.legend(
         handles=[
-            Line2D([0], [0], color="#17365D", linewidth=1.5, label="median"),
+            Line2D([0], [0], color=E4_COLOR, linewidth=4, label="E4"),
+            Line2D([0], [0], color=E8_COLOR, linewidth=4, label="E8"),
             Line2D(
                 [0],
                 [0],
                 marker="D",
                 markerfacecolor="white",
-                markeredgecolor="#17365D",
+                markeredgecolor="#333333",
                 color="none",
                 label="mean",
             ),
         ],
         loc="outside lower center",
-        ncol=2,
+        ncol=3,
         frameon=False,
     )
     fig.suptitle(
         "Paired subject-level GRU improvement over common Q\n"
-        "Dots are subjects; thin lines connect the same subject across D",
+        "Dots are subjects; thin lines connect the same subject across conditions",
         fontsize=17,
     )
     fig.savefig(GRU_Q_SUBJECT_FIGURE, bbox_inches="tight", dpi=180)
@@ -736,13 +790,18 @@ def _mean_sd(values: list[float]) -> str:
     return f"{statistics.mean(values):.5f} ± {statistics.stdev(values):.5f}"
 
 
-def _author_rows(author_data: dict, matched: dict) -> tuple[list[str], list[str]]:
+def _author_rows(
+    author_data: dict,
+    matched: dict,
+    embedding_dimension: dict,
+) -> tuple[list[str], list[str]]:
     rows = []
     correlations = []
     for baseline, record in author_data["records"].items():
         dataset_name = record["dataset"]
         dataset = matched["datasets"][dataset_name]
         d614 = _gru_for_d(dataset, 614)
+        e8 = embedding_dimension["datasets"][dataset_name]["e8"]
         role = (
             "author-selected"
             if record["author_selected"]
@@ -752,30 +811,45 @@ def _author_rows(author_data: dict, matched: dict) -> tuple[list[str], list[str]
             f"| {LABELS[dataset_name]} | {AUTHOR_LABELS[baseline]} | "
             f"{role} | "
             f"{_metric(dataset['q']):.5f} | {_metric(record):.5f} | "
-            f"{_mean_sd([_metric(row) for row in d614])} |"
+            f"{_mean_sd([_metric(row) for row in d614])} | "
+            f"{_mean_sd([_metric(row) for row in e8])} |"
         )
         if record["author_selected"]:
             author = record["metrics"]["per_subject_mean_log_likelihood_nats"]
-            seeds = [
+            e4_seeds = [
                 row["metrics"]["per_subject_mean_log_likelihood_nats"] for row in d614
             ]
-            if any(set(seed) != set(author) for seed in seeds):
+            e8_seeds = [
+                row["metrics"]["per_subject_mean_log_likelihood_nats"] for row in e8
+            ]
+            if any(
+                set(seed) != set(author) for seed in [*e4_seeds, *e8_seeds]
+            ):
                 raise AssertionError("Author/GRU subject keys do not align")
             reference = [math.exp(float(author[key])) for key in sorted(author)]
-            improvement = [
-                math.exp(statistics.mean(float(seed[key]) for seed in seeds))
-                - math.exp(float(author[key]))
-                for key in sorted(author)
-            ]
-            correlation = float(np.corrcoef(reference, improvement)[0, 1])
+            correlations_by_dimension = []
+            for seeds in (e4_seeds, e8_seeds):
+                improvement = [
+                    math.exp(statistics.mean(float(seed[key]) for seed in seeds))
+                    - math.exp(float(author[key]))
+                    for key in sorted(author)
+                ]
+                correlations_by_dimension.append(
+                    float(np.corrcoef(reference, improvement)[0, 1])
+                )
             correlations.append(
                 f"| {LABELS[dataset_name]} | {AUTHOR_LABELS[baseline]} | "
-                f"{len(reference)} | {correlation:+.2f} |"
+                f"{len(reference)} | {correlations_by_dimension[0]:+.2f} | "
+                f"{correlations_by_dimension[1]:+.2f} |"
             )
     return rows, correlations
 
 
-def _author_subject_rows(author_data: dict, matched: dict) -> list[str]:
+def _author_subject_rows(
+    author_data: dict,
+    matched: dict,
+    embedding_dimension: dict,
+) -> list[str]:
     rows = []
     for dataset_name, selected_baseline in AUTHOR_REFERENCE_PANELS:
         reference_label, labels, values, _, p_values, _ = _author_subject_conditions(
@@ -783,6 +857,7 @@ def _author_subject_rows(author_data: dict, matched: dict) -> list[str]:
             selected_baseline,
             author_data,
             matched["datasets"][dataset_name],
+            embedding_dimension["datasets"][dataset_name],
         )
         for label, differences, p_value in zip(labels, values, p_values):
             rows.append(
@@ -946,9 +1021,18 @@ def _result_block(
     matched: dict,
     examples: dict,
     validation: dict[str, dict],
+    embedding_dimension: dict,
 ) -> str:
-    author_rows, correlations = _author_rows(author_data, matched)
-    author_subject_rows = _author_subject_rows(author_data, matched)
+    author_rows, correlations = _author_rows(
+        author_data,
+        matched,
+        embedding_dimension,
+    )
+    author_subject_rows = _author_subject_rows(
+        author_data,
+        matched,
+        embedding_dimension,
+    )
     actual_ds = {
         d: sorted(
             {
@@ -996,13 +1080,15 @@ def _result_block(
         "that panel. Eckstein (human) has separate panels for its two co-winners. The "
         "red zero line is the author reference; "
         "positive values favor the displayed model. The panel title reports the correlation "
-        "between author-model likelihood and D=614 GRU improvement. This preserves the "
+        "between author-model likelihood and D=614 GRU improvement for E4 and E8. "
+        "Light blue denotes E4 and dark blue denotes E8. This preserves the "
         "author-relative comparison from the completed first-round report.",
         "",
         "![Paired subject-level GRU minus common-Q likelihood](../fig_subject_gru_minus_q_likelihood.png)",
         "",
         "Each dot is a subject's normalized likelihood under the three-seed mean GRU minus "
-        "that subject's common-Q likelihood. Thin lines connect the same subject across D; "
+        "that subject's common-Q likelihood. Thin lines connect the same subject across "
+        "the five E4 D values and E8 D=614; "
         "the short bar is the median and the hollow diamond is the arithmetic mean. Panel "
         "p-values are unadjusted two-sided paired Wilcoxon signed-rank tests against zero.",
         "",
@@ -1026,20 +1112,38 @@ def _result_block(
         "",
         "### Paired GRU minus common-Q result",
         "",
-        "| cohort | D | median Δ likelihood | mean Δ likelihood | subjects GRU better | Wilcoxon p |",
-        "|---|---:|---:|---:|---:|---:|",
+        "| cohort | space | D | median Δ likelihood | mean Δ likelihood | subjects GRU better | Wilcoxon p |",
+        "|---|---|---:|---:|---:|---:|---:|",
     ]
     for dataset_name in DATASET_ORDER:
         dataset = matched["datasets"][dataset_name]
         for d in DS:
             values = _subject_differences(dataset, d)
             lines.append(
-                f"| {LABELS[dataset_name]} | {d} | {statistics.median(values):+.5f} | "
+                f"| {LABELS[dataset_name]} | E4 | {d} | {statistics.median(values):+.5f} | "
                 f"{statistics.mean(values):+.5f} | "
                 f"{sum(value > 0 for value in values) / len(values):.0%} "
                 f"({sum(value > 0 for value in values)}/{len(values)}) | "
                 f"{_wilcoxon(values):.3g} |"
             )
+        q = dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"]
+        subjects = sorted(q)
+        e8_seeds = [
+            row["metrics"]["per_subject_mean_log_likelihood_nats"]
+            for row in embedding_dimension["datasets"][dataset_name]["e8"]
+        ]
+        values = [
+            math.exp(statistics.mean(float(seed[subject]) for seed in e8_seeds))
+            - math.exp(float(q[subject]))
+            for subject in subjects
+        ]
+        lines.append(
+            f"| {LABELS[dataset_name]} | E8 | 614 | {statistics.median(values):+.5f} | "
+            f"{statistics.mean(values):+.5f} | "
+            f"{sum(value > 0 for value in values) / len(values):.0%} "
+            f"({sum(value > 0 for value in values)}/{len(values)}) | "
+            f"{_wilcoxon(values):.3g} |"
+        )
 
     lines += [
         "",
@@ -1081,8 +1185,8 @@ def _result_block(
         "",
         "### Author-aligned baselines",
         "",
-        "| cohort | published model | role | common Q | published model refit | GRU D=614 |",
-        "|---|---|:---:|---:|---:|---:|",
+        "| cohort | published model | role | common Q | published model refit | E4 GRU D=614 | E8 GRU D=614 |",
+        "|---|---|:---:|---:|---:|---:|---:|",
         *author_rows,
         "",
         *_primary_author_read(author_data, matched),
@@ -1100,8 +1204,8 @@ def _result_block(
         "to that subject's D=614 GRU-minus-author improvement. Negative values mean GRU "
         "benefit is concentrated among subjects fit poorly by the author model.",
         "",
-        "| cohort | author reference | subjects | Pearson r |",
-        "|---|---|---:|---:|",
+        "| cohort | author reference | subjects | E4 Pearson r | E8 Pearson r |",
+        "|---|---|---:|---:|---:|",
         *correlations,
         "",
         "### Why common Q can beat an author-selected model",
@@ -1211,10 +1315,16 @@ def main() -> None:
         embedding_dimension,
         task_design["analysis_tiers"],
     )
-    _plot_author_subjects(author_data, matched)
-    _plot_gru_q_subjects(matched, validation)
+    _plot_author_subjects(author_data, matched, embedding_dimension)
+    _plot_gru_q_subjects(matched, validation, embedding_dimension)
     example_paths = _plot_examples(examples)
-    block = _result_block(author_data, matched, examples, validation)
+    block = _result_block(
+        author_data,
+        matched,
+        examples,
+        validation,
+        embedding_dimension,
+    )
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
     end_start = text.index(END, start_end)

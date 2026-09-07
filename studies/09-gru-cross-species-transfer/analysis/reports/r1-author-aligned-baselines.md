@@ -113,11 +113,11 @@ Kwak (mouse) is omitted from every figure, table, direction count, and inference
 
 ![Subject-level likelihood relative to the author-selected model](../fig_subject_baseline_likelihood.png)
 
-Every displayed subject likelihood is relative to the author model named in that panel. Eckstein (human) has separate panels for its two co-winners. The red zero line is the author reference; positive values favor the displayed model. The panel title reports the correlation between author-model likelihood and D=614 GRU improvement. This preserves the author-relative comparison from the completed first-round report.
+Every displayed subject likelihood is relative to the author model named in that panel. Eckstein (human) has separate panels for its two co-winners. The red zero line is the author reference; positive values favor the displayed model. The panel title reports the correlation between author-model likelihood and D=614 GRU improvement for E4 and E8. Light blue denotes E4 and dark blue denotes E8. This preserves the author-relative comparison from the completed first-round report.
 
 ![Paired subject-level GRU minus common-Q likelihood](../fig_subject_gru_minus_q_likelihood.png)
 
-Each dot is a subject's normalized likelihood under the three-seed mean GRU minus that subject's common-Q likelihood. Thin lines connect the same subject across D; the short bar is the median and the hollow diamond is the arithmetic mean. Panel p-values are unadjusted two-sided paired Wilcoxon signed-rank tests against zero.
+Each dot is a subject's normalized likelihood under the three-seed mean GRU minus that subject's common-Q likelihood. Thin lines connect the same subject across the five E4 D values and E8 D=614; the short bar is the median and the hollow diamond is the arithmetic mean. Panel p-values are unadjusted two-sided paired Wilcoxon signed-rank tests against zero.
 
 ### Cohort summary and trial-pooled likelihood
 
@@ -138,68 +138,80 @@ Each dot is a subject's normalized likelihood under the three-seed mean GRU minu
 
 ### Paired GRU minus common-Q result
 
-| cohort | D | median Δ likelihood | mean Δ likelihood | subjects GRU better | Wilcoxon p |
-|---|---:|---:|---:|---:|---:|
-| Grossman (mouse) | 10 | +0.00592 | +0.00638 | 90% (43/48) | 2.51e-08 |
-| Grossman (mouse) | 30 | +0.00889 | +0.00969 | 94% (45/48) | 1.75e-10 |
-| Grossman (mouse) | 100 | +0.01116 | +0.01252 | 96% (46/48) | 2.64e-12 |
-| Grossman (mouse) | 300 | +0.01209 | +0.01357 | 96% (46/48) | 3.06e-13 |
-| Grossman (mouse) | 614 | +0.01241 | +0.01386 | 96% (46/48) | 2.34e-13 |
-| Chen (mouse) | 10 | -0.00396 | -0.00369 | 31% (10/32) | 0.0872 |
-| Chen (mouse) | 30 | +0.00035 | -0.00124 | 56% (18/32) | 0.934 |
-| Chen (mouse) | 100 | +0.00377 | +0.00387 | 66% (21/32) | 0.0148 |
-| Chen (mouse) | 300 | +0.00484 | +0.00562 | 78% (25/32) | 0.000773 |
-| Chen (mouse) | 614 | +0.00530 | +0.00532 | 75% (24/32) | 0.00144 |
-| Zid (human) | 10 | -0.01243 | -0.00655 | 35% (91/258) | 3.48e-05 |
-| Zid (human) | 30 | -0.01279 | -0.00702 | 38% (98/258) | 6.06e-05 |
-| Zid (human) | 100 | -0.00852 | +0.00010 | 40% (103/258) | 0.0102 |
-| Zid (human) | 300 | -0.00822 | +0.00199 | 40% (103/258) | 0.0511 |
-| Zid (human) | 614 | -0.00870 | -0.00171 | 38% (99/258) | 0.00543 |
-| Lebedeva (mouse) | 10 | +0.00022 | +0.00205 | 50% (5/10) | 0.432 |
-| Lebedeva (mouse) | 30 | +0.00485 | +0.00586 | 80% (8/10) | 0.00977 |
-| Lebedeva (mouse) | 100 | +0.00809 | +0.00864 | 100% (10/10) | 0.00195 |
-| Lebedeva (mouse) | 300 | +0.00805 | +0.00891 | 100% (10/10) | 0.00195 |
-| Lebedeva (mouse) | 614 | +0.00886 | +0.00939 | 100% (10/10) | 0.00195 |
-| Beron (mouse) | 10 | -0.00636 | -0.00650 | 0% (0/6) | 0.0312 |
-| Beron (mouse) | 30 | -0.00499 | -0.00464 | 17% (1/6) | 0.0625 |
-| Beron (mouse) | 100 | -0.00203 | -0.00162 | 33% (2/6) | 0.312 |
-| Beron (mouse) | 300 | -0.00119 | -0.00044 | 33% (2/6) | 0.844 |
-| Beron (mouse) | 614 | -0.00206 | -0.00127 | 33% (2/6) | 0.438 |
-| Miller (rat) | 10 | -0.01579 | -0.01375 | 5% (1/20) | 3.62e-05 |
-| Miller (rat) | 30 | -0.01581 | -0.01333 | 5% (1/20) | 3.62e-05 |
-| Miller (rat) | 100 | -0.01075 | -0.00891 | 5% (1/20) | 0.000483 |
-| Miller (rat) | 300 | -0.00963 | -0.00831 | 5% (1/20) | 0.000483 |
-| Miller (rat) | 614 | -0.01003 | -0.00933 | 5% (1/20) | 0.000395 |
-| Findling (human) | 10 | -0.05006 | -0.05230 | 0% (0/22) | 4.77e-07 |
-| Findling (human) | 30 | -0.04509 | -0.04859 | 0% (0/22) | 4.77e-07 |
-| Findling (human) | 100 | -0.03451 | -0.03848 | 0% (0/22) | 4.77e-07 |
-| Findling (human) | 300 | -0.03140 | -0.03601 | 9% (2/22) | 3.34e-06 |
-| Findling (human) | 614 | -0.03256 | -0.03718 | 5% (1/22) | 9.54e-07 |
-| Tang (macaque) | 10 | -0.00245 | -0.00245 | 0% (0/2) | 0.5 |
-| Tang (macaque) | 30 | -0.00099 | -0.00099 | 50% (1/2) | 1 |
-| Tang (macaque) | 100 | -0.00112 | -0.00112 | 50% (1/2) | 1 |
-| Tang (macaque) | 300 | -0.00074 | -0.00074 | 50% (1/2) | 1 |
-| Tang (macaque) | 614 | -0.00050 | -0.00050 | 50% (1/2) | 1 |
-| Alsiö (rat) | 10 | -0.01889 | -0.01754 | 0% (0/95) | 2.6e-17 |
-| Alsiö (rat) | 30 | -0.01574 | -0.01451 | 0% (0/95) | 2.6e-17 |
-| Alsiö (rat) | 100 | -0.00467 | -0.00353 | 24% (23/95) | 1.58e-09 |
-| Alsiö (rat) | 300 | -0.00099 | +0.00001 | 36% (34/95) | 0.344 |
-| Alsiö (rat) | 614 | -0.00047 | +0.00065 | 45% (43/95) | 0.764 |
-| Eckstein (human) | 10 | -0.04870 | -0.02585 | 19% (58/306) | 4.48e-16 |
-| Eckstein (human) | 30 | -0.04694 | -0.02539 | 20% (60/306) | 1.45e-15 |
-| Eckstein (human) | 100 | -0.03661 | -0.01491 | 23% (69/306) | 2.99e-13 |
-| Eckstein (human) | 300 | -0.04071 | -0.01748 | 24% (73/306) | 1.82e-13 |
-| Eckstein (human) | 614 | -0.03969 | -0.01815 | 23% (71/306) | 9.74e-14 |
-| Costa (macaque) | 10 | -0.01795 | -0.01707 | 0% (0/11) | 0.000977 |
-| Costa (macaque) | 30 | -0.01370 | -0.01207 | 0% (0/11) | 0.000977 |
-| Costa (macaque) | 100 | -0.00584 | -0.00725 | 18% (2/11) | 0.00488 |
-| Costa (macaque) | 300 | -0.00356 | -0.00291 | 27% (3/11) | 0.175 |
-| Costa (macaque) | 614 | -0.00346 | -0.00362 | 27% (3/11) | 0.147 |
-| López-Yépez (mouse) | 10 | +0.00707 | +0.00964 | 88% (7/8) | 0.0781 |
-| López-Yépez (mouse) | 30 | +0.03775 | +0.03536 | 100% (8/8) | 0.00781 |
-| López-Yépez (mouse) | 100 | +0.04949 | +0.04310 | 100% (8/8) | 0.00781 |
-| López-Yépez (mouse) | 300 | +0.05351 | +0.05145 | 100% (8/8) | 0.00781 |
-| López-Yépez (mouse) | 614 | +0.04537 | +0.04689 | 100% (8/8) | 0.00781 |
+| cohort | space | D | median Δ likelihood | mean Δ likelihood | subjects GRU better | Wilcoxon p |
+|---|---|---:|---:|---:|---:|---:|
+| Grossman (mouse) | E4 | 10 | +0.00592 | +0.00638 | 90% (43/48) | 2.51e-08 |
+| Grossman (mouse) | E4 | 30 | +0.00889 | +0.00969 | 94% (45/48) | 1.75e-10 |
+| Grossman (mouse) | E4 | 100 | +0.01116 | +0.01252 | 96% (46/48) | 2.64e-12 |
+| Grossman (mouse) | E4 | 300 | +0.01209 | +0.01357 | 96% (46/48) | 3.06e-13 |
+| Grossman (mouse) | E4 | 614 | +0.01241 | +0.01386 | 96% (46/48) | 2.34e-13 |
+| Grossman (mouse) | E8 | 614 | +0.01193 | +0.01339 | 92% (44/48) | 1.8e-12 |
+| Chen (mouse) | E4 | 10 | -0.00396 | -0.00369 | 31% (10/32) | 0.0872 |
+| Chen (mouse) | E4 | 30 | +0.00035 | -0.00124 | 56% (18/32) | 0.934 |
+| Chen (mouse) | E4 | 100 | +0.00377 | +0.00387 | 66% (21/32) | 0.0148 |
+| Chen (mouse) | E4 | 300 | +0.00484 | +0.00562 | 78% (25/32) | 0.000773 |
+| Chen (mouse) | E4 | 614 | +0.00530 | +0.00532 | 75% (24/32) | 0.00144 |
+| Chen (mouse) | E8 | 614 | +0.00634 | +0.00740 | 81% (26/32) | 0.000178 |
+| Zid (human) | E4 | 10 | -0.01243 | -0.00655 | 35% (91/258) | 3.48e-05 |
+| Zid (human) | E4 | 30 | -0.01279 | -0.00702 | 38% (98/258) | 6.06e-05 |
+| Zid (human) | E4 | 100 | -0.00852 | +0.00010 | 40% (103/258) | 0.0102 |
+| Zid (human) | E4 | 300 | -0.00822 | +0.00199 | 40% (103/258) | 0.0511 |
+| Zid (human) | E4 | 614 | -0.00870 | -0.00171 | 38% (99/258) | 0.00543 |
+| Zid (human) | E8 | 614 | -0.00779 | -0.00484 | 37% (96/258) | 0.000803 |
+| Lebedeva (mouse) | E4 | 10 | +0.00022 | +0.00205 | 50% (5/10) | 0.432 |
+| Lebedeva (mouse) | E4 | 30 | +0.00485 | +0.00586 | 80% (8/10) | 0.00977 |
+| Lebedeva (mouse) | E4 | 100 | +0.00809 | +0.00864 | 100% (10/10) | 0.00195 |
+| Lebedeva (mouse) | E4 | 300 | +0.00805 | +0.00891 | 100% (10/10) | 0.00195 |
+| Lebedeva (mouse) | E4 | 614 | +0.00886 | +0.00939 | 100% (10/10) | 0.00195 |
+| Lebedeva (mouse) | E8 | 614 | +0.00935 | +0.00974 | 100% (10/10) | 0.00195 |
+| Beron (mouse) | E4 | 10 | -0.00636 | -0.00650 | 0% (0/6) | 0.0312 |
+| Beron (mouse) | E4 | 30 | -0.00499 | -0.00464 | 17% (1/6) | 0.0625 |
+| Beron (mouse) | E4 | 100 | -0.00203 | -0.00162 | 33% (2/6) | 0.312 |
+| Beron (mouse) | E4 | 300 | -0.00119 | -0.00044 | 33% (2/6) | 0.844 |
+| Beron (mouse) | E4 | 614 | -0.00206 | -0.00127 | 33% (2/6) | 0.438 |
+| Beron (mouse) | E8 | 614 | +0.00082 | +0.00152 | 83% (5/6) | 0.219 |
+| Miller (rat) | E4 | 10 | -0.01579 | -0.01375 | 5% (1/20) | 3.62e-05 |
+| Miller (rat) | E4 | 30 | -0.01581 | -0.01333 | 5% (1/20) | 3.62e-05 |
+| Miller (rat) | E4 | 100 | -0.01075 | -0.00891 | 5% (1/20) | 0.000483 |
+| Miller (rat) | E4 | 300 | -0.00963 | -0.00831 | 5% (1/20) | 0.000483 |
+| Miller (rat) | E4 | 614 | -0.01003 | -0.00933 | 5% (1/20) | 0.000395 |
+| Miller (rat) | E8 | 614 | -0.00725 | -0.00516 | 10% (2/20) | 0.00143 |
+| Findling (human) | E4 | 10 | -0.05006 | -0.05230 | 0% (0/22) | 4.77e-07 |
+| Findling (human) | E4 | 30 | -0.04509 | -0.04859 | 0% (0/22) | 4.77e-07 |
+| Findling (human) | E4 | 100 | -0.03451 | -0.03848 | 0% (0/22) | 4.77e-07 |
+| Findling (human) | E4 | 300 | -0.03140 | -0.03601 | 9% (2/22) | 3.34e-06 |
+| Findling (human) | E4 | 614 | -0.03256 | -0.03718 | 5% (1/22) | 9.54e-07 |
+| Findling (human) | E8 | 614 | -0.01685 | -0.02647 | 9% (2/22) | 3.34e-06 |
+| Tang (macaque) | E4 | 10 | -0.00245 | -0.00245 | 0% (0/2) | 0.5 |
+| Tang (macaque) | E4 | 30 | -0.00099 | -0.00099 | 50% (1/2) | 1 |
+| Tang (macaque) | E4 | 100 | -0.00112 | -0.00112 | 50% (1/2) | 1 |
+| Tang (macaque) | E4 | 300 | -0.00074 | -0.00074 | 50% (1/2) | 1 |
+| Tang (macaque) | E4 | 614 | -0.00050 | -0.00050 | 50% (1/2) | 1 |
+| Tang (macaque) | E8 | 614 | +0.00244 | +0.00244 | 100% (2/2) | 0.5 |
+| Alsiö (rat) | E4 | 10 | -0.01889 | -0.01754 | 0% (0/95) | 2.6e-17 |
+| Alsiö (rat) | E4 | 30 | -0.01574 | -0.01451 | 0% (0/95) | 2.6e-17 |
+| Alsiö (rat) | E4 | 100 | -0.00467 | -0.00353 | 24% (23/95) | 1.58e-09 |
+| Alsiö (rat) | E4 | 300 | -0.00099 | +0.00001 | 36% (34/95) | 0.344 |
+| Alsiö (rat) | E4 | 614 | -0.00047 | +0.00065 | 45% (43/95) | 0.764 |
+| Alsiö (rat) | E8 | 614 | +0.00076 | +0.00201 | 63% (60/95) | 0.00129 |
+| Eckstein (human) | E4 | 10 | -0.04870 | -0.02585 | 19% (58/306) | 4.48e-16 |
+| Eckstein (human) | E4 | 30 | -0.04694 | -0.02539 | 20% (60/306) | 1.45e-15 |
+| Eckstein (human) | E4 | 100 | -0.03661 | -0.01491 | 23% (69/306) | 2.99e-13 |
+| Eckstein (human) | E4 | 300 | -0.04071 | -0.01748 | 24% (73/306) | 1.82e-13 |
+| Eckstein (human) | E4 | 614 | -0.03969 | -0.01815 | 23% (71/306) | 9.74e-14 |
+| Eckstein (human) | E8 | 614 | -0.04136 | -0.01394 | 24% (72/306) | 2.26e-12 |
+| Costa (macaque) | E4 | 10 | -0.01795 | -0.01707 | 0% (0/11) | 0.000977 |
+| Costa (macaque) | E4 | 30 | -0.01370 | -0.01207 | 0% (0/11) | 0.000977 |
+| Costa (macaque) | E4 | 100 | -0.00584 | -0.00725 | 18% (2/11) | 0.00488 |
+| Costa (macaque) | E4 | 300 | -0.00356 | -0.00291 | 27% (3/11) | 0.175 |
+| Costa (macaque) | E4 | 614 | -0.00346 | -0.00362 | 27% (3/11) | 0.147 |
+| Costa (macaque) | E8 | 614 | +0.00892 | +0.00872 | 100% (11/11) | 0.000977 |
+| López-Yépez (mouse) | E4 | 10 | +0.00707 | +0.00964 | 88% (7/8) | 0.0781 |
+| López-Yépez (mouse) | E4 | 30 | +0.03775 | +0.03536 | 100% (8/8) | 0.00781 |
+| López-Yépez (mouse) | E4 | 100 | +0.04949 | +0.04310 | 100% (8/8) | 0.00781 |
+| López-Yépez (mouse) | E4 | 300 | +0.05351 | +0.05145 | 100% (8/8) | 0.00781 |
+| López-Yépez (mouse) | E4 | 614 | +0.04537 | +0.04689 | 100% (8/8) | 0.00781 |
+| López-Yépez (mouse) | E8 | 614 | +0.05929 | +0.06151 | 100% (8/8) | 0.00781 |
 
 ### Scaling benefit from D=10 to D=614
 
@@ -236,19 +248,19 @@ This screen therefore supports broad transfer, but not universal superiority ove
 
 ### Author-aligned baselines
 
-| cohort | published model | role | common Q | published model refit | GRU D=614 |
-|---|---|:---:|---:|---:|---:|
-| Grossman (mouse) | meta-learning RL | author-selected | 0.73177 | 0.72976 | 0.74535 ± 0.00017 |
-| Chen (mouse) | 4-parameter RLCK | author-selected | 0.58747 | 0.59138 | 0.59275 ± 0.00140 |
-| Zid (human) | traditional RLCK | paper comparator | 0.70427 | 0.69322 | 0.71363 ± 0.00192 |
-| Zid (human) | HK2 foraging RL | author-selected | 0.70427 | 0.68306 | 0.71363 ± 0.00192 |
-| Lebedeva (mouse) | PR | author-selected | 0.75629 | 0.76155 | 0.76634 ± 0.00040 |
-| Beron (mouse) | RFLR | author-selected | 0.82422 | 0.82236 | 0.82296 ± 0.00056 |
-| Miller (rat) | RHG | author-selected | 0.60945 | 0.61572 | 0.60007 ± 0.00263 |
-| Findling (human) | Weber-imprecision BI | author-selected | 0.69077 | 0.67384 | 0.65473 ± 0.00424 |
-| Findling (human) | Weber BI (64-particle fit) | particle sensitivity | 0.69077 | 0.68766 | 0.65473 ± 0.00424 |
-| Eckstein (human) | counterfactual RL | author-selected | 0.63162 | 0.65876 | 0.62596 ± 0.00871 |
-| Eckstein (human) | Bayesian inference | author-selected | 0.63162 | 0.66005 | 0.62596 ± 0.00871 |
+| cohort | published model | role | common Q | published model refit | E4 GRU D=614 | E8 GRU D=614 |
+|---|---|:---:|---:|---:|---:|---:|
+| Grossman (mouse) | meta-learning RL | author-selected | 0.73177 | 0.72976 | 0.74535 ± 0.00017 | 0.74521 ± 0.00024 |
+| Chen (mouse) | 4-parameter RLCK | author-selected | 0.58747 | 0.59138 | 0.59275 ± 0.00140 | 0.59514 ± 0.00162 |
+| Zid (human) | traditional RLCK | paper comparator | 0.70427 | 0.69322 | 0.71363 ± 0.00192 | 0.70997 ± 0.00266 |
+| Zid (human) | HK2 foraging RL | author-selected | 0.70427 | 0.68306 | 0.71363 ± 0.00192 | 0.70997 ± 0.00266 |
+| Lebedeva (mouse) | PR | author-selected | 0.75629 | 0.76155 | 0.76634 ± 0.00040 | 0.76670 ± 0.00019 |
+| Beron (mouse) | RFLR | author-selected | 0.82422 | 0.82236 | 0.82296 ± 0.00056 | 0.82574 ± 0.00096 |
+| Miller (rat) | RHG | author-selected | 0.60945 | 0.61572 | 0.60007 ± 0.00263 | 0.60371 ± 0.00251 |
+| Findling (human) | Weber-imprecision BI | author-selected | 0.69077 | 0.67384 | 0.65473 ± 0.00424 | 0.66505 ± 0.00210 |
+| Findling (human) | Weber BI (64-particle fit) | particle sensitivity | 0.69077 | 0.68766 | 0.65473 ± 0.00424 | 0.66505 ± 0.00210 |
+| Eckstein (human) | counterfactual RL | author-selected | 0.63162 | 0.65876 | 0.62596 ± 0.00871 | 0.63093 ± 0.00288 |
+| Eckstein (human) | Bayesian inference | author-selected | 0.63162 | 0.66005 | 0.62596 ± 0.00871 | 0.63093 ± 0.00288 |
 
 ### Primary author-model scientific read
 
@@ -276,12 +288,14 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Grossman (mouse) | meta-learning RL | GRU D=100 | +0.01340 | +0.01442 | 7.11e-14 |
 | Grossman (mouse) | meta-learning RL | GRU D=300 | +0.01510 | +0.01548 | 2.13e-14 |
 | Grossman (mouse) | meta-learning RL | GRU D=614 | +0.01541 | +0.01576 | 2.13e-14 |
+| Grossman (mouse) | meta-learning RL | E8 GRU D=614 | +0.01449 | +0.01530 | 2.13e-14 |
 | Chen (mouse) | 4-parameter RLCK | Common Q | -0.00504 | -0.00397 | 0.0228 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=10 | -0.00650 | -0.00766 | 3.95e-05 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=30 | -0.00562 | -0.00521 | 0.0111 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=100 | -0.00115 | -0.00010 | 0.846 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=300 | +0.00038 | +0.00165 | 0.379 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=614 | +0.00045 | +0.00135 | 0.454 |
+| Chen (mouse) | 4-parameter RLCK | E8 GRU D=614 | +0.00178 | +0.00343 | 0.106 |
 | Zid (human) | HK2 foraging RL | Common Q | +0.00184 | +0.01034 | 0.0741 |
 | Zid (human) | HK2 foraging RL | traditional RLCK | +0.00098 | +0.00352 | 0.753 |
 | Zid (human) | HK2 foraging RL | GRU D=10 | -0.00559 | +0.00379 | 0.0618 |
@@ -289,24 +303,28 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Zid (human) | HK2 foraging RL | GRU D=100 | -0.00393 | +0.01043 | 0.651 |
 | Zid (human) | HK2 foraging RL | GRU D=300 | -0.00204 | +0.01233 | 0.982 |
 | Zid (human) | HK2 foraging RL | GRU D=614 | -0.00394 | +0.00863 | 0.532 |
+| Zid (human) | HK2 foraging RL | E8 GRU D=614 | -0.00305 | +0.00550 | 0.359 |
 | Lebedeva (mouse) | PR | Common Q | -0.00457 | -0.00480 | 0.0195 |
 | Lebedeva (mouse) | PR | GRU D=10 | -0.00246 | -0.00275 | 0.0273 |
 | Lebedeva (mouse) | PR | GRU D=30 | +0.00109 | +0.00107 | 0.232 |
 | Lebedeva (mouse) | PR | GRU D=100 | +0.00381 | +0.00384 | 0.00195 |
 | Lebedeva (mouse) | PR | GRU D=300 | +0.00443 | +0.00412 | 0.00195 |
 | Lebedeva (mouse) | PR | GRU D=614 | +0.00464 | +0.00460 | 0.00195 |
+| Lebedeva (mouse) | PR | E8 GRU D=614 | +0.00504 | +0.00494 | 0.00195 |
 | Beron (mouse) | RFLR | Common Q | +0.00181 | +0.00190 | 0.0312 |
 | Beron (mouse) | RFLR | GRU D=10 | -0.00415 | -0.00460 | 0.0312 |
 | Beron (mouse) | RFLR | GRU D=30 | -0.00278 | -0.00274 | 0.0938 |
 | Beron (mouse) | RFLR | GRU D=100 | +0.00019 | +0.00028 | 0.844 |
 | Beron (mouse) | RFLR | GRU D=300 | +0.00103 | +0.00146 | 0.312 |
 | Beron (mouse) | RFLR | GRU D=614 | +0.00016 | +0.00063 | 0.844 |
+| Beron (mouse) | RFLR | E8 GRU D=614 | +0.00311 | +0.00342 | 0.0625 |
 | Miller (rat) | RHG | Common Q | -0.00471 | -0.00701 | 4.77e-05 |
 | Miller (rat) | RHG | GRU D=10 | -0.01919 | -0.02076 | 1.91e-06 |
 | Miller (rat) | RHG | GRU D=30 | -0.01893 | -0.02034 | 1.91e-06 |
 | Miller (rat) | RHG | GRU D=100 | -0.01542 | -0.01592 | 1.91e-06 |
 | Miller (rat) | RHG | GRU D=300 | -0.01456 | -0.01532 | 3.81e-06 |
 | Miller (rat) | RHG | GRU D=614 | -0.01526 | -0.01634 | 1.91e-06 |
+| Miller (rat) | RHG | E8 GRU D=614 | -0.01151 | -0.01217 | 5.72e-06 |
 | Findling (human) | Weber-imprecision BI | Common Q | +0.01826 | +0.01694 | 3.34e-05 |
 | Findling (human) | Weber-imprecision BI | Weber BI (64-particle fit) | +0.01478 | +0.01389 | 0.000593 |
 | Findling (human) | Weber-imprecision BI | GRU D=10 | -0.02157 | -0.03536 | 1.57e-05 |
@@ -314,6 +332,7 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Findling (human) | Weber-imprecision BI | GRU D=100 | -0.01276 | -0.02154 | 0.00324 |
 | Findling (human) | Weber-imprecision BI | GRU D=300 | -0.01011 | -0.01907 | 0.0115 |
 | Findling (human) | Weber-imprecision BI | GRU D=614 | -0.01055 | -0.02024 | 0.0103 |
+| Findling (human) | Weber-imprecision BI | E8 GRU D=614 | -0.00252 | -0.00953 | 0.248 |
 | Eckstein (human) | counterfactual RL | Common Q | -0.01312 | -0.02184 | 5.94e-06 |
 | Eckstein (human) | counterfactual RL | Bayesian inference | +0.00030 | +0.00297 | 0.0227 |
 | Eckstein (human) | counterfactual RL | GRU D=10 | -0.04757 | -0.04770 | 5.31e-18 |
@@ -321,6 +340,7 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Eckstein (human) | counterfactual RL | GRU D=100 | -0.03932 | -0.03676 | 8.57e-14 |
 | Eckstein (human) | counterfactual RL | GRU D=300 | -0.04238 | -0.03932 | 8.62e-15 |
 | Eckstein (human) | counterfactual RL | GRU D=614 | -0.04296 | -0.03999 | 4.3e-15 |
+| Eckstein (human) | counterfactual RL | E8 GRU D=614 | -0.03993 | -0.03578 | 4.77e-14 |
 | Eckstein (human) | Bayesian inference | Common Q | -0.01624 | -0.02481 | 7.2e-10 |
 | Eckstein (human) | Bayesian inference | counterfactual RL | -0.00030 | -0.00297 | 0.0227 |
 | Eckstein (human) | Bayesian inference | GRU D=10 | -0.05611 | -0.05067 | 8.08e-21 |
@@ -328,20 +348,21 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Eckstein (human) | Bayesian inference | GRU D=100 | -0.04262 | -0.03972 | 1.11e-16 |
 | Eckstein (human) | Bayesian inference | GRU D=300 | -0.04511 | -0.04229 | 3.92e-17 |
 | Eckstein (human) | Bayesian inference | GRU D=614 | -0.04429 | -0.04296 | 1.23e-17 |
+| Eckstein (human) | Bayesian inference | E8 GRU D=614 | -0.04637 | -0.03875 | 2.99e-17 |
 
 The correlations below relate each subject's author-model normalized likelihood to that subject's D=614 GRU-minus-author improvement. Negative values mean GRU benefit is concentrated among subjects fit poorly by the author model.
 
-| cohort | author reference | subjects | Pearson r |
-|---|---|---:|---:|
-| Grossman (mouse) | meta-learning RL | 48 | -0.30 |
-| Chen (mouse) | 4-parameter RLCK | 32 | -0.06 |
-| Zid (human) | HK2 foraging RL | 258 | -0.56 |
-| Lebedeva (mouse) | PR | 10 | -0.04 |
-| Beron (mouse) | RFLR | 6 | +0.55 |
-| Miller (rat) | RHG | 20 | -0.23 |
-| Findling (human) | Weber-imprecision BI | 22 | -0.49 |
-| Eckstein (human) | counterfactual RL | 306 | -0.70 |
-| Eckstein (human) | Bayesian inference | 306 | -0.71 |
+| cohort | author reference | subjects | E4 Pearson r | E8 Pearson r |
+|---|---|---:|---:|---:|
+| Grossman (mouse) | meta-learning RL | 48 | -0.30 | -0.30 |
+| Chen (mouse) | 4-parameter RLCK | 32 | -0.06 | -0.07 |
+| Zid (human) | HK2 foraging RL | 258 | -0.56 | -0.55 |
+| Lebedeva (mouse) | PR | 10 | -0.04 | -0.00 |
+| Beron (mouse) | RFLR | 6 | +0.55 | +0.38 |
+| Miller (rat) | RHG | 20 | -0.23 | -0.24 |
+| Findling (human) | Weber-imprecision BI | 22 | -0.49 | -0.37 |
+| Eckstein (human) | counterfactual RL | 306 | -0.70 | -0.73 |
+| Eckstein (human) | Bayesian inference | 306 | -0.71 | -0.74 |
 
 ### Why common Q can beat an author-selected model
 

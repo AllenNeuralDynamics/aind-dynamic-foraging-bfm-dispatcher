@@ -2,6 +2,10 @@
 
 ## 2026-09-07
 
+- Regenerated every dimension-dependent Result 1--4 figure with both E4 and E8
+  wherever the frozen artifacts support it, including subject-level GRU-Q and
+  author-relative comparisons, source-fitted embedding geometry, cross-cohort
+  drivers, task-design relationships, and the 12-cohort capacity comparison.
 - Extended E=8 D=614 transfer to the seven remaining valid cohorts in 21
   GPU-only Beaker tasks; froze all artifacts with exact historical-E4 trial-key
   parity and updated Report 1 so every displayed cohort has an E8 overlay.

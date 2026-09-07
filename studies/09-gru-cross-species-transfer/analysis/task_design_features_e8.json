@@ -1,7 +1,7 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_task_design_features.py",
-    "produced_at_pt": "2026-09-07T15:02:04-07:00",
+    "produced_at_pt": "2026-09-07T15:04:29-07:00",
     "dispatcher_git_sha": "6b04a3ab4d6828638351877a3d8cfe5d46327220",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
@@ -21,11 +21,14 @@
       "q-matched-half@20260905-024031",
       "q-expanded-matched-half@20260906-001656",
       "q-expanded-matched-half@20260906-kwak-choicefix",
-      "v2-sc-active@20260622-144622"
+      "e4-e8-d614-source@20260906-195409",
+      "gru-e8-d614-diagnostic@20260907-071400",
+      "gru-e8-d614-expansion@20260907-132415",
+      "gru-e8-d614-expansion@20260907-132625"
     ]
   },
   "inputs": {
-    "analysis/generalization_drivers.json": "4ebea459e06c09bb673a01d2865fb87f69c191a31b9e8075bb7775ff13469356",
+    "analysis/generalization_drivers_e8.json": "63495e7c642becf5ab502dfc972b44fe3540246aa8127c62772cfe04ff84d69a",
     "analysis/task_design_annotations.json": "9b977aeeb22f4c2fd55380b16b71dd33dba650892ac60641667dc8e23427fd89",
     "code/config/data/mice_snapshot.yaml": "9c2b4855c1a7e2686e3059f736b279142ccabfea0447da54bc50ef4e0008632b",
     "code/config/data/task/uncoupled_block.yaml": "80a3f2153909eee9578d6649eae7d5b961c5143d0a169f0b5e7f0a5308ec18df",
@@ -46,7 +49,7 @@
       "costa",
       "lopez_mouse"
     ],
-    "subject_embedding_size": 4,
+    "subject_embedding_size": 8,
     "analysis_tiers": {
       "primary": [
         "grossman",
@@ -852,9 +855,8 @@
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": 0.027598151834553993,
-        "embedding_centroid_mahalanobis": 0.5812070037634741,
-        "gru_d614_minus_d10_bits_per_trial": 0.014817008383150669
+        "gru_d614_minus_q_bits_per_trial": 0.026707549854985677,
+        "embedding_centroid_mahalanobis": 0.8925151910433721
       },
       "empirical_schedule_distance_to_grossman": 0.0
     },
@@ -1324,9 +1326,8 @@
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": 0.013106605228150608,
-        "embedding_centroid_mahalanobis": 7.125622528331783,
-        "gru_d614_minus_d10_bits_per_trial": 0.0224656099829638
+        "gru_d614_minus_q_bits_per_trial": 0.018259010381464835,
+        "embedding_centroid_mahalanobis": 11.771140566822732
       },
       "empirical_schedule_distance_to_grossman": 1.416548470753058
     },
@@ -4282,9 +4283,8 @@
         "split_strategy": "within_session_prefix_suffix"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": 0.019049034193362634,
-        "embedding_centroid_mahalanobis": 7.09263237802159,
-        "gru_d614_minus_d10_bits_per_trial": 0.010264052084763517
+        "gru_d614_minus_q_bits_per_trial": 0.011620389925177957,
+        "embedding_centroid_mahalanobis": 13.247582392513143
       },
       "empirical_schedule_distance_to_grossman": 1.1007050492957582
     },
@@ -4514,9 +4514,8 @@
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": 0.017863564306093455,
-        "embedding_centroid_mahalanobis": 2.154035834986089,
-        "gru_d614_minus_d10_bits_per_trial": 0.01420835908868443
+        "gru_d614_minus_q_bits_per_trial": 0.01850812842402308,
+        "embedding_centroid_mahalanobis": 2.8267355960803133
       },
       "empirical_schedule_distance_to_grossman": 1.3690783511842168
     },
@@ -4702,9 +4701,8 @@
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": -0.002330162029323756,
-        "embedding_centroid_mahalanobis": 2.4862243122623866,
-        "gru_d614_minus_d10_bits_per_trial": 0.009202197024419314
+        "gru_d614_minus_q_bits_per_trial": 0.0025956563911698725,
+        "embedding_centroid_mahalanobis": 4.82441736699281
       },
       "empirical_schedule_distance_to_grossman": 1.215746523725249
     },
@@ -5042,9 +5040,8 @@
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": -0.022170878134081987,
-        "embedding_centroid_mahalanobis": 5.905364554816845,
-        "gru_d614_minus_d10_bits_per_trial": 0.010809246141684352
+        "gru_d614_minus_q_bits_per_trial": -0.012177732258607063,
+        "embedding_centroid_mahalanobis": 9.758314628052647
       },
       "empirical_schedule_distance_to_grossman": 1.7011642405562573
     },
@@ -5152,9 +5149,8 @@
         "inclusion_rule": "The 22-subject analytic cohort is verified by exact agreement between per-subject performance in the 2025 Source Data workbook and released trial files; subjects 6 and 12 have incomplete runs, and subject 7 is the paper's below-criterion exclusion."
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": -0.0775523297335307,
-        "embedding_centroid_mahalanobis": 7.869082533612269,
-        "gru_d614_minus_d10_bits_per_trial": 0.0323402370805152
+        "gru_d614_minus_q_bits_per_trial": -0.05493626416286279,
+        "embedding_centroid_mahalanobis": 14.377153667232506
       }
     },
     "tang": {
@@ -5234,9 +5230,8 @@
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": -0.001153541477200687,
-        "embedding_centroid_mahalanobis": 2.811376442719863,
-        "gru_d614_minus_d10_bits_per_trial": 0.005181813653721926
+        "gru_d614_minus_q_bits_per_trial": 0.006487370139565887,
+        "embedding_centroid_mahalanobis": 8.397415763157035
       }
     },
     "alsio": {
@@ -5319,9 +5314,8 @@
         "inclusion_rule": "Retain every subject and every valid left/right response in the complete VPVD and TSVR cohorts; exclude only explicit no-response rows"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": 0.0015422247460729524,
-        "embedding_centroid_mahalanobis": 8.077399474624142,
-        "gru_d614_minus_d10_bits_per_trial": 0.05095078767726258
+        "gru_d614_minus_q_bits_per_trial": 0.005245797569514102,
+        "embedding_centroid_mahalanobis": 13.246679746782752
       }
     },
     "eckstein": {
@@ -5400,9 +5394,8 @@
         "paper_reported_analytic_subjects": 291
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": -0.012802990659775871,
-        "embedding_centroid_mahalanobis": 10.2140207224967,
-        "gru_d614_minus_d10_bits_per_trial": 0.013435490744029175
+        "gru_d614_minus_q_bits_per_trial": -0.001463486090182583,
+        "embedding_centroid_mahalanobis": 16.897789352594508
       }
     },
     "costa": {
@@ -5479,9 +5472,8 @@
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": -0.008285688764200591,
-        "embedding_centroid_mahalanobis": 7.6191201932191,
-        "gru_d614_minus_d10_bits_per_trial": 0.034714978249966326
+        "gru_d614_minus_q_bits_per_trial": 0.020081182525729102,
+        "embedding_centroid_mahalanobis": 13.72311953538791
       }
     },
     "lopez_mouse": {
@@ -5558,106 +5550,105 @@
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": 0.1243469410808002,
-        "embedding_centroid_mahalanobis": 11.206463478843864,
-        "gru_d614_minus_d10_bits_per_trial": 0.09763835676573258
+        "gru_d614_minus_q_bits_per_trial": 0.15967372154777904,
+        "embedding_centroid_mahalanobis": 18.467582280074918
       }
     }
   },
   "relationships": {
     "gru_d614_minus_q_vs_task_structure_distance": {
       "n_cohorts": 8,
-      "spearman_rho": -0.3849001794597505,
-      "permutation_p_two_sided": 0.40476190476190477,
-      "permutation_method": "exact",
-      "permutations": 40320,
-      "bootstrap_95_ci": [
-        -0.9428090415820635,
-        0.779483762953957
-      ],
-      "bootstraps": 20000,
-      "leave_one_out_range": [
-        -0.8017837257372732,
-        0.0
-      ]
-    },
-    "embedding_centroid_vs_task_structure_distance": {
-      "n_cohorts": 8,
-      "spearman_rho": 0.5773502691896257,
+      "spearman_rho": -0.5773502691896257,
       "permutation_p_two_sided": 0.15476190476190477,
       "permutation_method": "exact",
       "permutations": 40320,
       "bootstrap_95_ci": [
-        -0.17541160386140583,
-        0.9607689228305227
+        -0.9597148699373932,
+        0.25982792098465235
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.3162277660168379,
-        0.7768985960673558
+        -0.8017837257372732,
+        -0.3162277660168379
+      ]
+    },
+    "embedding_centroid_vs_task_structure_distance": {
+      "n_cohorts": 8,
+      "spearman_rho": 0.6735753140545634,
+      "permutation_p_two_sided": 0.08333333333333333,
+      "permutation_method": "exact",
+      "permutations": 40320,
+      "bootstrap_95_ci": [
+        0.0,
+        0.9743547036924464
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        0.47434164902525683,
+        0.8964214570007951
       ]
     },
     "gru_d614_minus_q_vs_full_design_distance": {
       "n_cohorts": 8,
-      "spearman_rho": -0.4910286161402363,
-      "permutation_p_two_sided": 0.22380952380952382,
+      "spearman_rho": -0.6874400625963308,
+      "permutation_p_two_sided": 0.06666666666666667,
       "permutation_method": "exact",
       "permutations": 40320,
       "bootstrap_95_ci": [
         -1.0,
-        0.47807252552771823
+        0.11250879009260237
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
         -0.8894991799933214,
-        -0.22454435656953592
+        -0.5239368319955838
       ]
     },
     "embedding_centroid_vs_full_design_distance": {
       "n_cohorts": 8,
-      "spearman_rho": 0.785645785824378,
-      "permutation_p_two_sided": 0.025,
+      "spearman_rho": 0.8470243628419076,
+      "permutation_p_two_sided": 0.010714285714285714,
       "permutation_method": "exact",
       "permutations": 40320,
       "bootstrap_95_ci": [
-        0.09413160730419344,
+        0.28392415310581703,
         1.0
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.6736330697086078,
-        0.9092412093166349
+        0.7671932182792477,
+        0.9819805060619657
       ]
     },
     "gru_d614_minus_q_vs_empirical_schedule_distance": {
       "n_cohorts": 6,
-      "spearman_rho": -0.8285714285714286,
-      "permutation_p_two_sided": 0.058333333333333334,
+      "spearman_rho": -0.5428571428571428,
+      "permutation_p_two_sided": 0.2972222222222222,
       "permutation_method": "exact",
       "permutations": 720,
       "bootstrap_95_ci": [
         -1.0,
-        0.0
+        0.6363636363636362
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.9999999999999998,
-        -0.6999999999999998
+        -0.6999999999999998,
+        -0.19999999999999996
       ]
     },
     "embedding_centroid_vs_empirical_schedule_distance": {
       "n_cohorts": 6,
-      "spearman_rho": 0.4857142857142857,
-      "permutation_p_two_sided": 0.35555555555555557,
+      "spearman_rho": 0.3142857142857143,
+      "permutation_p_two_sided": 0.5638888888888889,
       "permutation_method": "exact",
       "permutations": 720,
       "bootstrap_95_ci": [
-        -0.7999999999999999,
+        -0.9999999999999999,
         0.9999999999999999
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.09999999999999998,
+        -0.19999999999999996,
         0.7999999999999998
       ]
     }
@@ -5665,66 +5656,66 @@
   "sensitivity_relationships": {
     "gru_d614_minus_q_vs_task_structure_distance": {
       "n_cohorts": 12,
-      "spearman_rho": -0.05835824897876086,
-      "permutation_p_two_sided": 0.8587514124858752,
+      "spearman_rho": -0.015562199727669562,
+      "permutation_p_two_sided": 0.964340356596434,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.7223252512932091,
-        0.6332053313865279
+        -0.6785146864042095,
+        0.6753518373968392
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.280305955290694,
-        0.17320508075688773
+        -0.22934123614693147,
+        0.23094010767585033
       ]
     },
     "embedding_centroid_vs_task_structure_distance": {
       "n_cohorts": 12,
-      "spearman_rho": 0.6847367880174607,
-      "permutation_p_two_sided": 0.01955980440195598,
+      "spearman_rho": 0.727532837268552,
+      "permutation_p_two_sided": 0.01110988890111099,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        0.17300859166271382,
-        0.932091372259788
+        0.253546276418555,
+        0.9370892170529155
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.5773502691896258,
-        0.8542821429703302
+        0.6350852961085884,
+        0.9045340337332909
       ]
     },
     "gru_d614_minus_q_vs_full_design_distance": {
       "n_cohorts": 12,
-      "spearman_rho": -0.28183015204312045,
-      "permutation_p_two_sided": 0.36951630483695164,
+      "spearman_rho": -0.4026145029187435,
+      "permutation_p_two_sided": 0.1931780682193178,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.8339994432603272,
-        0.34332936731219377
+        -0.8260150475099738,
+        0.1702426252220897
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.4743416490252569,
-        -0.11104504640461155
+        -0.5104656101507404,
+        -0.25873180855923106
       ]
     },
     "embedding_centroid_vs_full_design_distance": {
       "n_cohorts": 12,
       "spearman_rho": 0.7210459734090224,
-      "permutation_p_two_sided": 0.00993990060099399,
+      "permutation_p_two_sided": 0.00954990450095499,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        0.12998296592064382,
-        0.9672041516493517
+        0.1339147584064719,
+        0.9674326467128995
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
         0.6324739599567005,
-        0.8145260639827644
+        0.8004987358916189
       ]
     }
   },
@@ -5732,98 +5723,80 @@
     {
       "feature": "mean_arm_lag1_autocorrelation",
       "n_cohorts": 6,
-      "spearman_rho": 0.2571428571428571,
-      "permutation_p_two_sided": 0.6583333333333333,
+      "spearman_rho": 0.42857142857142855,
+      "permutation_p_two_sided": 0.41944444444444445,
       "permutation_method": "exact",
       "permutations": 720,
       "bootstrap_95_ci": [
-        -0.9999999999999999,
+        -0.7419354838709677,
         1.0
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.29999999999999993,
-        0.6999999999999998
+        0.0,
+        0.9999999999999998
       ],
-      "bh_fdr_q": 1.0
+      "bh_fdr_q": 0.5592592592592592
     },
     {
       "feature": "reward_gap_lag1_autocorrelation",
       "n_cohorts": 6,
-      "spearman_rho": 0.2571428571428571,
-      "permutation_p_two_sided": 0.6583333333333333,
+      "spearman_rho": 0.42857142857142855,
+      "permutation_p_two_sided": 0.41944444444444445,
       "permutation_method": "exact",
       "permutations": 720,
       "bootstrap_95_ci": [
-        -0.9999999999999999,
+        -0.7419354838709677,
         1.0
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.29999999999999993,
-        0.6999999999999998
+        0.0,
+        0.9999999999999998
       ],
-      "bh_fdr_q": 1.0
+      "bh_fdr_q": 0.5592592592592592
     },
     {
       "feature": "cross_arm_correlation",
       "n_cohorts": 6,
-      "spearman_rho": -0.08571428571428572,
-      "permutation_p_two_sided": 0.9194444444444444,
+      "spearman_rho": -0.42857142857142855,
+      "permutation_p_two_sided": 0.41944444444444445,
       "permutation_method": "exact",
       "permutations": 720,
       "bootstrap_95_ci": [
-        -0.9999999999999999,
-        0.9999999999999999
+        -1.0,
+        0.8064516129032258
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.29999999999999993,
-        0.5999999999999999
+        -0.6999999999999998,
+        0.0
       ],
-      "bh_fdr_q": 1.0
+      "bh_fdr_q": 0.5592592592592592
     },
     {
       "feature": "probability_change_rate",
       "n_cohorts": 6,
-      "spearman_rho": -0.2571428571428571,
-      "permutation_p_two_sided": 0.6583333333333333,
+      "spearman_rho": -0.5428571428571428,
+      "permutation_p_two_sided": 0.2972222222222222,
       "permutation_method": "exact",
       "permutations": 720,
       "bootstrap_95_ci": [
-        -0.9999999999999999,
-        0.9199999999999998
+        -1.0,
+        0.6
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.4999999999999999,
-        0.29999999999999993
+        -0.8999999999999998,
+        -0.19999999999999996
       ],
-      "bh_fdr_q": 1.0
+      "bh_fdr_q": 0.5592592592592592
     },
     {
       "feature": "mean_absolute_arm_step_on_change",
       "n_cohorts": 6,
-      "spearman_rho": -0.08571428571428572,
-      "permutation_p_two_sided": 0.9194444444444444,
-      "permutation_method": "exact",
-      "permutations": 720,
-      "bootstrap_95_ci": [
-        -0.9999999999999999,
-        0.9199999999999998
-      ],
-      "bootstraps": 20000,
-      "leave_one_out_range": [
-        -0.29999999999999993,
-        0.29999999999999993
-      ],
-      "bh_fdr_q": 1.0
-    },
-    {
-      "feature": "mean_absolute_reward_gap",
-      "n_cohorts": 6,
-      "spearman_rho": 0.02857142857142857,
-      "permutation_p_two_sided": 1.0,
+      "spearman_rho": 0.2571428571428571,
+      "permutation_p_two_sided": 0.6583333333333333,
       "permutation_method": "exact",
       "permutations": 720,
       "bootstrap_95_ci": [
@@ -5833,45 +5806,63 @@
       "bootstraps": 20000,
       "leave_one_out_range": [
         -0.09999999999999998,
-        0.29999999999999993
+        0.5999999999999999
       ],
-      "bh_fdr_q": 1.0
+      "bh_fdr_q": 0.7138888888888889
+    },
+    {
+      "feature": "mean_absolute_reward_gap",
+      "n_cohorts": 6,
+      "spearman_rho": 0.2,
+      "permutation_p_two_sided": 0.7138888888888889,
+      "permutation_method": "exact",
+      "permutations": 720,
+      "bootstrap_95_ci": [
+        -0.9999999999999999,
+        0.9199999999999998
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.19999999999999996,
+        0.4999999999999999
+      ],
+      "bh_fdr_q": 0.7138888888888889
     },
     {
       "feature": "mean_reward_probability",
       "n_cohorts": 6,
-      "spearman_rho": 0.550782483869826,
-      "permutation_p_two_sided": 0.2722222222222222,
+      "spearman_rho": 0.46381682852195877,
+      "permutation_p_two_sided": 0.37222222222222223,
       "permutation_method": "exact",
       "permutations": 720,
       "bootstrap_95_ci": [
         -0.6363636363636362,
-        0.9999999999999999
+        1.0
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.20519567041703082,
-        0.872081599272381
+        0.051298917604257706,
+        0.6999999999999998
       ],
-      "bh_fdr_q": 1.0
+      "bh_fdr_q": 0.5592592592592592
     },
     {
       "feature": "equal_probability_fraction",
       "n_cohorts": 6,
-      "spearman_rho": 0.550782483869826,
-      "permutation_p_two_sided": 0.2722222222222222,
+      "spearman_rho": 0.46381682852195877,
+      "permutation_p_two_sided": 0.37222222222222223,
       "permutation_method": "exact",
       "permutations": 720,
       "bootstrap_95_ci": [
-        -0.6,
-        0.9999999999999999
+        -0.7419354838709677,
+        1.0
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.20519567041703082,
-        0.7999999999999998
+        0.051298917604257706,
+        0.8999999999999998
       ],
-      "bh_fdr_q": 1.0
+      "bh_fdr_q": 0.5592592592592592
     }
   ]
 }
