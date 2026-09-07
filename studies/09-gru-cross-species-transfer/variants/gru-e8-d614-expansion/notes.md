@@ -24,4 +24,11 @@ stress/descriptive shard to remain below the resumable launcher's approximate
 15-task payload limit. Both shards are GPU-only Beaker launches on hub H200
 clusters using low-priority preemptible tasks with automatic resume.
 
-Status: launch configuration prepared; submission pending capacity validation.
+Status: launched after verifying 22 schedulable GPUs on AWS H200 and 15 on
+on-prem H200. The primary shard is Beaker experiment
+`01M1YRP7ASQRQN4Y7MZ2HEQAXG`, W&B group
+`gru-e8-d614-expansion@20260907-132415`. The stress/descriptive shard is Beaker
+experiment `01M1YRT8B20NMJ3JAHNVC0RMF4`, W&B group
+`gru-e8-d614-expansion@20260907-132625`. An initial boundary submission returned
+a retryable Beaker database conflict; no partial experiment was created, and
+the clean retry succeeded.
