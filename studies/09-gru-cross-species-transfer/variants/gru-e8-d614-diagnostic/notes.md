@@ -20,4 +20,6 @@ the identical 15 target cells from `source_runs_e4_pair.json`. That is the
 primary E=4 comparator; the older Study 09 D=614 E=4 cells are retained only as
 a software-drift reference.
 
-Status: waiting for the three E=8 Study 01 source runs in issue #148.
+Status: E=8 source provenance frozen; 15-task transfer launched as Beaker
+experiment `01M1Y3NHNHGZBXYYZQSW6JD9T2` and W&B group
+`gru-e8-d614-diagnostic@20260907-071400`.
