@@ -100,13 +100,13 @@ particle-count sensitivity and the paper comparators retained from round one.
 
 ![GRU, common Q, and available author baselines](../fig_author_baseline_likelihood.png)
 
-Every model uses the same immutable adaptation and held-out observations. GRU points are the three source-training seeds; the curve is their mean ± SD. Common Q is fitted independently per target subject on the identical adaptation half. Existing author-model lines are retained for Grossman (mouse), Chen (mouse), and Zid (human), but no new author-selected model was implemented in Stage A.
+Every model uses the same immutable adaptation and held-out observations. GRU points are the three source-training seeds; the curve is their mean ± SD. Common Q is fitted independently per target subject on the identical adaptation half. Author-model lines include the existing Grossman (mouse), Chen (mouse), and Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), and both Eckstein (human) co-winners.
 
 Kwak (mouse) is omitted from every figure, table, direction count, and inference in this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, which confounds subject adaptation with treatment transfer. Readmission requires a new DMSO/control-only run using chronological odd DMSO sessions for adaptation and chronological even DMSO sessions for testing.
 
 ![Subject-level likelihood relative to the author-selected model](../fig_subject_baseline_likelihood.png)
 
-For Grossman (mouse), Chen (mouse), and Zid (human), every displayed subject likelihood is relative to that paper's author-selected model. The red zero line is the author reference; positive values favor the displayed model. The panel title reports the correlation between author-model likelihood and D=614 GRU improvement. This preserves the author-relative comparison from the completed first-round report.
+Every displayed subject likelihood is relative to the author model named in that panel. Eckstein (human) has separate panels for its two co-winners. The red zero line is the author reference; positive values favor the displayed model. The panel title reports the correlation between author-model likelihood and D=614 GRU improvement. This preserves the author-relative comparison from the completed first-round report.
 
 ![Paired subject-level GRU minus common-Q likelihood](../fig_subject_gru_minus_q_likelihood.png)
 
@@ -225,16 +225,37 @@ Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614. The lar
 
 **Aggregation warning — Zid (human).** The trial-pooled D=614 score favors GRU by +0.00936, while the arithmetic mean subject difference is -0.00171 (median -0.00870; 38% of subjects favor GRU; p=0.00543). All Zid (human) subjects contribute the same 150 held-out trials, so this reversal is not unequal trial weighting. It reflects the nonlinear difference between a geometric pooled likelihood and arithmetic per-subject likelihood differences in the heterogeneous Zid (human) distribution. The subject-paired result is primary for claims about a typical subject; the pooled score remains descriptive of total trial prediction.
 
-This screen therefore supports broad transfer, but not universal superiority over a fitted subject-level Q model. López-Yépez (mouse), Grossman (mouse), Lebedeva (mouse), and Chen (mouse) are the positive-transfer cases; Findling (human), Eckstein (human), Miller (rat), and subject-balanced Zid (human) are the main valid stress tests for Stage-B model selection. No new author model is implemented until those candidates are explicitly chosen.
+This screen therefore supports broad transfer, but not universal superiority over a fitted subject-level Q model. López-Yépez (mouse), Grossman (mouse), Lebedeva (mouse), and Chen (mouse) are the positive-transfer cases; Findling (human), Eckstein (human), Miller (rat), and subject-balanced Zid (human) are the main valid stress tests that motivated the primary-set author-model reproductions reported below.
 
-### Existing author-aligned baselines
+### Author-aligned baselines
 
-| cohort | published model | author-selected? | common Q | published model refit | GRU D=614 |
+| cohort | published model | role | common Q | published model refit | GRU D=614 |
 |---|---|:---:|---:|---:|---:|
-| Grossman (mouse) | meta-learning RL | yes | 0.73177 | 0.72976 | 0.74535 ± 0.00017 |
-| Chen (mouse) | 4-parameter RLCK | yes | 0.58747 | 0.59138 | 0.59275 ± 0.00140 |
+| Grossman (mouse) | meta-learning RL | author-selected | 0.73177 | 0.72976 | 0.74535 ± 0.00017 |
+| Chen (mouse) | 4-parameter RLCK | author-selected | 0.58747 | 0.59138 | 0.59275 ± 0.00140 |
 | Zid (human) | traditional RLCK | paper comparator | 0.70427 | 0.69322 | 0.71363 ± 0.00192 |
-| Zid (human) | HK2 foraging RL | yes | 0.70427 | 0.68306 | 0.71363 ± 0.00192 |
+| Zid (human) | HK2 foraging RL | author-selected | 0.70427 | 0.68306 | 0.71363 ± 0.00192 |
+| Lebedeva (mouse) | PR | author-selected | 0.75629 | 0.76155 | 0.76634 ± 0.00040 |
+| Beron (mouse) | RFLR | author-selected | 0.82422 | 0.82236 | 0.82296 ± 0.00056 |
+| Miller (rat) | RHG | author-selected | 0.60945 | 0.61572 | 0.60007 ± 0.00263 |
+| Findling (human) | Weber-imprecision BI | author-selected | 0.69077 | 0.67384 | 0.65473 ± 0.00424 |
+| Findling (human) | Weber BI (64-particle fit) | particle sensitivity | 0.69077 | 0.68766 | 0.65473 ± 0.00424 |
+| Eckstein (human) | counterfactual RL | author-selected | 0.63162 | 0.65876 | 0.62596 ± 0.00871 |
+| Eckstein (human) | Bayesian inference | author-selected | 0.63162 | 0.66005 | 0.62596 ± 0.00871 |
+
+### Primary author-model scientific read
+
+Trial-pooled held-out ranking under the matched-half protocol:
+
+- **Lebedeva (mouse):** GRU D=614 (0.76634) > PR (0.76155) > common Q (0.75629)
+- **Beron (mouse):** common Q (0.82422) > GRU D=614 (0.82296) > RFLR (0.82236)
+- **Miller (rat):** RHG (0.61572) > common Q (0.60945) > GRU D=614 (0.60007)
+- **Findling (human):** common Q (0.69077) > Weber-imprecision BI (0.67384) > GRU D=614 (0.65473)
+- **Eckstein (human):** Bayesian inference (0.66005) > counterfactual RL (0.65876) > common Q (0.63162) > GRU D=614 (0.62596)
+
+For Findling (human), increasing only the fit particle count from 2 to 64 raises held-out likelihood from 0.67384 to 0.68766 (Δ=+0.01382), nearly reaching common Q (0.69077). The released two-particle fitting objective therefore contributes material Monte Carlo instability. The two-particle result remains the primary author-code-parity reference; the 64-particle result is a sensitivity, not a replacement author-selected model.
+
+These rankings concern held-out prediction after equal adaptation data. They do not recreate the papers' original full-data, hierarchical, or information-criterion model-selection analyses.
 
 ### Subject-level differences from the author-selected model
 
@@ -261,6 +282,45 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Zid (human) | HK2 foraging RL | GRU D=100 | -0.00393 | +0.01043 | 0.651 |
 | Zid (human) | HK2 foraging RL | GRU D=300 | -0.00204 | +0.01233 | 0.982 |
 | Zid (human) | HK2 foraging RL | GRU D=614 | -0.00394 | +0.00863 | 0.532 |
+| Lebedeva (mouse) | PR | Common Q | -0.00457 | -0.00480 | 0.0195 |
+| Lebedeva (mouse) | PR | GRU D=10 | -0.00246 | -0.00275 | 0.0273 |
+| Lebedeva (mouse) | PR | GRU D=30 | +0.00109 | +0.00107 | 0.232 |
+| Lebedeva (mouse) | PR | GRU D=100 | +0.00381 | +0.00384 | 0.00195 |
+| Lebedeva (mouse) | PR | GRU D=300 | +0.00443 | +0.00412 | 0.00195 |
+| Lebedeva (mouse) | PR | GRU D=614 | +0.00464 | +0.00460 | 0.00195 |
+| Beron (mouse) | RFLR | Common Q | +0.00181 | +0.00190 | 0.0312 |
+| Beron (mouse) | RFLR | GRU D=10 | -0.00415 | -0.00460 | 0.0312 |
+| Beron (mouse) | RFLR | GRU D=30 | -0.00278 | -0.00274 | 0.0938 |
+| Beron (mouse) | RFLR | GRU D=100 | +0.00019 | +0.00028 | 0.844 |
+| Beron (mouse) | RFLR | GRU D=300 | +0.00103 | +0.00146 | 0.312 |
+| Beron (mouse) | RFLR | GRU D=614 | +0.00016 | +0.00063 | 0.844 |
+| Miller (rat) | RHG | Common Q | -0.00471 | -0.00701 | 4.77e-05 |
+| Miller (rat) | RHG | GRU D=10 | -0.01919 | -0.02076 | 1.91e-06 |
+| Miller (rat) | RHG | GRU D=30 | -0.01893 | -0.02034 | 1.91e-06 |
+| Miller (rat) | RHG | GRU D=100 | -0.01542 | -0.01592 | 1.91e-06 |
+| Miller (rat) | RHG | GRU D=300 | -0.01456 | -0.01532 | 3.81e-06 |
+| Miller (rat) | RHG | GRU D=614 | -0.01526 | -0.01634 | 1.91e-06 |
+| Findling (human) | Weber-imprecision BI | Common Q | +0.01826 | +0.01694 | 3.34e-05 |
+| Findling (human) | Weber-imprecision BI | Weber BI (64-particle fit) | +0.01478 | +0.01389 | 0.000593 |
+| Findling (human) | Weber-imprecision BI | GRU D=10 | -0.02157 | -0.03536 | 1.57e-05 |
+| Findling (human) | Weber-imprecision BI | GRU D=30 | -0.02025 | -0.03165 | 6.53e-05 |
+| Findling (human) | Weber-imprecision BI | GRU D=100 | -0.01276 | -0.02154 | 0.00324 |
+| Findling (human) | Weber-imprecision BI | GRU D=300 | -0.01011 | -0.01907 | 0.0115 |
+| Findling (human) | Weber-imprecision BI | GRU D=614 | -0.01055 | -0.02024 | 0.0103 |
+| Eckstein (human) | counterfactual RL | Common Q | -0.01312 | -0.02184 | 5.94e-06 |
+| Eckstein (human) | counterfactual RL | Bayesian inference | +0.00030 | +0.00297 | 0.0227 |
+| Eckstein (human) | counterfactual RL | GRU D=10 | -0.04757 | -0.04770 | 5.31e-18 |
+| Eckstein (human) | counterfactual RL | GRU D=30 | -0.04879 | -0.04723 | 1.1e-17 |
+| Eckstein (human) | counterfactual RL | GRU D=100 | -0.03932 | -0.03676 | 8.57e-14 |
+| Eckstein (human) | counterfactual RL | GRU D=300 | -0.04238 | -0.03932 | 8.62e-15 |
+| Eckstein (human) | counterfactual RL | GRU D=614 | -0.04296 | -0.03999 | 4.3e-15 |
+| Eckstein (human) | Bayesian inference | Common Q | -0.01624 | -0.02481 | 7.2e-10 |
+| Eckstein (human) | Bayesian inference | counterfactual RL | -0.00030 | -0.00297 | 0.0227 |
+| Eckstein (human) | Bayesian inference | GRU D=10 | -0.05611 | -0.05067 | 8.08e-21 |
+| Eckstein (human) | Bayesian inference | GRU D=30 | -0.05690 | -0.05020 | 1.88e-20 |
+| Eckstein (human) | Bayesian inference | GRU D=100 | -0.04262 | -0.03972 | 1.11e-16 |
+| Eckstein (human) | Bayesian inference | GRU D=300 | -0.04511 | -0.04229 | 3.92e-17 |
+| Eckstein (human) | Bayesian inference | GRU D=614 | -0.04429 | -0.04296 | 1.23e-17 |
 
 The correlations below relate each subject's author-model normalized likelihood to that subject's D=614 GRU-minus-author improvement. Negative values mean GRU benefit is concentrated among subjects fit poorly by the author model.
 
@@ -269,6 +329,12 @@ The correlations below relate each subject's author-model normalized likelihood 
 | Grossman (mouse) | meta-learning RL | 48 | -0.30 |
 | Chen (mouse) | 4-parameter RLCK | 32 | -0.06 |
 | Zid (human) | HK2 foraging RL | 258 | -0.56 |
+| Lebedeva (mouse) | PR | 10 | -0.04 |
+| Beron (mouse) | RFLR | 6 | +0.55 |
+| Miller (rat) | RHG | 20 | -0.23 |
+| Findling (human) | Weber-imprecision BI | 22 | -0.49 |
+| Eckstein (human) | counterfactual RL | 306 | -0.70 |
+| Eckstein (human) | Bayesian inference | 306 | -0.71 |
 
 ### Why common Q can beat an author-selected model
 
@@ -462,29 +528,31 @@ Black and gray marks denote rewarded and unrewarded choices; the black trace is 
 
 ### Author-model feasibility — Stage-B stop gate
 
-No new author-selected model is implemented or launched in Stage A. Existing Grossman (mouse),
-Chen (mouse), Zid (human), and Hattori (mouse)-family code may be displayed where an already frozen result exists.
+The primary-set models selected after the Stage-A screen are now implemented.
+All are fitted to the same adaptation half and scored on the same held-out trials as
+GRU and common Q. This is a matched predictive benchmark, not a claim to recreate each
+paper's original population-level model-selection analysis.
 
 | Cohort | Candidate author family | Available code | Important missing or non-matching details | Estimated effort | Reproduction confidence |
 |---|---|---|---|---|---|
 | Grossman (mouse) | uncertainty meta-learning RL | Existing Study 09 implementation | Original hierarchical Stan fit and parameter-order constraint are not reproduced | Existing | Moderate |
 | Chen (mouse) | RLCK | Existing Study 09 implementation | Matched-half fitting differs from the paper's full-data selection protocol | Existing | High for equations; moderate for paper-level reproduction |
 | Zid (human) | history-kernel-2 foraging RL | Existing Study 09 implementation | Matched-half fitting differs from the paper's full-data AIC cohort | Existing | High for equations; moderate for paper-level reproduction |
-| Lebedeva (mouse) | PR model | No runnable code in the downloaded behavior archive | Need exact cross-validation/fitting parity and parameter bounds | 3–5 days | Moderate |
-| Beron (mouse) | RFLR | Paper-associated analysis code appears available, not yet pinned | Need choose among mathematically related views and reproduce condition handling | 3–5 days | Moderate |
+| Lebedeva (mouse) | PR model | Pinned MATLAB author code plus paper equations | Paper says both states start at zero; code starts reward state at five. We follow the paper and disclose finite fitting bounds | Implemented | Moderate |
+| Beron (mouse) | RFLR | Pinned paper-associated Python code | Original unconstrained SGD is replaced by bounded differential evolution on the matched half | Implemented | High for equations; moderate for fit-procedure parity |
 | Kwak (mouse) | simple RL | No maintained fit package found | DMSO/control-only odd/even session split must replace the invalid cross-treatment result | 2–3 days | Moderate |
-| Miller (rat) | three-timescale cognitive mixture | Dataset and manuscript, no maintained fit package found | Full likelihood/state reset and fit-bound details need reconstruction | 5–8 days | Low to moderate |
-| Findling (human) | Weber-variability inference | Research code pinned with the data | Hierarchical model and latent-noise inference are substantially more complex | 8–15 days | Moderate |
+| Miller (rat) | RHG cognitive mixture | Exact executable specification in Castro et al. Appendix E.2 | The original paper does not provide maintained fitting code; finite optimization bounds are disclosed | Implemented | Moderate to high for equations; moderate for paper-level fit parity |
+| Findling (human) | Weber-imprecision inference | Pinned research code and exact released Sobol grid | Released fit uses two stochastic particles and no seed; our seed is fixed and held-out prediction uses 256 particles | Implemented | High for code-path reproduction; moderate for stochastic fit stability |
 | Tang (macaque) | none identified | Neural-analysis release | No selected behavioral baseline to reproduce | Not applicable | High confidence that Stage B needs a new scientific choice |
 | Alsiö (rat) | separate positive/negative-rate RL | Paper equations; no pinned package | Selected model was evaluated on excluded PRL cohort, not admitted II–V cohort | 3–5 days, but low scientific value | Low for a direct author-aligned claim |
-| Eckstein (human) | hierarchical RL plus Bayesian inference | OSF research code | Two co-winners, developmental hierarchy, and 291-versus-306 cohort mismatch | 10–15 days | Moderate |
+| Eckstein (human) | counterfactual RL plus Bayesian inference | Pinned OSF research code | Individual matched-prefix MLE replaces the paper's hierarchical population fit; both co-winners and the 291-versus-306 mismatch remain visible | Implemented | High for equations; moderate for paper-level fit parity |
 | Costa (macaque) | feedback-dependent RL | Published equations | Original optimization and phase-specific fitting details need reconstruction | 3–5 days | Moderate |
 | López-Yépez (mouse) | double-trace RL | Published MATLAB equations | Original data fit code and exact parameter bounds are not in the release | 4–7 days | Moderate |
 | Hattori (mouse) | `Hattori2019` Q family / Bayesian candidates | Existing model family in `aind-dynamic-foraging-models` | Dataset access is currently blocked; paper/model identity must be pinned before claiming parity | 1–3 days after data access | High for existing equations; low for paper-level parity until audited |
 
-Stage-B selection will occur only after the expanded GRU-versus-common-Q results are
-reviewed, using scientific value, effect size, sample/species coverage, code clarity,
-effort, and reproduction confidence.
+The primary set has passed this gate. Any additional author model remains gated on
+scientific value, effect size, sample/species coverage, code clarity, effort, and
+reproduction confidence; none is added automatically.
 
 ### Validation
 
@@ -494,7 +562,7 @@ effort, and reproduction confidence.
 - Every GRU cell and common-Q baseline has identical ordered held-out `(subject_id, ses_idx, trial, choice)` keys.
 - V2 uses the complete first-half prefix with no K condition, then scores the second-half suffix after state replay.
 - Nominal source D is plotted. Realized source-subject counts were D=10: [10], D=30: [29, 30], D=100: [99, 101], D=300: [300, 301], D=614: [614].
-- New author-selected models remain outside Stage A.
+- Every primary-set author model uses the same immutable adaptation and held-out trials as GRU and common Q; model-specific fitting deviations are disclosed in the feasibility table.
 <!-- END result-1 -->
 
 ## Interpretation

@@ -377,6 +377,9 @@ def _plot_author_subjects(author_data: dict, matched: dict) -> None:
         tick_labels = [
             label.replace("4-parameter ", "4-param\n")
             .replace("traditional ", "traditional\n")
+            .replace("Common Q", "Common\nQ")
+            .replace("counterfactual RL", "counterfactual\nRL")
+            .replace("Bayesian inference", "Bayesian\ninference")
             .replace("Weber BI (64-particle fit)", "Weber BI\n(64-particle fit)")
             .replace("GRU ", "GRU\n")
             for label in labels
@@ -420,7 +423,7 @@ def _plot_author_subjects(author_data: dict, matched: dict) -> None:
 
 def _plot_gru_q_subjects(matched: dict, validation: dict[str, dict]) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(4, 4, figsize=(18, 16), constrained_layout=True)
+    fig, axes = plt.subplots(3, 4, figsize=(18, 13), constrained_layout=True)
     rng = np.random.default_rng(29)
     for axis, dataset_name in zip(axes.flat, DATASET_ORDER):
         dataset = matched["datasets"][dataset_name]
