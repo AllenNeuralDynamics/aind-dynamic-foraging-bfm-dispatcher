@@ -14,7 +14,9 @@ Study 01 will report paired held-out AIND performance and the source-embedding
 covariance spectrum. Study 09 will consume the immutable E=4 and E=8 artifacts for
 the external matched-half screen without retraining either core.
 
-Status: running under #148. All six one-GPU tasks started on the on-prem H200
+Status: complete under #148. All six one-GPU tasks succeeded on the on-prem H200
 hub in Beaker experiment
 [`01M1WWK9HP269XQS440Y29631F`](https://beaker.org/ex/01M1WWK9HP269XQS440Y29631F),
-W&B group `e4-e8-d614-source@20260906-195409`.
+and all six W&B runs finished with final train/eval likelihoods in group
+`e4-e8-d614-source@20260906-195409`. Result 11 reports a small paired E8 source
+gain (+0.00029 pooled held-out likelihood) and 18.7% covariance in PCs 5–8.

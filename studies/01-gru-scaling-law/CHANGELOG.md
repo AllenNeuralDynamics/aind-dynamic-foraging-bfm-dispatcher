@@ -11,9 +11,10 @@ variant and a one-task E=8 plumbing smoke. Study 01 owns source training and
 held-out AIND comparison; Study 09 will consume the resulting immutable
 checkpoints for external transfer. The new E=4 bridge arm isolates embedding
 dimension from software and execution drift relative to the historical runs.
-Added the planned r11 producer and report for paired held-out likelihood,
-adaptation/test gaps, subject-level differences, and the source-embedding
-covariance spectrum.
+Result 11 is now live: E8 improves pooled held-out likelihood by +0.00029, with
+a +0.00016 median subject-paired difference across 149 held-out mice (Wilcoxon
+p=0.000872). PCs 5–8 carry 18.7% of source-embedding covariance, motivating the
+separate external-transfer test in Study 09.
 
 ## [Unreleased] — r9 gets the GRU side of the history-pattern scatter
 

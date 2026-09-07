@@ -218,6 +218,13 @@ def _result_markdown(data: dict) -> str:
             f"has median **{statistics.median(deltas):+.5f}**, mean "
             f"**{statistics.mean(deltas):+.5f}**, and two-sided Wilcoxon "
             f"**p={_wilcoxon(deltas):.3g}**.",
+            "",
+            "The source-data gain is statistically detectable but very small: E8 "
+            f"improves pooled held-out likelihood by only "
+            f"**{statistics.mean(b - a for a, b in zip(e4_test, e8_test)):+.5f}**. "
+            f"PCs 5–8 nevertheless carry **{statistics.mean(e8_tail):.1%}** of source-"
+            "embedding covariance, so external transfer—not source likelihood alone—"
+            "is the decisive test of whether the extra capacity is useful.",
         ]
     )
     return "\n".join(lines)
@@ -232,6 +239,7 @@ def main() -> None:
     text = REPORT.read_text()
     before, rest = text.split(START, 1)
     _, after = rest.split(END, 1)
+    before = before.replace("status: planned", "status: live", 1)
     REPORT.write_text(f"{before}{START}\n{_result_markdown(data)}\n{END}{after}")
 
 

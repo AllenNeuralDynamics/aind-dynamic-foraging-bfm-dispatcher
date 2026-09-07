@@ -1,0 +1,4010 @@
+{
+  "_meta": {
+    "produced_by": "analysis/freeze_embedding_dimension.py",
+    "produced_at_pt": "2026-09-07T09:30:13-07:00",
+    "dispatcher_git_sha": null,
+    "wrapper_git_sha": "870e6ddd56c0bfba4d2a314b63af0e056ef0153c",
+    "wandb_groups": [
+      "e4-e8-d614-source@20260906-195409"
+    ]
+  },
+  "status": "complete",
+  "frozen_at_pt": "2026-09-07T09:30:13-07:00",
+  "wandb_project": "https://wandb.ai/AIND-disRNN/mice_data_scaling",
+  "wandb_group": "e4-e8-d614-source@20260906-195409",
+  "beaker_experiment_id": "01M1WWK9HP269XQS440Y29631F",
+  "contract": {
+    "source_D": 614,
+    "source_hidden_size": 128,
+    "embedding_dimensions": [
+      4,
+      8
+    ],
+    "source_seeds": [
+      0,
+      1,
+      2
+    ],
+    "source_snapshot": "20260603",
+    "n_heldout_subjects": 149,
+    "exact_heldout_subject_and_trial_count_parity": true
+  },
+  "dimensions": {
+    "e4": [
+      {
+        "seed": 0,
+        "run_id": "e4-e8-d614-source-20260906-195409-c160507b",
+        "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-c160507b",
+        "beaker_job_id": "01M1WWK9NE0M7WJPWH0RS2CFZV",
+        "beaker_result_dataset_id": "01M1WWK9HZ597B06GBKQ2N31X0",
+        "source_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NTk3MzcxMQ==",
+          "name": "gru-output-e4-e8-d614-source-20260906-195409-c160507b",
+          "digest": "2a127fc6148883d9514879615dec1a79",
+          "file_count": 52,
+          "size_bytes": 26083803
+        },
+        "heldout_table_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NjA5NzYyNA==",
+          "name": "run-e4-e8-d614-source-20260906-195409-c160507b-heldoutper_subject_likelihood-7C0f3w",
+          "digest": "1a3f3ecf462e9f961b23d65e92f45b9e",
+          "file_count": 1,
+          "size_bytes": 6219
+        },
+        "heldout_table_sha256": "37400c7588a5a85b4c5e0b4f1f16e648ca42c73b5abffbdeb3e6ef28bfd70398",
+        "heldout": {
+          "adaptation_likelihood": 0.7264866828918457,
+          "test_likelihood": 0.7289683818817139,
+          "test_minus_adaptation": 0.002481698989868164,
+          "per_subject_test_likelihood": {
+            "452275": {
+              "n_trials": 15105,
+              "eval_likelihood": 0.5456561362030612
+            },
+            "453476": {
+              "n_trials": 8433,
+              "eval_likelihood": 0.6051552895950086
+            },
+            "453478": {
+              "n_trials": 6232,
+              "eval_likelihood": 0.6240970926187124
+            },
+            "455525": {
+              "n_trials": 12888,
+              "eval_likelihood": 0.6014169036080206
+            },
+            "472184": {
+              "n_trials": 16372,
+              "eval_likelihood": 0.5850855146594335
+            },
+            "494693": {
+              "n_trials": 4633,
+              "eval_likelihood": 0.5805850961286021
+            },
+            "616134": {
+              "n_trials": 5885,
+              "eval_likelihood": 0.6170399969555922
+            },
+            "627042": {
+              "n_trials": 11816,
+              "eval_likelihood": 0.647045602933996
+            },
+            "637701": {
+              "n_trials": 4197,
+              "eval_likelihood": 0.5700674800253924
+            },
+            "639875": {
+              "n_trials": 14822,
+              "eval_likelihood": 0.7343383125982925
+            },
+            "641494": {
+              "n_trials": 17536,
+              "eval_likelihood": 0.7050149407611394
+            },
+            "643773": {
+              "n_trials": 16103,
+              "eval_likelihood": 0.6597533876658702
+            },
+            "648586": {
+              "n_trials": 6423,
+              "eval_likelihood": 0.7691717300452696
+            },
+            "651475": {
+              "n_trials": 14268,
+              "eval_likelihood": 0.8809984097850425
+            },
+            "651554": {
+              "n_trials": 11741,
+              "eval_likelihood": 0.7933479553684994
+            },
+            "652743": {
+              "n_trials": 3315,
+              "eval_likelihood": 0.7103350125102297
+            },
+            "655100": {
+              "n_trials": 2031,
+              "eval_likelihood": 0.6461637426522227
+            },
+            "656489": {
+              "n_trials": 19109,
+              "eval_likelihood": 0.6658214801508437
+            },
+            "659778": {
+              "n_trials": 7508,
+              "eval_likelihood": 0.6304156701332061
+            },
+            "663373": {
+              "n_trials": 7292,
+              "eval_likelihood": 0.7728803355354136
+            },
+            "668551": {
+              "n_trials": 13355,
+              "eval_likelihood": 0.856710199258388
+            },
+            "671245": {
+              "n_trials": 1874,
+              "eval_likelihood": 0.7176934424707735
+            },
+            "673396": {
+              "n_trials": 4336,
+              "eval_likelihood": 0.6590437716401687
+            },
+            "682342": {
+              "n_trials": 2152,
+              "eval_likelihood": 0.7082621892435749
+            },
+            "684039": {
+              "n_trials": 4466,
+              "eval_likelihood": 0.7475831471753861
+            },
+            "697929": {
+              "n_trials": 3263,
+              "eval_likelihood": 0.6324041819913616
+            },
+            "697930": {
+              "n_trials": 1441,
+              "eval_likelihood": 0.7672964411731288
+            },
+            "699982": {
+              "n_trials": 4747,
+              "eval_likelihood": 0.7934570813640828
+            },
+            "700708": {
+              "n_trials": 9794,
+              "eval_likelihood": 0.7083702336393605
+            },
+            "708299": {
+              "n_trials": 6721,
+              "eval_likelihood": 0.8052263901033279
+            },
+            "710414": {
+              "n_trials": 2770,
+              "eval_likelihood": 0.7826270191372258
+            },
+            "711039": {
+              "n_trials": 6988,
+              "eval_likelihood": 0.7904043048146263
+            },
+            "711041": {
+              "n_trials": 8076,
+              "eval_likelihood": 0.8014202545716423
+            },
+            "711254": {
+              "n_trials": 4229,
+              "eval_likelihood": 0.825422845552179
+            },
+            "711281": {
+              "n_trials": 5144,
+              "eval_likelihood": 0.8199344354572292
+            },
+            "712031": {
+              "n_trials": 3618,
+              "eval_likelihood": 0.7158809296044145
+            },
+            "713379": {
+              "n_trials": 14940,
+              "eval_likelihood": 0.62652249866052
+            },
+            "713862": {
+              "n_trials": 8382,
+              "eval_likelihood": 0.7854936989227636
+            },
+            "716324": {
+              "n_trials": 5932,
+              "eval_likelihood": 0.7265808238050951
+            },
+            "721403": {
+              "n_trials": 6251,
+              "eval_likelihood": 0.780027414985101
+            },
+            "722683": {
+              "n_trials": 4062,
+              "eval_likelihood": 0.6787759688789765
+            },
+            "722989": {
+              "n_trials": 3818,
+              "eval_likelihood": 0.6207701333529552
+            },
+            "726649": {
+              "n_trials": 4097,
+              "eval_likelihood": 0.7048125674585712
+            },
+            "727456": {
+              "n_trials": 9974,
+              "eval_likelihood": 0.7697901959545614
+            },
+            "736198": {
+              "n_trials": 5224,
+              "eval_likelihood": 0.7084352343325628
+            },
+            "736199": {
+              "n_trials": 4427,
+              "eval_likelihood": 0.6998448798594713
+            },
+            "744779": {
+              "n_trials": 5981,
+              "eval_likelihood": 0.8203762111212879
+            },
+            "745505": {
+              "n_trials": 5686,
+              "eval_likelihood": 0.688943437431576
+            },
+            "746346": {
+              "n_trials": 9150,
+              "eval_likelihood": 0.8194653046840713
+            },
+            "747886": {
+              "n_trials": 3397,
+              "eval_likelihood": 0.7324166958409117
+            },
+            "749472": {
+              "n_trials": 5035,
+              "eval_likelihood": 0.798209991921533
+            },
+            "751153": {
+              "n_trials": 2404,
+              "eval_likelihood": 0.7361459157103448
+            },
+            "751765": {
+              "n_trials": 9589,
+              "eval_likelihood": 0.6710972690676786
+            },
+            "751920": {
+              "n_trials": 2862,
+              "eval_likelihood": 0.696518755341837
+            },
+            "753122": {
+              "n_trials": 5025,
+              "eval_likelihood": 0.7979013615000976
+            },
+            "754372": {
+              "n_trials": 2934,
+              "eval_likelihood": 0.8148692069064514
+            },
+            "756567": {
+              "n_trials": 3980,
+              "eval_likelihood": 0.7227588400516135
+            },
+            "757214": {
+              "n_trials": 5987,
+              "eval_likelihood": 0.6597819657601809
+            },
+            "761406": {
+              "n_trials": 6154,
+              "eval_likelihood": 0.7725985171583244
+            },
+            "762611": {
+              "n_trials": 3709,
+              "eval_likelihood": 0.7380659929447745
+            },
+            "763704": {
+              "n_trials": 6562,
+              "eval_likelihood": 0.5853335758214313
+            },
+            "764693": {
+              "n_trials": 6538,
+              "eval_likelihood": 0.6492473068828617
+            },
+            "765232": {
+              "n_trials": 7208,
+              "eval_likelihood": 0.6673103249376875
+            },
+            "765365": {
+              "n_trials": 9736,
+              "eval_likelihood": 0.7649745274026581
+            },
+            "765373": {
+              "n_trials": 4582,
+              "eval_likelihood": 0.7529498509587262
+            },
+            "765861": {
+              "n_trials": 3882,
+              "eval_likelihood": 0.7937017903489545
+            },
+            "766556": {
+              "n_trials": 5549,
+              "eval_likelihood": 0.7680887101251085
+            },
+            "766998": {
+              "n_trials": 9319,
+              "eval_likelihood": 0.7356679508546855
+            },
+            "767462": {
+              "n_trials": 7048,
+              "eval_likelihood": 0.7886043457606334
+            },
+            "767463": {
+              "n_trials": 7958,
+              "eval_likelihood": 0.7130322864358656
+            },
+            "769359": {
+              "n_trials": 4962,
+              "eval_likelihood": 0.8073351373990084
+            },
+            "770803": {
+              "n_trials": 6626,
+              "eval_likelihood": 0.6907068513040615
+            },
+            "774826": {
+              "n_trials": 3019,
+              "eval_likelihood": 0.6556327693313373
+            },
+            "775741": {
+              "n_trials": 9805,
+              "eval_likelihood": 0.7985952969461593
+            },
+            "775745": {
+              "n_trials": 7881,
+              "eval_likelihood": 0.7802441563763393
+            },
+            "776259": {
+              "n_trials": 3149,
+              "eval_likelihood": 0.7206171389376733
+            },
+            "777027": {
+              "n_trials": 5490,
+              "eval_likelihood": 0.6436612088215864
+            },
+            "777098": {
+              "n_trials": 4717,
+              "eval_likelihood": 0.7315611664763695
+            },
+            "777271": {
+              "n_trials": 3901,
+              "eval_likelihood": 0.7340662081401769
+            },
+            "778103": {
+              "n_trials": 6208,
+              "eval_likelihood": 0.6876077446592774
+            },
+            "778336": {
+              "n_trials": 4919,
+              "eval_likelihood": 0.8020995152380893
+            },
+            "780618": {
+              "n_trials": 5662,
+              "eval_likelihood": 0.7559924970835254
+            },
+            "780621": {
+              "n_trials": 9680,
+              "eval_likelihood": 0.762649731270983
+            },
+            "781162": {
+              "n_trials": 9002,
+              "eval_likelihood": 0.754680141067283
+            },
+            "781369": {
+              "n_trials": 7625,
+              "eval_likelihood": 0.8117240003383586
+            },
+            "781896": {
+              "n_trials": 7995,
+              "eval_likelihood": 0.7954669155310482
+            },
+            "781897": {
+              "n_trials": 7821,
+              "eval_likelihood": 0.7069726477451803
+            },
+            "782394": {
+              "n_trials": 5624,
+              "eval_likelihood": 0.7859603034680172
+            },
+            "784956": {
+              "n_trials": 6589,
+              "eval_likelihood": 0.7782774291606455
+            },
+            "785951": {
+              "n_trials": 4448,
+              "eval_likelihood": 0.7890764979671671
+            },
+            "786234": {
+              "n_trials": 6201,
+              "eval_likelihood": 0.783639213513541
+            },
+            "787625": {
+              "n_trials": 3903,
+              "eval_likelihood": 0.7277065133973073
+            },
+            "788732": {
+              "n_trials": 10471,
+              "eval_likelihood": 0.8285522836895537
+            },
+            "788733": {
+              "n_trials": 8903,
+              "eval_likelihood": 0.8014115360452465
+            },
+            "790584": {
+              "n_trials": 7492,
+              "eval_likelihood": 0.7769221473827281
+            },
+            "790726": {
+              "n_trials": 4051,
+              "eval_likelihood": 0.7597205486370674
+            },
+            "790768": {
+              "n_trials": 13983,
+              "eval_likelihood": 0.7739231964491838
+            },
+            "791174": {
+              "n_trials": 17414,
+              "eval_likelihood": 0.7141621598686614
+            },
+            "793397": {
+              "n_trials": 9399,
+              "eval_likelihood": 0.7437861737230388
+            },
+            "795395": {
+              "n_trials": 9134,
+              "eval_likelihood": 0.7698332881726055
+            },
+            "797673": {
+              "n_trials": 5448,
+              "eval_likelihood": 0.7070276530878198
+            },
+            "798520": {
+              "n_trials": 5980,
+              "eval_likelihood": 0.7298443401425714
+            },
+            "798664": {
+              "n_trials": 4335,
+              "eval_likelihood": 0.7559902792481386
+            },
+            "800175": {
+              "n_trials": 8720,
+              "eval_likelihood": 0.7410242178479328
+            },
+            "801996": {
+              "n_trials": 4674,
+              "eval_likelihood": 0.785112668232712
+            },
+            "802292": {
+              "n_trials": 7885,
+              "eval_likelihood": 0.7334020958830265
+            },
+            "802953": {
+              "n_trials": 4247,
+              "eval_likelihood": 0.7771777782709757
+            },
+            "805496": {
+              "n_trials": 5469,
+              "eval_likelihood": 0.6947129771917376
+            },
+            "807885": {
+              "n_trials": 5589,
+              "eval_likelihood": 0.6952998372671887
+            },
+            "808584": {
+              "n_trials": 9454,
+              "eval_likelihood": 0.7228122394999829
+            },
+            "809488": {
+              "n_trials": 7631,
+              "eval_likelihood": 0.7404547643408923
+            },
+            "810756": {
+              "n_trials": 10320,
+              "eval_likelihood": 0.7459426099316604
+            },
+            "810758": {
+              "n_trials": 6453,
+              "eval_likelihood": 0.8128220523265531
+            },
+            "812305": {
+              "n_trials": 5920,
+              "eval_likelihood": 0.7727088366731162
+            },
+            "812307": {
+              "n_trials": 8261,
+              "eval_likelihood": 0.7657939408914451
+            },
+            "813165": {
+              "n_trials": 5287,
+              "eval_likelihood": 0.7466208961884595
+            },
+            "813167": {
+              "n_trials": 7256,
+              "eval_likelihood": 0.8020337122017778
+            },
+            "813171": {
+              "n_trials": 5443,
+              "eval_likelihood": 0.7470136242248084
+            },
+            "813992": {
+              "n_trials": 8630,
+              "eval_likelihood": 0.790659739032208
+            },
+            "814147": {
+              "n_trials": 5947,
+              "eval_likelihood": 0.7648575138433981
+            },
+            "814196": {
+              "n_trials": 2498,
+              "eval_likelihood": 0.7099870470245196
+            },
+            "815334": {
+              "n_trials": 8891,
+              "eval_likelihood": 0.6845318831702061
+            },
+            "818020": {
+              "n_trials": 2884,
+              "eval_likelihood": 0.7339239280396002
+            },
+            "818585": {
+              "n_trials": 8742,
+              "eval_likelihood": 0.7936211050377123
+            },
+            "818908": {
+              "n_trials": 6148,
+              "eval_likelihood": 0.6425474927566887
+            },
+            "819169": {
+              "n_trials": 5085,
+              "eval_likelihood": 0.7101210355532515
+            },
+            "820243": {
+              "n_trials": 5882,
+              "eval_likelihood": 0.8067524259772475
+            },
+            "821576": {
+              "n_trials": 9932,
+              "eval_likelihood": 0.756084200988725
+            },
+            "823161": {
+              "n_trials": 6478,
+              "eval_likelihood": 0.7809327613405472
+            },
+            "823163": {
+              "n_trials": 6765,
+              "eval_likelihood": 0.7378679898754303
+            },
+            "823166": {
+              "n_trials": 11818,
+              "eval_likelihood": 0.6905685585323104
+            },
+            "826160": {
+              "n_trials": 3849,
+              "eval_likelihood": 0.8128139707826331
+            },
+            "829048": {
+              "n_trials": 2891,
+              "eval_likelihood": 0.7203303193030165
+            },
+            "829489": {
+              "n_trials": 8190,
+              "eval_likelihood": 0.6808313695045476
+            },
+            "829569": {
+              "n_trials": 5000,
+              "eval_likelihood": 0.6608743008434734
+            },
+            "832634": {
+              "n_trials": 4690,
+              "eval_likelihood": 0.7449856946707033
+            },
+            "835178": {
+              "n_trials": 3968,
+              "eval_likelihood": 0.7449354654988283
+            },
+            "835444": {
+              "n_trials": 6054,
+              "eval_likelihood": 0.7895656019628349
+            },
+            "836656": {
+              "n_trials": 3384,
+              "eval_likelihood": 0.7767009090525558
+            },
+            "836657": {
+              "n_trials": 5065,
+              "eval_likelihood": 0.8107931311446547
+            },
+            "837689": {
+              "n_trials": 3201,
+              "eval_likelihood": 0.7645964450013143
+            },
+            "838101": {
+              "n_trials": 5821,
+              "eval_likelihood": 0.7167683296333556
+            },
+            "838332": {
+              "n_trials": 6039,
+              "eval_likelihood": 0.8169600798976623
+            },
+            "839483": {
+              "n_trials": 6628,
+              "eval_likelihood": 0.7399164060840363
+            },
+            "841356": {
+              "n_trials": 7456,
+              "eval_likelihood": 0.7245406343563168
+            },
+            "841363": {
+              "n_trials": 6966,
+              "eval_likelihood": 0.7408976470642776
+            },
+            "841599": {
+              "n_trials": 7082,
+              "eval_likelihood": 0.7877307574360426
+            },
+            "845710": {
+              "n_trials": 3522,
+              "eval_likelihood": 0.780512133196085
+            },
+            "850597": {
+              "n_trials": 3155,
+              "eval_likelihood": 0.742398674716122
+            }
+          }
+        },
+        "source_embedding_checkpoint": {
+          "policy": "best_eval",
+          "step": 90000,
+          "eval_likelihood": 0.7338505983352661,
+          "params_path": "checkpoints/step_90000/params.json",
+          "checkpoint_index_sha256": "ae124e216834222cf8bca70f40b96a44ba524dd8bbdd6cb2a401c3b2165ae1f6",
+          "params_sha256": "f6c190d03205e1b1a273b655ebe92bfdce23b1e35ba02426189921b3690848a5",
+          "subject_index_map_sha256": "fbb61e6c7f43d1b7ae52ec92f59131a0cc1fef53ff6a4ccc23448f02aab64592"
+        },
+        "source_embedding_spectrum": {
+          "eigenvalues": [
+            0.0014289957187119022,
+            0.0005464875779538193,
+            0.0003480521303905025,
+            0.00015756249358191263
+          ],
+          "explained_variance_ratio": [
+            0.5759529709913124,
+            0.22026038287649002,
+            0.1402814969515527,
+            0.06350514918064486
+          ],
+          "cumulative_explained_variance": [
+            0.5759529709913124,
+            0.7962133538678025,
+            0.9364948508193551,
+            1.0
+          ],
+          "effective_rank": 3.00897616241015,
+          "pc5_to_pc8_variance_fraction": null
+        }
+      },
+      {
+        "seed": 1,
+        "run_id": "e4-e8-d614-source-20260906-195409-c3820c43",
+        "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-c3820c43",
+        "beaker_job_id": "01M1WWK9RVGPNXKVAK5GZGY1TQ",
+        "beaker_result_dataset_id": "01M1WWK9NNHV7592T2MZ8R0VZ0",
+        "source_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDY5Nzg1MQ==",
+          "name": "gru-output-e4-e8-d614-source-20260906-195409-c3820c43",
+          "digest": "2cd3fd7613dce6ff43e4df9a5658ff88",
+          "file_count": 52,
+          "size_bytes": 25976542
+        },
+        "heldout_table_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDgwNTgxMQ==",
+          "name": "run-e4-e8-d614-source-20260906-195409-c3820c43-heldoutper_subject_likelihood-7qQ3Yg",
+          "digest": "afa6189652222ba61add44b5f8688a1c",
+          "file_count": 1,
+          "size_bytes": 6213
+        },
+        "heldout_table_sha256": "1b0cfff7addb795da84a77f65a00a2573c9bfae1c5bc75cacb0426705f5b8053",
+        "heldout": {
+          "adaptation_likelihood": 0.7263257503509521,
+          "test_likelihood": 0.7288877367973328,
+          "test_minus_adaptation": 0.0025619864463806152,
+          "per_subject_test_likelihood": {
+            "452275": {
+              "n_trials": 15105,
+              "eval_likelihood": 0.5453109097097224
+            },
+            "453476": {
+              "n_trials": 8433,
+              "eval_likelihood": 0.6052134383787144
+            },
+            "453478": {
+              "n_trials": 6232,
+              "eval_likelihood": 0.6241571511636452
+            },
+            "455525": {
+              "n_trials": 12888,
+              "eval_likelihood": 0.601404302600422
+            },
+            "472184": {
+              "n_trials": 16372,
+              "eval_likelihood": 0.5851526649106908
+            },
+            "494693": {
+              "n_trials": 4633,
+              "eval_likelihood": 0.5802224139095453
+            },
+            "616134": {
+              "n_trials": 5885,
+              "eval_likelihood": 0.6167802434255797
+            },
+            "627042": {
+              "n_trials": 11816,
+              "eval_likelihood": 0.6475298846602058
+            },
+            "637701": {
+              "n_trials": 4197,
+              "eval_likelihood": 0.5697925174849819
+            },
+            "639875": {
+              "n_trials": 14822,
+              "eval_likelihood": 0.7339998755313746
+            },
+            "641494": {
+              "n_trials": 17536,
+              "eval_likelihood": 0.7047406349495997
+            },
+            "643773": {
+              "n_trials": 16103,
+              "eval_likelihood": 0.6595382923961567
+            },
+            "648586": {
+              "n_trials": 6423,
+              "eval_likelihood": 0.7691788857129735
+            },
+            "651475": {
+              "n_trials": 14268,
+              "eval_likelihood": 0.881533101936959
+            },
+            "651554": {
+              "n_trials": 11741,
+              "eval_likelihood": 0.7936166544731446
+            },
+            "652743": {
+              "n_trials": 3315,
+              "eval_likelihood": 0.7112853763626633
+            },
+            "655100": {
+              "n_trials": 2031,
+              "eval_likelihood": 0.646620361776485
+            },
+            "656489": {
+              "n_trials": 19109,
+              "eval_likelihood": 0.665488765660066
+            },
+            "659778": {
+              "n_trials": 7508,
+              "eval_likelihood": 0.6299613624194876
+            },
+            "663373": {
+              "n_trials": 7292,
+              "eval_likelihood": 0.7721263665662269
+            },
+            "668551": {
+              "n_trials": 13355,
+              "eval_likelihood": 0.8558340687236107
+            },
+            "671245": {
+              "n_trials": 1874,
+              "eval_likelihood": 0.7147205041923366
+            },
+            "673396": {
+              "n_trials": 4336,
+              "eval_likelihood": 0.6595047906365337
+            },
+            "682342": {
+              "n_trials": 2152,
+              "eval_likelihood": 0.7088192915934144
+            },
+            "684039": {
+              "n_trials": 4466,
+              "eval_likelihood": 0.748289030171097
+            },
+            "697929": {
+              "n_trials": 3263,
+              "eval_likelihood": 0.6317151747190567
+            },
+            "697930": {
+              "n_trials": 1441,
+              "eval_likelihood": 0.7680277359846567
+            },
+            "699982": {
+              "n_trials": 4747,
+              "eval_likelihood": 0.7933620193142786
+            },
+            "700708": {
+              "n_trials": 9794,
+              "eval_likelihood": 0.7077660974974301
+            },
+            "708299": {
+              "n_trials": 6721,
+              "eval_likelihood": 0.8050227082464844
+            },
+            "710414": {
+              "n_trials": 2770,
+              "eval_likelihood": 0.7820190700297963
+            },
+            "711039": {
+              "n_trials": 6988,
+              "eval_likelihood": 0.7905066462895081
+            },
+            "711041": {
+              "n_trials": 8076,
+              "eval_likelihood": 0.8019108671144113
+            },
+            "711254": {
+              "n_trials": 4229,
+              "eval_likelihood": 0.8252883421376347
+            },
+            "711281": {
+              "n_trials": 5144,
+              "eval_likelihood": 0.8189957704543209
+            },
+            "712031": {
+              "n_trials": 3618,
+              "eval_likelihood": 0.7157264400775966
+            },
+            "713379": {
+              "n_trials": 14940,
+              "eval_likelihood": 0.6264230679174863
+            },
+            "713862": {
+              "n_trials": 8382,
+              "eval_likelihood": 0.7857911598135345
+            },
+            "716324": {
+              "n_trials": 5932,
+              "eval_likelihood": 0.7265453300851283
+            },
+            "721403": {
+              "n_trials": 6251,
+              "eval_likelihood": 0.7797089661348993
+            },
+            "722683": {
+              "n_trials": 4062,
+              "eval_likelihood": 0.6770301555440477
+            },
+            "722989": {
+              "n_trials": 3818,
+              "eval_likelihood": 0.6208837940372997
+            },
+            "726649": {
+              "n_trials": 4097,
+              "eval_likelihood": 0.70498922455196
+            },
+            "727456": {
+              "n_trials": 9974,
+              "eval_likelihood": 0.7693986967511204
+            },
+            "736198": {
+              "n_trials": 5224,
+              "eval_likelihood": 0.7085978344587414
+            },
+            "736199": {
+              "n_trials": 4427,
+              "eval_likelihood": 0.6993881134979233
+            },
+            "744779": {
+              "n_trials": 5981,
+              "eval_likelihood": 0.8208534760393683
+            },
+            "745505": {
+              "n_trials": 5686,
+              "eval_likelihood": 0.6892684807061448
+            },
+            "746346": {
+              "n_trials": 9150,
+              "eval_likelihood": 0.8195617281841495
+            },
+            "747886": {
+              "n_trials": 3397,
+              "eval_likelihood": 0.7328035570279446
+            },
+            "749472": {
+              "n_trials": 5035,
+              "eval_likelihood": 0.7979550665118679
+            },
+            "751153": {
+              "n_trials": 2404,
+              "eval_likelihood": 0.7365875785788305
+            },
+            "751765": {
+              "n_trials": 9589,
+              "eval_likelihood": 0.6712541876070766
+            },
+            "751920": {
+              "n_trials": 2862,
+              "eval_likelihood": 0.6951676039756117
+            },
+            "753122": {
+              "n_trials": 5025,
+              "eval_likelihood": 0.7974051522680139
+            },
+            "754372": {
+              "n_trials": 2934,
+              "eval_likelihood": 0.8152261190436676
+            },
+            "756567": {
+              "n_trials": 3980,
+              "eval_likelihood": 0.7227430720701837
+            },
+            "757214": {
+              "n_trials": 5987,
+              "eval_likelihood": 0.6608603392331825
+            },
+            "761406": {
+              "n_trials": 6154,
+              "eval_likelihood": 0.7731136206414041
+            },
+            "762611": {
+              "n_trials": 3709,
+              "eval_likelihood": 0.7373514408443645
+            },
+            "763704": {
+              "n_trials": 6562,
+              "eval_likelihood": 0.5854322789193215
+            },
+            "764693": {
+              "n_trials": 6538,
+              "eval_likelihood": 0.6484349971004112
+            },
+            "765232": {
+              "n_trials": 7208,
+              "eval_likelihood": 0.6673690017407576
+            },
+            "765365": {
+              "n_trials": 9736,
+              "eval_likelihood": 0.7649073791172448
+            },
+            "765373": {
+              "n_trials": 4582,
+              "eval_likelihood": 0.7537715567311849
+            },
+            "765861": {
+              "n_trials": 3882,
+              "eval_likelihood": 0.7940121206118668
+            },
+            "766556": {
+              "n_trials": 5549,
+              "eval_likelihood": 0.7677974091778984
+            },
+            "766998": {
+              "n_trials": 9319,
+              "eval_likelihood": 0.7361701339873584
+            },
+            "767462": {
+              "n_trials": 7048,
+              "eval_likelihood": 0.7890097952633782
+            },
+            "767463": {
+              "n_trials": 7958,
+              "eval_likelihood": 0.7133873799026399
+            },
+            "769359": {
+              "n_trials": 4962,
+              "eval_likelihood": 0.8064641522531817
+            },
+            "770803": {
+              "n_trials": 6626,
+              "eval_likelihood": 0.69101463834515
+            },
+            "774826": {
+              "n_trials": 3019,
+              "eval_likelihood": 0.6567538880802006
+            },
+            "775741": {
+              "n_trials": 9805,
+              "eval_likelihood": 0.7994384671401927
+            },
+            "775745": {
+              "n_trials": 7881,
+              "eval_likelihood": 0.780570251759725
+            },
+            "776259": {
+              "n_trials": 3149,
+              "eval_likelihood": 0.7214573642561734
+            },
+            "777027": {
+              "n_trials": 5490,
+              "eval_likelihood": 0.6432820821771482
+            },
+            "777098": {
+              "n_trials": 4717,
+              "eval_likelihood": 0.7311822795868593
+            },
+            "777271": {
+              "n_trials": 3901,
+              "eval_likelihood": 0.7340512645845801
+            },
+            "778103": {
+              "n_trials": 6208,
+              "eval_likelihood": 0.6872459870159479
+            },
+            "778336": {
+              "n_trials": 4919,
+              "eval_likelihood": 0.8018197400000653
+            },
+            "780618": {
+              "n_trials": 5662,
+              "eval_likelihood": 0.7552208490260258
+            },
+            "780621": {
+              "n_trials": 9680,
+              "eval_likelihood": 0.7624315504180337
+            },
+            "781162": {
+              "n_trials": 9002,
+              "eval_likelihood": 0.7545729350065143
+            },
+            "781369": {
+              "n_trials": 7625,
+              "eval_likelihood": 0.8111545069321596
+            },
+            "781896": {
+              "n_trials": 7995,
+              "eval_likelihood": 0.796079577449846
+            },
+            "781897": {
+              "n_trials": 7821,
+              "eval_likelihood": 0.7074873144754387
+            },
+            "782394": {
+              "n_trials": 5624,
+              "eval_likelihood": 0.7863275365997261
+            },
+            "784956": {
+              "n_trials": 6589,
+              "eval_likelihood": 0.7775249492719102
+            },
+            "785951": {
+              "n_trials": 4448,
+              "eval_likelihood": 0.7891973885153687
+            },
+            "786234": {
+              "n_trials": 6201,
+              "eval_likelihood": 0.7836332401464011
+            },
+            "787625": {
+              "n_trials": 3903,
+              "eval_likelihood": 0.7272376092547077
+            },
+            "788732": {
+              "n_trials": 10471,
+              "eval_likelihood": 0.827517134940523
+            },
+            "788733": {
+              "n_trials": 8903,
+              "eval_likelihood": 0.8019431626629413
+            },
+            "790584": {
+              "n_trials": 7492,
+              "eval_likelihood": 0.7776090986369768
+            },
+            "790726": {
+              "n_trials": 4051,
+              "eval_likelihood": 0.7604249188702508
+            },
+            "790768": {
+              "n_trials": 13983,
+              "eval_likelihood": 0.773095410048802
+            },
+            "791174": {
+              "n_trials": 17414,
+              "eval_likelihood": 0.7136511291789871
+            },
+            "793397": {
+              "n_trials": 9399,
+              "eval_likelihood": 0.743528945610427
+            },
+            "795395": {
+              "n_trials": 9134,
+              "eval_likelihood": 0.7689845771522892
+            },
+            "797673": {
+              "n_trials": 5448,
+              "eval_likelihood": 0.7067625368372762
+            },
+            "798520": {
+              "n_trials": 5980,
+              "eval_likelihood": 0.729907908721539
+            },
+            "798664": {
+              "n_trials": 4335,
+              "eval_likelihood": 0.7575910015262459
+            },
+            "800175": {
+              "n_trials": 8720,
+              "eval_likelihood": 0.7398000148765633
+            },
+            "801996": {
+              "n_trials": 4674,
+              "eval_likelihood": 0.7852160783016141
+            },
+            "802292": {
+              "n_trials": 7885,
+              "eval_likelihood": 0.732894889008047
+            },
+            "802953": {
+              "n_trials": 4247,
+              "eval_likelihood": 0.7771421196435205
+            },
+            "805496": {
+              "n_trials": 5469,
+              "eval_likelihood": 0.6944080472890699
+            },
+            "807885": {
+              "n_trials": 5589,
+              "eval_likelihood": 0.6947648486180749
+            },
+            "808584": {
+              "n_trials": 9454,
+              "eval_likelihood": 0.722841165546992
+            },
+            "809488": {
+              "n_trials": 7631,
+              "eval_likelihood": 0.7407453300188118
+            },
+            "810756": {
+              "n_trials": 10320,
+              "eval_likelihood": 0.7454226727005107
+            },
+            "810758": {
+              "n_trials": 6453,
+              "eval_likelihood": 0.8125058565494888
+            },
+            "812305": {
+              "n_trials": 5920,
+              "eval_likelihood": 0.7726518236516947
+            },
+            "812307": {
+              "n_trials": 8261,
+              "eval_likelihood": 0.7657366237253911
+            },
+            "813165": {
+              "n_trials": 5287,
+              "eval_likelihood": 0.7460353592369747
+            },
+            "813167": {
+              "n_trials": 7256,
+              "eval_likelihood": 0.8022247181329842
+            },
+            "813171": {
+              "n_trials": 5443,
+              "eval_likelihood": 0.7475580554808477
+            },
+            "813992": {
+              "n_trials": 8630,
+              "eval_likelihood": 0.7903939181562921
+            },
+            "814147": {
+              "n_trials": 5947,
+              "eval_likelihood": 0.763989222182879
+            },
+            "814196": {
+              "n_trials": 2498,
+              "eval_likelihood": 0.710917104661691
+            },
+            "815334": {
+              "n_trials": 8891,
+              "eval_likelihood": 0.6837755398732751
+            },
+            "818020": {
+              "n_trials": 2884,
+              "eval_likelihood": 0.7344065860187373
+            },
+            "818585": {
+              "n_trials": 8742,
+              "eval_likelihood": 0.79357088227487
+            },
+            "818908": {
+              "n_trials": 6148,
+              "eval_likelihood": 0.6428583535310399
+            },
+            "819169": {
+              "n_trials": 5085,
+              "eval_likelihood": 0.7105003930490839
+            },
+            "820243": {
+              "n_trials": 5882,
+              "eval_likelihood": 0.8064360257792892
+            },
+            "821576": {
+              "n_trials": 9932,
+              "eval_likelihood": 0.7565489358842081
+            },
+            "823161": {
+              "n_trials": 6478,
+              "eval_likelihood": 0.7811471405497692
+            },
+            "823163": {
+              "n_trials": 6765,
+              "eval_likelihood": 0.7381348782640033
+            },
+            "823166": {
+              "n_trials": 11818,
+              "eval_likelihood": 0.6909707647620803
+            },
+            "826160": {
+              "n_trials": 3849,
+              "eval_likelihood": 0.8137098730268444
+            },
+            "829048": {
+              "n_trials": 2891,
+              "eval_likelihood": 0.720471704561632
+            },
+            "829489": {
+              "n_trials": 8190,
+              "eval_likelihood": 0.6809567128308202
+            },
+            "829569": {
+              "n_trials": 5000,
+              "eval_likelihood": 0.6608309379364374
+            },
+            "832634": {
+              "n_trials": 4690,
+              "eval_likelihood": 0.7445687982048422
+            },
+            "835178": {
+              "n_trials": 3968,
+              "eval_likelihood": 0.7444327174364281
+            },
+            "835444": {
+              "n_trials": 6054,
+              "eval_likelihood": 0.7894480072107347
+            },
+            "836656": {
+              "n_trials": 3384,
+              "eval_likelihood": 0.7761435800637626
+            },
+            "836657": {
+              "n_trials": 5065,
+              "eval_likelihood": 0.8111764593104832
+            },
+            "837689": {
+              "n_trials": 3201,
+              "eval_likelihood": 0.7647299698993218
+            },
+            "838101": {
+              "n_trials": 5821,
+              "eval_likelihood": 0.716244265061737
+            },
+            "838332": {
+              "n_trials": 6039,
+              "eval_likelihood": 0.8173458179676824
+            },
+            "839483": {
+              "n_trials": 6628,
+              "eval_likelihood": 0.7396453548406767
+            },
+            "841356": {
+              "n_trials": 7456,
+              "eval_likelihood": 0.7245726008472458
+            },
+            "841363": {
+              "n_trials": 6966,
+              "eval_likelihood": 0.7413988628333211
+            },
+            "841599": {
+              "n_trials": 7082,
+              "eval_likelihood": 0.7868646175551894
+            },
+            "845710": {
+              "n_trials": 3522,
+              "eval_likelihood": 0.7802968961008112
+            },
+            "850597": {
+              "n_trials": 3155,
+              "eval_likelihood": 0.7424177938320126
+            }
+          }
+        },
+        "source_embedding_checkpoint": {
+          "policy": "best_eval",
+          "step": 90000,
+          "eval_likelihood": 0.7337669730186462,
+          "params_path": "checkpoints/step_90000/params.json",
+          "checkpoint_index_sha256": "4e04525a82c3dcb9e18e85df32ee6754a09dccba538d6a8ec9b2402ee10975d8",
+          "params_sha256": "8af48625faa162d2b7af7c1713c7d1efade87291debc0d6373a39663f7ab535e",
+          "subject_index_map_sha256": "fbb61e6c7f43d1b7ae52ec92f59131a0cc1fef53ff6a4ccc23448f02aab64592"
+        },
+        "source_embedding_spectrum": {
+          "eigenvalues": [
+            0.0014838965221723858,
+            0.0006553057383271216,
+            0.0006295518553150796,
+            6.316412568796638e-05
+          ],
+          "explained_variance_ratio": [
+            0.523989887993752,
+            0.23139994959015162,
+            0.22230580180205112,
+            0.022304360614045445
+          ],
+          "cumulative_explained_variance": [
+            0.523989887993752,
+            0.7553898375839037,
+            0.9776956393859548,
+            1.0000000000000002
+          ],
+          "effective_rank": 2.993456870639066,
+          "pc5_to_pc8_variance_fraction": null
+        }
+      },
+      {
+        "seed": 2,
+        "run_id": "e4-e8-d614-source-20260906-195409-464e627f",
+        "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-464e627f",
+        "beaker_job_id": "01M1WWK9W98JKJRNDASECSAXZH",
+        "beaker_result_dataset_id": "01M1WWK9S1WDAZY35Z98VS69SZ",
+        "source_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDY1MjY2MQ==",
+          "name": "gru-output-e4-e8-d614-source-20260906-195409-464e627f",
+          "digest": "17f148b7da45a6cd1b79a393a44eb951",
+          "file_count": 52,
+          "size_bytes": 26043445
+        },
+        "heldout_table_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDc1MTk5NA==",
+          "name": "run-e4-e8-d614-source-20260906-195409-464e627f-heldoutper_subject_likelihood-I50ALw",
+          "digest": "0c4520d1446f262f225b0f1ddfe0a656",
+          "file_count": 1,
+          "size_bytes": 6225
+        },
+        "heldout_table_sha256": "34ab9264b2583f4bf3abe3b67c7cd395b64af2d44efc20f0a5bed9ebac1a923e",
+        "heldout": {
+          "adaptation_likelihood": 0.726438581943512,
+          "test_likelihood": 0.7288655638694763,
+          "test_minus_adaptation": 0.0024269819259643555,
+          "per_subject_test_likelihood": {
+            "452275": {
+              "n_trials": 15105,
+              "eval_likelihood": 0.5455521308254874
+            },
+            "453476": {
+              "n_trials": 8433,
+              "eval_likelihood": 0.6049389297162453
+            },
+            "453478": {
+              "n_trials": 6232,
+              "eval_likelihood": 0.6240783182027108
+            },
+            "455525": {
+              "n_trials": 12888,
+              "eval_likelihood": 0.6015856242520934
+            },
+            "472184": {
+              "n_trials": 16372,
+              "eval_likelihood": 0.584760046395128
+            },
+            "494693": {
+              "n_trials": 4633,
+              "eval_likelihood": 0.5803808419434173
+            },
+            "616134": {
+              "n_trials": 5885,
+              "eval_likelihood": 0.6168595842735679
+            },
+            "627042": {
+              "n_trials": 11816,
+              "eval_likelihood": 0.6464861842721339
+            },
+            "637701": {
+              "n_trials": 4197,
+              "eval_likelihood": 0.5697733620773033
+            },
+            "639875": {
+              "n_trials": 14822,
+              "eval_likelihood": 0.7337865411588732
+            },
+            "641494": {
+              "n_trials": 17536,
+              "eval_likelihood": 0.7054959076363435
+            },
+            "643773": {
+              "n_trials": 16103,
+              "eval_likelihood": 0.6592191936313806
+            },
+            "648586": {
+              "n_trials": 6423,
+              "eval_likelihood": 0.7699414040499556
+            },
+            "651475": {
+              "n_trials": 14268,
+              "eval_likelihood": 0.8814484408737264
+            },
+            "651554": {
+              "n_trials": 11741,
+              "eval_likelihood": 0.7940516963989074
+            },
+            "652743": {
+              "n_trials": 3315,
+              "eval_likelihood": 0.7103925212426068
+            },
+            "655100": {
+              "n_trials": 2031,
+              "eval_likelihood": 0.6452291468583476
+            },
+            "656489": {
+              "n_trials": 19109,
+              "eval_likelihood": 0.6655115541439779
+            },
+            "659778": {
+              "n_trials": 7508,
+              "eval_likelihood": 0.6303068260247161
+            },
+            "663373": {
+              "n_trials": 7292,
+              "eval_likelihood": 0.7721686842246093
+            },
+            "668551": {
+              "n_trials": 13355,
+              "eval_likelihood": 0.8562462470886348
+            },
+            "671245": {
+              "n_trials": 1874,
+              "eval_likelihood": 0.7155819341750943
+            },
+            "673396": {
+              "n_trials": 4336,
+              "eval_likelihood": 0.6582234091474429
+            },
+            "682342": {
+              "n_trials": 2152,
+              "eval_likelihood": 0.7092715991999481
+            },
+            "684039": {
+              "n_trials": 4466,
+              "eval_likelihood": 0.7478249203408052
+            },
+            "697929": {
+              "n_trials": 3263,
+              "eval_likelihood": 0.6319335451069452
+            },
+            "697930": {
+              "n_trials": 1441,
+              "eval_likelihood": 0.7686945827726318
+            },
+            "699982": {
+              "n_trials": 4747,
+              "eval_likelihood": 0.7936235083363606
+            },
+            "700708": {
+              "n_trials": 9794,
+              "eval_likelihood": 0.708631618021557
+            },
+            "708299": {
+              "n_trials": 6721,
+              "eval_likelihood": 0.8054661011587434
+            },
+            "710414": {
+              "n_trials": 2770,
+              "eval_likelihood": 0.7815161752369769
+            },
+            "711039": {
+              "n_trials": 6988,
+              "eval_likelihood": 0.7907779225838414
+            },
+            "711041": {
+              "n_trials": 8076,
+              "eval_likelihood": 0.8017535067747397
+            },
+            "711254": {
+              "n_trials": 4229,
+              "eval_likelihood": 0.8255581487063096
+            },
+            "711281": {
+              "n_trials": 5144,
+              "eval_likelihood": 0.8183646174727153
+            },
+            "712031": {
+              "n_trials": 3618,
+              "eval_likelihood": 0.7154916715175229
+            },
+            "713379": {
+              "n_trials": 14940,
+              "eval_likelihood": 0.6262615550453638
+            },
+            "713862": {
+              "n_trials": 8382,
+              "eval_likelihood": 0.7849543886538874
+            },
+            "716324": {
+              "n_trials": 5932,
+              "eval_likelihood": 0.7264669618539222
+            },
+            "721403": {
+              "n_trials": 6251,
+              "eval_likelihood": 0.7791439412247829
+            },
+            "722683": {
+              "n_trials": 4062,
+              "eval_likelihood": 0.6778612053198035
+            },
+            "722989": {
+              "n_trials": 3818,
+              "eval_likelihood": 0.6206455435003628
+            },
+            "726649": {
+              "n_trials": 4097,
+              "eval_likelihood": 0.7046420700101371
+            },
+            "727456": {
+              "n_trials": 9974,
+              "eval_likelihood": 0.7696168513275659
+            },
+            "736198": {
+              "n_trials": 5224,
+              "eval_likelihood": 0.7083957837736204
+            },
+            "736199": {
+              "n_trials": 4427,
+              "eval_likelihood": 0.6996311510549748
+            },
+            "744779": {
+              "n_trials": 5981,
+              "eval_likelihood": 0.8202251593966399
+            },
+            "745505": {
+              "n_trials": 5686,
+              "eval_likelihood": 0.6885224006614715
+            },
+            "746346": {
+              "n_trials": 9150,
+              "eval_likelihood": 0.8194635689805264
+            },
+            "747886": {
+              "n_trials": 3397,
+              "eval_likelihood": 0.7328754104286413
+            },
+            "749472": {
+              "n_trials": 5035,
+              "eval_likelihood": 0.7977043080454486
+            },
+            "751153": {
+              "n_trials": 2404,
+              "eval_likelihood": 0.7357201473195432
+            },
+            "751765": {
+              "n_trials": 9589,
+              "eval_likelihood": 0.6717486406725801
+            },
+            "751920": {
+              "n_trials": 2862,
+              "eval_likelihood": 0.6952334012352539
+            },
+            "753122": {
+              "n_trials": 5025,
+              "eval_likelihood": 0.7970956975511733
+            },
+            "754372": {
+              "n_trials": 2934,
+              "eval_likelihood": 0.8140661842281678
+            },
+            "756567": {
+              "n_trials": 3980,
+              "eval_likelihood": 0.7227975971364147
+            },
+            "757214": {
+              "n_trials": 5987,
+              "eval_likelihood": 0.6603917840136462
+            },
+            "761406": {
+              "n_trials": 6154,
+              "eval_likelihood": 0.7728381773900964
+            },
+            "762611": {
+              "n_trials": 3709,
+              "eval_likelihood": 0.7386275480568278
+            },
+            "763704": {
+              "n_trials": 6562,
+              "eval_likelihood": 0.5857705287064119
+            },
+            "764693": {
+              "n_trials": 6538,
+              "eval_likelihood": 0.6499805836481232
+            },
+            "765232": {
+              "n_trials": 7208,
+              "eval_likelihood": 0.6674180326490071
+            },
+            "765365": {
+              "n_trials": 9736,
+              "eval_likelihood": 0.7650353798858438
+            },
+            "765373": {
+              "n_trials": 4582,
+              "eval_likelihood": 0.7533829431391227
+            },
+            "765861": {
+              "n_trials": 3882,
+              "eval_likelihood": 0.7935091370400367
+            },
+            "766556": {
+              "n_trials": 5549,
+              "eval_likelihood": 0.7679240127014464
+            },
+            "766998": {
+              "n_trials": 9319,
+              "eval_likelihood": 0.7361051799894508
+            },
+            "767462": {
+              "n_trials": 7048,
+              "eval_likelihood": 0.7902553802947782
+            },
+            "767463": {
+              "n_trials": 7958,
+              "eval_likelihood": 0.7131547756725375
+            },
+            "769359": {
+              "n_trials": 4962,
+              "eval_likelihood": 0.807349802485642
+            },
+            "770803": {
+              "n_trials": 6626,
+              "eval_likelihood": 0.6900437903675092
+            },
+            "774826": {
+              "n_trials": 3019,
+              "eval_likelihood": 0.6554286817321954
+            },
+            "775741": {
+              "n_trials": 9805,
+              "eval_likelihood": 0.799036243644235
+            },
+            "775745": {
+              "n_trials": 7881,
+              "eval_likelihood": 0.7804133930512079
+            },
+            "776259": {
+              "n_trials": 3149,
+              "eval_likelihood": 0.720042860294167
+            },
+            "777027": {
+              "n_trials": 5490,
+              "eval_likelihood": 0.6437010416548785
+            },
+            "777098": {
+              "n_trials": 4717,
+              "eval_likelihood": 0.7319971045882364
+            },
+            "777271": {
+              "n_trials": 3901,
+              "eval_likelihood": 0.7337603630206091
+            },
+            "778103": {
+              "n_trials": 6208,
+              "eval_likelihood": 0.6869182520734043
+            },
+            "778336": {
+              "n_trials": 4919,
+              "eval_likelihood": 0.8015097470440117
+            },
+            "780618": {
+              "n_trials": 5662,
+              "eval_likelihood": 0.7544096367031035
+            },
+            "780621": {
+              "n_trials": 9680,
+              "eval_likelihood": 0.7629628031527171
+            },
+            "781162": {
+              "n_trials": 9002,
+              "eval_likelihood": 0.7547056282832987
+            },
+            "781369": {
+              "n_trials": 7625,
+              "eval_likelihood": 0.8118699789530326
+            },
+            "781896": {
+              "n_trials": 7995,
+              "eval_likelihood": 0.795221258552094
+            },
+            "781897": {
+              "n_trials": 7821,
+              "eval_likelihood": 0.7070522302070483
+            },
+            "782394": {
+              "n_trials": 5624,
+              "eval_likelihood": 0.7852237306722394
+            },
+            "784956": {
+              "n_trials": 6589,
+              "eval_likelihood": 0.7780607927750686
+            },
+            "785951": {
+              "n_trials": 4448,
+              "eval_likelihood": 0.7894351101424588
+            },
+            "786234": {
+              "n_trials": 6201,
+              "eval_likelihood": 0.7833019845649964
+            },
+            "787625": {
+              "n_trials": 3903,
+              "eval_likelihood": 0.7271146578660493
+            },
+            "788732": {
+              "n_trials": 10471,
+              "eval_likelihood": 0.8276806310382437
+            },
+            "788733": {
+              "n_trials": 8903,
+              "eval_likelihood": 0.8023764507095353
+            },
+            "790584": {
+              "n_trials": 7492,
+              "eval_likelihood": 0.7778649399166513
+            },
+            "790726": {
+              "n_trials": 4051,
+              "eval_likelihood": 0.7596025575516723
+            },
+            "790768": {
+              "n_trials": 13983,
+              "eval_likelihood": 0.7732136899103064
+            },
+            "791174": {
+              "n_trials": 17414,
+              "eval_likelihood": 0.7141091014198182
+            },
+            "793397": {
+              "n_trials": 9399,
+              "eval_likelihood": 0.7435830344489681
+            },
+            "795395": {
+              "n_trials": 9134,
+              "eval_likelihood": 0.7686387135354933
+            },
+            "797673": {
+              "n_trials": 5448,
+              "eval_likelihood": 0.7062133200660409
+            },
+            "798520": {
+              "n_trials": 5980,
+              "eval_likelihood": 0.7298273962227386
+            },
+            "798664": {
+              "n_trials": 4335,
+              "eval_likelihood": 0.7561331625970563
+            },
+            "800175": {
+              "n_trials": 8720,
+              "eval_likelihood": 0.7400497033280277
+            },
+            "801996": {
+              "n_trials": 4674,
+              "eval_likelihood": 0.7851473828095912
+            },
+            "802292": {
+              "n_trials": 7885,
+              "eval_likelihood": 0.7332980377917028
+            },
+            "802953": {
+              "n_trials": 4247,
+              "eval_likelihood": 0.7767308890617178
+            },
+            "805496": {
+              "n_trials": 5469,
+              "eval_likelihood": 0.6945636348454326
+            },
+            "807885": {
+              "n_trials": 5589,
+              "eval_likelihood": 0.6957519263066145
+            },
+            "808584": {
+              "n_trials": 9454,
+              "eval_likelihood": 0.722711039710617
+            },
+            "809488": {
+              "n_trials": 7631,
+              "eval_likelihood": 0.7407364031920811
+            },
+            "810756": {
+              "n_trials": 10320,
+              "eval_likelihood": 0.7454290960918886
+            },
+            "810758": {
+              "n_trials": 6453,
+              "eval_likelihood": 0.8127253679122411
+            },
+            "812305": {
+              "n_trials": 5920,
+              "eval_likelihood": 0.772646440622571
+            },
+            "812307": {
+              "n_trials": 8261,
+              "eval_likelihood": 0.7656857493706867
+            },
+            "813165": {
+              "n_trials": 5287,
+              "eval_likelihood": 0.7458135735695814
+            },
+            "813167": {
+              "n_trials": 7256,
+              "eval_likelihood": 0.8021563209243496
+            },
+            "813171": {
+              "n_trials": 5443,
+              "eval_likelihood": 0.7474336397861271
+            },
+            "813992": {
+              "n_trials": 8630,
+              "eval_likelihood": 0.7909426024704876
+            },
+            "814147": {
+              "n_trials": 5947,
+              "eval_likelihood": 0.7640333603406382
+            },
+            "814196": {
+              "n_trials": 2498,
+              "eval_likelihood": 0.7098485880766685
+            },
+            "815334": {
+              "n_trials": 8891,
+              "eval_likelihood": 0.6850493242874108
+            },
+            "818020": {
+              "n_trials": 2884,
+              "eval_likelihood": 0.733308210272961
+            },
+            "818585": {
+              "n_trials": 8742,
+              "eval_likelihood": 0.7934353450232581
+            },
+            "818908": {
+              "n_trials": 6148,
+              "eval_likelihood": 0.6433323438932722
+            },
+            "819169": {
+              "n_trials": 5085,
+              "eval_likelihood": 0.7109605617186462
+            },
+            "820243": {
+              "n_trials": 5882,
+              "eval_likelihood": 0.8067732722074915
+            },
+            "821576": {
+              "n_trials": 9932,
+              "eval_likelihood": 0.7559975239148882
+            },
+            "823161": {
+              "n_trials": 6478,
+              "eval_likelihood": 0.7804446546190595
+            },
+            "823163": {
+              "n_trials": 6765,
+              "eval_likelihood": 0.7381134396658343
+            },
+            "823166": {
+              "n_trials": 11818,
+              "eval_likelihood": 0.6900890622115714
+            },
+            "826160": {
+              "n_trials": 3849,
+              "eval_likelihood": 0.8119262073928192
+            },
+            "829048": {
+              "n_trials": 2891,
+              "eval_likelihood": 0.7207671171846584
+            },
+            "829489": {
+              "n_trials": 8190,
+              "eval_likelihood": 0.6808185157175886
+            },
+            "829569": {
+              "n_trials": 5000,
+              "eval_likelihood": 0.6613397501155005
+            },
+            "832634": {
+              "n_trials": 4690,
+              "eval_likelihood": 0.744730057642915
+            },
+            "835178": {
+              "n_trials": 3968,
+              "eval_likelihood": 0.7444667235793371
+            },
+            "835444": {
+              "n_trials": 6054,
+              "eval_likelihood": 0.7897379439262696
+            },
+            "836656": {
+              "n_trials": 3384,
+              "eval_likelihood": 0.7774610297827542
+            },
+            "836657": {
+              "n_trials": 5065,
+              "eval_likelihood": 0.8108389737595705
+            },
+            "837689": {
+              "n_trials": 3201,
+              "eval_likelihood": 0.7643278055451486
+            },
+            "838101": {
+              "n_trials": 5821,
+              "eval_likelihood": 0.7155445658551001
+            },
+            "838332": {
+              "n_trials": 6039,
+              "eval_likelihood": 0.8172883053669406
+            },
+            "839483": {
+              "n_trials": 6628,
+              "eval_likelihood": 0.739944259983238
+            },
+            "841356": {
+              "n_trials": 7456,
+              "eval_likelihood": 0.7239218822635217
+            },
+            "841363": {
+              "n_trials": 6966,
+              "eval_likelihood": 0.7412447226169575
+            },
+            "841599": {
+              "n_trials": 7082,
+              "eval_likelihood": 0.7867754907123604
+            },
+            "845710": {
+              "n_trials": 3522,
+              "eval_likelihood": 0.7798397650078059
+            },
+            "850597": {
+              "n_trials": 3155,
+              "eval_likelihood": 0.7430712802456471
+            }
+          }
+        },
+        "source_embedding_checkpoint": {
+          "policy": "best_eval",
+          "step": 90000,
+          "eval_likelihood": 0.7337654829025269,
+          "params_path": "checkpoints/step_90000/params.json",
+          "checkpoint_index_sha256": "70790de17e6795dfb36e12ad3e78da931d67e784d777c7c06d939ed6b2150f14",
+          "params_sha256": "2d3068536eb3e515d29f366db0d2d8bbb7b416cb23c773b0e820dbd064cccaa0",
+          "subject_index_map_sha256": "fbb61e6c7f43d1b7ae52ec92f59131a0cc1fef53ff6a4ccc23448f02aab64592"
+        },
+        "source_embedding_spectrum": {
+          "eigenvalues": [
+            0.001469796395145777,
+            0.0012416043143972295,
+            0.000682489455344536,
+            0.00012518221107288063
+          ],
+          "explained_variance_ratio": [
+            0.4176658613748008,
+            0.3528214772958091,
+            0.1939401587778573,
+            0.03557250255153277
+          ],
+          "cumulative_explained_variance": [
+            0.4176658613748008,
+            0.7704873386706099,
+            0.9644274974484672,
+            1.0
+          ],
+          "effective_rank": 3.218766078259022,
+          "pc5_to_pc8_variance_fraction": null
+        }
+      }
+    ],
+    "e8": [
+      {
+        "seed": 0,
+        "run_id": "e4-e8-d614-source-20260906-195409-4413e385",
+        "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-4413e385",
+        "beaker_job_id": "01M1WWK9ZRFQY79EK3R8KCV3PT",
+        "beaker_result_dataset_id": "01M1WWK9WG50PF4130CZ19QBGQ",
+        "source_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDgxMjgwMw==",
+          "name": "gru-output-e4-e8-d614-source-20260906-195409-4413e385",
+          "digest": "219c3741d6e0e74de1d4e2d0adbbc651",
+          "file_count": 52,
+          "size_bytes": 27468347
+        },
+        "heldout_table_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDkxMjcwNg==",
+          "name": "run-e4-e8-d614-source-20260906-195409-4413e385-heldoutper_subject_likelihood-XxA-ow",
+          "digest": "0086432c807ee589fe1c9db8f7618816",
+          "file_count": 1,
+          "size_bytes": 6208
+        },
+        "heldout_table_sha256": "29258a088e46ada9c024538ac24d67062043ff386b92a43b333bc286873cd030",
+        "heldout": {
+          "adaptation_likelihood": 0.7272206544876099,
+          "test_likelihood": 0.7292184829711914,
+          "test_minus_adaptation": 0.001997828483581543,
+          "per_subject_test_likelihood": {
+            "452275": {
+              "n_trials": 15105,
+              "eval_likelihood": 0.545424933724184
+            },
+            "453476": {
+              "n_trials": 8433,
+              "eval_likelihood": 0.6048823549037754
+            },
+            "453478": {
+              "n_trials": 6232,
+              "eval_likelihood": 0.623452657207449
+            },
+            "455525": {
+              "n_trials": 12888,
+              "eval_likelihood": 0.601038611412638
+            },
+            "472184": {
+              "n_trials": 16372,
+              "eval_likelihood": 0.5845325485049622
+            },
+            "494693": {
+              "n_trials": 4633,
+              "eval_likelihood": 0.5788095789759264
+            },
+            "616134": {
+              "n_trials": 5885,
+              "eval_likelihood": 0.6172006160296761
+            },
+            "627042": {
+              "n_trials": 11816,
+              "eval_likelihood": 0.6475798373246161
+            },
+            "637701": {
+              "n_trials": 4197,
+              "eval_likelihood": 0.5707315939300397
+            },
+            "639875": {
+              "n_trials": 14822,
+              "eval_likelihood": 0.7350790811175688
+            },
+            "641494": {
+              "n_trials": 17536,
+              "eval_likelihood": 0.7048865156226639
+            },
+            "643773": {
+              "n_trials": 16103,
+              "eval_likelihood": 0.6590447497223284
+            },
+            "648586": {
+              "n_trials": 6423,
+              "eval_likelihood": 0.7695977379595013
+            },
+            "651475": {
+              "n_trials": 14268,
+              "eval_likelihood": 0.8817222313320858
+            },
+            "651554": {
+              "n_trials": 11741,
+              "eval_likelihood": 0.7942755169223668
+            },
+            "652743": {
+              "n_trials": 3315,
+              "eval_likelihood": 0.7102612107911747
+            },
+            "655100": {
+              "n_trials": 2031,
+              "eval_likelihood": 0.6466301313335404
+            },
+            "656489": {
+              "n_trials": 19109,
+              "eval_likelihood": 0.6666195740747912
+            },
+            "659778": {
+              "n_trials": 7508,
+              "eval_likelihood": 0.6311898376479558
+            },
+            "663373": {
+              "n_trials": 7292,
+              "eval_likelihood": 0.7723697129583275
+            },
+            "668551": {
+              "n_trials": 13355,
+              "eval_likelihood": 0.8559572102800524
+            },
+            "671245": {
+              "n_trials": 1874,
+              "eval_likelihood": 0.7173854363848076
+            },
+            "673396": {
+              "n_trials": 4336,
+              "eval_likelihood": 0.6587403178115886
+            },
+            "682342": {
+              "n_trials": 2152,
+              "eval_likelihood": 0.7099749305390013
+            },
+            "684039": {
+              "n_trials": 4466,
+              "eval_likelihood": 0.748610438996965
+            },
+            "697929": {
+              "n_trials": 3263,
+              "eval_likelihood": 0.6332054119982056
+            },
+            "697930": {
+              "n_trials": 1441,
+              "eval_likelihood": 0.77185908361948
+            },
+            "699982": {
+              "n_trials": 4747,
+              "eval_likelihood": 0.7949357008486911
+            },
+            "700708": {
+              "n_trials": 9794,
+              "eval_likelihood": 0.7086176382969025
+            },
+            "708299": {
+              "n_trials": 6721,
+              "eval_likelihood": 0.8067034649951426
+            },
+            "710414": {
+              "n_trials": 2770,
+              "eval_likelihood": 0.781441258030532
+            },
+            "711039": {
+              "n_trials": 6988,
+              "eval_likelihood": 0.7913308403268826
+            },
+            "711041": {
+              "n_trials": 8076,
+              "eval_likelihood": 0.8021122546717036
+            },
+            "711254": {
+              "n_trials": 4229,
+              "eval_likelihood": 0.82419661621071
+            },
+            "711281": {
+              "n_trials": 5144,
+              "eval_likelihood": 0.8186160500559629
+            },
+            "712031": {
+              "n_trials": 3618,
+              "eval_likelihood": 0.714586503949887
+            },
+            "713379": {
+              "n_trials": 14940,
+              "eval_likelihood": 0.6264952362438356
+            },
+            "713862": {
+              "n_trials": 8382,
+              "eval_likelihood": 0.785721565753224
+            },
+            "716324": {
+              "n_trials": 5932,
+              "eval_likelihood": 0.7259909494013268
+            },
+            "721403": {
+              "n_trials": 6251,
+              "eval_likelihood": 0.7792671181717404
+            },
+            "722683": {
+              "n_trials": 4062,
+              "eval_likelihood": 0.6805259427520849
+            },
+            "722989": {
+              "n_trials": 3818,
+              "eval_likelihood": 0.6207761037458758
+            },
+            "726649": {
+              "n_trials": 4097,
+              "eval_likelihood": 0.7068075604785073
+            },
+            "727456": {
+              "n_trials": 9974,
+              "eval_likelihood": 0.7696892790241956
+            },
+            "736198": {
+              "n_trials": 5224,
+              "eval_likelihood": 0.709353194684568
+            },
+            "736199": {
+              "n_trials": 4427,
+              "eval_likelihood": 0.6993159456629245
+            },
+            "744779": {
+              "n_trials": 5981,
+              "eval_likelihood": 0.8201787951789109
+            },
+            "745505": {
+              "n_trials": 5686,
+              "eval_likelihood": 0.6875352666884361
+            },
+            "746346": {
+              "n_trials": 9150,
+              "eval_likelihood": 0.8193517207945193
+            },
+            "747886": {
+              "n_trials": 3397,
+              "eval_likelihood": 0.7317174111617782
+            },
+            "749472": {
+              "n_trials": 5035,
+              "eval_likelihood": 0.7994298431232152
+            },
+            "751153": {
+              "n_trials": 2404,
+              "eval_likelihood": 0.736944549822211
+            },
+            "751765": {
+              "n_trials": 9589,
+              "eval_likelihood": 0.6718964983669782
+            },
+            "751920": {
+              "n_trials": 2862,
+              "eval_likelihood": 0.6962837231218674
+            },
+            "753122": {
+              "n_trials": 5025,
+              "eval_likelihood": 0.7975460908829276
+            },
+            "754372": {
+              "n_trials": 2934,
+              "eval_likelihood": 0.8139195004890069
+            },
+            "756567": {
+              "n_trials": 3980,
+              "eval_likelihood": 0.7227384072742067
+            },
+            "757214": {
+              "n_trials": 5987,
+              "eval_likelihood": 0.6608201590650015
+            },
+            "761406": {
+              "n_trials": 6154,
+              "eval_likelihood": 0.7737743987702524
+            },
+            "762611": {
+              "n_trials": 3709,
+              "eval_likelihood": 0.7407775323152166
+            },
+            "763704": {
+              "n_trials": 6562,
+              "eval_likelihood": 0.5870868822529638
+            },
+            "764693": {
+              "n_trials": 6538,
+              "eval_likelihood": 0.650210215324933
+            },
+            "765232": {
+              "n_trials": 7208,
+              "eval_likelihood": 0.6669300517365858
+            },
+            "765365": {
+              "n_trials": 9736,
+              "eval_likelihood": 0.764793005538416
+            },
+            "765373": {
+              "n_trials": 4582,
+              "eval_likelihood": 0.7525957429109311
+            },
+            "765861": {
+              "n_trials": 3882,
+              "eval_likelihood": 0.7928003430628938
+            },
+            "766556": {
+              "n_trials": 5549,
+              "eval_likelihood": 0.7695640787969675
+            },
+            "766998": {
+              "n_trials": 9319,
+              "eval_likelihood": 0.7375517185973798
+            },
+            "767462": {
+              "n_trials": 7048,
+              "eval_likelihood": 0.7892854566969455
+            },
+            "767463": {
+              "n_trials": 7958,
+              "eval_likelihood": 0.7159547332343466
+            },
+            "769359": {
+              "n_trials": 4962,
+              "eval_likelihood": 0.8072891429804903
+            },
+            "770803": {
+              "n_trials": 6626,
+              "eval_likelihood": 0.6917046772343063
+            },
+            "774826": {
+              "n_trials": 3019,
+              "eval_likelihood": 0.6580998016248988
+            },
+            "775741": {
+              "n_trials": 9805,
+              "eval_likelihood": 0.799107136441803
+            },
+            "775745": {
+              "n_trials": 7881,
+              "eval_likelihood": 0.7810972476673137
+            },
+            "776259": {
+              "n_trials": 3149,
+              "eval_likelihood": 0.7211799119190059
+            },
+            "777027": {
+              "n_trials": 5490,
+              "eval_likelihood": 0.6440403978063184
+            },
+            "777098": {
+              "n_trials": 4717,
+              "eval_likelihood": 0.7324388718615825
+            },
+            "777271": {
+              "n_trials": 3901,
+              "eval_likelihood": 0.7342551025861968
+            },
+            "778103": {
+              "n_trials": 6208,
+              "eval_likelihood": 0.6878203803436103
+            },
+            "778336": {
+              "n_trials": 4919,
+              "eval_likelihood": 0.8023452181140295
+            },
+            "780618": {
+              "n_trials": 5662,
+              "eval_likelihood": 0.7545428923603203
+            },
+            "780621": {
+              "n_trials": 9680,
+              "eval_likelihood": 0.7628753797441267
+            },
+            "781162": {
+              "n_trials": 9002,
+              "eval_likelihood": 0.7551386042776389
+            },
+            "781369": {
+              "n_trials": 7625,
+              "eval_likelihood": 0.8124768799212053
+            },
+            "781896": {
+              "n_trials": 7995,
+              "eval_likelihood": 0.7958210676927004
+            },
+            "781897": {
+              "n_trials": 7821,
+              "eval_likelihood": 0.707084852097422
+            },
+            "782394": {
+              "n_trials": 5624,
+              "eval_likelihood": 0.7858106459865785
+            },
+            "784956": {
+              "n_trials": 6589,
+              "eval_likelihood": 0.7780421796313655
+            },
+            "785951": {
+              "n_trials": 4448,
+              "eval_likelihood": 0.7892164422454361
+            },
+            "786234": {
+              "n_trials": 6201,
+              "eval_likelihood": 0.783852144543401
+            },
+            "787625": {
+              "n_trials": 3903,
+              "eval_likelihood": 0.7276621438775427
+            },
+            "788732": {
+              "n_trials": 10471,
+              "eval_likelihood": 0.8282395761380612
+            },
+            "788733": {
+              "n_trials": 8903,
+              "eval_likelihood": 0.802258446997305
+            },
+            "790584": {
+              "n_trials": 7492,
+              "eval_likelihood": 0.7773114866957789
+            },
+            "790726": {
+              "n_trials": 4051,
+              "eval_likelihood": 0.7616377485309943
+            },
+            "790768": {
+              "n_trials": 13983,
+              "eval_likelihood": 0.7746838485724803
+            },
+            "791174": {
+              "n_trials": 17414,
+              "eval_likelihood": 0.715853513905483
+            },
+            "793397": {
+              "n_trials": 9399,
+              "eval_likelihood": 0.7441878562289733
+            },
+            "795395": {
+              "n_trials": 9134,
+              "eval_likelihood": 0.7701456196588927
+            },
+            "797673": {
+              "n_trials": 5448,
+              "eval_likelihood": 0.707441792498525
+            },
+            "798520": {
+              "n_trials": 5980,
+              "eval_likelihood": 0.7297893634576728
+            },
+            "798664": {
+              "n_trials": 4335,
+              "eval_likelihood": 0.7578160947600373
+            },
+            "800175": {
+              "n_trials": 8720,
+              "eval_likelihood": 0.7404612685287482
+            },
+            "801996": {
+              "n_trials": 4674,
+              "eval_likelihood": 0.7844633167491315
+            },
+            "802292": {
+              "n_trials": 7885,
+              "eval_likelihood": 0.7357456164343943
+            },
+            "802953": {
+              "n_trials": 4247,
+              "eval_likelihood": 0.777644160009766
+            },
+            "805496": {
+              "n_trials": 5469,
+              "eval_likelihood": 0.694775305530641
+            },
+            "807885": {
+              "n_trials": 5589,
+              "eval_likelihood": 0.6958693645484706
+            },
+            "808584": {
+              "n_trials": 9454,
+              "eval_likelihood": 0.7227678286782511
+            },
+            "809488": {
+              "n_trials": 7631,
+              "eval_likelihood": 0.7408269154422706
+            },
+            "810756": {
+              "n_trials": 10320,
+              "eval_likelihood": 0.745419321327952
+            },
+            "810758": {
+              "n_trials": 6453,
+              "eval_likelihood": 0.8131553237390805
+            },
+            "812305": {
+              "n_trials": 5920,
+              "eval_likelihood": 0.7724407625250204
+            },
+            "812307": {
+              "n_trials": 8261,
+              "eval_likelihood": 0.7657038220696288
+            },
+            "813165": {
+              "n_trials": 5287,
+              "eval_likelihood": 0.7469224901381994
+            },
+            "813167": {
+              "n_trials": 7256,
+              "eval_likelihood": 0.8009610726412598
+            },
+            "813171": {
+              "n_trials": 5443,
+              "eval_likelihood": 0.7467018446120746
+            },
+            "813992": {
+              "n_trials": 8630,
+              "eval_likelihood": 0.7905593517611276
+            },
+            "814147": {
+              "n_trials": 5947,
+              "eval_likelihood": 0.7632513105999161
+            },
+            "814196": {
+              "n_trials": 2498,
+              "eval_likelihood": 0.7088313496850371
+            },
+            "815334": {
+              "n_trials": 8891,
+              "eval_likelihood": 0.684275426669176
+            },
+            "818020": {
+              "n_trials": 2884,
+              "eval_likelihood": 0.7373334890185144
+            },
+            "818585": {
+              "n_trials": 8742,
+              "eval_likelihood": 0.7938009866974711
+            },
+            "818908": {
+              "n_trials": 6148,
+              "eval_likelihood": 0.6426659940118192
+            },
+            "819169": {
+              "n_trials": 5085,
+              "eval_likelihood": 0.7105970882822857
+            },
+            "820243": {
+              "n_trials": 5882,
+              "eval_likelihood": 0.8069242911358642
+            },
+            "821576": {
+              "n_trials": 9932,
+              "eval_likelihood": 0.7566729088537356
+            },
+            "823161": {
+              "n_trials": 6478,
+              "eval_likelihood": 0.7818374379227486
+            },
+            "823163": {
+              "n_trials": 6765,
+              "eval_likelihood": 0.7376372012386233
+            },
+            "823166": {
+              "n_trials": 11818,
+              "eval_likelihood": 0.6901939377212766
+            },
+            "826160": {
+              "n_trials": 3849,
+              "eval_likelihood": 0.8127607255528563
+            },
+            "829048": {
+              "n_trials": 2891,
+              "eval_likelihood": 0.7200385634066485
+            },
+            "829489": {
+              "n_trials": 8190,
+              "eval_likelihood": 0.6807133904011518
+            },
+            "829569": {
+              "n_trials": 5000,
+              "eval_likelihood": 0.661512167610961
+            },
+            "832634": {
+              "n_trials": 4690,
+              "eval_likelihood": 0.7453200976534158
+            },
+            "835178": {
+              "n_trials": 3968,
+              "eval_likelihood": 0.7431085946550495
+            },
+            "835444": {
+              "n_trials": 6054,
+              "eval_likelihood": 0.7896739516710545
+            },
+            "836656": {
+              "n_trials": 3384,
+              "eval_likelihood": 0.7765665824823206
+            },
+            "836657": {
+              "n_trials": 5065,
+              "eval_likelihood": 0.8103287408574603
+            },
+            "837689": {
+              "n_trials": 3201,
+              "eval_likelihood": 0.7636776243652031
+            },
+            "838101": {
+              "n_trials": 5821,
+              "eval_likelihood": 0.7164221132424066
+            },
+            "838332": {
+              "n_trials": 6039,
+              "eval_likelihood": 0.81813221563845
+            },
+            "839483": {
+              "n_trials": 6628,
+              "eval_likelihood": 0.7400238563009488
+            },
+            "841356": {
+              "n_trials": 7456,
+              "eval_likelihood": 0.7251075718570117
+            },
+            "841363": {
+              "n_trials": 6966,
+              "eval_likelihood": 0.7411611565409588
+            },
+            "841599": {
+              "n_trials": 7082,
+              "eval_likelihood": 0.7885732255771543
+            },
+            "845710": {
+              "n_trials": 3522,
+              "eval_likelihood": 0.7798400184024483
+            },
+            "850597": {
+              "n_trials": 3155,
+              "eval_likelihood": 0.7417545493007139
+            }
+          }
+        },
+        "source_embedding_checkpoint": {
+          "policy": "best_eval",
+          "step": 90000,
+          "eval_likelihood": 0.7340492606163025,
+          "params_path": "checkpoints/step_90000/params.json",
+          "checkpoint_index_sha256": "f03f49cfc59ccad204327ab9d6f660e01b91c027db7ce50ee6aa292b46f3967f",
+          "params_sha256": "bd67269f14048d2005352c552229c3b4968355826935b4d4cc8f4821b0083461",
+          "subject_index_map_sha256": "fbb61e6c7f43d1b7ae52ec92f59131a0cc1fef53ff6a4ccc23448f02aab64592"
+        },
+        "source_embedding_spectrum": {
+          "eigenvalues": [
+            0.0023229270734514444,
+            0.001539931026609821,
+            0.0014579631549134133,
+            0.0011346131621041472,
+            0.0008442199289133633,
+            0.0005150734237610771,
+            0.0002353231277028338,
+            7.753734339264245e-05
+          ],
+          "explained_variance_ratio": [
+            0.28580767192124235,
+            0.1894696164441778,
+            0.1793844756536488,
+            0.13960022684240492,
+            0.10387090289224639,
+            0.06337346436576977,
+            0.028953623231072992,
+            0.009540018649437073
+          ],
+          "cumulative_explained_variance": [
+            0.28580767192124235,
+            0.47527728836542016,
+            0.654661764019069,
+            0.7942619908614739,
+            0.8981328937537203,
+            0.96150635811949,
+            0.990459981350563,
+            1.0
+          ],
+          "effective_rank": 6.130210872309082,
+          "pc5_to_pc8_variance_fraction": 0.20573800913852622
+        }
+      },
+      {
+        "seed": 1,
+        "run_id": "e4-e8-d614-source-20260906-195409-849b588d",
+        "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-849b588d",
+        "beaker_job_id": "01M1WWKA3EG8Q82CG7FE2QZXG5",
+        "beaker_result_dataset_id": "01M1WWK9ZYHJMT3AZJP49VKFFA",
+        "source_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDc3MjAwNA==",
+          "name": "gru-output-e4-e8-d614-source-20260906-195409-849b588d",
+          "digest": "011c1f731c731ed6ed89f4daf27e589b",
+          "file_count": 52,
+          "size_bytes": 27486807
+        },
+        "heldout_table_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDg3MjcxMg==",
+          "name": "run-e4-e8-d614-source-20260906-195409-849b588d-heldoutper_subject_likelihood-nI8g4g",
+          "digest": "9e5e3049b8e213af3f7ee120b4ece7dc",
+          "file_count": 1,
+          "size_bytes": 6221
+        },
+        "heldout_table_sha256": "c62de5dc1babadfc62c0fd31a71de58dd46bb1c9274a83c75e98f77382d6c82c",
+        "heldout": {
+          "adaptation_likelihood": 0.7271100282669067,
+          "test_likelihood": 0.7291982173919678,
+          "test_minus_adaptation": 0.002088189125061035,
+          "per_subject_test_likelihood": {
+            "452275": {
+              "n_trials": 15105,
+              "eval_likelihood": 0.545734056634409
+            },
+            "453476": {
+              "n_trials": 8433,
+              "eval_likelihood": 0.6050061190761589
+            },
+            "453478": {
+              "n_trials": 6232,
+              "eval_likelihood": 0.6239489793317136
+            },
+            "455525": {
+              "n_trials": 12888,
+              "eval_likelihood": 0.6026890332900753
+            },
+            "472184": {
+              "n_trials": 16372,
+              "eval_likelihood": 0.5849697501623293
+            },
+            "494693": {
+              "n_trials": 4633,
+              "eval_likelihood": 0.5792993903241883
+            },
+            "616134": {
+              "n_trials": 5885,
+              "eval_likelihood": 0.6170677834657037
+            },
+            "627042": {
+              "n_trials": 11816,
+              "eval_likelihood": 0.6472602625997449
+            },
+            "637701": {
+              "n_trials": 4197,
+              "eval_likelihood": 0.5705199296436632
+            },
+            "639875": {
+              "n_trials": 14822,
+              "eval_likelihood": 0.7343194432392345
+            },
+            "641494": {
+              "n_trials": 17536,
+              "eval_likelihood": 0.70522970212748
+            },
+            "643773": {
+              "n_trials": 16103,
+              "eval_likelihood": 0.6602836736832871
+            },
+            "648586": {
+              "n_trials": 6423,
+              "eval_likelihood": 0.7692002370788211
+            },
+            "651475": {
+              "n_trials": 14268,
+              "eval_likelihood": 0.8811327406572074
+            },
+            "651554": {
+              "n_trials": 11741,
+              "eval_likelihood": 0.7936367025005012
+            },
+            "652743": {
+              "n_trials": 3315,
+              "eval_likelihood": 0.7119423615003215
+            },
+            "655100": {
+              "n_trials": 2031,
+              "eval_likelihood": 0.6454582582523463
+            },
+            "656489": {
+              "n_trials": 19109,
+              "eval_likelihood": 0.6672109649625542
+            },
+            "659778": {
+              "n_trials": 7508,
+              "eval_likelihood": 0.6311896433051943
+            },
+            "663373": {
+              "n_trials": 7292,
+              "eval_likelihood": 0.7716285578557657
+            },
+            "668551": {
+              "n_trials": 13355,
+              "eval_likelihood": 0.856015389609109
+            },
+            "671245": {
+              "n_trials": 1874,
+              "eval_likelihood": 0.7162957308412785
+            },
+            "673396": {
+              "n_trials": 4336,
+              "eval_likelihood": 0.658403652195208
+            },
+            "682342": {
+              "n_trials": 2152,
+              "eval_likelihood": 0.7096921176932138
+            },
+            "684039": {
+              "n_trials": 4466,
+              "eval_likelihood": 0.7492029703593986
+            },
+            "697929": {
+              "n_trials": 3263,
+              "eval_likelihood": 0.6330825516583362
+            },
+            "697930": {
+              "n_trials": 1441,
+              "eval_likelihood": 0.7710949905812433
+            },
+            "699982": {
+              "n_trials": 4747,
+              "eval_likelihood": 0.7932496678879176
+            },
+            "700708": {
+              "n_trials": 9794,
+              "eval_likelihood": 0.7086972904883497
+            },
+            "708299": {
+              "n_trials": 6721,
+              "eval_likelihood": 0.8056581351574434
+            },
+            "710414": {
+              "n_trials": 2770,
+              "eval_likelihood": 0.7801350818189337
+            },
+            "711039": {
+              "n_trials": 6988,
+              "eval_likelihood": 0.7905427870327131
+            },
+            "711041": {
+              "n_trials": 8076,
+              "eval_likelihood": 0.8027555670472654
+            },
+            "711254": {
+              "n_trials": 4229,
+              "eval_likelihood": 0.8251129088346744
+            },
+            "711281": {
+              "n_trials": 5144,
+              "eval_likelihood": 0.8194660715322288
+            },
+            "712031": {
+              "n_trials": 3618,
+              "eval_likelihood": 0.7134493492678495
+            },
+            "713379": {
+              "n_trials": 14940,
+              "eval_likelihood": 0.6263704516018005
+            },
+            "713862": {
+              "n_trials": 8382,
+              "eval_likelihood": 0.7848094990617095
+            },
+            "716324": {
+              "n_trials": 5932,
+              "eval_likelihood": 0.7264510306024835
+            },
+            "721403": {
+              "n_trials": 6251,
+              "eval_likelihood": 0.7791035294580554
+            },
+            "722683": {
+              "n_trials": 4062,
+              "eval_likelihood": 0.6796911856057359
+            },
+            "722989": {
+              "n_trials": 3818,
+              "eval_likelihood": 0.6200327893983787
+            },
+            "726649": {
+              "n_trials": 4097,
+              "eval_likelihood": 0.707227350200176
+            },
+            "727456": {
+              "n_trials": 9974,
+              "eval_likelihood": 0.7698970338047589
+            },
+            "736198": {
+              "n_trials": 5224,
+              "eval_likelihood": 0.7089376489378425
+            },
+            "736199": {
+              "n_trials": 4427,
+              "eval_likelihood": 0.6994357779049647
+            },
+            "744779": {
+              "n_trials": 5981,
+              "eval_likelihood": 0.8196555032060638
+            },
+            "745505": {
+              "n_trials": 5686,
+              "eval_likelihood": 0.6890351089418075
+            },
+            "746346": {
+              "n_trials": 9150,
+              "eval_likelihood": 0.8189592810549994
+            },
+            "747886": {
+              "n_trials": 3397,
+              "eval_likelihood": 0.7317306980072242
+            },
+            "749472": {
+              "n_trials": 5035,
+              "eval_likelihood": 0.7987238268608844
+            },
+            "751153": {
+              "n_trials": 2404,
+              "eval_likelihood": 0.735534480834668
+            },
+            "751765": {
+              "n_trials": 9589,
+              "eval_likelihood": 0.6703625541796769
+            },
+            "751920": {
+              "n_trials": 2862,
+              "eval_likelihood": 0.6963659523574577
+            },
+            "753122": {
+              "n_trials": 5025,
+              "eval_likelihood": 0.7985041253886964
+            },
+            "754372": {
+              "n_trials": 2934,
+              "eval_likelihood": 0.8130286642939457
+            },
+            "756567": {
+              "n_trials": 3980,
+              "eval_likelihood": 0.722709725051716
+            },
+            "757214": {
+              "n_trials": 5987,
+              "eval_likelihood": 0.6611040785479542
+            },
+            "761406": {
+              "n_trials": 6154,
+              "eval_likelihood": 0.7737678325031038
+            },
+            "762611": {
+              "n_trials": 3709,
+              "eval_likelihood": 0.7396151826322925
+            },
+            "763704": {
+              "n_trials": 6562,
+              "eval_likelihood": 0.5867854202627564
+            },
+            "764693": {
+              "n_trials": 6538,
+              "eval_likelihood": 0.6505643469506585
+            },
+            "765232": {
+              "n_trials": 7208,
+              "eval_likelihood": 0.6673698900201953
+            },
+            "765365": {
+              "n_trials": 9736,
+              "eval_likelihood": 0.7649377523306938
+            },
+            "765373": {
+              "n_trials": 4582,
+              "eval_likelihood": 0.7527815676982911
+            },
+            "765861": {
+              "n_trials": 3882,
+              "eval_likelihood": 0.7931040704249316
+            },
+            "766556": {
+              "n_trials": 5549,
+              "eval_likelihood": 0.7682290325832242
+            },
+            "766998": {
+              "n_trials": 9319,
+              "eval_likelihood": 0.7372058195784389
+            },
+            "767462": {
+              "n_trials": 7048,
+              "eval_likelihood": 0.7887056625595493
+            },
+            "767463": {
+              "n_trials": 7958,
+              "eval_likelihood": 0.7159734630358597
+            },
+            "769359": {
+              "n_trials": 4962,
+              "eval_likelihood": 0.8080506959211963
+            },
+            "770803": {
+              "n_trials": 6626,
+              "eval_likelihood": 0.6920129742564164
+            },
+            "774826": {
+              "n_trials": 3019,
+              "eval_likelihood": 0.6585245217441359
+            },
+            "775741": {
+              "n_trials": 9805,
+              "eval_likelihood": 0.7991972781484551
+            },
+            "775745": {
+              "n_trials": 7881,
+              "eval_likelihood": 0.7813754167144343
+            },
+            "776259": {
+              "n_trials": 3149,
+              "eval_likelihood": 0.7204957490158448
+            },
+            "777027": {
+              "n_trials": 5490,
+              "eval_likelihood": 0.6444940406658372
+            },
+            "777098": {
+              "n_trials": 4717,
+              "eval_likelihood": 0.7316605940905362
+            },
+            "777271": {
+              "n_trials": 3901,
+              "eval_likelihood": 0.7335277101425576
+            },
+            "778103": {
+              "n_trials": 6208,
+              "eval_likelihood": 0.6881682931251253
+            },
+            "778336": {
+              "n_trials": 4919,
+              "eval_likelihood": 0.8013956468153034
+            },
+            "780618": {
+              "n_trials": 5662,
+              "eval_likelihood": 0.7547971147676958
+            },
+            "780621": {
+              "n_trials": 9680,
+              "eval_likelihood": 0.7620627988484674
+            },
+            "781162": {
+              "n_trials": 9002,
+              "eval_likelihood": 0.7551862157734052
+            },
+            "781369": {
+              "n_trials": 7625,
+              "eval_likelihood": 0.8121905338855785
+            },
+            "781896": {
+              "n_trials": 7995,
+              "eval_likelihood": 0.7963621508862049
+            },
+            "781897": {
+              "n_trials": 7821,
+              "eval_likelihood": 0.7068229400114939
+            },
+            "782394": {
+              "n_trials": 5624,
+              "eval_likelihood": 0.7860254994428195
+            },
+            "784956": {
+              "n_trials": 6589,
+              "eval_likelihood": 0.7779362322484641
+            },
+            "785951": {
+              "n_trials": 4448,
+              "eval_likelihood": 0.7888336744295837
+            },
+            "786234": {
+              "n_trials": 6201,
+              "eval_likelihood": 0.7830917364409318
+            },
+            "787625": {
+              "n_trials": 3903,
+              "eval_likelihood": 0.7286109491561868
+            },
+            "788732": {
+              "n_trials": 10471,
+              "eval_likelihood": 0.8281778663759632
+            },
+            "788733": {
+              "n_trials": 8903,
+              "eval_likelihood": 0.8027611921076101
+            },
+            "790584": {
+              "n_trials": 7492,
+              "eval_likelihood": 0.7773971875933923
+            },
+            "790726": {
+              "n_trials": 4051,
+              "eval_likelihood": 0.7619414960188231
+            },
+            "790768": {
+              "n_trials": 13983,
+              "eval_likelihood": 0.7742595527407669
+            },
+            "791174": {
+              "n_trials": 17414,
+              "eval_likelihood": 0.7151522900998706
+            },
+            "793397": {
+              "n_trials": 9399,
+              "eval_likelihood": 0.744497950329746
+            },
+            "795395": {
+              "n_trials": 9134,
+              "eval_likelihood": 0.7696642170636987
+            },
+            "797673": {
+              "n_trials": 5448,
+              "eval_likelihood": 0.706990966002958
+            },
+            "798520": {
+              "n_trials": 5980,
+              "eval_likelihood": 0.7291985697545438
+            },
+            "798664": {
+              "n_trials": 4335,
+              "eval_likelihood": 0.7576186791766963
+            },
+            "800175": {
+              "n_trials": 8720,
+              "eval_likelihood": 0.7400689774765178
+            },
+            "801996": {
+              "n_trials": 4674,
+              "eval_likelihood": 0.7840313167196238
+            },
+            "802292": {
+              "n_trials": 7885,
+              "eval_likelihood": 0.7358459093688444
+            },
+            "802953": {
+              "n_trials": 4247,
+              "eval_likelihood": 0.7777084189882297
+            },
+            "805496": {
+              "n_trials": 5469,
+              "eval_likelihood": 0.694971880431581
+            },
+            "807885": {
+              "n_trials": 5589,
+              "eval_likelihood": 0.6956794383346077
+            },
+            "808584": {
+              "n_trials": 9454,
+              "eval_likelihood": 0.7229861825988209
+            },
+            "809488": {
+              "n_trials": 7631,
+              "eval_likelihood": 0.7416916080064573
+            },
+            "810756": {
+              "n_trials": 10320,
+              "eval_likelihood": 0.7452586475410834
+            },
+            "810758": {
+              "n_trials": 6453,
+              "eval_likelihood": 0.8140835763847517
+            },
+            "812305": {
+              "n_trials": 5920,
+              "eval_likelihood": 0.7726790659787367
+            },
+            "812307": {
+              "n_trials": 8261,
+              "eval_likelihood": 0.7647239052202632
+            },
+            "813165": {
+              "n_trials": 5287,
+              "eval_likelihood": 0.7459598700265695
+            },
+            "813167": {
+              "n_trials": 7256,
+              "eval_likelihood": 0.8018467711327814
+            },
+            "813171": {
+              "n_trials": 5443,
+              "eval_likelihood": 0.746295494282465
+            },
+            "813992": {
+              "n_trials": 8630,
+              "eval_likelihood": 0.7909941705129144
+            },
+            "814147": {
+              "n_trials": 5947,
+              "eval_likelihood": 0.7642255999195738
+            },
+            "814196": {
+              "n_trials": 2498,
+              "eval_likelihood": 0.7083495690956768
+            },
+            "815334": {
+              "n_trials": 8891,
+              "eval_likelihood": 0.6852377229154895
+            },
+            "818020": {
+              "n_trials": 2884,
+              "eval_likelihood": 0.7382032285553505
+            },
+            "818585": {
+              "n_trials": 8742,
+              "eval_likelihood": 0.7933737086407666
+            },
+            "818908": {
+              "n_trials": 6148,
+              "eval_likelihood": 0.6427436160784197
+            },
+            "819169": {
+              "n_trials": 5085,
+              "eval_likelihood": 0.711766475909167
+            },
+            "820243": {
+              "n_trials": 5882,
+              "eval_likelihood": 0.8071157411905319
+            },
+            "821576": {
+              "n_trials": 9932,
+              "eval_likelihood": 0.7562626981604827
+            },
+            "823161": {
+              "n_trials": 6478,
+              "eval_likelihood": 0.7818921142116014
+            },
+            "823163": {
+              "n_trials": 6765,
+              "eval_likelihood": 0.7377666236510658
+            },
+            "823166": {
+              "n_trials": 11818,
+              "eval_likelihood": 0.6903786397123207
+            },
+            "826160": {
+              "n_trials": 3849,
+              "eval_likelihood": 0.8132507235784222
+            },
+            "829048": {
+              "n_trials": 2891,
+              "eval_likelihood": 0.7198832401174653
+            },
+            "829489": {
+              "n_trials": 8190,
+              "eval_likelihood": 0.680193037655496
+            },
+            "829569": {
+              "n_trials": 5000,
+              "eval_likelihood": 0.6610692163315202
+            },
+            "832634": {
+              "n_trials": 4690,
+              "eval_likelihood": 0.7444698048807148
+            },
+            "835178": {
+              "n_trials": 3968,
+              "eval_likelihood": 0.7438411006186721
+            },
+            "835444": {
+              "n_trials": 6054,
+              "eval_likelihood": 0.7886851738465448
+            },
+            "836656": {
+              "n_trials": 3384,
+              "eval_likelihood": 0.7765177154788477
+            },
+            "836657": {
+              "n_trials": 5065,
+              "eval_likelihood": 0.8101198664750849
+            },
+            "837689": {
+              "n_trials": 3201,
+              "eval_likelihood": 0.7641328105612101
+            },
+            "838101": {
+              "n_trials": 5821,
+              "eval_likelihood": 0.7165214447241042
+            },
+            "838332": {
+              "n_trials": 6039,
+              "eval_likelihood": 0.8177084566468731
+            },
+            "839483": {
+              "n_trials": 6628,
+              "eval_likelihood": 0.740178500601032
+            },
+            "841356": {
+              "n_trials": 7456,
+              "eval_likelihood": 0.7249676549231521
+            },
+            "841363": {
+              "n_trials": 6966,
+              "eval_likelihood": 0.7412543965159044
+            },
+            "841599": {
+              "n_trials": 7082,
+              "eval_likelihood": 0.7878794235683153
+            },
+            "845710": {
+              "n_trials": 3522,
+              "eval_likelihood": 0.7800891688185786
+            },
+            "850597": {
+              "n_trials": 3155,
+              "eval_likelihood": 0.7420633526174492
+            }
+          }
+        },
+        "source_embedding_checkpoint": {
+          "policy": "best_eval",
+          "step": 90000,
+          "eval_likelihood": 0.7340570688247681,
+          "params_path": "checkpoints/step_90000/params.json",
+          "checkpoint_index_sha256": "9966f7f244b3a5a47ff1128b979c456124e0e9dbbe460d8b40664c0412aa2d74",
+          "params_sha256": "3243757e6f69308462f20c0c288f6ba6a4e453500664dff12c8c47b9849419b5",
+          "subject_index_map_sha256": "fbb61e6c7f43d1b7ae52ec92f59131a0cc1fef53ff6a4ccc23448f02aab64592"
+        },
+        "source_embedding_spectrum": {
+          "eigenvalues": [
+            0.002839514489980783,
+            0.001926108228967336,
+            0.0016920640053877413,
+            0.0009004872413607739,
+            0.0007141253375441632,
+            0.0006634059433638987,
+            0.00020746520108218223,
+            3.5670276797837935e-05
+          ],
+          "explained_variance_ratio": [
+            0.3162451119371804,
+            0.21451635997005314,
+            0.18845016381386437,
+            0.10028992260718064,
+            0.07953424717700915,
+            0.07388547850668893,
+            0.023106011950567083,
+            0.003972704037456351
+          ],
+          "cumulative_explained_variance": [
+            0.3162451119371804,
+            0.5307614719072336,
+            0.7192116357210979,
+            0.8195015583282785,
+            0.8990358055052877,
+            0.9729212840119766,
+            0.9960272959625437,
+            1.0
+          ],
+          "effective_rank": 5.710411718927822,
+          "pc5_to_pc8_variance_fraction": 0.18049844167172152
+        }
+      },
+      {
+        "seed": 2,
+        "run_id": "e4-e8-d614-source-20260906-195409-5c1c0d2c",
+        "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-5c1c0d2c",
+        "beaker_job_id": "01M1WWKA7DMX90CCHQZ9GAY91B",
+        "beaker_result_dataset_id": "01M1WWKA3JMEA6B2BFN7GF11SQ",
+        "source_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDcyNzQ0OA==",
+          "name": "gru-output-e4-e8-d614-source-20260906-195409-5c1c0d2c",
+          "digest": "3d771b5b33bc2ac4cdb1f165230624c8",
+          "file_count": 52,
+          "size_bytes": 27516790
+        },
+        "heldout_table_artifact": {
+          "id": "QXJ0aWZhY3Q6MzU1NDgzMTUxMg==",
+          "name": "run-e4-e8-d614-source-20260906-195409-5c1c0d2c-heldoutper_subject_likelihood-W3mmPg",
+          "digest": "1b80d333b83bb3333a1067edcab34ca3",
+          "file_count": 1,
+          "size_bytes": 6221
+        },
+        "heldout_table_sha256": "de4986bdd579802d98a50a3edb763bcb06fecfb291cd08a04103c13f04ecae29",
+        "heldout": {
+          "adaptation_likelihood": 0.7271637320518494,
+          "test_likelihood": 0.7291742563247681,
+          "test_minus_adaptation": 0.002010524272918701,
+          "per_subject_test_likelihood": {
+            "452275": {
+              "n_trials": 15105,
+              "eval_likelihood": 0.5453149453462803
+            },
+            "453476": {
+              "n_trials": 8433,
+              "eval_likelihood": 0.6055472472497127
+            },
+            "453478": {
+              "n_trials": 6232,
+              "eval_likelihood": 0.6232580919584733
+            },
+            "455525": {
+              "n_trials": 12888,
+              "eval_likelihood": 0.6024042852087873
+            },
+            "472184": {
+              "n_trials": 16372,
+              "eval_likelihood": 0.5846346576581876
+            },
+            "494693": {
+              "n_trials": 4633,
+              "eval_likelihood": 0.5783981872737324
+            },
+            "616134": {
+              "n_trials": 5885,
+              "eval_likelihood": 0.6171055730474584
+            },
+            "627042": {
+              "n_trials": 11816,
+              "eval_likelihood": 0.6464467942923994
+            },
+            "637701": {
+              "n_trials": 4197,
+              "eval_likelihood": 0.57004926043089
+            },
+            "639875": {
+              "n_trials": 14822,
+              "eval_likelihood": 0.7347894658259831
+            },
+            "641494": {
+              "n_trials": 17536,
+              "eval_likelihood": 0.7045922092362374
+            },
+            "643773": {
+              "n_trials": 16103,
+              "eval_likelihood": 0.6598279606663777
+            },
+            "648586": {
+              "n_trials": 6423,
+              "eval_likelihood": 0.7695269103838822
+            },
+            "651475": {
+              "n_trials": 14268,
+              "eval_likelihood": 0.8822441687809698
+            },
+            "651554": {
+              "n_trials": 11741,
+              "eval_likelihood": 0.7940393147558444
+            },
+            "652743": {
+              "n_trials": 3315,
+              "eval_likelihood": 0.7102966770315616
+            },
+            "655100": {
+              "n_trials": 2031,
+              "eval_likelihood": 0.6462159826004822
+            },
+            "656489": {
+              "n_trials": 19109,
+              "eval_likelihood": 0.6668428570571923
+            },
+            "659778": {
+              "n_trials": 7508,
+              "eval_likelihood": 0.630636492654118
+            },
+            "663373": {
+              "n_trials": 7292,
+              "eval_likelihood": 0.7724114338000359
+            },
+            "668551": {
+              "n_trials": 13355,
+              "eval_likelihood": 0.8559673636879112
+            },
+            "671245": {
+              "n_trials": 1874,
+              "eval_likelihood": 0.7170660895173215
+            },
+            "673396": {
+              "n_trials": 4336,
+              "eval_likelihood": 0.6575065369183131
+            },
+            "682342": {
+              "n_trials": 2152,
+              "eval_likelihood": 0.7099508730393226
+            },
+            "684039": {
+              "n_trials": 4466,
+              "eval_likelihood": 0.7484127373578982
+            },
+            "697929": {
+              "n_trials": 3263,
+              "eval_likelihood": 0.6329608369652903
+            },
+            "697930": {
+              "n_trials": 1441,
+              "eval_likelihood": 0.7750388974528754
+            },
+            "699982": {
+              "n_trials": 4747,
+              "eval_likelihood": 0.7936869925892756
+            },
+            "700708": {
+              "n_trials": 9794,
+              "eval_likelihood": 0.7082494303327534
+            },
+            "708299": {
+              "n_trials": 6721,
+              "eval_likelihood": 0.807127152240771
+            },
+            "710414": {
+              "n_trials": 2770,
+              "eval_likelihood": 0.7793539273214654
+            },
+            "711039": {
+              "n_trials": 6988,
+              "eval_likelihood": 0.7910573706495747
+            },
+            "711041": {
+              "n_trials": 8076,
+              "eval_likelihood": 0.8020437186436761
+            },
+            "711254": {
+              "n_trials": 4229,
+              "eval_likelihood": 0.8249023462383674
+            },
+            "711281": {
+              "n_trials": 5144,
+              "eval_likelihood": 0.8196777052756838
+            },
+            "712031": {
+              "n_trials": 3618,
+              "eval_likelihood": 0.7151348931492179
+            },
+            "713379": {
+              "n_trials": 14940,
+              "eval_likelihood": 0.6253345465296489
+            },
+            "713862": {
+              "n_trials": 8382,
+              "eval_likelihood": 0.784362148351868
+            },
+            "716324": {
+              "n_trials": 5932,
+              "eval_likelihood": 0.7275494708609699
+            },
+            "721403": {
+              "n_trials": 6251,
+              "eval_likelihood": 0.7796474818505295
+            },
+            "722683": {
+              "n_trials": 4062,
+              "eval_likelihood": 0.6819594492315085
+            },
+            "722989": {
+              "n_trials": 3818,
+              "eval_likelihood": 0.6204226185163311
+            },
+            "726649": {
+              "n_trials": 4097,
+              "eval_likelihood": 0.7069868701516338
+            },
+            "727456": {
+              "n_trials": 9974,
+              "eval_likelihood": 0.7694368652102808
+            },
+            "736198": {
+              "n_trials": 5224,
+              "eval_likelihood": 0.7082544156746361
+            },
+            "736199": {
+              "n_trials": 4427,
+              "eval_likelihood": 0.6993927563678702
+            },
+            "744779": {
+              "n_trials": 5981,
+              "eval_likelihood": 0.8211454096724848
+            },
+            "745505": {
+              "n_trials": 5686,
+              "eval_likelihood": 0.6885327818071443
+            },
+            "746346": {
+              "n_trials": 9150,
+              "eval_likelihood": 0.8195261293991847
+            },
+            "747886": {
+              "n_trials": 3397,
+              "eval_likelihood": 0.7332234846046845
+            },
+            "749472": {
+              "n_trials": 5035,
+              "eval_likelihood": 0.7984818527417444
+            },
+            "751153": {
+              "n_trials": 2404,
+              "eval_likelihood": 0.7349181194040804
+            },
+            "751765": {
+              "n_trials": 9589,
+              "eval_likelihood": 0.6710073399545191
+            },
+            "751920": {
+              "n_trials": 2862,
+              "eval_likelihood": 0.6944967456852236
+            },
+            "753122": {
+              "n_trials": 5025,
+              "eval_likelihood": 0.798304375468091
+            },
+            "754372": {
+              "n_trials": 2934,
+              "eval_likelihood": 0.8141610127672888
+            },
+            "756567": {
+              "n_trials": 3980,
+              "eval_likelihood": 0.7229809168074736
+            },
+            "757214": {
+              "n_trials": 5987,
+              "eval_likelihood": 0.6617454236829886
+            },
+            "761406": {
+              "n_trials": 6154,
+              "eval_likelihood": 0.7738559047413329
+            },
+            "762611": {
+              "n_trials": 3709,
+              "eval_likelihood": 0.7401525604553281
+            },
+            "763704": {
+              "n_trials": 6562,
+              "eval_likelihood": 0.5877870123479462
+            },
+            "764693": {
+              "n_trials": 6538,
+              "eval_likelihood": 0.6510396666233436
+            },
+            "765232": {
+              "n_trials": 7208,
+              "eval_likelihood": 0.6670652247889002
+            },
+            "765365": {
+              "n_trials": 9736,
+              "eval_likelihood": 0.7645913211913762
+            },
+            "765373": {
+              "n_trials": 4582,
+              "eval_likelihood": 0.7525524033429083
+            },
+            "765861": {
+              "n_trials": 3882,
+              "eval_likelihood": 0.7925273907194578
+            },
+            "766556": {
+              "n_trials": 5549,
+              "eval_likelihood": 0.7691448806809935
+            },
+            "766998": {
+              "n_trials": 9319,
+              "eval_likelihood": 0.7379691361579324
+            },
+            "767462": {
+              "n_trials": 7048,
+              "eval_likelihood": 0.7884556732361742
+            },
+            "767463": {
+              "n_trials": 7958,
+              "eval_likelihood": 0.7152820133992649
+            },
+            "769359": {
+              "n_trials": 4962,
+              "eval_likelihood": 0.8073458075910349
+            },
+            "770803": {
+              "n_trials": 6626,
+              "eval_likelihood": 0.6918229014522069
+            },
+            "774826": {
+              "n_trials": 3019,
+              "eval_likelihood": 0.658202931968169
+            },
+            "775741": {
+              "n_trials": 9805,
+              "eval_likelihood": 0.7993632081570875
+            },
+            "775745": {
+              "n_trials": 7881,
+              "eval_likelihood": 0.779973576048622
+            },
+            "776259": {
+              "n_trials": 3149,
+              "eval_likelihood": 0.719748454374147
+            },
+            "777027": {
+              "n_trials": 5490,
+              "eval_likelihood": 0.643962188889991
+            },
+            "777098": {
+              "n_trials": 4717,
+              "eval_likelihood": 0.7318650559557844
+            },
+            "777271": {
+              "n_trials": 3901,
+              "eval_likelihood": 0.7334556264988362
+            },
+            "778103": {
+              "n_trials": 6208,
+              "eval_likelihood": 0.6886687607365106
+            },
+            "778336": {
+              "n_trials": 4919,
+              "eval_likelihood": 0.8024993638556024
+            },
+            "780618": {
+              "n_trials": 5662,
+              "eval_likelihood": 0.7534946197472151
+            },
+            "780621": {
+              "n_trials": 9680,
+              "eval_likelihood": 0.7628674153856534
+            },
+            "781162": {
+              "n_trials": 9002,
+              "eval_likelihood": 0.7545327114005217
+            },
+            "781369": {
+              "n_trials": 7625,
+              "eval_likelihood": 0.8122293278841751
+            },
+            "781896": {
+              "n_trials": 7995,
+              "eval_likelihood": 0.7960184699832211
+            },
+            "781897": {
+              "n_trials": 7821,
+              "eval_likelihood": 0.7062809171975373
+            },
+            "782394": {
+              "n_trials": 5624,
+              "eval_likelihood": 0.7861189228985846
+            },
+            "784956": {
+              "n_trials": 6589,
+              "eval_likelihood": 0.7780584265238956
+            },
+            "785951": {
+              "n_trials": 4448,
+              "eval_likelihood": 0.7895664999034823
+            },
+            "786234": {
+              "n_trials": 6201,
+              "eval_likelihood": 0.7829136754580575
+            },
+            "787625": {
+              "n_trials": 3903,
+              "eval_likelihood": 0.7274448348993499
+            },
+            "788732": {
+              "n_trials": 10471,
+              "eval_likelihood": 0.8272832503113913
+            },
+            "788733": {
+              "n_trials": 8903,
+              "eval_likelihood": 0.8028029587422912
+            },
+            "790584": {
+              "n_trials": 7492,
+              "eval_likelihood": 0.7781498345251079
+            },
+            "790726": {
+              "n_trials": 4051,
+              "eval_likelihood": 0.7614077252435576
+            },
+            "790768": {
+              "n_trials": 13983,
+              "eval_likelihood": 0.7746890234910169
+            },
+            "791174": {
+              "n_trials": 17414,
+              "eval_likelihood": 0.7158478083962655
+            },
+            "793397": {
+              "n_trials": 9399,
+              "eval_likelihood": 0.7444915148803368
+            },
+            "795395": {
+              "n_trials": 9134,
+              "eval_likelihood": 0.7698796045030023
+            },
+            "797673": {
+              "n_trials": 5448,
+              "eval_likelihood": 0.7075715726867987
+            },
+            "798520": {
+              "n_trials": 5980,
+              "eval_likelihood": 0.7284676877989931
+            },
+            "798664": {
+              "n_trials": 4335,
+              "eval_likelihood": 0.7566976454194415
+            },
+            "800175": {
+              "n_trials": 8720,
+              "eval_likelihood": 0.7410688933887689
+            },
+            "801996": {
+              "n_trials": 4674,
+              "eval_likelihood": 0.7840181818240445
+            },
+            "802292": {
+              "n_trials": 7885,
+              "eval_likelihood": 0.7355390235607564
+            },
+            "802953": {
+              "n_trials": 4247,
+              "eval_likelihood": 0.777420150620158
+            },
+            "805496": {
+              "n_trials": 5469,
+              "eval_likelihood": 0.6949940232748557
+            },
+            "807885": {
+              "n_trials": 5589,
+              "eval_likelihood": 0.6957764132528658
+            },
+            "808584": {
+              "n_trials": 9454,
+              "eval_likelihood": 0.7234213318420261
+            },
+            "809488": {
+              "n_trials": 7631,
+              "eval_likelihood": 0.740475482823124
+            },
+            "810756": {
+              "n_trials": 10320,
+              "eval_likelihood": 0.7451112892062179
+            },
+            "810758": {
+              "n_trials": 6453,
+              "eval_likelihood": 0.8127722216223495
+            },
+            "812305": {
+              "n_trials": 5920,
+              "eval_likelihood": 0.7733817285124609
+            },
+            "812307": {
+              "n_trials": 8261,
+              "eval_likelihood": 0.7654326081255299
+            },
+            "813165": {
+              "n_trials": 5287,
+              "eval_likelihood": 0.7457167737891084
+            },
+            "813167": {
+              "n_trials": 7256,
+              "eval_likelihood": 0.8016637987778289
+            },
+            "813171": {
+              "n_trials": 5443,
+              "eval_likelihood": 0.7469044624936749
+            },
+            "813992": {
+              "n_trials": 8630,
+              "eval_likelihood": 0.7907621744114979
+            },
+            "814147": {
+              "n_trials": 5947,
+              "eval_likelihood": 0.7634100940079692
+            },
+            "814196": {
+              "n_trials": 2498,
+              "eval_likelihood": 0.7102559718976695
+            },
+            "815334": {
+              "n_trials": 8891,
+              "eval_likelihood": 0.6850817539250603
+            },
+            "818020": {
+              "n_trials": 2884,
+              "eval_likelihood": 0.7335088708738404
+            },
+            "818585": {
+              "n_trials": 8742,
+              "eval_likelihood": 0.7943417456734763
+            },
+            "818908": {
+              "n_trials": 6148,
+              "eval_likelihood": 0.6432432316077227
+            },
+            "819169": {
+              "n_trials": 5085,
+              "eval_likelihood": 0.7116954620433108
+            },
+            "820243": {
+              "n_trials": 5882,
+              "eval_likelihood": 0.8069691206795564
+            },
+            "821576": {
+              "n_trials": 9932,
+              "eval_likelihood": 0.7561992254711535
+            },
+            "823161": {
+              "n_trials": 6478,
+              "eval_likelihood": 0.7824690393722096
+            },
+            "823163": {
+              "n_trials": 6765,
+              "eval_likelihood": 0.7383182847196492
+            },
+            "823166": {
+              "n_trials": 11818,
+              "eval_likelihood": 0.6905654543422194
+            },
+            "826160": {
+              "n_trials": 3849,
+              "eval_likelihood": 0.8121551172944237
+            },
+            "829048": {
+              "n_trials": 2891,
+              "eval_likelihood": 0.7219168081184008
+            },
+            "829489": {
+              "n_trials": 8190,
+              "eval_likelihood": 0.6812363369527641
+            },
+            "829569": {
+              "n_trials": 5000,
+              "eval_likelihood": 0.6613385694410362
+            },
+            "832634": {
+              "n_trials": 4690,
+              "eval_likelihood": 0.7446986377109744
+            },
+            "835178": {
+              "n_trials": 3968,
+              "eval_likelihood": 0.7428948057055087
+            },
+            "835444": {
+              "n_trials": 6054,
+              "eval_likelihood": 0.7886553036440739
+            },
+            "836656": {
+              "n_trials": 3384,
+              "eval_likelihood": 0.7754657623293183
+            },
+            "836657": {
+              "n_trials": 5065,
+              "eval_likelihood": 0.80938251543034
+            },
+            "837689": {
+              "n_trials": 3201,
+              "eval_likelihood": 0.7635057449506165
+            },
+            "838101": {
+              "n_trials": 5821,
+              "eval_likelihood": 0.7161937025265848
+            },
+            "838332": {
+              "n_trials": 6039,
+              "eval_likelihood": 0.8180353891776964
+            },
+            "839483": {
+              "n_trials": 6628,
+              "eval_likelihood": 0.7399256888971649
+            },
+            "841356": {
+              "n_trials": 7456,
+              "eval_likelihood": 0.7238492546639361
+            },
+            "841363": {
+              "n_trials": 6966,
+              "eval_likelihood": 0.7413466056794555
+            },
+            "841599": {
+              "n_trials": 7082,
+              "eval_likelihood": 0.7885067696097823
+            },
+            "845710": {
+              "n_trials": 3522,
+              "eval_likelihood": 0.780474499613821
+            },
+            "850597": {
+              "n_trials": 3155,
+              "eval_likelihood": 0.7426786976508798
+            }
+          }
+        },
+        "source_embedding_checkpoint": {
+          "policy": "best_eval",
+          "step": 90000,
+          "eval_likelihood": 0.733953058719635,
+          "params_path": "checkpoints/step_90000/params.json",
+          "checkpoint_index_sha256": "ad4f97890bce27ffe6297ac41b484daddea0f04531d9f08c65539befd3a6ea6b",
+          "params_sha256": "a8355a93fb16638dcfa2d70bdfe7a0a106a40998c47589a7249c06ce165ad12b",
+          "subject_index_map_sha256": "fbb61e6c7f43d1b7ae52ec92f59131a0cc1fef53ff6a4ccc23448f02aab64592"
+        },
+        "source_embedding_spectrum": {
+          "eigenvalues": [
+            0.0034710989239763643,
+            0.0019850502201365482,
+            0.001587980076448128,
+            0.001079425448907676,
+            0.0007409672155840887,
+            0.0006925187523340552,
+            0.0002466595784715674,
+            4.081141705079764e-05
+          ],
+          "explained_variance_ratio": [
+            0.3525922923766807,
+            0.20164029401933178,
+            0.16130613032541585,
+            0.10964743495241185,
+            0.07526703641723667,
+            0.07034566854683108,
+            0.02505554238434834,
+            0.004145600977743693
+          ],
+          "cumulative_explained_variance": [
+            0.3525922923766807,
+            0.5542325863960125,
+            0.7155387167214283,
+            0.8251861516738401,
+            0.9004531880910768,
+            0.9707988566379079,
+            0.9958543990222563,
+            1.0
+          ],
+          "effective_rank": 5.604865243259461,
+          "pc5_to_pc8_variance_fraction": 0.1748138483261598
+        }
+      }
+    ]
+  }
+}
