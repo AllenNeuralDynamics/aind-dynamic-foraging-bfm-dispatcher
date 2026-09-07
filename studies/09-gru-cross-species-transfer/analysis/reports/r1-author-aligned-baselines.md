@@ -66,9 +66,6 @@ inputs:
     - analysis/fig_example_sessions_beron_lower.png
     - analysis/fig_example_sessions_beron_median.png
     - analysis/fig_example_sessions_beron_upper.png
-    - analysis/fig_example_sessions_kwak_lower.png
-    - analysis/fig_example_sessions_kwak_median.png
-    - analysis/fig_example_sessions_kwak_upper.png
     - analysis/fig_example_sessions_miller_lower.png
     - analysis/fig_example_sessions_miller_median.png
     - analysis/fig_example_sessions_miller_upper.png
