@@ -21,5 +21,5 @@ retained here.
 **E=8 cohort means (held-out likelihood):** Grossman (mouse) `0.74521`,
 Lebedeva (mouse) `0.76670`, Miller (rat) `0.60371`, Findling (human)
 `0.66505`, and Eckstein (human) `0.63093`. These are not yet an E=8 versus
-E=4 conclusion; the paired current-code E=4 transfer is still gated on its
-remaining source seed.
+E=4 conclusion in isolation; the completed paired comparison and subject-level
+tests are reported in Result 4.

@@ -23,6 +23,9 @@ a software-drift reference.
 Status: E=8 source provenance frozen; 15-task transfer launched as Beaker
 experiment `01M1Y3NHNHGZBXYYZQSW6JD9T2` and W&B group
 `gru-e8-d614-diagnostic@20260907-071400`. The paired E=4 source provenance is
-also frozen, and its 15-task transfer is running as Beaker experiment
+also frozen, and its 15-task transfer completed successfully as Beaker experiment
 `01M1YBQERTCR0HF6Y749X7M5HT`, W&B group
-`gru-e8-d614-diagnostic@20260907-093646` (label `e4-pair-d614`).
+`gru-e8-d614-diagnostic@20260907-093646` (label `e4-pair-d614`). Result 4 finds
+that E8 is neutral on Grossman (mouse) and Lebedeva (mouse), but improves Miller
+(rat), Findling (human), and Eckstein (human); the broader E8 expansion is
+scientifically warranted.

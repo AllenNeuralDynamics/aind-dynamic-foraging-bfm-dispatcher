@@ -146,6 +146,36 @@ def _result_markdown(data: dict) -> str:
             f"{statistics.median(deltas):+.5f} | {statistics.mean(deltas):+.5f} | "
             f"{_p(deltas):.3g} |"
         )
+    pooled_deltas = {
+        name: statistics.mean(
+            _metric(e8) - _metric(e4)
+            for e4, e8 in zip(
+                _dimension_rows(data["datasets"][name], "e4"),
+                _dimension_rows(data["datasets"][name], "e8"),
+            )
+        )
+        for name in DATASET_ORDER
+    }
+    lines.extend(
+        [
+            "",
+            "E8 is neutral on the two closer mouse tasks: pooled Δ="
+            f"{pooled_deltas['grossman']:+.5f} for Grossman (mouse) and "
+            f"{pooled_deltas['lebedeva']:+.5f} for Lebedeva (mouse), with neither "
+            "subject-level test significant. In contrast, E8 improves all three "
+            "harder cross-task/species cohorts: pooled Δ="
+            f"{pooled_deltas['miller']:+.5f} for Miller (rat), "
+            f"{pooled_deltas['findling']:+.5f} for Findling (human), and "
+            f"{pooled_deltas['eckstein']:+.5f} for Eckstein (human), each with "
+            "subject-level Wilcoxon p<.001.",
+            "",
+            "**Decision:** expand E8 to every non-quarantined valid Study 09 cohort. "
+            "The diagnostic screen shows reproducible benefit in the three difficult "
+            "cohorts and no significant subject-level loss in either close mouse "
+            "cohort; the broader panel can test whether that benefit tracks task "
+            "distance or baseline predictability.",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -160,6 +190,11 @@ def main() -> None:
     text = REPORT.read_text()
     before, rest = text.split(START, 1)
     _, after = rest.split(END, 1)
+    before = before.replace("status: planned", "status: live", 1)
+    groups = "wandb_groups:\n" + "\n".join(
+        f"  - {group}" for group in data["_meta"]["wandb_groups"]
+    )
+    before = before.replace("wandb_groups: []", groups, 1)
     REPORT.write_text(f"{before}{START}\n{_result_markdown(data)}\n{END}{after}")
 
 

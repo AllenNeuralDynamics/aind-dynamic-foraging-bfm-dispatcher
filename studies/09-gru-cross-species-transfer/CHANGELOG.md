@@ -5,6 +5,10 @@
 - Froze all six paired source artifacts, completed the E=8 diagnostic transfer,
   and launched the matched 15-cell E=4 transfer as Beaker experiment
   `01M1YBQERTCR0HF6Y749X7M5HT`.
+- Completed the E=4 transfer, verified exact E4/E8/historical held-out trial-key
+  parity, and published Result 4. E8 is neutral on Grossman (mouse) and
+  Lebedeva (mouse), but improves Miller (rat), Findling (human), and Eckstein
+  (human), supporting expansion to the remaining non-quarantined cohorts.
 
 ## 2026-09-06
 

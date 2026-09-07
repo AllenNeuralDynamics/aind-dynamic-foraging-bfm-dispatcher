@@ -6,7 +6,8 @@
 - **Clusters:** `ai1/octo-hub-onprem-h200`, `ai1/octo-hub-aws-h200`
 - **Grid:** five diagnostic cohorts × three paired E=4 source seeds (15 GPU tasks)
 - **Pinned refs:** dispatcher `8746e60`, wrapper `9595dd3`, models `faa0f5a`
-- **Status:** running
+- **Status:** success (15/15 Beaker tasks exit 0; 15/15 W&B runs finished
+  with final held-out likelihoods)
 
 Only the external subject embedding is adapted for 500 steps at learning rate
 0.001. The E=4 source core is frozen, and each target uses the same v1/v2 split
@@ -16,3 +17,8 @@ The resumable launcher rendered and pinned the submitted spec. Its SDK submissio
 path is unavailable without `BEAKER_TOKEN` in this local session, so the exact
 rendered spec was submitted through the authenticated Beaker CLI; the rendered
 YAML is retained here.
+
+**E=4 cohort means (held-out likelihood):** Grossman (mouse) `0.74538`,
+Lebedeva (mouse) `0.76631`, Miller (rat) `0.60007`, Findling (human)
+`0.65453`, and Eckstein (human) `0.62554`. Result 4 compares these against the
+paired E=8 cells with exact historical trial-key parity.
