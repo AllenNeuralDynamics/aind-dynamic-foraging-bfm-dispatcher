@@ -26,6 +26,8 @@ AUTHOR_DATA = STUDY / "analysis" / "author_baseline_results.json"
 MATCHED_DATA = STUDY / "analysis" / "matched_half_results.json"
 EXAMPLE_DATA = STUDY / "analysis" / "example_behavior_sessions.json"
 VALIDATION_DATA = STUDY / "analysis" / "dataset_suite_validation.json"
+EMBEDDING_DIMENSION_DATA = STUDY / "analysis" / "embedding_dimension_results.json"
+TASK_DESIGN_DATA = STUDY / "analysis" / "task_design_annotations.json"
 SURVEY = STUDY / "DATASET_SURVEY.md"
 FIGURE = STUDY / "analysis" / "fig_author_baseline_likelihood.png"
 SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_baseline_likelihood.png"
@@ -50,6 +52,20 @@ ALL_DATASET_ORDER = (
     "lopez_mouse",
 )
 DATASET_ORDER = tuple(name for name in ALL_DATASET_ORDER if name != "kwak")
+TIER_ORDER = ("primary", "stress_test", "descriptive_only")
+TIER_LABELS = {
+    "primary": "Primary",
+    "stress_test": "Stress test",
+    "descriptive_only": "Descriptive",
+}
+SPECIES_COLORS = {
+    "mouse": "#4C72B0",
+    "rat": "#DD8452",
+    "macaque": "#C44E52",
+    "human": "#8172B3",
+}
+E4_COLOR = "#6BAED6"
+E8_COLOR = "#17365D"
 LABELS = {
     "grossman": "Grossman (mouse)",
     "chen": "Chen (mouse)",
@@ -161,13 +177,49 @@ def _p(value: float) -> str:
     return "<.001" if value < 0.001 else f"={value:.3f}".replace("0.", ".")
 
 
+def _summary_order(
+    author_data: dict,
+    matched: dict,
+    analysis_tiers: dict[str, list[str]],
+) -> tuple[tuple[str, str], ...]:
+    records = author_data["records"]
+    ordered: list[tuple[str, str]] = []
+    for tier in TIER_ORDER:
+        names = [name for name in analysis_tiers[tier] if name in DATASET_ORDER]
+
+        def advantage(dataset_name: str) -> float:
+            dataset = matched["datasets"][dataset_name]
+            gru_e4 = statistics.mean(
+                _metric(row) for row in _gru_for_d(dataset, 614)
+            )
+            author_values = [
+                _metric(record)
+                for record in records.values()
+                if record["dataset"] == dataset_name and record["author_selected"]
+            ]
+            reference = max(author_values) if author_values else _metric(dataset["q"])
+            return gru_e4 - reference
+
+        ordered.extend(
+            (tier, name) for name in sorted(names, key=advantage, reverse=True)
+        )
+    if {name for _, name in ordered} != set(DATASET_ORDER):
+        raise AssertionError("Analysis tiers do not cover every displayed dataset")
+    return tuple(ordered)
+
+
 def _plot_summary(
-    author_data: dict, matched: dict, validation: dict[str, dict]
+    author_data: dict,
+    matched: dict,
+    validation: dict[str, dict],
+    embedding_dimension: dict,
+    analysis_tiers: dict[str, list[str]],
 ) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(4, 4, figsize=(18, 15), constrained_layout=True)
+    fig, axes = plt.subplots(3, 4, figsize=(18, 12), constrained_layout=True)
     records = author_data["records"]
-    for axis, dataset_name in zip(axes.flat, DATASET_ORDER):
+    panel_order = _summary_order(author_data, matched, analysis_tiers)
+    for axis, (tier, dataset_name) in zip(axes.flat, panel_order):
         dataset = matched["datasets"][dataset_name]
         means = []
         sds = []
@@ -175,17 +227,42 @@ def _plot_summary(
             values = [_metric(row) for row in _gru_for_d(dataset, d)]
             means.append(statistics.mean(values))
             sds.append(statistics.stdev(values))
-            axis.scatter([d] * 3, values, s=18, color="#4C72B0", alpha=0.35)
+            axis.scatter([d] * 3, values, s=18, color=E4_COLOR, alpha=0.4)
         axis.errorbar(
             DS,
             means,
             yerr=sds,
             marker="o",
-            color="#4C72B0",
+            color=E4_COLOR,
             capsize=2,
             linewidth=1.6,
-            label="GRU mean ± SD",
+            label="E4 GRU mean ± SD",
         )
+        if dataset_name in embedding_dimension["datasets"]:
+            e8_values = [
+                _metric(row)
+                for row in embedding_dimension["datasets"][dataset_name]["e8"]
+            ]
+            axis.scatter(
+                [614] * len(e8_values),
+                e8_values,
+                s=28,
+                color=E8_COLOR,
+                alpha=0.45,
+                zorder=4,
+            )
+            axis.errorbar(
+                [614],
+                [statistics.mean(e8_values)],
+                yerr=[statistics.stdev(e8_values)],
+                marker="D",
+                markersize=5,
+                color=E8_COLOR,
+                capsize=3,
+                linewidth=1.8,
+                label="E8 GRU D=614 mean ± SD",
+                zorder=5,
+            )
         axis.axhline(
             _metric(dataset["q"]), color="#222222", linestyle="--", label="common Q"
         )
@@ -207,8 +284,10 @@ def _plot_summary(
             f"test trials={audit['num_test_trials']:,}"
         )
         axis.set_title(
-            f"{LABELS[dataset_name]}\n{textwrap.fill(TASKS[dataset_name], 34)}\n{details}",
+            f"{TIER_LABELS[tier]} · {LABELS[dataset_name]}\n"
+            f"{textwrap.fill(TASKS[dataset_name], 34)}\n{details}",
             fontsize=9,
+            color=SPECIES_COLORS[audit["species"]],
         )
         axis.set_xscale("log")
         axis.set_xticks(DS, [str(value) for value in DS])
@@ -216,11 +295,11 @@ def _plot_summary(
         axis.set_ylabel("Held-out normalized likelihood")
         axis.grid(axis="y", alpha=0.2)
         axis.legend(frameon=False, fontsize=6.5, loc="best")
-    for axis in axes.flat[len(DATASET_ORDER) :]:
+    for axis in axes.flat[len(panel_order) :]:
         axis.set_visible(False)
     fig.suptitle(
-        "Frozen-core GRU transfer versus matched common Q\n"
-        "Every displayed panel uses a valid cohort and identical held-out trials",
+        "Frozen-core GRU transfer versus matched common Q and author models\n"
+        "Tiered cohorts; within each tier, descending E4 D=614 advantage",
         fontsize=17,
     )
     fig.savefig(FIGURE, bbox_inches="tight", dpi=180)
@@ -885,7 +964,14 @@ def _result_block(
         "![GRU, common Q, and available author baselines](../fig_author_baseline_likelihood.png)",
         "",
         "Every model uses the same immutable adaptation and held-out observations. "
-        "GRU points are the three source-training seeds; the curve is their mean ± SD. "
+        "Panels are grouped as primary, stress test, and descriptive, then ordered within "
+        "each tier by descending E4 D=614 GRU advantage over the strongest available "
+        "author-selected model. Stress-test and descriptive cohorts without a reproduced "
+        "author model use common Q as the ordering reference. Panel-title color encodes "
+        "species using the same palette as the task-design figures. Light-blue GRU points "
+        "and curves are E4; dark-blue D=614 overlays are E8 and appear only for Grossman "
+        "(mouse), Lebedeva (mouse), Miller (rat), Findling (human), and Eckstein (human). "
+        "GRU points are the three source-training seeds; summaries are their mean ± SD. "
         "Common Q is fitted independently per target subject on the identical adaptation half. "
         "Author-model lines include the existing Grossman (mouse), Chen (mouse), and "
         "Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), "
@@ -1097,11 +1183,19 @@ def main() -> None:
     matched = json.loads(MATCHED_DATA.read_text())
     examples = json.loads(EXAMPLE_DATA.read_text())
     validation = _validation_map(json.loads(VALIDATION_DATA.read_text()))
+    embedding_dimension = json.loads(EMBEDDING_DIMENSION_DATA.read_text())
+    task_design = json.loads(TASK_DESIGN_DATA.read_text())
     if tuple(matched["datasets"]) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen matched-result dataset membership drifted")
     if tuple(examples["datasets"]) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen example dataset membership drifted")
-    _plot_summary(author_data, matched, validation)
+    _plot_summary(
+        author_data,
+        matched,
+        validation,
+        embedding_dimension,
+        task_design["analysis_tiers"],
+    )
     _plot_author_subjects(author_data, matched)
     _plot_gru_q_subjects(matched, validation)
     example_paths = _plot_examples(examples)
