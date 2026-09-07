@@ -13,11 +13,13 @@ from zoneinfo import ZoneInfo
 STUDY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STUDY / "analysis"))
 from freeze_matched_half import (  # noqa: E402
+    ENTITY,
+    RUNS_QUERY,
     _artifact,
     _beaker_tasks,
     _job_env,
     _unwrapped,
-    _wandb_runs,
+    _wandb_graphql,
 )
 
 
@@ -28,6 +30,20 @@ MANIFESTS = {
 EXPECTED_DISPATCHER = "ab399a50a736add59fcc189d0ac14e2dc6687279"
 EXPECTED_WRAPPER = "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4"
 EXPECTED_MODELS = "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf"
+SOURCE_PROJECT = "mice_data_scaling"
+
+
+def _wandb_runs(group: str) -> dict[str, dict]:
+    data = _wandb_graphql(
+        RUNS_QUERY,
+        {
+            "entity": ENTITY,
+            "project": SOURCE_PROJECT,
+            "filters": json.dumps({"group": group}),
+        },
+    )
+    nodes = [edge["node"] for edge in data["project"]["runs"]["edges"]]
+    return {node["name"]: node for node in nodes}
 
 
 def _parse_args() -> argparse.Namespace:
