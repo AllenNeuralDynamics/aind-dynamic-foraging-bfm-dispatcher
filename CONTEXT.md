@@ -103,6 +103,19 @@ and the `BFM_*` env-var prefix. Distinct from disRNN, which is one architecture 
 See ADR-0007 for which `disrnn` tokens rename and which are frozen.
 _Avoid_: disrnn (as a project name)
 
+**Trained GRU**:
+The multisubject GRU whose recurrent core, subject embeddings, and choice readout
+are all learned from source subjects. In reservoir comparisons, this is the
+positive-control model and must use the matched architecture, data split, and seed.
+_Avoid_: full GRU, normal GRU
+
+**Frozen random reservoir**:
+A multisubject GRU initialized by the ordinary seeded initializer whose GRU cell
+and any session-conditioning parameters never update. Source training changes
+only subject embeddings and the final choice readout; held-out conditioning
+changes only the new subject embedding.
+_Avoid_: untrained model, random GRU (both hide the trained readout and embeddings)
+
 ### Model parameters
 
 **Forgetting rate**:
