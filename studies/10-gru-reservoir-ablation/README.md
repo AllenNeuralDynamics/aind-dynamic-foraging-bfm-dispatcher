@@ -28,14 +28,19 @@ GRU), then bootstrap subjects. The reservoir is non-inferior only if the lower
 
 ## Execution
 
-Run seed 0 first as the end-to-end GPU smoke. After its output proves the core
-stayed frozen and the held-out table is complete, launch seeds 1 and 2. All
-training is GPU work on Beaker hub infrastructure. Report generation is local
-from committed frozen inputs.
+Seed 0 began as the end-to-end GPU smoke. At the investigator's request, seeds
+1 and 2 were launched before seed 0 completed; all three outputs remain subject
+to the same frozen-parameter and held-out-table audits. All training is GPU work
+on Beaker hub infrastructure. Report generation is local from committed frozen
+inputs.
 
 Seed 0 was submitted at 17:55 PT on 2026-09-07 as Beaker experiment
 [`01M1Z86SE16551913JFAA8D189`](https://beaker.org/ex/01M1Z86SE16551913JFAA8D189),
 W&B group `frozen-random-core-d614@20260907-175533`.
+
+Seeds 1 and 2 were submitted at 18:41 PT on 2026-09-07 as Beaker experiment
+[`01M1ZATF3VZS00RZ82JQTWWQSG`](https://beaker.org/ex/01M1ZATF3VZS00RZ82JQTWWQSG),
+W&B group `frozen-random-core-d614@20260907-184115`.
 
 ## Scope boundary
 

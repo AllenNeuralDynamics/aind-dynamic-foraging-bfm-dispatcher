@@ -5,3 +5,5 @@
 - Created the H128/D614/E4 frozen-random reservoir control.
 - Pinned the Study 01 trained-GRU references and non-inferiority criterion.
 - Split execution into a seed-0 GPU smoke and seeds-1/2 completion launch.
+- Submitted seeds 1 and 2 before seed-0 completion at the investigator's
+  request; retained the same post-run audit requirements for every seed.

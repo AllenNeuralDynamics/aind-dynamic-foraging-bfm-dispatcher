@@ -22,7 +22,10 @@ from _meta import build_meta  # noqa: E402
 RESERVOIR_PROJECT = "AIND-disRNN/gru_reservoir_ablation"
 SOURCE_PROJECT = "AIND-disRNN/mice_data_scaling"
 # Hard allowlist. Add the seeds-1/2 group after that launch; never discover by project scan.
-WANDB_GROUPS = ("frozen-random-core-d614@20260907-175533",)
+WANDB_GROUPS = (
+    "frozen-random-core-d614@20260907-175533",
+    "frozen-random-core-d614@20260907-184115",
+)
 SOURCE_RESULT_GROUPS = (
     "heldout-rerun-v2-retry@20260623-065818",
 )
@@ -276,10 +279,6 @@ def _freeze_run(run: Any, *, audit_frozen: bool) -> dict[str, Any]:
 
 
 def main() -> None:
-    if len(WANDB_GROUPS) < 2:
-        raise RuntimeError(
-            "Add the pinned seeds-1/2 W&B group to WANDB_GROUPS after its launch."
-        )
     api = wandb.Api()
     reservoir_runs = []
     for group in WANDB_GROUPS:

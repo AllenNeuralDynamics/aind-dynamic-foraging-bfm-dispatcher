@@ -5,6 +5,7 @@ status: draft
 authors: [han]
 wandb_groups:
   - frozen-random-core-d614@20260907-175533
+  - frozen-random-core-d614@20260907-184115
   - heldout-rerun-v2-retry@20260623-065818
 inputs:
   script: analysis/report_reservoir.py
@@ -17,7 +18,7 @@ reproduce: make -C studies/10-gru-reservoir-ablation r1
 # Result 1 - frozen-random GRU reservoir
 
 <!-- BEGIN result-1 -->
-Awaiting the seed-0 validation and seeds-1/2 completion launch.
+Awaiting completion and frozen-parameter audits for seeds 0-2.
 <!-- END result-1 -->
 
 ## Interpretation boundary
