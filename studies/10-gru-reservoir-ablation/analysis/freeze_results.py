@@ -23,6 +23,14 @@ RESERVOIR_PROJECT = "AIND-disRNN/gru_reservoir_ablation"
 SOURCE_PROJECT = "AIND-disRNN/mice_data_scaling"
 # Hard allowlist. Add the seeds-1/2 group after that launch; never discover by project scan.
 WANDB_GROUPS = ("frozen-random-core-d614@20260907-175533",)
+SOURCE_RESULT_GROUPS = (
+    "heldout-rerun-v2-retry@20260623-065818",
+)
+SOURCE_RESULT_RUNS = {
+    0: "r63jnufo",
+    1: "lgg3y0bq",
+    2: "ngc7rp78",
+}
 REFERENCE = STUDY / "reference" / "study01-trained-gru.json"
 OUTPUT = STUDY / "analysis" / "reservoir_results.json"
 EXPECTED_SEEDS = (0, 1, 2)
@@ -36,7 +44,10 @@ def _unwrap(value: Any) -> Any:
 
 
 def _seed(run: Any) -> int:
-    value = _unwrap(run.config.get("seed"))
+    meta = _unwrap(run.config.get("meta")) or {}
+    value = _unwrap(meta.get("source_seed"))
+    if value is None:
+        value = _unwrap(run.config.get("seed"))
     if value is None:
         raise ValueError(f"run {run.id} has no seed")
     return int(value)
@@ -74,18 +85,22 @@ def _validate_reservoir_config(run: Any) -> None:
         raise ValueError(f"run {run.id} resolved D={len(subject_ids)}, expected 614")
 
 
-def _per_subject_table(run: Any) -> Any:
+def _per_subject_table(run: Any) -> tuple[Any, dict[str, str]]:
     for artifact in run.logged_artifacts():
         if artifact.type != "run_table":
             continue
         for entry_name in artifact.manifest.entries:
             if "per_subject_likelihood" in str(entry_name):
-                return artifact.get(entry_name).get_dataframe()
+                return artifact.get(entry_name).get_dataframe(), {
+                    "name": artifact.name,
+                    "digest": artifact.digest,
+                    "entry": str(entry_name),
+                }
     raise ValueError(f"run {run.id} has no held-out per-subject likelihood table")
 
 
-def _subject_rows(run: Any) -> list[dict[str, Any]]:
-    frame = _per_subject_table(run)
+def _subject_rows(run: Any) -> tuple[list[dict[str, Any]], dict[str, str]]:
+    frame, provenance = _per_subject_table(run)
     required = {"heldout_subject_id", "n_trials", "eval_likelihood"}
     missing = required - set(frame.columns)
     if missing:
@@ -105,7 +120,7 @@ def _subject_rows(run: Any) -> list[dict[str, Any]]:
         )
     if len({row["subject_id"] for row in rows}) != len(rows):
         raise ValueError(f"run {run.id} has duplicate held-out subject ids")
-    return rows
+    return rows, provenance
 
 
 def _pooled_likelihood(rows: list[dict[str, Any]]) -> float:
@@ -175,53 +190,87 @@ def _frozen_parameter_audit(run: Any) -> dict[str, Any]:
         final_path = _download_entry(artifact, "params.json", root)
         initial = json.loads(initial_path.read_text())
         final = json.loads(final_path.read_text())
-        frozen_modules = sorted(
-            module
-            for module in initial
-            if module != "multisubject_gru" and not module.endswith("/~/readout")
-        )
-        if not any(module.endswith("/~/gru") for module in frozen_modules):
+        if initial.keys() != final.keys():
+            raise ValueError(f"run {run.id} changed the parameter-module topology")
+        frozen_parameters = []
+        changed_frozen_parameters = []
+        changed_subject_embeddings = []
+        changed_readout_parameters = []
+        found_gru = False
+        for module, initial_parameters in initial.items():
+            final_parameters = final[module]
+            if initial_parameters.keys() != final_parameters.keys():
+                raise ValueError(
+                    f"run {run.id} changed the parameter topology for {module}"
+                )
+            found_gru = found_gru or module.endswith("/~/gru")
+            for parameter, initial_value in initial_parameters.items():
+                name = f"{module}/{parameter}"
+                final_value = final_parameters[parameter]
+                if parameter == "subject_embeddings":
+                    if initial_value != final_value:
+                        changed_subject_embeddings.append(name)
+                elif module.endswith("/~/readout"):
+                    if initial_value != final_value:
+                        changed_readout_parameters.append(name)
+                else:
+                    frozen_parameters.append(name)
+                    if initial_value != final_value:
+                        changed_frozen_parameters.append(name)
+        if not found_gru:
             raise ValueError(f"run {run.id} has no GRU module in its parameter tree")
-        changed = [module for module in frozen_modules if initial[module] != final[module]]
-        if changed:
-            raise ValueError(f"run {run.id} changed frozen modules: {changed}")
-        if initial["multisubject_gru"]["subject_embeddings"] == final[
-            "multisubject_gru"
-        ]["subject_embeddings"]:
+        if changed_frozen_parameters:
+            raise ValueError(
+                f"run {run.id} changed frozen parameters: {changed_frozen_parameters}"
+            )
+        if not changed_subject_embeddings:
             raise ValueError(f"run {run.id} did not update subject embeddings")
-        readout = next(module for module in initial if module.endswith("/~/readout"))
-        if initial[readout] == final[readout]:
+        if not changed_readout_parameters:
             raise ValueError(f"run {run.id} did not update the readout")
         return {
             "passed": True,
-            "frozen_modules": frozen_modules,
+            "frozen_parameters": frozen_parameters,
+            "changed_subject_embeddings": changed_subject_embeddings,
+            "changed_readout_parameters": changed_readout_parameters,
             "initial_params_sha256": _sha256(initial_path),
             "final_params_sha256": _sha256(final_path),
             "initial_tree_sha256": _canonical_tree_sha256(initial),
         }
 
 
+def _summary_likelihood(run: Any) -> float:
+    for key in ("heldout/final/eval_likelihood", "heldout/eval_likelihood"):
+        if run.summary.get(key) is not None:
+            return float(run.summary[key])
+    raise ValueError(f"run {run.id} has no held-out eval likelihood summary")
+
+
 def _freeze_run(run: Any, *, audit_frozen: bool) -> dict[str, Any]:
-    rows = _subject_rows(run)
+    rows, table_artifact = _subject_rows(run)
     pooled = _pooled_likelihood(rows)
-    summary_value = float(run.summary["heldout/final/eval_likelihood"])
+    summary_value = _summary_likelihood(run)
     if not math.isclose(pooled, summary_value, rel_tol=0, abs_tol=2e-6):
         raise ValueError(
             f"run {run.id} pooled likelihood {pooled} != summary {summary_value}"
         )
-    artifact = _training_artifact(run)
     result = {
         "seed": _seed(run),
         "wandb_run_id": run.id,
         "wandb_url": run.url,
-        "artifact_name": artifact.name,
-        "artifact_digest": artifact.digest,
+        "table_artifact": table_artifact,
         "heldout_likelihood": summary_value,
         "pooled_likelihood_from_subjects": pooled,
-        "training_steps_completed": int(run.summary["training_steps_completed"]),
         "subjects": rows,
     }
     if audit_frozen:
+        artifact = _training_artifact(run)
+        result["training_artifact"] = {
+            "name": artifact.name,
+            "digest": artifact.digest,
+        }
+        result["training_steps_completed"] = int(
+            run.summary["training_steps_completed"]
+        )
         result["frozen_parameter_audit"] = _frozen_parameter_audit(run)
     return result
 
@@ -237,6 +286,8 @@ def main() -> None:
         reservoir_runs.extend(
             api.runs(RESERVOIR_PROJECT, filters={"group": group, "state": "finished"})
         )
+    if len(reservoir_runs) != len(EXPECTED_SEEDS):
+        raise ValueError(f"found {len(reservoir_runs)} finished reservoir runs")
     reservoir_by_seed = {_seed(run): run for run in reservoir_runs}
     if tuple(sorted(reservoir_by_seed)) != EXPECTED_SEEDS:
         raise ValueError(f"reservoir seed coverage is {sorted(reservoir_by_seed)}")
@@ -244,21 +295,44 @@ def main() -> None:
         _validate_reservoir_config(run)
 
     reference = json.loads(REFERENCE.read_text())
-    source_cells = {cell["seed"]: cell for cell in reference["cells"] if cell["D"] == 614}
-    source_runs = {
+    source_cells = {
+        cell["seed"]: cell for cell in reference["cells"] if cell["D"] == 614
+    }
+    source_model_runs = {
         seed: api.run(f"{SOURCE_PROJECT}/{source_cells[seed]['wandb_run_id']}")
         for seed in EXPECTED_SEEDS
     }
+    source_result_runs = {
+        seed: api.run(f"{SOURCE_PROJECT}/{SOURCE_RESULT_RUNS[seed]}")
+        for seed in EXPECTED_SEEDS
+    }
+    for seed, run in source_result_runs.items():
+        if run.state != "finished":
+            raise ValueError(f"trained-GRU result run {run.id} is {run.state}")
+        meta = _unwrap(run.config.get("meta")) or {}
+        if float(_unwrap(meta.get("source_subject_ratio"))) != 1.0:
+            raise ValueError(f"trained-GRU result run {run.id} is not D=614")
+        if _seed(run) != seed:
+            raise ValueError(f"trained-GRU result run {run.id} has the wrong source seed")
 
     reservoir = [
         _freeze_run(reservoir_by_seed[seed], audit_frozen=True)
         for seed in EXPECTED_SEEDS
     ]
-    trained = [_freeze_run(source_runs[seed], audit_frozen=False) for seed in EXPECTED_SEEDS]
+    trained = [
+        _freeze_run(source_result_runs[seed], audit_frozen=False)
+        for seed in EXPECTED_SEEDS
+    ]
     for seed, reservoir_result, trained_result in zip(EXPECTED_SEEDS, reservoir, trained):
-        if trained_result["artifact_digest"] != source_cells[seed]["artifact_digest"]:
+        source_model_artifact = _training_artifact(source_model_runs[seed])
+        if source_model_artifact.digest != source_cells[seed]["artifact_digest"]:
             raise ValueError(f"seed {seed} trained-GRU artifact digest changed")
-        trained_initial_tree_sha256 = _initial_tree_sha256(source_runs[seed])
+        trained_result["source_model"] = {
+            "wandb_run_id": source_model_runs[seed].id,
+            "artifact_name": source_model_artifact.name,
+            "artifact_digest": source_model_artifact.digest,
+        }
+        trained_initial_tree_sha256 = _initial_tree_sha256(source_model_runs[seed])
         trained_result["initial_tree_sha256"] = trained_initial_tree_sha256
         if (
             reservoir_result["frozen_parameter_audit"]["initial_tree_sha256"]
@@ -276,7 +350,9 @@ def main() -> None:
 
     output = {
         "_meta": build_meta(
-            "analysis/freeze_results.py", list(WANDB_GROUPS), study_root=STUDY
+            "analysis/freeze_results.py",
+            list(WANDB_GROUPS) + list(SOURCE_RESULT_GROUPS),
+            study_root=STUDY,
         ),
         "reservoir": reservoir,
         "trained_gru": trained,

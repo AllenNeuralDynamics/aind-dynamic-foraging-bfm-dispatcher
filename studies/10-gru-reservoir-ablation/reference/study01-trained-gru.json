@@ -12,6 +12,12 @@
     }
   ],
   "architecture": {"hidden_size": 128, "subject_embedding_size": 4},
+  "heldout_result_runs": {
+    "group": "heldout-rerun-v2-retry@20260623-065818",
+    "seed_0": "r63jnufo",
+    "seed_1": "lgg3y0bq",
+    "seed_2": "ngc7rp78"
+  },
   "cells": [
     {"D": 10, "seed": 0, "likelihood": 0.7202110886573792},
     {"D": 10, "seed": 1, "likelihood": 0.7235190272331238},

@@ -2,6 +2,9 @@
 
 Project: AIND-disRNN/gru_reservoir_ablation
 Pinned groups: ``freeze_results.WANDB_GROUPS`` only.
+Positive-control project: AIND-disRNN/mice_data_scaling
+Pinned positive-control runs: ``freeze_results.SOURCE_RESULT_RUNS`` and the
+D=614 source-model run IDs in ``reference/study01-trained-gru.json``.
 
 Summary keys:
 - heldout/final/eval_likelihood

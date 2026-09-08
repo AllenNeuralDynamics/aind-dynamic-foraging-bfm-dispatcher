@@ -5,6 +5,7 @@ status: draft
 authors: [han]
 wandb_groups:
   - frozen-random-core-d614@20260907-175533
+  - heldout-rerun-v2-retry@20260623-065818
 inputs:
   script: analysis/report_reservoir.py
   data: analysis/reservoir_results.json
