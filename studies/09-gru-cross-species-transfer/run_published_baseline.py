@@ -66,7 +66,7 @@ BASELINES = {
     },
     "hattori-q-learning": {
         "dataset": "hattori",
-        "dataset_id": "hattori-et-al-2023-imaging",
+        "dataset_id": "hattori-et-al-2023-imaging-mature",
         "agent_class": "ForagerQLearning",
         "agent_kwargs": {
             "number_of_learning_rate": 2,

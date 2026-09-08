@@ -39,7 +39,7 @@ DATASET_IDS = {
     "eckstein": "eckstein-et-al-2022",
     "costa": "costa-averbeck-2016-stochastic",
     "lopez_mouse": "lopez-yepez-et-al-2021-mouse",
-    "hattori": "hattori-et-al-2023-imaging",
+    "hattori": "hattori-et-al-2023-imaging-mature",
 }
 
 
