@@ -1,0 +1,13 @@
+entity: AIND-disRNN
+project: gru_cross_species_transfer
+name: gru-hattori-matched-half-smoke
+method: grid
+command:
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=hattori
+  - --source-manifest=source_runs_e8.json
+  - ${args_no_hyphens}
+parameters:
+  --source-key:
+    value: e8-d614-s0

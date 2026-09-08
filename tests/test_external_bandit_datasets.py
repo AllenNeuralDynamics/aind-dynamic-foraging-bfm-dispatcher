@@ -39,6 +39,7 @@ from external_bandit_datasets.adapters import (  # noqa: E402
     adapt_costa,
     adapt_lopez_mouse,
     adapt_findling,
+    adapt_hattori,
     adapt_kwak,
     adapt_lebedeva,
     adapt_miller,
@@ -523,6 +524,66 @@ class TestExternalBanditDatasets(unittest.TestCase):
             self.assertEqual(table["animal_response"].tolist()[:2], [0, 1])
             self.assertEqual(audit["excluded_trials"], 4)
             self.assertEqual(len(manifest["subjects"][0]["adapt_session_ids"]), 1)
+
+    def test_hattori_adapter_uses_untreated_imaging_sessions(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "hattori.zip"
+            with zipfile.ZipFile(path, "w", allowZip64=True) as archive:
+                for subject in ("RH001", "RH002"):
+                    for day in range(1, 17):
+                        session_date = f"1901{day:02d}"
+                        plane = "deeper" if day % 2 else "shallower"
+                        payload = io.BytesIO()
+                        np.savez(
+                            payload,
+                            a=np.asarray([2, 1, 3, 4]),
+                            R=np.asarray([1, 0, 0, 0]),
+                            lprob=np.asarray([0.6, 0.1, 0.6, 0.6]),
+                            rprob=np.asarray([0.1, 0.6, 0.1, 0.1]),
+                        )
+                        archive.writestr(
+                            "Hattori_NatureNeuroscience_Data/Imaging/"
+                            f"{subject}/{plane}/{session_date}_ofc_imaging_data.npz",
+                            payload.getvalue(),
+                        )
+                payload = io.BytesIO()
+                np.savez(
+                    payload,
+                    a=np.asarray([1, 2]),
+                    R=np.asarray([1, 1]),
+                    lprob=np.asarray([0.1, 0.6]),
+                    rprob=np.asarray([0.6, 0.1]),
+                )
+                archive.writestr(
+                    "Hattori_NatureNeuroscience_Data/Inactivation/"
+                    "excluded/ofc_opto_data_0.npz",
+                    payload.getvalue(),
+                )
+            source = replace(
+                SOURCES["hattori"], digest=hashlib.md5(path.read_bytes()).hexdigest()
+            )
+            expected = {
+                "num_subjects": 2,
+                "num_sessions": 4,
+                "num_trials": 8,
+                "excluded_trials": 8,
+            }
+            with (
+                mock.patch.dict(SOURCES, {"hattori": source}),
+                mock.patch.dict(EXPECTED_AUDITS, {"hattori": expected}),
+            ):
+                table, manifest, audit = adapt_hattori(path)
+
+            self.assertEqual(table["animal_response"].tolist()[:2], [0, 1])
+            self.assertEqual(table["source_action"].tolist()[:2], [2, 1])
+            self.assertEqual(set(table["imaging_plane"]), {"deeper", "shallower"})
+            self.assertEqual(set(table["source_session_position"]), {15, 16})
+            self.assertEqual(
+                manifest["subjects"][0]["adapt_session_ids"], ["190115"]
+            )
+            self.assertEqual(audit["num_trials"], 8)
+            self.assertEqual(audit["excluded_pre_mature_sessions"], 28)
+            self.assertEqual(audit["excluded_pre_mature_trials"], 112)
 
     def test_kwak_adapter_preserves_treatment_and_reward_probabilities(self) -> None:
         from scipy.io import savemat

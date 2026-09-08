@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "studies/09-gru-cross-species-transfer/analysis/freeze_embedding_space.py",
-    "produced_at_pt": "2026-09-07T14:58:58-07:00",
-    "dispatcher_git_sha": "6b04a3ab4d6828638351877a3d8cfe5d46327220",
+    "produced_at_pt": "2026-09-07T21:00:19-07:00",
+    "dispatcher_git_sha": "703e750eb44e9103214aca1ced8c82557925849f",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "v2-sc-active@20260622-144622",
@@ -17,7 +17,8 @@
       "gru-alsio-matched-half@20260905-232925",
       "gru-eckstein-matched-half@20260905-232924",
       "gru-costa-matched-half@20260905-232924",
-      "gru-lopez-mouse-matched-half@20260905-232924"
+      "gru-lopez-mouse-matched-half@20260905-232924",
+      "gru-hattori-matched-half@20260907-200329"
     ]
   },
   "contract": {
@@ -50,64 +51,69 @@
       "n_subjects": 149
     },
     "grossman": {
-      "label": "Grossman mouse",
+      "label": "Grossman (mouse)",
       "species": "mouse",
       "n_subjects": 48
     },
     "chen": {
-      "label": "Chen mouse",
+      "label": "Chen (mouse)",
       "species": "mouse",
       "n_subjects": 32
     },
     "zid": {
-      "label": "Zid human",
+      "label": "Zid (human)",
       "species": "human",
       "n_subjects": 258
     },
     "lebedeva": {
-      "label": "Lebedeva mouse",
+      "label": "Lebedeva (mouse)",
       "species": "mouse",
       "n_subjects": 10
     },
     "beron": {
-      "label": "Beron mouse",
+      "label": "Beron (mouse)",
       "species": "mouse",
       "n_subjects": 6
     },
     "miller": {
-      "label": "Miller rat",
+      "label": "Miller (rat)",
       "species": "rat",
       "n_subjects": 20
     },
     "findling": {
-      "label": "Findling human",
+      "label": "Findling (human)",
       "species": "human",
       "n_subjects": 22
     },
     "tang": {
-      "label": "Tang macaque",
+      "label": "Tang (macaque)",
       "species": "macaque",
       "n_subjects": 2
     },
     "alsio": {
-      "label": "Alsi\u00f6 rat",
+      "label": "Alsi\u00f6 (rat)",
       "species": "rat",
       "n_subjects": 95
     },
     "eckstein": {
-      "label": "Eckstein human",
+      "label": "Eckstein (human)",
       "species": "human",
       "n_subjects": 306
     },
     "costa": {
-      "label": "Costa macaque",
+      "label": "Costa (macaque)",
       "species": "macaque",
       "n_subjects": 11
     },
     "lopez_mouse": {
-      "label": "L\u00f3pez-Y\u00e9pez mouse",
+      "label": "L\u00f3pez-Y\u00e9pez (mouse)",
       "species": "mouse",
       "n_subjects": 8
+    },
+    "hattori": {
+      "label": "Hattori (mouse)",
+      "species": "mouse",
+      "n_subjects": 7
     }
   },
   "seeds": [
@@ -14658,6 +14664,92 @@
               "summary": {
                 "cache_path": "wandb/lopez_mouse/s0/output_summary.json",
                 "sha256": "eeb78d76ec46c54d47951480af3c2d70ddde215067328379765d7579c5469ed0"
+              }
+            }
+          }
+        },
+        "hattori": {
+          "subjects": [
+            {
+              "subject_id": "RH353",
+              "embedding": [
+                0.02419348992407322,
+                -0.10972294211387634,
+                -0.07695017755031586,
+                0.00400904007256031
+              ]
+            },
+            {
+              "subject_id": "RH365",
+              "embedding": [
+                0.04401564970612526,
+                -0.09963987022638321,
+                -0.08949589729309082,
+                0.03647923097014427
+              ]
+            },
+            {
+              "subject_id": "RH374",
+              "embedding": [
+                0.042409252375364304,
+                -0.12987613677978516,
+                -0.10770226269960403,
+                0.01979139633476734
+              ]
+            },
+            {
+              "subject_id": "RH375",
+              "embedding": [
+                0.02256542071700096,
+                -0.09460006654262543,
+                -0.0661277174949646,
+                -0.01925315335392952
+              ]
+            },
+            {
+              "subject_id": "RH377",
+              "embedding": [
+                0.047006286680698395,
+                -0.10964721441268921,
+                -0.1159348413348198,
+                0.027549678459763527
+              ]
+            },
+            {
+              "subject_id": "RH445",
+              "embedding": [
+                0.036072082817554474,
+                -0.11308199912309647,
+                -0.12453078478574753,
+                -0.017101384699344635
+              ]
+            },
+            {
+              "subject_id": "RH456",
+              "embedding": [
+                0.04064057767391205,
+                -0.09702686965465546,
+                -0.06625865399837494,
+                0.02666907198727131
+              ]
+            }
+          ],
+          "provenance": {
+            "wandb_run_id": "gru-hattori-matched-half-20260907-200329-8362a38e",
+            "artifact": "external-gru-output-gru-hattori-matched-half-20260907-200329-8362a38e",
+            "artifact_digest": "5ed3ca2f6df41d2535ab7865d16af074",
+            "files": {
+              "embeddings": {
+                "cache_path": "wandb/hattori/s0/subject_embeddings.pkl",
+                "sha256": "170f82d467e9fde54a9da4e401eab3709296d8c8dfc55d05bc626bd2adf97eab"
+              },
+              "index_map": {
+                "cache_path": "wandb/hattori/s0/subject_index_map.json",
+                "sha256": "11e013c08cfe932317ae0cf572991ec11c23678e879670e86285e718486e8595"
+              },
+              "summary": {
+                "cache_path": "wandb/hattori/s0/output_summary.json",
+                "sha256": "8f859dd45d48fdf62601ca178259ce7837a01875c69fdf16ee5f890e814809c5"
               }
             }
           }
@@ -29214,6 +29306,92 @@
               }
             }
           }
+        },
+        "hattori": {
+          "subjects": [
+            {
+              "subject_id": "RH353",
+              "embedding": [
+                -0.014408399350941181,
+                -0.15589706599712372,
+                0.015603534877300262,
+                -0.05594344809651375
+              ]
+            },
+            {
+              "subject_id": "RH365",
+              "embedding": [
+                -0.021896440535783768,
+                -0.12033761292695999,
+                0.025406794622540474,
+                -0.04278073459863663
+              ]
+            },
+            {
+              "subject_id": "RH374",
+              "embedding": [
+                -0.012356545776128769,
+                -0.18287616968154907,
+                0.014789829030632973,
+                -0.058993466198444366
+              ]
+            },
+            {
+              "subject_id": "RH375",
+              "embedding": [
+                0.011195366270840168,
+                -0.1232062429189682,
+                -0.009765763767063618,
+                -0.05371527373790741
+              ]
+            },
+            {
+              "subject_id": "RH377",
+              "embedding": [
+                0.0014166319742798805,
+                -0.14587964117527008,
+                0.014317427761852741,
+                -0.043847471475601196
+              ]
+            },
+            {
+              "subject_id": "RH445",
+              "embedding": [
+                0.0276801697909832,
+                -0.15879936516284943,
+                -0.019048582762479782,
+                -0.05573461577296257
+              ]
+            },
+            {
+              "subject_id": "RH456",
+              "embedding": [
+                -0.026106560602784157,
+                -0.12841679155826569,
+                0.024144157767295837,
+                -0.05708523467183113
+              ]
+            }
+          ],
+          "provenance": {
+            "wandb_run_id": "gru-hattori-matched-half-20260907-200329-8adafd00",
+            "artifact": "external-gru-output-gru-hattori-matched-half-20260907-200329-8adafd00",
+            "artifact_digest": "fbfe9882bec2a4b98f2445ebce1630a3",
+            "files": {
+              "embeddings": {
+                "cache_path": "wandb/hattori/s1/subject_embeddings.pkl",
+                "sha256": "89dfb27fee221fdfa7b98024153f9775e5c0d27301c6c7d3481816ce3b5fc534"
+              },
+              "index_map": {
+                "cache_path": "wandb/hattori/s1/subject_index_map.json",
+                "sha256": "11e013c08cfe932317ae0cf572991ec11c23678e879670e86285e718486e8595"
+              },
+              "summary": {
+                "cache_path": "wandb/hattori/s1/output_summary.json",
+                "sha256": "e2b658a80890cc853ab513a591a6231d57b05066b5ffe77903108dae0a227390"
+              }
+            }
+          }
         }
       }
     },
@@ -43764,6 +43942,92 @@
               "summary": {
                 "cache_path": "wandb/lopez_mouse/s2/output_summary.json",
                 "sha256": "b51e432348895a1af5980c83b450c50c3365a38d2976dc4dda4188412e89dfdb"
+              }
+            }
+          }
+        },
+        "hattori": {
+          "subjects": [
+            {
+              "subject_id": "RH353",
+              "embedding": [
+                0.06796270608901978,
+                0.10700111091136932,
+                -0.0267497505992651,
+                0.045342180877923965
+              ]
+            },
+            {
+              "subject_id": "RH365",
+              "embedding": [
+                0.06418754905462265,
+                0.0932118147611618,
+                -0.03892575949430466,
+                0.057511795312166214
+              ]
+            },
+            {
+              "subject_id": "RH374",
+              "embedding": [
+                0.09704876691102982,
+                0.15264154970645905,
+                -0.03695281594991684,
+                0.05373679846525192
+              ]
+            },
+            {
+              "subject_id": "RH375",
+              "embedding": [
+                0.09049547463655472,
+                0.094049371778965,
+                -0.06816622614860535,
+                -0.012498196214437485
+              ]
+            },
+            {
+              "subject_id": "RH377",
+              "embedding": [
+                0.08285484462976456,
+                0.12731610238552094,
+                -0.055642399936914444,
+                0.03575439751148224
+              ]
+            },
+            {
+              "subject_id": "RH445",
+              "embedding": [
+                0.0850304514169693,
+                0.12275820225477219,
+                -0.05007413774728775,
+                -0.0057178158313035965
+              ]
+            },
+            {
+              "subject_id": "RH456",
+              "embedding": [
+                0.06626851856708527,
+                0.08720634132623672,
+                -0.030831359326839447,
+                0.06511989235877991
+              ]
+            }
+          ],
+          "provenance": {
+            "wandb_run_id": "gru-hattori-matched-half-20260907-200329-f949e643",
+            "artifact": "external-gru-output-gru-hattori-matched-half-20260907-200329-f949e643",
+            "artifact_digest": "8349940534465c89b49cfa4166c11e5d",
+            "files": {
+              "embeddings": {
+                "cache_path": "wandb/hattori/s2/subject_embeddings.pkl",
+                "sha256": "07f0ced15efc1408f0a5de0f52b2957919da56afafc296bdb5caeb3f57b5572a"
+              },
+              "index_map": {
+                "cache_path": "wandb/hattori/s2/subject_index_map.json",
+                "sha256": "11e013c08cfe932317ae0cf572991ec11c23678e879670e86285e718486e8595"
+              },
+              "summary": {
+                "cache_path": "wandb/hattori/s2/output_summary.json",
+                "sha256": "b6396f60a2290c27676ed2039d6635da34e49d3c5040a17c0758a358e489e883"
               }
             }
           }

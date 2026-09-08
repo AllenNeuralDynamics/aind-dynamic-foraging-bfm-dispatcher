@@ -494,9 +494,9 @@ def main() -> None:
             "categorical_distance": annotations["contract"],
             "aind_source_prototypes": prototypes,
             "schedule_summary": "Compute within-session metrics per subject, then average subjects equally within each cohort.",
-            "empirical_schedule_distance": "Root-mean-square standardized Euclidean distance to Grossman across the declared distance features; standardization uses only the six primary, non-quarantined complete-probability cohorts.",
+            "empirical_schedule_distance": f"Root-mean-square standardized Euclidean distance to Grossman across the declared distance features; standardization uses only the {len(schedule_names)} primary, non-quarantined complete-probability cohorts.",
             "schedule_distance_features": list(DISTANCE_FEATURES),
-            "inference": "Primary Spearman inference uses eight primary cohorts for categorical distance and six primary complete-probability cohorts for schedule distance. The all-valid categorical sensitivity uses 12 non-quarantined cohorts. Exact two-sided permutation is used for n<=8; otherwise deterministic 100,000-draw permutation; all analyses use 20,000 cohort bootstraps and a leave-one-cohort-out range.",
+            "inference": f"Primary Spearman inference uses {len(primary_names)} primary cohorts for categorical distance and {len(schedule_names)} primary complete-probability cohorts for schedule distance. The all-valid categorical sensitivity uses {len(sensitivity_names)} non-quarantined cohorts. Exact two-sided permutation is used for n<=8; otherwise deterministic 100,000-draw permutation; all analyses use 20,000 cohort bootstraps and a leave-one-cohort-out range.",
             "rng_seed": RNG_SEED,
         },
         "schedule_standardization": {

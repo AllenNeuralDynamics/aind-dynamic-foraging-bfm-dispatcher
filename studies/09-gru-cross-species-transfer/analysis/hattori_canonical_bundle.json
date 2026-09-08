@@ -1,0 +1,15 @@
+{
+  "beaker_dataset_id": "01M1ZED14MFW8BC8728QZ3Z30F",
+  "beaker_dataset_name": "study09-hattori-mature-canonical-20260907",
+  "beaker_workspace": "ai1/aind-dynamic-foraging-foundation-model",
+  "created_at": "2026-09-07T19:43:51-07:00",
+  "committed_at": "2026-09-07T19:43:52-07:00",
+  "dataset_id": "hattori-et-al-2023-imaging-mature",
+  "source_md5": "b326372c694d9ec45ab90bfbf3e05846",
+  "inclusion": "All seven untreated Imaging-cohort mice; session 15 onward per the paper's late/expert threshold",
+  "files": {
+    "hattori.audit.json": "403cfc27187cfef94885d4e010e2b940cb4dfaaa698f55a840cb685a9fa6fe60",
+    "hattori.parquet": "c76548cb6f523b924776c8f2c6aa3b0d8695bc8c4a05c4e9b90f8779ea779f38",
+    "hattori.split.json": "2847ef4b5cf5df56e99640fcfcfeae9d2d7a28850e92a1160e36ee51d50697e0"
+  }
+}

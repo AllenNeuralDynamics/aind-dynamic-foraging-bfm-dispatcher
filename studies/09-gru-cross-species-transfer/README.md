@@ -47,8 +47,8 @@ Generated files are:
 - `$CACHE_ROOT/canonical/<dataset>.audit.json`: provenance, checksums, and counts.
 
 The admitted dataset keys are `grossman`, `chen`, `zid`, `lebedeva`, `beron`,
-`kwak`, `miller`, `findling`, `tang`, `alsio`, `eckstein`, `costa`, and
-`lopez_mouse`. Run `make validate` after generation to verify the exact release
+`kwak`, `miller`, `findling`, `tang`, `alsio`, `eckstein`, `costa`,
+`lopez_mouse`, and `hattori`. Run `make validate` after generation to verify the exact release
 counts, binary choices/rewards, v1/v2 contract, deterministic manifest
 regeneration, and non-empty adaptation/test partitions. Its committed summary
 is `analysis/dataset_suite_validation.json`.
@@ -78,6 +78,15 @@ Zid (human) uses the official Experiment 1 MATLAB file rather than the equivalen
 Python pickle, avoiding executable deserialization of downloaded data. The
 first 25 fixed-schedule practice trials are excluded, leaving the 300 main
 trials for each participant.
+
+Hattori (mouse) uses every mouse in the untreated longitudinal Imaging cohort but
+only each mouse's 15th probabilistic-reversal session onward. The paper calls days
+1–14 early and day 15 onward late/expert-stage behavior. This mature-only rule
+retains 292 dated sessions and 141,488 binary-choice trials from seven mice; the
+separate inactivation and paAIP2 cohorts are not mixed into the within-condition
+transfer estimand. Source actions `1=right, 2=left` become canonical
+`1=right, 0=left`; alarm and miss trials are excluded because they contain no
+binary choice.
 
 ## Frozen split contract
 
@@ -130,7 +139,7 @@ frozen and the target test partition never selects a checkpoint. Source run IDs
 and immutable W&B artifact digests are recorded in `source_runs.json`.
 
 The starter `gru-*-matched-half` variants and expansion dataset variants run as
-GPU-only Beaker grids. The common-Q variants run as CPU-only SLURM arrays on
+GPU-only Beaker grids. The Bari2019 common-Q variants run as CPU-only SLURM arrays on
 Allen HPC. Both model
 families consume the same generated Parquet table and split manifest, and both
 emit the wrapper's canonical `test_trial_predictions.csv` and
@@ -148,15 +157,19 @@ DMSO/control-only odd/even-session rerun. The current GPU image predates the wra
 declared `pyarrow` dependency, so tasks also mount dependency bundle
 `01M1RDVWF18JF5QMEB618WJPSF`, verify the wheel checksum, and install
 `pyarrow==21.0.0` before reading the canonical Parquet table.
+Hattori (mouse) uses the separate mature-only canonical dataset
+`study09-hattori-mature-canonical-20260907`
+(`01M1ZED14MFW8BC8728QZ3Z30F`), containing only session 15 onward.
 
-The common-Q comparison is consolidated into
+The Bari2019 common-Q comparison is consolidated into
 [Result 1](analysis/reports/r1-author-aligned-baselines.md).
-All 13 raw cohort matrices and all 195 GRU cells are frozen, but Kwak (mouse) is
-quarantined. Exact ordered trial-key equality passes between every GRU cell and
-its cohort's Q baseline; parity alone does not rescue an invalid scientific split.
-Across the 12 valid cohorts at D=614, the exploratory subject-paired result favors
-GRU for Grossman (mouse), Chen (mouse), Lebedeva (mouse), and López-Yépez (mouse);
-it favors common Q for Zid (human), Miller (rat), Findling (human), and
+All 14 raw cohort matrices and all 210 E4 GRU cells are frozen. Kwak (mouse) and
+its 15 cells are quarantined, leaving 13 valid cohorts and 195 valid E4 cells.
+Exact ordered trial-key equality passes between every GRU cell and its cohort's
+Bari2019 baseline; parity alone does not rescue an invalid scientific split.
+Across the 13 valid cohorts at D=614, the exploratory subject-paired result favors
+GRU for Grossman (mouse), Chen (mouse), Lebedeva (mouse), López-Yépez (mouse),
+and Hattori (mouse); it favors Bari2019 common Q for Zid (human), Miller (rat), Findling (human), and
 Eckstein (human); Beron (mouse), Tang (macaque), Alsiö (rat), and Costa (macaque) are
 unresolved at the unadjusted 0.05 level. Every valid cohort improves in trial-pooled
 GRU likelihood from D=10 to D=614,
@@ -177,14 +190,21 @@ summaries in a heterogeneous distribution, not unequal trial weighting.
 
 ## Author-aligned baselines
 
-The common Q-learning model remains the controlled baseline across datasets.
-Three additional variants test whether that conclusion depends on using a
-generic family instead of the model selected by each dataset's authors:
+Bari2019 (`L1F1CK1`) remains the controlled common-Q baseline across datasets.
+Author-aligned variants test whether conclusions depend on using a common family
+instead of the model selected by each dataset's authors:
 
 - `grossman-meta-learning`: uncertainty-dependent asymmetric meta-learning;
 - `chen-rlck`: the selected four-parameter RL plus choice-kernel model;
 - `zid-history-kernel`: both the best traditional RLCK model and the best
-  overall history-kernel-2 foraging-RL model.
+  overall history-kernel-2 foraging-RL model;
+- `lebedeva-pr`: probabilistic reversal model;
+- `beron-rflr`: reward-forgetting logistic regression;
+- `miller-rhg`: reward-history-gradient model;
+- `findling-weber`: Weber-imprecision Bayesian inference;
+- `eckstein-rl` and `eckstein-bi`: the two reported co-winning families;
+- `hattori-q-learning`: Hattori2019 (`L2F1CK0`), with separate rewarded and
+  unrewarded learning rates and no choice kernel.
 
 They use the same subject-level adaptation observations and identical held-out
 trial keys as the GRU and common-Q comparisons in Result 1. These fits are
@@ -192,14 +212,13 @@ CPU-only SLURM jobs on Allen HPC; they must not be sent to Beaker.
 
 The completed consolidated comparison is
 [Result 1](analysis/reports/r1-author-aligned-baselines.md).
-The author-selected model beats common Q only for Chen (mouse) (+0.00392 normalized
-likelihood). The D=614 transferred GRU remains above the author-selected model
-by +0.01559 on Grossman (mouse), +0.00136 on Chen (mouse), and +0.03057 on Zid (human).
-
-No new author-selected model is implemented or run during Stage A. The
-feasibility table in `DATASET_SURVEY.md` is the explicit stop gate before Stage
-B; new model families require a dataset-by-dataset decision after reviewing the
-expanded GRU-versus-common-Q result.
+The author-selected refit beats Bari2019 common Q for Chen (mouse), Lebedeva
+(mouse), Miller (rat), and both Eckstein (human) co-winners; Bari2019 is better
+for Grossman (mouse), Zid (human), Beron (mouse), Findling (human), and Hattori
+(mouse). Result 1 reports every subject-paired comparison and the known
+paper-parity limitations. In particular, Hattori2019 does not reproduce the
+paper's cross-validated L2 penalty, so equation parity is high but paper-level
+fit-procedure parity is moderate.
 
 ## Subject embedding space
 
@@ -215,20 +234,20 @@ Held-out AIND mice remain calibrated to the source distribution, with only
 E=8 threshold. Every external cohort's median distance exceeds the held-out-AIND
 median in all three seeds in both spaces. Raw E4 and E8 distances are not
 directly comparable, but the external-cohort distance ranks are strongly stable
-(Spearman rho=0.909). Distance is descriptive: species, task structure, reward
+(Spearman rho=0.923). Distance is descriptive: species, task structure, reward
 contingency, session duration, and adaptation-data volume vary together and
 cannot be isolated by this survey.
 
 ## Generalization drivers
 
 [Result 3](analysis/reports/r3-generalization-drivers.md) is a cross-cohort
-meta-analysis of the frozen GRU, common-Q, embedding, and task-design artifacts.
+meta-analysis of the frozen GRU, Bari2019 common-Q, embedding, and task-design artifacts.
 It compares subject-balanced E4 and E8 D=614 GRU improvement and
 dimension-specific embedding displacement with an evidence-backed categorical
 distance from the AIND source tasks. For
-the six primary cohorts with complete trial-wise arm probabilities, it also tests
+the seven primary cohorts with complete trial-wise arm probabilities, it also tests
 an empirical reward-schedule distance from Grossman (mouse). Primary categorical
-inference uses eight cohorts; a separate all-valid sensitivity uses 12 and still
+inference uses nine cohorts; a separate all-valid sensitivity uses 13 and still
 excludes quarantined Kwak (mouse). Species remains descriptive
 because species, study, apparatus, and task design are confounded.
 
@@ -239,12 +258,15 @@ versus E=8 transfer in issue #148. Both
 source dimensions use D=614, H=128, three seeds, the same source snapshot and
 training recipe, and the same external 500-step embedding adaptation. The
 strict paired current-code comparison covers Grossman (mouse), Lebedeva
-(mouse), Miller (rat), Findling (human), and Eckstein (human). The remaining
+(mouse), Miller (rat), Findling (human), Eckstein (human), and Hattori (mouse). The remaining
 seven cohorts compare current E8 with the frozen historical E4 screen on exactly
 the same held-out trial keys. The two E8 expansion shards completed as Beaker experiments
-`01M1YRP7ASQRQN4Y7MZ2HEQAXG` and `01M1YRT8B20NMJ3JAHNVC0RMF4`. Kwak (mouse)
+`01M1YRP7ASQRQN4Y7MZ2HEQAXG` and `01M1YRT8B20NMJ3JAHNVC0RMF4`; Hattori (mouse)
+completed in `01M1ZFJ3BPJSZNJ403DPD3FS6C` (E4) and
+`01M1ZFJ1Z9BP5GFCM8RPTG119Z` (E8). Kwak (mouse)
 remains quarantined and was not run. All 21 expansion tasks succeeded, their
-W&B artifacts were frozen, and exact held-out trial-key parity passed. Across
-all 12 valid cohorts, E8 has higher mean held-out likelihood in 10 and lower in
-Grossman (mouse) and Zid (human). The seven historical-E4 comparisons remain a
-weaker causal dimension ablation than the five paired current-code reruns.
+W&B artifacts were frozen, and all 18 mature Hattori tasks also succeeded. Exact
+held-out trial-key parity passed. Across all 13 valid cohorts, E8 has higher mean
+held-out likelihood in 10 and lower in Grossman (mouse), Zid (human), and Hattori
+(mouse). The seven historical-E4 comparisons remain a weaker causal dimension
+ablation than the six paired current-code reruns.

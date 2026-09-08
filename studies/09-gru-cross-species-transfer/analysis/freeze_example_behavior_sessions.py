@@ -41,6 +41,7 @@ DATASETS = (
     "eckstein",
     "costa",
     "lopez_mouse",
+    "hattori",
 )
 QUANTILES = (
     (0.1, "lower tail", "lower"),

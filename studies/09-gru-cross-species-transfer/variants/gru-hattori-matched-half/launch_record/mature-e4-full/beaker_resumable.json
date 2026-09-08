@@ -1,0 +1,31 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 15,
+  "experiment_id": "01M1ZFJ3BPJSZNJ403DPD3FS6C",
+  "experiment_url": "https://beaker.org/ex/01M1ZFJ3BPJSZNJ403DPD3FS6C",
+  "dispatcher_commit": "703e750eb44e9103214aca1ced8c82557925849f",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "wandb_group": "gru-hattori-matched-half@20260907-200329",
+  "sweep_file": "studies/09-gru-cross-species-transfer/variants/gru-hattori-matched-half/sweep_e4.yaml",
+  "created_utc": "2026-09-08T03:03:30.055445+00:00",
+  "status": "success",
+  "completed_utc": "2026-09-08T03:12:31.890343Z",
+  "result_dataset_ids": [
+    "01M1ZFJ3BV28WB9GHB5YEWEC2P",
+    "01M1ZFJ3FK1W3B71VRPQNZJ8NC",
+    "01M1ZFJ3KFGF5HCRAJSXRKG24F",
+    "01M1ZFJ3QNJ6017RQ7REVB8RY7",
+    "01M1ZFJ3V9Y378P6ZJS9CB30AR",
+    "01M1ZFJ3YSZ2C7NQFT3CH2HP1B",
+    "01M1ZFJ42RPGXX6TJTS6WXD9QA",
+    "01M1ZFJ46267YQMR0ZD12CMPRZ",
+    "01M1ZFJ49GHSRJ57E9HEGJEBVP",
+    "01M1ZFJ4D1K76MTWNJAYA4CRZ8",
+    "01M1ZFJ4GDGM57VQR5FGZJW7WT",
+    "01M1ZFJ4KV97QMMCNZE6NT1G8P",
+    "01M1ZFJ4QP0C0V03WFNBCC0VQ5",
+    "01M1ZFJ4VNNM32CHA274559FJ4",
+    "01M1ZFJ4Z2CJCDYTR8PZF8P9AA"
+  ]
+}

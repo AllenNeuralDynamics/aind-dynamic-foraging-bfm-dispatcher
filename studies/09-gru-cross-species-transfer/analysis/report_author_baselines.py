@@ -53,6 +53,7 @@ ALL_DATASET_ORDER = (
     "eckstein",
     "costa",
     "lopez_mouse",
+    "hattori",
 )
 DATASET_ORDER = tuple(name for name in ALL_DATASET_ORDER if name != "kwak")
 TIER_ORDER = ("primary", "stress_test", "descriptive_only")
@@ -83,6 +84,7 @@ LABELS = {
     "eckstein": "Eckstein (human)",
     "costa": "Costa (macaque)",
     "lopez_mouse": "López-Yépez (mouse)",
+    "hattori": "Hattori (mouse)",
 }
 TASKS = {
     "grossman": "blockwise dynamic foraging",
@@ -98,6 +100,7 @@ TASKS = {
     "eckstein": "developmental stochastic reversal",
     "costa": "stochastic stimulus reversal",
     "lopez_mouse": "baited variable-interval matching",
+    "hattori": "baited probabilistic reversal",
 }
 AUTHOR_LABELS = {
     "grossman-meta-learning": "meta-learning RL",
@@ -111,6 +114,7 @@ AUTHOR_LABELS = {
     "findling-weber-imprecision-64p": "Weber BI (64-particle fit)",
     "eckstein-rl": "counterfactual RL",
     "eckstein-bi": "Bayesian inference",
+    "hattori-q-learning": "Hattori2019",
 }
 AUTHOR_REFERENCE_PANELS = (
     ("grossman", "grossman-meta-learning"),
@@ -122,6 +126,7 @@ AUTHOR_REFERENCE_PANELS = (
     ("findling", "findling-weber-imprecision"),
     ("eckstein", "eckstein-rl"),
     ("eckstein", "eckstein-bi"),
+    ("hattori", "hattori-q-learning"),
 )
 EXAMPLE_CATEGORIES = (
     ("lower", "Lower tail"),
@@ -219,7 +224,10 @@ def _plot_summary(
     analysis_tiers: dict[str, list[str]],
 ) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(3, 4, figsize=(18, 12), constrained_layout=True)
+    nrows = math.ceil(len(DATASET_ORDER) / 4)
+    fig, axes = plt.subplots(
+        nrows, 4, figsize=(18, 4 * nrows), constrained_layout=True
+    )
     records = author_data["records"]
     panel_order = _summary_order(author_data, matched, analysis_tiers)
     for axis, (tier, dataset_name) in zip(axes.flat, panel_order):
@@ -267,7 +275,10 @@ def _plot_summary(
                 zorder=5,
             )
         axis.axhline(
-            _metric(dataset["q"]), color="#222222", linestyle="--", label="common Q"
+            _metric(dataset["q"]),
+            color="#222222",
+            linestyle="--",
+            label="Bari2019 (common Q)",
         )
         for baseline, record in records.items():
             if record["dataset"] != dataset_name:
@@ -301,7 +312,7 @@ def _plot_summary(
     for axis in axes.flat[len(panel_order) :]:
         axis.set_visible(False)
     fig.suptitle(
-        "Frozen-core GRU transfer versus matched common Q and author models\n"
+        "Frozen-core GRU transfer versus matched Bari2019 and author models\n"
         "Tiered cohorts; within each tier, descending E4 D=614 advantage",
         fontsize=17,
     )
@@ -342,7 +353,7 @@ def _author_subject_conditions(
     if set(reference) != set(q):
         raise AssertionError("Author and Q per-subject metric sets do not align")
 
-    labels = ["Common Q"]
+    labels = ["Bari2019"]
     log_values = [[float(q[subject]) for subject in subjects]]
     colors = ["#666666"]
     for baseline, record in comparators:
@@ -410,9 +421,13 @@ def _plot_author_subjects(
     author_data: dict,
     matched: dict,
     embedding_dimension: dict,
+    validation: dict[str, dict],
 ) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(3, 3, figsize=(18, 16), constrained_layout=True)
+    nrows = math.ceil(len(AUTHOR_REFERENCE_PANELS) / 4)
+    fig, axes = plt.subplots(
+        nrows, 4, figsize=(18, 5.3 * nrows), constrained_layout=True
+    )
     for axis, (dataset_name, selected_baseline) in zip(
         axes.flat, AUTHOR_REFERENCE_PANELS
     ):
@@ -490,7 +505,6 @@ def _plot_author_subjects(
         tick_labels = [
             label.replace("4-parameter ", "4-param\n")
             .replace("traditional ", "traditional\n")
-            .replace("Common Q", "Common\nQ")
             .replace("counterfactual RL", "counterfactual\nRL")
             .replace("Bayesian inference", "Bayesian\ninference")
             .replace("Weber BI (64-particle fit)", "Weber BI\n(64-particle fit)")
@@ -506,11 +520,14 @@ def _plot_author_subjects(
             "D=614 corr(author likelihood, GRU Δ)\n"
             f"E4 r={correlations[0]:+.2f}, E8 r={correlations[1]:+.2f}",
             fontsize=10,
+            color=SPECIES_COLORS[validation[dataset_name]["species"]],
         )
         axis.axhline(0, color="#C44E52", linewidth=1.6, alpha=0.8, zorder=0)
         axis.set_yscale("symlog", linthresh=0.01)
         axis.set_ylabel("Δ subject held-out normalized likelihood")
         axis.grid(axis="y", alpha=0.2)
+    for axis in axes.flat[len(AUTHOR_REFERENCE_PANELS) :]:
+        axis.set_visible(False)
     fig.legend(
         handles=[
             Line2D([0], [0], color="#333333", linewidth=1.8, label="median"),
@@ -542,7 +559,10 @@ def _plot_gru_q_subjects(
     embedding_dimension: dict,
 ) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(3, 4, figsize=(18, 13), constrained_layout=True)
+    nrows = math.ceil(len(DATASET_ORDER) / 4)
+    fig, axes = plt.subplots(
+        nrows, 4, figsize=(18, 4.3 * nrows), constrained_layout=True
+    )
     rng = np.random.default_rng(29)
     for axis, dataset_name in zip(axes.flat, DATASET_ORDER):
         dataset = matched["datasets"][dataset_name]
@@ -633,8 +653,9 @@ def _plot_gru_q_subjects(
             f"v{audit['schema_version']} · n={n_subjects}\n"
             f"{textwrap.fill(TASKS[dataset_name], 34)}",
             fontsize=9,
+            color=SPECIES_COLORS[audit["species"]],
         )
-        axis.set_ylabel("Subject GRU − Q likelihood")
+        axis.set_ylabel("Subject GRU − Bari2019 likelihood")
         axis.grid(axis="y", alpha=0.2)
     for axis in axes.flat[len(DATASET_ORDER) :]:
         axis.set_visible(False)
@@ -657,7 +678,7 @@ def _plot_gru_q_subjects(
         frameon=False,
     )
     fig.suptitle(
-        "Paired subject-level GRU improvement over common Q\n"
+        "Paired subject-level GRU improvement over Bari2019 (common Q)\n"
         "Dots are subjects; thin lines connect the same subject across conditions",
         fontsize=17,
     )
@@ -725,7 +746,7 @@ def _plot_examples(example_data: dict) -> list[Path]:
                 delta = example["gru_d614_minus_q_normalized_likelihood"]
                 axes[0].set_title(
                     f"{example['subject_id']} · {example['session_id']} · "
-                    f"GRU−Q={delta:+.3f}",
+                    f"GRU−Bari2019={delta:+.3f}",
                     fontsize=9,
                     loc="left",
                 )
@@ -878,7 +899,7 @@ def _primary_author_read(author_data: dict, matched: dict) -> list[str]:
     for dataset_name in PRIMARY_AUTHOR_COHORTS:
         dataset = matched["datasets"][dataset_name]
         scores = [
-            ("common Q", _metric(dataset["q"])),
+            ("Bari2019 (common Q)", _metric(dataset["q"])),
             (
                 "GRU D=614",
                 statistics.mean(_metric(row) for row in _gru_for_d(dataset, 614)),
@@ -904,7 +925,7 @@ def _primary_author_read(author_data: dict, matched: dict) -> list[str]:
         "",
         "For Findling (human), increasing only the fit particle count from 2 to 64 "
         f"raises held-out likelihood from {primary:.5f} to {sensitivity:.5f} "
-        f"(Δ={sensitivity - primary:+.5f}), nearly reaching common Q ({q_score:.5f}). "
+        f"(Δ={sensitivity - primary:+.5f}), nearly reaching Bari2019 common Q ({q_score:.5f}). "
         "The released two-particle fitting objective therefore contributes material "
         "Monte Carlo instability. The two-particle result remains the primary "
         "author-code-parity reference; the 64-particle result is a sensitivity, not a "
@@ -971,7 +992,7 @@ def _stage_a_read(matched: dict) -> list[str]:
         "At D=614, the exploratory unadjusted subject-paired Wilcoxon result favors GRU "
         f"for {describe(gru_better)}.",
         "",
-        "It favors common Q for " + describe(q_better) + ".",
+        "It favors Bari2019 common Q for " + describe(q_better) + ".",
         "",
         "The remaining cohorts are unresolved at the 0.05 level: "
         + describe(unresolved)
@@ -1048,25 +1069,25 @@ def _result_block(
         "",
         "## Stage-A decision result",
         "",
-        "![GRU, common Q, and available author baselines](../fig_author_baseline_likelihood.png)",
+        "![GRU, Bari2019 common Q, and available author baselines](../fig_author_baseline_likelihood.png)",
         "",
         "Every model uses the same immutable adaptation and held-out observations. "
         "Panels are grouped as primary, stress test, and descriptive, then ordered within "
         "each tier by descending E4 D=614 GRU advantage over the strongest available "
         "author-selected model. Stress-test and descriptive cohorts without a reproduced "
-        "author model use common Q as the ordering reference. Panel-title color encodes "
+        "author model use Bari2019 common Q as the ordering reference. Panel-title color encodes "
         "species using the same palette as the task-design figures. Light-blue GRU points "
         "and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now "
         "appear for every displayed cohort. The five-cohort diagnostic E8 values have a "
-        "paired current-code E4 comparator in Result 4; the seven expansion values are "
-        "shown against historical E4 here and should not be interpreted as an isolated "
-        "embedding-dimension effect. "
+        "paired current-code E4 comparator in Result 4. Of the eight expansion values, "
+        "seven use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. "
         "GRU points are the three source-training seeds; summaries are their mean ± SD. "
-        "Common Q is fitted independently per target subject on the identical adaptation half. "
+        "The common Q baseline is the Bari2019 preset and is fitted independently per "
+        "target subject on the identical adaptation half. "
         "Author-model lines include the existing Grossman (mouse), Chen (mouse), and "
         "Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), "
-        "Beron (mouse), Miller (rat), Findling (human), and both Eckstein (human) "
-        "co-winners.",
+        "Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) "
+        "co-winners, and Hattori2019 for Hattori (mouse).",
         "",
         "Kwak (mouse) is omitted from every figure, table, direction count, and inference in "
         "this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, "
@@ -1084,17 +1105,17 @@ def _result_block(
         "Light blue denotes E4 and dark blue denotes E8. This preserves the "
         "author-relative comparison from the completed first-round report.",
         "",
-        "![Paired subject-level GRU minus common-Q likelihood](../fig_subject_gru_minus_q_likelihood.png)",
+        "![Paired subject-level GRU minus Bari2019 likelihood](../fig_subject_gru_minus_q_likelihood.png)",
         "",
         "Each dot is a subject's normalized likelihood under the three-seed mean GRU minus "
-        "that subject's common-Q likelihood. Thin lines connect the same subject across "
+        "that subject's Bari2019 common-Q likelihood. Thin lines connect the same subject across "
         "the five E4 D values and E8 D=614; "
         "the short bar is the median and the hollow diamond is the arithmetic mean. Panel "
         "p-values are unadjusted two-sided paired Wilcoxon signed-rank tests against zero.",
         "",
         "### Cohort summary and trial-pooled likelihood",
         "",
-        "| cohort | species | split | subjects | sessions | held-out trials | common Q | GRU D=10 | D=30 | D=100 | D=300 | D=614 |",
+        "| cohort | species | split | subjects | sessions | held-out trials | Bari2019 common Q | GRU D=10 | D=30 | D=100 | D=300 | D=614 |",
         "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for dataset_name in DATASET_ORDER:
@@ -1110,7 +1131,7 @@ def _result_block(
 
     lines += [
         "",
-        "### Paired GRU minus common-Q result",
+        "### Paired GRU minus Bari2019 result",
         "",
         "| cohort | space | D | median Δ likelihood | mean Δ likelihood | subjects GRU better | Wilcoxon p |",
         "|---|---|---:|---:|---:|---:|---:|",
@@ -1185,7 +1206,7 @@ def _result_block(
         "",
         "### Author-aligned baselines",
         "",
-        "| cohort | published model | role | common Q | published model refit | E4 GRU D=614 | E8 GRU D=614 |",
+        "| cohort | published model | role | Bari2019 common Q | published model refit | E4 GRU D=614 | E8 GRU D=614 |",
         "|---|---|:---:|---:|---:|---:|---:|",
         *author_rows,
         "",
@@ -1208,24 +1229,31 @@ def _result_block(
         "|---|---|---:|---:|---:|",
         *correlations,
         "",
-        "### Why common Q can beat an author-selected model",
+        "### Why Bari2019 common Q can beat an author-selected model",
         "",
         "This report tests held-out generalization after fitting the same adaptation half; "
         "it does not reproduce each paper's original model-selection objective. Grossman (mouse) "
-        "did compare against Q-learning, but our common Q includes forgetting, a one-step "
+        "did compare against Q-learning, but our Bari2019 common Q includes forgetting, a one-step "
         "choice kernel, and side bias, while the Grossman (mouse) refit omits the paper's hierarchical "
         "Stan fit and parameter-ordering constraint. Zid (human) selected its model using all 300 "
         "trials and AIC on a smaller analysis cohort, whereas this benchmark fits trials "
         "0–149 and scores 150–299 for all 258 released participants. A ranking reversal here "
-        "therefore means that common Q generalizes better under this matched protocol; it is "
+        "therefore means that Bari2019 common Q generalizes better under this matched protocol; it is "
         "not evidence that the papers failed to test Q or selected the wrong model for their "
         "own analysis.",
+        "",
+        "For Hattori (mouse), the comparison is specifically Bari2019 (`L1F1CK1`) "
+        "versus Hattori2019 (`L2F1CK0`). Both are `ForagerQLearning` models with five "
+        "fitted parameters. Bari2019 spends its extra flexibility on a one-trial choice "
+        "kernel; Hattori2019 instead separates rewarded and unrewarded learning rates. "
+        "Their small held-out difference therefore tests those two mechanisms under the "
+        "same mature-session split, not model-size advantage.",
         "",
         "### Representative held-out sessions",
         "",
         "Sessions are selected deterministically at neighboring ranks around the lower "
         "(10th percentile), median, and upper (90th percentile) session-level D=614 "
-        "GRU-minus-Q likelihood distribution. For v2, the complete real session is shown "
+        "GRU-minus-Bari2019 likelihood distribution. For v2, the complete real session is shown "
         "with the adaptation/test boundary; for v1, only a real held-out session is shown. "
         "No pseudo-sessions are constructed.",
         "",
@@ -1274,7 +1302,7 @@ def _result_block(
         "- Every admitted release passed pinned-source checksum and exact-count audits.",
         "- Every canonical choice and reward is binary.",
         "- Every manifest is deterministic and uses only schema v1 or v2.",
-        "- Every GRU cell and common-Q baseline has identical ordered held-out "
+        "- Every GRU cell and Bari2019 common-Q baseline has identical ordered held-out "
         "`(subject_id, ses_idx, trial, choice)` keys.",
         "- V2 uses the complete first-half prefix with no K condition, then scores the "
         "second-half suffix after state replay.",
@@ -1282,7 +1310,7 @@ def _result_block(
         + ", ".join(f"D={d}: {actual_ds[d]}" for d in DS)
         + ".",
         "- Every primary-set author model uses the same immutable adaptation and held-out "
-        "trials as GRU and common Q; model-specific fitting deviations are disclosed in "
+        "trials as GRU and Bari2019 common Q; model-specific fitting deviations are disclosed in "
         "the feasibility table.",
     ]
     return "\n".join(lines)
@@ -1315,7 +1343,9 @@ def main() -> None:
         embedding_dimension,
         task_design["analysis_tiers"],
     )
-    _plot_author_subjects(author_data, matched, embedding_dimension)
+    _plot_author_subjects(
+        author_data, matched, embedding_dimension, validation
+    )
     _plot_gru_q_subjects(matched, validation, embedding_dimension)
     example_paths = _plot_examples(examples)
     block = _result_block(

@@ -243,6 +243,22 @@ SOURCES: dict[str, Source] = {
         digest="f8ec0ce1da0f98f53d170d257ba5267932a9a4e2b1001e9499d5a3c39210ad1b",
         collection_provider="figshare",
     ),
+    "hattori": Source(
+        dataset_id="hattori-et-al-2023-imaging-mature",
+        species="mouse",
+        title="Meta-reinforcement learning via orbitofrontal cortex",
+        repository="Zenodo",
+        doi="10.5281/zenodo.10969434",
+        version="v3 (2024-04-13; Zenodo record 10969434)",
+        license="not specified on Zenodo",
+        url=(
+            "https://zenodo.org/records/10969434/files/"
+            "Hattori_NatureNeuroscience_Data.zip?download=1"
+        ),
+        filename="Hattori_NatureNeuroscience_Data.zip",
+        digest_algorithm="md5",
+        digest="b326372c694d9ec45ab90bfbf3e05846",
+    ),
 }
 
 
