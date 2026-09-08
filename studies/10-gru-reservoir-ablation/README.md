@@ -33,6 +33,10 @@ stayed frozen and the held-out table is complete, launch seeds 1 and 2. All
 training is GPU work on Beaker hub infrastructure. Report generation is local
 from committed frozen inputs.
 
+Seed 0 was submitted at 17:55 PT on 2026-09-07 as Beaker experiment
+[`01M1Z86SE16551913JFAA8D189`](https://beaker.org/ex/01M1Z86SE16551913JFAA8D189),
+W&B group `frozen-random-core-d614@20260907-175533`.
+
 ## Scope boundary
 
 This first pass does not test E=8, a reservoir D curve, tuned reservoir dynamics,

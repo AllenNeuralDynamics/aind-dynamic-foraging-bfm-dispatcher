@@ -13,3 +13,7 @@ Execution is staged without duplicating a scientific cell:
 
 Both launches use Beaker hub GPU infrastructure. No CPU-only task belongs in
 this experiment.
+
+Seed 0 submitted 2026-09-07 17:55 PT: Beaker
+[`01M1Z86SE16551913JFAA8D189`](https://beaker.org/ex/01M1Z86SE16551913JFAA8D189),
+group `frozen-random-core-d614@20260907-175533`.

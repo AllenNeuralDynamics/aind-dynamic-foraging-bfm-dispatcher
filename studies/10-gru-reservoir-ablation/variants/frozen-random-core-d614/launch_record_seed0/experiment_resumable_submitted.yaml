@@ -1,0 +1,74 @@
+version: v2
+description: "frozen-random-core-d614@20260907-175533 \u2014 1 resumable grid tasks\
+  \ (autoResume)"
+tasks:
+- name: frozen-random-core-d614-20260907-175533-000
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=gru_scaling
+  - wandb.project=gru_reservoir_ablation
+  - model.architecture.hidden_size=128
+  - model.architecture.subject_embedding_size=4
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.n_steps=150000
+  - model.training.lr=1e-5
+  - model.training.freeze_gru_core=true
+  - model.training.checkpoint_run_heldout_eval=false
+  - model.training.length_bucketing=true
+  - model.training.early_stopping.enabled=true
+  - model.training.early_stopping.start_after_step=70000
+  - data.subject_ratio=1.0
+  - seed=0
+  context:
+    priority: normal
+    preemptible: false
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 847a270945a29a0ce6ab78c89df660d084c7be95
+  - name: DISPATCHER_REF
+    value: 8a531014eec946f3c847a49b73a818abaf56b207
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: frozen-random-core-d614-20260907-175533-bbcdf2f9
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: frozen-random-core-d614@20260907-175533
+  - name: BFM_META_STUDY
+    value: 10-gru-reservoir-ablation
+  - name: BFM_META_VARIANT
+    value: frozen-random-core-d614
+  - name: BFM_META_LAUNCH_ID
+    value: 20260907-175533
+  - name: BFM_META_CONFIG_HASH
+    value: 09c00985
+  - name: BFM_META_LABEL
+    value: reservoir-seed0
+  - name: BFM_META_NOTE
+    value: 'Study 10 seed-0 end-to-end GPU validation: native H128 D614 E4 initialization,
+      frozen GRU and session-conditioning parameters, source embeddings plus readout
+      trained, held-out embeddings conditioned only; compare with paired Study 01
+      v2 seed 0.'
+  result:
+    path: /results
