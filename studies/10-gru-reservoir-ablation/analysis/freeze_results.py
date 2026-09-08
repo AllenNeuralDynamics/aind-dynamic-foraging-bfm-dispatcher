@@ -26,6 +26,16 @@ WANDB_GROUPS = (
     "frozen-random-core-d614@20260907-175533",
     "frozen-random-core-d614@20260907-184115",
 )
+RESERVOIR_RUNS = {
+    0: "frozen-random-core-d614-20260907-175533-bbcdf2f9",
+    1: "frozen-random-core-d614-20260907-184115-0c259519",
+    2: "frozen-random-core-d614-20260907-184115-d2f43380",
+}
+RESERVOIR_GROUP_BY_SEED = {
+    0: WANDB_GROUPS[0],
+    1: WANDB_GROUPS[1],
+    2: WANDB_GROUPS[1],
+}
 SOURCE_RESULT_GROUPS = (
     "heldout-rerun-v2-retry@20260623-065818",
 )
@@ -242,13 +252,26 @@ def _frozen_parameter_audit(run: Any) -> dict[str, Any]:
 
 
 def _summary_likelihood(run: Any) -> float:
-    for key in ("heldout/final/eval_likelihood", "heldout/eval_likelihood"):
+    for key in (
+        "heldout/final/eval_likelihood",
+        "heldout/eval_likelihood",
+        "final/eval_likelihood",
+    ):
         if run.summary.get(key) is not None:
             return float(run.summary[key])
     raise ValueError(f"run {run.id} has no held-out eval likelihood summary")
 
 
-def _freeze_run(run: Any, *, audit_frozen: bool) -> dict[str, Any]:
+def _training_steps_completed(run: Any) -> int:
+    for key in ("training_steps_completed", "checkpoint/step", "_step"):
+        if run.summary.get(key) is not None:
+            return int(run.summary[key])
+    raise ValueError(f"run {run.id} has no completed-training step summary")
+
+
+def _freeze_run(
+    run: Any, *, audit_frozen: bool, explicit_seed: int | None = None
+) -> dict[str, Any]:
     rows, table_artifact = _subject_rows(run)
     pooled = _pooled_likelihood(rows)
     summary_value = _summary_likelihood(run)
@@ -257,7 +280,7 @@ def _freeze_run(run: Any, *, audit_frozen: bool) -> dict[str, Any]:
             f"run {run.id} pooled likelihood {pooled} != summary {summary_value}"
         )
     result = {
-        "seed": _seed(run),
+        "seed": _seed(run) if explicit_seed is None else explicit_seed,
         "wandb_run_id": run.id,
         "wandb_url": run.url,
         "table_artifact": table_artifact,
@@ -271,26 +294,22 @@ def _freeze_run(run: Any, *, audit_frozen: bool) -> dict[str, Any]:
             "name": artifact.name,
             "digest": artifact.digest,
         }
-        result["training_steps_completed"] = int(
-            run.summary["training_steps_completed"]
-        )
+        result["training_steps_completed"] = _training_steps_completed(run)
         result["frozen_parameter_audit"] = _frozen_parameter_audit(run)
     return result
 
 
 def main() -> None:
     api = wandb.Api()
-    reservoir_runs = []
-    for group in WANDB_GROUPS:
-        reservoir_runs.extend(
-            api.runs(RESERVOIR_PROJECT, filters={"group": group, "state": "finished"})
-        )
-    if len(reservoir_runs) != len(EXPECTED_SEEDS):
-        raise ValueError(f"found {len(reservoir_runs)} finished reservoir runs")
-    reservoir_by_seed = {_seed(run): run for run in reservoir_runs}
-    if tuple(sorted(reservoir_by_seed)) != EXPECTED_SEEDS:
-        raise ValueError(f"reservoir seed coverage is {sorted(reservoir_by_seed)}")
-    for run in reservoir_by_seed.values():
+    reservoir_by_seed = {
+        seed: api.run(f"{RESERVOIR_PROJECT}/{RESERVOIR_RUNS[seed]}")
+        for seed in EXPECTED_SEEDS
+    }
+    for seed, run in reservoir_by_seed.items():
+        if run.state != "finished":
+            raise ValueError(f"reservoir run {run.id} is {run.state}")
+        if run.group != RESERVOIR_GROUP_BY_SEED[seed]:
+            raise ValueError(f"reservoir run {run.id} belongs to {run.group!r}")
         _validate_reservoir_config(run)
 
     reference = json.loads(REFERENCE.read_text())
@@ -315,7 +334,9 @@ def main() -> None:
             raise ValueError(f"trained-GRU result run {run.id} has the wrong source seed")
 
     reservoir = [
-        _freeze_run(reservoir_by_seed[seed], audit_frozen=True)
+        _freeze_run(
+            reservoir_by_seed[seed], audit_frozen=True, explicit_seed=seed
+        )
         for seed in EXPECTED_SEEDS
     ]
     trained = [

@@ -22,3 +22,9 @@ group `frozen-random-core-d614@20260907-175533`.
 Seeds 1 and 2 submitted 2026-09-07 18:41 PT: Beaker
 [`01M1ZATF3VZS00RZ82JQTWWQSG`](https://beaker.org/ex/01M1ZATF3VZS00RZ82JQTWWQSG),
 group `frozen-random-core-d614@20260907-184115`.
+
+The completion audit excluded these first-launch outputs from the confirmatory
+comparison: the current resolver exchanged three source and held-out subjects
+relative to Study 01. `sweep-paired-rerun.yaml` pins the exact ordered Study 01
+source and held-out lists from `reference/study01-v2-exact-split.json` and is the
+authoritative confirmatory sweep.

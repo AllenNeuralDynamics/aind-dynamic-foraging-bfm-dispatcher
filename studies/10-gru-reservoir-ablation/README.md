@@ -42,6 +42,21 @@ Seeds 1 and 2 were submitted at 18:41 PT on 2026-09-07 as Beaker experiment
 [`01M1ZATF3VZS00RZ82JQTWWQSG`](https://beaker.org/ex/01M1ZATF3VZS00RZ82JQTWWQSG),
 W&B group `frozen-random-core-d614@20260907-184115`.
 
+### Split-parity correction
+
+The post-run parity audit found that the current snapshot resolver exchanged
+three subjects between train and held-out relative to the immutable Study 01
+v2 runs: the reservoir pilot trained on `764791`, `808057`, and `823164` in
+place of `722683`, `795395`, and `820243`. Its held-out cohort made the reciprocal
+exchange. The 146 shared held-out subjects had identical trial counts, but the
+pilot is excluded from the paired confirmatory result because all 149 subjects
+and the source-training cohort must match exactly.
+
+The correction pins the ordered 614-subject source cohort and the 149-subject
+held-out cohort from the exact Study 01 W&B records in
+`reference/study01-v2-exact-split.json`. The rerun sweep passes both lists
+explicitly, bypassing selection-policy drift.
+
 ## Scope boundary
 
 This first pass does not test E=8, a reservoir D curve, tuned reservoir dynamics,
