@@ -2,6 +2,10 @@
 
 ## 2026-09-07
 
+- Admitted Hattori (mouse) from the checksum-pinned Zenodo v3 release using the
+  complete seven-mouse untreated imaging cohort: 390 real sessions, 192,272
+  binary-choice trials, and a schema-v1 odd/even-session split. Added the
+  paper's asymmetric Q-learning family to the matched author-baseline runner.
 - Regenerated every dimension-dependent Result 1--4 figure with both E4 and E8
   wherever the frozen artifacts support it, including subject-level GRU-Q and
   author-relative comparisons, source-fitted embedding geometry, cross-cohort

@@ -30,6 +30,7 @@ cohort fit. The machine-readable exact-count and digest audit is
 | Eckstein (human) | Human; stochastic reversal across development | [OSF `7wuh4`](https://osf.io/7wuh4/) (no explicit OSF data license) | 306 | 306 | 40,229 | 20,248 | v2 | co-winners: counterfactual RL and Bayesian-inference models, originally fit hierarchically | High; two co-winners, hierarchical original fit, and paper reports an analytic n=291 | Both author co-winners implemented; matched-half HPC fits completed |
 | Costa (macaque) | Macaque; stochastic stimulus reversal | [Zenodo record 20086410](https://doi.org/10.5281/zenodo.20086410), CC BY 4.0 | 11 | 245 | 329,840 | 162,960 | v1 | feedback-dependent RL with separate positive/negative learning rates | Moderate; equations are published, original fitting code not found | Admitted; GRU and common Q completed and frozen; exact trial-key parity passed |
 | López-Yépez (mouse) | Mouse; baited variable-interval dynamic matching | [Figshare v1](https://doi.org/10.6084/m9.figshare.14540283.v1), CC BY 4.0 | 8 | 218 | 147,726 | 77,662 | v1 | double-trace RL with fast and slow choice traces | Moderate; equations are published, MATLAB implementation was not released with the data | Admitted; GRU and common Q completed and frozen; exact trial-key parity passed |
+| Hattori (mouse) | Mouse; baited probabilistic reversals during longitudinal OFC imaging | [Zenodo v3](https://doi.org/10.5281/zenodo.10969434) (no explicit Zenodo data license) | 7 | 390 | 192,272 | 94,425 | v1 | asymmetric rewarded/unrewarded Q-learning with unchosen-value forgetting | Low; the exact equations match the existing `Hattori2019` family | Admitted; checksum, exact-count, deterministic-manifest, and wrapper-loader audits passed; matched fits pending |
 
 The Eckstein (human) release contains 306 valid one-session participant files, while the
 paper reports 291 analytic participants. Because no machine-readable exclusion list
@@ -52,6 +53,12 @@ Alsiö (rat) cohorts II–V form a complete multi-session cohort and are admitte
 The separate cohort VI probabilistic-reversal release contains dose/reversal labels but
 no recoverable chronological real-session identity, so it is not mixed into this cohort.
 
+Hattori (mouse) uses the complete seven-mouse untreated longitudinal imaging cohort.
+The intervention and paAIP2 cohorts are separate causal experiments and are not mixed
+into this within-condition transfer estimand. Source actions `1=right, 2=left` map to
+canonical `0=left, 1=right`; alarm (`3`) and miss (`4`) trials have no binary choice and
+are excluded. All 390 calendar-dated imaging sessions remain distinct and chronological.
+
 ## Skipped cohorts
 
 | Cohort | Raw-release audit | Status | Exact reason |
@@ -59,7 +66,6 @@ no recoverable chronological real-session identity, so it is not mixed into this
 | López-Yépez (human) | 19 subjects, 26 sessions, 4,335 valid binary choices; per-subject session counts range 1–4 | `skipped: requires unsupported split structure` | Mixed structure: 15 subjects have one session, two have two, one has three, and one has four. The complete cohort is neither v1 nor v2. |
 | Shin (rat) | 383 released session matrices from 27 rats | `skipped: requires unsupported split structure` | The public release does not map each session matrix to a rat identity, so subject-level v1 adaptation/test membership cannot be reconstructed. |
 | Alsiö (rat) cohort VI PRL | Complete PRL trial records, but dose/reversal labels do not define chronological sessions | `skipped: requires unsupported split structure` | Preserving real session state would require a new grouping rule or pseudo-sessions. |
-| Hattori (mouse) | Pinned Dryad derivative located; original Zenodo archive is about 6.5 GB | `skipped: data access blocked` | The smaller pinned Dryad behavior archive returned authorization/WAF failures during the audit. The available `Hattori2019` model remains a useful Stage-B positive-control candidate if data access is restored. |
 | Samejima (macaque) | No stable public trial-level choice/reward release located | `skipped: no public trial-level data` | Aggregate paper results are insufficient for an immutable held-out trial split. |
 
 ## Stage-B author-model feasibility gate
@@ -84,7 +90,7 @@ paper's original population-level model-selection analysis.
 | Eckstein (human) | counterfactual RL plus Bayesian inference | Pinned OSF research code | Individual matched-prefix MLE replaces the paper's hierarchical population fit; both co-winners and the 291-versus-306 mismatch remain visible | Implemented | High for equations; moderate for paper-level fit parity |
 | Costa (macaque) | feedback-dependent RL | Published equations | Original optimization and phase-specific fitting details need reconstruction | 3–5 days | Moderate |
 | López-Yépez (mouse) | double-trace RL | Published MATLAB equations | Original data fit code and exact parameter bounds are not in the release | 4–7 days | Moderate |
-| Hattori (mouse) | `Hattori2019` Q family / Bayesian candidates | Existing model family in `aind-dynamic-foraging-models` | Dataset access is currently blocked; paper/model identity must be pinned before claiming parity | 1–3 days after data access | High for existing equations; low for paper-level parity until audited |
+| Hattori (mouse) | asymmetric rewarded/unrewarded Q-learning with unchosen-value forgetting | Existing `Hattori2019` family in `aind-dynamic-foraging-models` | The matched-half subject fits do not reproduce the paper's L2 penalty selected by tenfold cross-validation | Implemented; fit pending | High for equations; moderate for paper-level fitting parity |
 
 The primary set has passed this gate. Any additional author model remains gated on
 scientific value, effect size, sample/species coverage, code clarity, effort, and

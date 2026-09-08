@@ -64,6 +64,18 @@ BASELINES = {
         "agent_class": "ForagerEcksteinBI",
         "citation": "Eckstein et al., Developmental Cognitive Neuroscience (2022), BI",
     },
+    "hattori-q-learning": {
+        "dataset": "hattori",
+        "dataset_id": "hattori-et-al-2023-imaging",
+        "agent_class": "ForagerQLearning",
+        "agent_kwargs": {
+            "number_of_learning_rate": 2,
+            "number_of_forget_rate": 1,
+            "choice_kernel": "none",
+            "action_selection": "softmax",
+        },
+        "citation": "Hattori et al., Nature Neuroscience (2023), Eqs. 17-19",
+    },
 }
 
 
@@ -138,7 +150,7 @@ def main() -> None:
     trainer = BaselineRLTrainer(
         agent_class=specification["agent_class"],
         architecture={"multisubject": True},
-        agent_kwargs={},
+        agent_kwargs=specification.get("agent_kwargs", {}),
         fit_bounds_override={},
         clamp_params={},
         DE_kwargs={"polish": True},

@@ -48,7 +48,7 @@ Generated files are:
 
 The admitted dataset keys are `grossman`, `chen`, `zid`, `lebedeva`, `beron`,
 `kwak`, `miller`, `findling`, `tang`, `alsio`, `eckstein`, `costa`, and
-`lopez_mouse`. Run `make validate` after generation to verify the exact release
+`lopez_mouse`, and `hattori`. Run `make validate` after generation to verify the exact release
 counts, binary choices/rewards, v1/v2 contract, deterministic manifest
 regeneration, and non-empty adaptation/test partitions. Its committed summary
 is `analysis/dataset_suite_validation.json`.
@@ -78,6 +78,12 @@ Zid (human) uses the official Experiment 1 MATLAB file rather than the equivalen
 Python pickle, avoiding executable deserialization of downloaded data. The
 first 25 fixed-schedule practice trials are excluded, leaving the 300 main
 trials for each participant.
+
+Hattori (mouse) uses all seven mice and all 390 dated sessions from the untreated
+longitudinal imaging cohort in the Zenodo v3 release. The separate inactivation
+and paAIP2 intervention cohorts are not mixed into the within-condition transfer
+estimand. Source actions `1=right, 2=left` become canonical `1=right, 0=left`;
+alarm and miss trials are excluded because they contain no binary choice.
 
 ## Frozen split contract
 

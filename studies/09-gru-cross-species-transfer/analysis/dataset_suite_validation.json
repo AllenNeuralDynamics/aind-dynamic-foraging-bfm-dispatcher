@@ -244,6 +244,24 @@
       "audit_sha256": "4ed3a0af5939c772be76e76fcefdfa047e1c2e6804aad387547886a218997e02",
       "source_digest": "f8ec0ce1da0f98f53d170d257ba5267932a9a4e2b1001e9499d5a3c39210ad1b",
       "source_digest_algorithm": "sha256"
+    },
+    {
+      "dataset": "hattori",
+      "dataset_id": "hattori-et-al-2023-imaging",
+      "species": "mouse",
+      "schema_version": 1,
+      "split_strategy": "interleaved_sessions_odd_adapt_even_test",
+      "num_subjects": 7,
+      "num_sessions": 390,
+      "num_trials": 192272,
+      "num_adapt_trials": 97847,
+      "num_test_trials": 94425,
+      "excluded_trials": 74378,
+      "table_sha256": "5f2bac87e52768d57de2e38ee748b7d3e7d107352665b6368f2616f845974a99",
+      "manifest_sha256": "ea7a7b2ce983a669ca04145014f0fc6917f6a2dd47a34d180181d46a77e8524f",
+      "audit_sha256": "5173cab1a5dff76a41f6070393336079a79cb0b2876642266e7a6c92380087fe",
+      "source_digest": "b326372c694d9ec45ab90bfbf3e05846",
+      "source_digest_algorithm": "md5"
     }
   ]
 }
