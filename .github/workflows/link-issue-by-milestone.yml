@@ -1,0 +1,18 @@
+name: Link issue to cross-repo milestone parent
+
+on:
+  issues:
+    types: [milestoned]
+
+jobs:
+  link:
+    if: ${{ github.event.issue.milestone && github.event.issue.milestone.description }}
+    uses: AllenNeuralDynamics/.github/.github/workflows/util-link-issues-by-milestone.yml@main
+    with:
+      issue-number: ${{ github.event.issue.number }}
+      issue-id: ${{ github.event.issue.id }}
+      milestone-description: ${{ github.event.issue.milestone.description }}
+      target-owner: AllenNeuralDynamics
+      target-repo: aind-scientific-computing
+    secrets:
+      service-token: ${{ secrets.SERVICE_TOKEN }}
