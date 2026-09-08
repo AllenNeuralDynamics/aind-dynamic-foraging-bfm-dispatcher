@@ -12,6 +12,9 @@ existing split contract:
 No schema v3, pseudo-session construction, or subject removal was used to make a
 cohort fit. The machine-readable exact-count and digest audit is
 [`analysis/dataset_suite_validation.json`](analysis/dataset_suite_validation.json).
+The prespecified mature-session and treatment audit, including evidence confidence,
+before/after counts, and existing-result disposition, is
+[`analysis/reports/r5-maturity-audit.md`](analysis/reports/r5-maturity-audit.md).
 
 ## Admitted cohorts
 
