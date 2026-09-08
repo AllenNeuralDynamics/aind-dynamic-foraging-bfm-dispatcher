@@ -72,6 +72,11 @@ are run with seeds 0-2. The corresponding nominal D values are 10, 30, 100,
 and 300; small realized-D differences from curriculum eligibility are reported
 rather than corrected. The existing ratio-1.0 pilot supplies D=614.
 
+The 12 missing cells were submitted at 11:14 PT on 2026-09-08 as Beaker
+experiment
+[`01M213NMJA2PSGPWX5EN28FYZM`](https://beaker.org/ex/01M213NMJA2PSGPWX5EN28FYZM),
+W&B group `frozen-random-core-h128-dcurve@20260908-111444`.
+
 ## Scope boundary
 
 This study does not test E=8, tuned reservoir dynamics, or a

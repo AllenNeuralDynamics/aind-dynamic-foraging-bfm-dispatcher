@@ -9,3 +9,6 @@ exchange relative to the historical Study 01 split is accepted as negligible
 for this aggregate scaling screen. The exact-cohort D=614 rerun is retained as
 a sensitivity replication, not counted as three additional independent seeds.
 
+Submitted 2026-09-08 11:14 PT: Beaker experiment
+[`01M213NMJA2PSGPWX5EN28FYZM`](https://beaker.org/ex/01M213NMJA2PSGPWX5EN28FYZM),
+W&B group `frozen-random-core-h128-dcurve@20260908-111444`.
