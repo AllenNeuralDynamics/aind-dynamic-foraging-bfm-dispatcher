@@ -10,3 +10,5 @@
 - The audit found a reciprocal three-subject source/held-out split drift versus
   Study 01. Excluded the pilot from confirmation and added an exact-list rerun
   manifest and sweep.
+- Submitted corrected, exact-split seeds 0-2 and made that launch the sole
+  reservoir input to the confirmatory report.

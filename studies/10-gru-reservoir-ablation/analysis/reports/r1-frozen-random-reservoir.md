@@ -4,8 +4,7 @@ slug: frozen-random-reservoir
 status: draft
 authors: [han]
 wandb_groups:
-  - frozen-random-core-d614@20260907-175533
-  - frozen-random-core-d614@20260907-184115
+  - frozen-random-core-d614@20260908-045745
   - heldout-rerun-v2-retry@20260623-065818
 inputs:
   script: analysis/report_reservoir.py

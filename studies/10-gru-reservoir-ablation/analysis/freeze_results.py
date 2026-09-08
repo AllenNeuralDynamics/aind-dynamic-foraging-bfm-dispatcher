@@ -21,20 +21,17 @@ from _meta import build_meta  # noqa: E402
 
 RESERVOIR_PROJECT = "AIND-disRNN/gru_reservoir_ablation"
 SOURCE_PROJECT = "AIND-disRNN/mice_data_scaling"
-# Hard allowlist. Add the seeds-1/2 group after that launch; never discover by project scan.
-WANDB_GROUPS = (
-    "frozen-random-core-d614@20260907-175533",
-    "frozen-random-core-d614@20260907-184115",
-)
+# Hard allowlist for the exact-split confirmatory rerun; never discover by project scan.
+WANDB_GROUPS = ("frozen-random-core-d614@20260908-045745",)
 RESERVOIR_RUNS = {
-    0: "frozen-random-core-d614-20260907-175533-bbcdf2f9",
-    1: "frozen-random-core-d614-20260907-184115-0c259519",
-    2: "frozen-random-core-d614-20260907-184115-d2f43380",
+    0: "frozen-random-core-d614-20260908-045745-8e1ff34e",
+    1: "frozen-random-core-d614-20260908-045745-bfd572e7",
+    2: "frozen-random-core-d614-20260908-045745-2bfc1c89",
 }
 RESERVOIR_GROUP_BY_SEED = {
     0: WANDB_GROUPS[0],
-    1: WANDB_GROUPS[1],
-    2: WANDB_GROUPS[1],
+    1: WANDB_GROUPS[0],
+    2: WANDB_GROUPS[0],
 }
 SOURCE_RESULT_GROUPS = (
     "heldout-rerun-v2-retry@20260623-065818",

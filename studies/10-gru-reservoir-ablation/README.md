@@ -57,6 +57,12 @@ held-out cohort from the exact Study 01 W&B records in
 `reference/study01-v2-exact-split.json`. The rerun sweep passes both lists
 explicitly, bypassing selection-policy drift.
 
+The corrected seeds 0-2 were submitted at 04:57 PT on 2026-09-08 as Beaker
+experiment
+[`01M20E3AD2T3EMMAZ9VEYA8267`](https://beaker.org/ex/01M20E3AD2T3EMMAZ9VEYA8267),
+W&B group `frozen-random-core-d614@20260908-045745`. Only this group enters the
+confirmatory report.
+
 ## Scope boundary
 
 This first pass does not test E=8, a reservoir D curve, tuned reservoir dynamics,
