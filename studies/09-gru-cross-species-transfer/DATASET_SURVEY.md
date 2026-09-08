@@ -30,7 +30,7 @@ cohort fit. The machine-readable exact-count and digest audit is
 | Eckstein (human) | Human; stochastic reversal across development | [OSF `7wuh4`](https://osf.io/7wuh4/) (no explicit OSF data license) | 306 | 306 | 40,229 | 20,248 | v2 | co-winners: counterfactual RL and Bayesian-inference models, originally fit hierarchically | High; two co-winners, hierarchical original fit, and paper reports an analytic n=291 | Both author co-winners implemented; matched-half HPC fits completed |
 | Costa (macaque) | Macaque; stochastic stimulus reversal | [Zenodo record 20086410](https://doi.org/10.5281/zenodo.20086410), CC BY 4.0 | 11 | 245 | 329,840 | 162,960 | v1 | feedback-dependent RL with separate positive/negative learning rates | Moderate; equations are published, original fitting code not found | Admitted; GRU and common Q completed and frozen; exact trial-key parity passed |
 | López-Yépez (mouse) | Mouse; baited variable-interval dynamic matching | [Figshare v1](https://doi.org/10.6084/m9.figshare.14540283.v1), CC BY 4.0 | 8 | 218 | 147,726 | 77,662 | v1 | double-trace RL with fast and slow choice traces | Moderate; equations are published, MATLAB implementation was not released with the data | Admitted; GRU and common Q completed and frozen; exact trial-key parity passed |
-| Hattori (mouse) | Mouse; baited probabilistic reversals during longitudinal OFC imaging | [Zenodo v3](https://doi.org/10.5281/zenodo.10969434) (no explicit Zenodo data license) | 7 | 390 | 192,272 | 94,425 | v1 | asymmetric rewarded/unrewarded Q-learning with unchosen-value forgetting | Low; the exact equations match the existing `Hattori2019` family | Admitted; checksum, exact-count, deterministic-manifest, and wrapper-loader audits passed; matched fits pending |
+| Hattori (mouse) | Mouse; baited probabilistic reversals during longitudinal OFC imaging | [Zenodo v3](https://doi.org/10.5281/zenodo.10969434) (no explicit Zenodo data license) | 7 | 292 | 141,488 | 68,972 | v1 | asymmetric rewarded/unrewarded Q-learning with unchosen-value forgetting | Low; the exact equations match the existing `Hattori2019` family | Admitted as mature-only; paper-defined day-15 cutoff, checksum, exact-count, deterministic-manifest, and wrapper-loader audits passed; matched fits relaunched |
 
 The Eckstein (human) release contains 306 valid one-session participant files, while the
 paper reports 291 analytic participants. Because no machine-readable exclusion list
@@ -53,11 +53,17 @@ Alsiö (rat) cohorts II–V form a complete multi-session cohort and are admitte
 The separate cohort VI probabilistic-reversal release contains dose/reversal labels but
 no recoverable chronological real-session identity, so it is not mixed into this cohort.
 
-Hattori (mouse) uses the complete seven-mouse untreated longitudinal imaging cohort.
-The intervention and paAIP2 cohorts are separate causal experiments and are not mixed
-into this within-condition transfer estimand. Source actions `1=right, 2=left` map to
-canonical `0=left, 1=right`; alarm (`3`) and miss (`4`) trials have no binary choice and
-are excluded. All 390 calendar-dated imaging sessions remain distinct and chronological.
+Hattori (mouse) retains every mouse in the seven-mouse untreated longitudinal Imaging
+cohort, but only each mouse's 15th probabilistic-reversal session onward. This follows
+the paper's own split between early behavior (days 1–14) and late/expert-stage behavior
+(day 15 onward), rather than allowing prolonged acquisition to dominate a transfer test
+of mature policies. The rule excludes 98 early sessions (69,829 source trials) and keeps
+292 real sessions with 141,488 binary choices. The intervention and paAIP2 cohorts are
+separate causal experiments and are not mixed into this within-condition estimand.
+Source actions `1=right, 2=left` map to canonical `0=left, 1=right`; alarm (`3`) and miss
+(`4`) trials have no binary choice and are excluded. Retained calendar-dated sessions
+remain distinct and chronological, and odd/even assignment is recalculated within the
+retained mature sequence.
 
 ## Skipped cohorts
 

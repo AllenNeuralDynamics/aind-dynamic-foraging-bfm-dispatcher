@@ -47,7 +47,7 @@ Generated files are:
 - `$CACHE_ROOT/canonical/<dataset>.audit.json`: provenance, checksums, and counts.
 
 The admitted dataset keys are `grossman`, `chen`, `zid`, `lebedeva`, `beron`,
-`kwak`, `miller`, `findling`, `tang`, `alsio`, `eckstein`, `costa`, and
+`kwak`, `miller`, `findling`, `tang`, `alsio`, `eckstein`, `costa`,
 `lopez_mouse`, and `hattori`. Run `make validate` after generation to verify the exact release
 counts, binary choices/rewards, v1/v2 contract, deterministic manifest
 regeneration, and non-empty adaptation/test partitions. Its committed summary
@@ -79,11 +79,14 @@ Python pickle, avoiding executable deserialization of downloaded data. The
 first 25 fixed-schedule practice trials are excluded, leaving the 300 main
 trials for each participant.
 
-Hattori (mouse) uses all seven mice and all 390 dated sessions from the untreated
-longitudinal imaging cohort in the Zenodo v3 release. The separate inactivation
-and paAIP2 intervention cohorts are not mixed into the within-condition transfer
-estimand. Source actions `1=right, 2=left` become canonical `1=right, 0=left`;
-alarm and miss trials are excluded because they contain no binary choice.
+Hattori (mouse) uses every mouse in the untreated longitudinal Imaging cohort but
+only each mouse's 15th probabilistic-reversal session onward. The paper calls days
+1–14 early and day 15 onward late/expert-stage behavior. This mature-only rule
+retains 292 dated sessions and 141,488 binary-choice trials from seven mice; the
+separate inactivation and paAIP2 cohorts are not mixed into the within-condition
+transfer estimand. Source actions `1=right, 2=left` become canonical
+`1=right, 0=left`; alarm and miss trials are excluded because they contain no
+binary choice.
 
 ## Frozen split contract
 

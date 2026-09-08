@@ -530,10 +530,9 @@ class TestExternalBanditDatasets(unittest.TestCase):
             path = Path(directory) / "hattori.zip"
             with zipfile.ZipFile(path, "w", allowZip64=True) as archive:
                 for subject in ("RH001", "RH002"):
-                    for session_date, plane in (
-                        ("190101", "deeper"),
-                        ("190102", "shallower"),
-                    ):
+                    for day in range(1, 17):
+                        session_date = f"1901{day:02d}"
+                        plane = "deeper" if day % 2 else "shallower"
                         payload = io.BytesIO()
                         np.savez(
                             payload,
@@ -578,10 +577,13 @@ class TestExternalBanditDatasets(unittest.TestCase):
             self.assertEqual(table["animal_response"].tolist()[:2], [0, 1])
             self.assertEqual(table["source_action"].tolist()[:2], [2, 1])
             self.assertEqual(set(table["imaging_plane"]), {"deeper", "shallower"})
+            self.assertEqual(set(table["source_session_position"]), {15, 16})
             self.assertEqual(
-                manifest["subjects"][0]["adapt_session_ids"], ["190101"]
+                manifest["subjects"][0]["adapt_session_ids"], ["190115"]
             )
             self.assertEqual(audit["num_trials"], 8)
+            self.assertEqual(audit["excluded_pre_mature_sessions"], 28)
+            self.assertEqual(audit["excluded_pre_mature_trials"], 112)
 
     def test_kwak_adapter_preserves_treatment_and_reward_probabilities(self) -> None:
         from scipy.io import savemat

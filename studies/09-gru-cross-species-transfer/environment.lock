@@ -29,7 +29,8 @@ kwak_choicefix_beaker_dataset=01M1VGY7MV148S9GWM2HW38FRQ
 kwak_choicefix_beaker_experiment=01M1VH47Q8M8N75FKM2F5NX7AT
 kwak_choicefix_slurm_array_job=25581496
 
-# Hattori (mouse) untreated longitudinal imaging cohort.
+# Hattori (mouse) untreated longitudinal imaging cohort, session 15 onward.
 hattori_source_zenodo_record=10969434
 hattori_source_md5=b326372c694d9ec45ab90bfbf3e05846
-hattori_canonical_beaker_dataset=01M1ZCEYAXNTEN5G643MQZG6TD
+hattori_mature_session_start=15
+hattori_canonical_beaker_dataset=01M1ZED14MFW8BC8728QZ3Z30F

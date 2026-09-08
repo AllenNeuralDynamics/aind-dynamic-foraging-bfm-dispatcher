@@ -244,7 +244,7 @@ SOURCES: dict[str, Source] = {
         collection_provider="figshare",
     ),
     "hattori": Source(
-        dataset_id="hattori-et-al-2023-imaging",
+        dataset_id="hattori-et-al-2023-imaging-mature",
         species="mouse",
         title="Meta-reinforcement learning via orbitofrontal cortex",
         repository="Zenodo",
