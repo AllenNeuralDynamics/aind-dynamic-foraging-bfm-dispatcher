@@ -12,3 +12,10 @@
   manifest and sweep.
 - Submitted corrected, exact-split seeds 0-2 and made that launch the sole
   reservoir input to the confirmatory report.
+
+## 2026-09-08
+
+- Accepted the known three-subject split drift for aggregate screening while
+  retaining the exact-list D=614 rerun as a sensitivity replication.
+- Added the four missing H=128/E=4 reservoir data-scaling ratios with three
+  seeds per ratio; the existing pilot supplies the D=614 curve cell.

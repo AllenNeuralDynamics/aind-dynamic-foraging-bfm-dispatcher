@@ -1,0 +1,40 @@
+entity: AIND-disRNN
+project: gru_reservoir_ablation
+name: frozen-random-core-h128-dcurve
+method: grid
+metric:
+  name: heldout/final/eval_likelihood
+  goal: maximize
+command:
+- python
+- -m
+- run_hpc
+- data=mice_snapshot_scaling
+- model=gru_scaling
+- wandb.project=gru_reservoir_ablation
+- model.architecture.hidden_size=128
+- model.architecture.subject_embedding_size=4
+- model.architecture.session_encoding_type=scalar
+- model.architecture.session_n_pretrain_steps=30000
+- model.architecture.session_n_warmup_steps=20000
+- model.training.n_steps=150000
+- model.training.lr=1e-5
+- model.training.freeze_gru_core=true
+- model.training.checkpoint_run_heldout_eval=false
+- model.training.length_bucketing=true
+- model.training.early_stopping.enabled=true
+- model.training.early_stopping.start_after_step=70000
+- ${args_no_hyphens}
+parameters:
+  data.subject_ratio:
+    values:
+    - 0.016
+    - 0.049
+    - 0.163
+    - 0.489
+  seed:
+    values:
+    - 0
+    - 1
+    - 2
+
