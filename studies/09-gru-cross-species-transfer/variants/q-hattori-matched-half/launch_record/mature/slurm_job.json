@@ -1,0 +1,29 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25585753",
+  "wandb_group": "q-hattori-matched-half@slurm-25585753",
+  "wandb_run_id": "u72bf23w",
+  "dispatcher_commit": "703e750eb44e9103214aca1ced8c82557925849f",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "script": "studies/09-gru-cross-species-transfer/variants/q-hattori-matched-half/q_hattori_matched_half.slurm",
+  "dataset": "hattori",
+  "dataset_id": "hattori-et-al-2023-imaging-mature",
+  "canonical_data_root": "/allen/aind/scratch/han.hou/datasets/study09-hattori-mature-canonical-20260907",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-q-hattori-25585753",
+  "submitted_at": "2026-09-07T19:55:34-07:00",
+  "started_at": "2026-09-07T19:55:35-07:00",
+  "completed_at": "2026-09-07T20:37:59-07:00",
+  "elapsed_seconds": 2518.9716725349426,
+  "status": "success",
+  "outputs": {
+    "normalized_likelihood": 0.5572994673682756,
+    "accuracy": 0.6966595140056835,
+    "brier_score": 0.19962997408512265,
+    "n_trials": 68972,
+    "ordered_trial_key_sha256": "0709d4447c7edab3b5398e5b0247e81b032544aa8e278fd2f316443f17fab41c",
+    "test_metrics_sha256": "027096f1c4303cb065df37ce44fc6e7f1b771c9bbd0490993750122ba29111b6",
+    "test_trial_predictions_sha256": "9f964fac90190082f44522238c5c303a312d01eee14b43b55caf36844bd62119"
+  }
+}

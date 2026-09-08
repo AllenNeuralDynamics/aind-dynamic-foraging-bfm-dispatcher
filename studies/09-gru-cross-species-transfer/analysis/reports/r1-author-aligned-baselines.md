@@ -35,6 +35,10 @@ wandb_groups:
   - gru-e8-d614-diagnostic@20260907-093646
   - gru-e8-d614-expansion@20260907-132415
   - gru-e8-d614-expansion@20260907-132625
+  - gru-hattori-matched-half@20260907-200329
+  - gru-hattori-matched-half@20260907-200328
+  - q-hattori-matched-half@slurm-25585753
+  - hattori-q-learning@slurm-25585754
 inputs:
   script: analysis/report_author_baselines.py
   data:
@@ -87,14 +91,17 @@ inputs:
     - analysis/fig_example_sessions_lopez_mouse_lower.png
     - analysis/fig_example_sessions_lopez_mouse_median.png
     - analysis/fig_example_sessions_lopez_mouse_upper.png
+    - analysis/fig_example_sessions_hattori_lower.png
+    - analysis/fig_example_sessions_hattori_median.png
+    - analysis/fig_example_sessions_hattori_upper.png
 reproduce: make -C studies/09-gru-cross-species-transfer r1
 ---
 
 # Result 1 — Stage-A external transfer decision report
 
 This consolidated result compares frozen-core GRU transfer across every source D
-with the matched common-Q control for all admitted cohorts. It includes the
-author-selected models for all eight primary cohorts, plus the Findling (human)
+with the matched Bari2019 common-Q control for all admitted cohorts. It includes the
+author-selected models for all nine primary cohorts, plus the Findling (human)
 particle-count sensitivity and the paper comparators retained from round one.
 
 <!-- BEGIN result-1 -->
@@ -102,9 +109,9 @@ particle-count sensitivity and the paper comparators retained from round one.
 
 ## Stage-A decision result
 
-![GRU, common Q, and available author baselines](../fig_author_baseline_likelihood.png)
+![GRU, Bari2019 common Q, and available author baselines](../fig_author_baseline_likelihood.png)
 
-Every model uses the same immutable adaptation and held-out observations. Panels are grouped as primary, stress test, and descriptive, then ordered within each tier by descending E4 D=614 GRU advantage over the strongest available author-selected model. Stress-test and descriptive cohorts without a reproduced author model use common Q as the ordering reference. Panel-title color encodes species using the same palette as the task-design figures. Light-blue GRU points and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now appear for every displayed cohort. The five-cohort diagnostic E8 values have a paired current-code E4 comparator in Result 4; the seven expansion values are shown against historical E4 here and should not be interpreted as an isolated embedding-dimension effect. GRU points are the three source-training seeds; summaries are their mean ± SD. Common Q is fitted independently per target subject on the identical adaptation half. Author-model lines include the existing Grossman (mouse), Chen (mouse), and Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), and both Eckstein (human) co-winners.
+Every model uses the same immutable adaptation and held-out observations. Panels are grouped as primary, stress test, and descriptive, then ordered within each tier by descending E4 D=614 GRU advantage over the strongest available author-selected model. Stress-test and descriptive cohorts without a reproduced author model use Bari2019 common Q as the ordering reference. Panel-title color encodes species using the same palette as the task-design figures. Light-blue GRU points and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now appear for every displayed cohort. The five-cohort diagnostic E8 values have a paired current-code E4 comparator in Result 4. Of the eight expansion values, seven use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. GRU points are the three source-training seeds; summaries are their mean ± SD. The common Q baseline is the Bari2019 preset and is fitted independently per target subject on the identical adaptation half. Author-model lines include the existing Grossman (mouse), Chen (mouse), and Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) co-winners, and Hattori2019 for Hattori (mouse).
 
 Kwak (mouse) is omitted from every figure, table, direction count, and inference in this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, which confounds subject adaptation with treatment transfer. Readmission requires a new DMSO/control-only run using chronological odd DMSO sessions for adaptation and chronological even DMSO sessions for testing.
 
@@ -112,13 +119,13 @@ Kwak (mouse) is omitted from every figure, table, direction count, and inference
 
 Every displayed subject likelihood is relative to the author model named in that panel. Eckstein (human) has separate panels for its two co-winners. The red zero line is the author reference; positive values favor the displayed model. The panel title reports the correlation between author-model likelihood and D=614 GRU improvement for E4 and E8. Light blue denotes E4 and dark blue denotes E8. This preserves the author-relative comparison from the completed first-round report.
 
-![Paired subject-level GRU minus common-Q likelihood](../fig_subject_gru_minus_q_likelihood.png)
+![Paired subject-level GRU minus Bari2019 likelihood](../fig_subject_gru_minus_q_likelihood.png)
 
-Each dot is a subject's normalized likelihood under the three-seed mean GRU minus that subject's common-Q likelihood. Thin lines connect the same subject across the five E4 D values and E8 D=614; the short bar is the median and the hollow diamond is the arithmetic mean. Panel p-values are unadjusted two-sided paired Wilcoxon signed-rank tests against zero.
+Each dot is a subject's normalized likelihood under the three-seed mean GRU minus that subject's Bari2019 common-Q likelihood. Thin lines connect the same subject across the five E4 D values and E8 D=614; the short bar is the median and the hollow diamond is the arithmetic mean. Panel p-values are unadjusted two-sided paired Wilcoxon signed-rank tests against zero.
 
 ### Cohort summary and trial-pooled likelihood
 
-| cohort | species | split | subjects | sessions | held-out trials | common Q | GRU D=10 | D=30 | D=100 | D=300 | D=614 |
+| cohort | species | split | subjects | sessions | held-out trials | Bari2019 common Q | GRU D=10 | D=30 | D=100 | D=300 | D=614 |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Grossman (mouse) — blockwise dynamic foraging | mouse | v1 | 48 | 754 | 101,877 | 0.73177 | 0.73775 ± 0.00210 | 0.74134 ± 0.00020 | 0.74410 ± 0.00042 | 0.74506 ± 0.00019 | 0.74535 ± 0.00017 |
 | Chen (mouse) — restless random walk | mouse | v1 | 32 | 256 | 35,644 | 0.58747 | 0.58332 ± 0.00178 | 0.58593 ± 0.00369 | 0.59139 ± 0.00448 | 0.59310 ± 0.00181 | 0.59275 ± 0.00140 |
@@ -132,8 +139,9 @@ Each dot is a subject's normalized likelihood under the three-seed mean GRU minu
 | Eckstein (human) — developmental stochastic reversal | human | v2 | 306 | 306 | 20,248 | 0.63162 | 0.62018 ± 0.00401 | 0.62006 ± 0.00285 | 0.62991 ± 0.01490 | 0.62654 ± 0.01246 | 0.62596 ± 0.00871 |
 | Costa (macaque) — stochastic stimulus reversal | macaque | v1 | 11 | 245 | 162,960 | 0.59186 | 0.57464 ± 0.00389 | 0.57989 ± 0.00815 | 0.58469 ± 0.00372 | 0.58879 ± 0.00721 | 0.58820 ± 0.00291 |
 | López-Yépez (mouse) — baited variable-interval matching | mouse | v1 | 8 | 218 | 77,662 | 0.53130 | 0.53790 ± 0.01493 | 0.56534 ± 0.02304 | 0.57473 ± 0.01429 | 0.58096 ± 0.01166 | 0.57554 ± 0.01322 |
+| Hattori (mouse) — baited probabilistic reversal | mouse | v1 | 7 | 292 | 68,972 | 0.55730 | 0.56026 ± 0.00076 | 0.56062 ± 0.00160 | 0.56371 ± 0.00133 | 0.56566 ± 0.00024 | 0.56607 ± 0.00067 |
 
-### Paired GRU minus common-Q result
+### Paired GRU minus Bari2019 result
 
 | cohort | space | D | median Δ likelihood | mean Δ likelihood | subjects GRU better | Wilcoxon p |
 |---|---|---:|---:|---:|---:|---:|
@@ -209,6 +217,12 @@ Each dot is a subject's normalized likelihood under the three-seed mean GRU minu
 | López-Yépez (mouse) | E4 | 300 | +0.05351 | +0.05145 | 100% (8/8) | 0.00781 |
 | López-Yépez (mouse) | E4 | 614 | +0.04537 | +0.04689 | 100% (8/8) | 0.00781 |
 | López-Yépez (mouse) | E8 | 614 | +0.05929 | +0.06151 | 100% (8/8) | 0.00781 |
+| Hattori (mouse) | E4 | 10 | +0.00467 | +0.00320 | 71% (5/7) | 0.0781 |
+| Hattori (mouse) | E4 | 30 | +0.00425 | +0.00383 | 86% (6/7) | 0.0312 |
+| Hattori (mouse) | E4 | 100 | +0.00809 | +0.00737 | 100% (7/7) | 0.0156 |
+| Hattori (mouse) | E4 | 300 | +0.01017 | +0.00931 | 100% (7/7) | 0.0156 |
+| Hattori (mouse) | E4 | 614 | +0.01064 | +0.00972 | 100% (7/7) | 0.0156 |
+| Hattori (mouse) | E8 | 614 | +0.01057 | +0.00940 | 100% (7/7) | 0.0156 |
 
 ### Scaling benefit from D=10 to D=614
 
@@ -228,12 +242,13 @@ The subject-level value is D=614 GRU normalized likelihood minus D=10 GRU normal
 | Eckstein (human) | +0.00577 | +0.00791 | +0.00771 | 62% | 1.78e-07 |
 | Costa (macaque) | +0.01356 | +0.01375 | +0.01345 | 100% | 0.000977 |
 | López-Yépez (mouse) | +0.03765 | +0.02407 | +0.03725 | 100% | 0.00781 |
+| Hattori (mouse) | +0.00582 | +0.00583 | +0.00652 | 100% | 0.0156 |
 
 ### Stage-A scientific read
 
-At D=614, the exploratory unadjusted subject-paired Wilcoxon result favors GRU for **Grossman (mouse)** (mean Δ=+0.01386, p=2.34e-13), **Chen (mouse)** (mean Δ=+0.00532, p=0.00144), **Lebedeva (mouse)** (mean Δ=+0.00939, p=0.00195), **López-Yépez (mouse)** (mean Δ=+0.04689, p=0.00781).
+At D=614, the exploratory unadjusted subject-paired Wilcoxon result favors GRU for **Grossman (mouse)** (mean Δ=+0.01386, p=2.34e-13), **Chen (mouse)** (mean Δ=+0.00532, p=0.00144), **Lebedeva (mouse)** (mean Δ=+0.00939, p=0.00195), **López-Yépez (mouse)** (mean Δ=+0.04689, p=0.00781), **Hattori (mouse)** (mean Δ=+0.00972, p=0.0156).
 
-It favors common Q for **Zid (human)** (mean Δ=-0.00171, p=0.00543), **Miller (rat)** (mean Δ=-0.00933, p=0.000395), **Findling (human)** (mean Δ=-0.03718, p=9.54e-07), **Eckstein (human)** (mean Δ=-0.01815, p=9.74e-14).
+It favors Bari2019 common Q for **Zid (human)** (mean Δ=-0.00171, p=0.00543), **Miller (rat)** (mean Δ=-0.00933, p=0.000395), **Findling (human)** (mean Δ=-0.03718, p=9.54e-07), **Eckstein (human)** (mean Δ=-0.01815, p=9.74e-14).
 
 The remaining cohorts are unresolved at the 0.05 level: **Beron (mouse)** (mean Δ=-0.00127, p=0.438), **Tang (macaque)** (mean Δ=-0.00050, p=1), **Alsiö (rat)** (mean Δ=+0.00065, p=0.764), **Costa (macaque)** (mean Δ=-0.00362, p=0.147). Tang (macaque) has only two subjects, so its inferential result is especially limited.
 
@@ -245,7 +260,7 @@ This screen therefore supports broad transfer, but not universal superiority ove
 
 ### Author-aligned baselines
 
-| cohort | published model | role | common Q | published model refit | E4 GRU D=614 | E8 GRU D=614 |
+| cohort | published model | role | Bari2019 common Q | published model refit | E4 GRU D=614 | E8 GRU D=614 |
 |---|---|:---:|---:|---:|---:|---:|
 | Grossman (mouse) | meta-learning RL | author-selected | 0.73177 | 0.72976 | 0.74535 ± 0.00017 | 0.74521 ± 0.00024 |
 | Chen (mouse) | 4-parameter RLCK | author-selected | 0.58747 | 0.59138 | 0.59275 ± 0.00140 | 0.59514 ± 0.00162 |
@@ -258,18 +273,19 @@ This screen therefore supports broad transfer, but not universal superiority ove
 | Findling (human) | Weber BI (64-particle fit) | particle sensitivity | 0.69077 | 0.68766 | 0.65473 ± 0.00424 | 0.66505 ± 0.00210 |
 | Eckstein (human) | counterfactual RL | author-selected | 0.63162 | 0.65876 | 0.62596 ± 0.00871 | 0.63093 ± 0.00288 |
 | Eckstein (human) | Bayesian inference | author-selected | 0.63162 | 0.66005 | 0.62596 ± 0.00871 | 0.63093 ± 0.00288 |
+| Hattori (mouse) | Hattori2019 | author-selected | 0.55730 | 0.55570 | 0.56607 ± 0.00067 | 0.56577 ± 0.00002 |
 
 ### Primary author-model scientific read
 
 Trial-pooled held-out ranking under the matched-half protocol:
 
-- **Lebedeva (mouse):** GRU D=614 (0.76634) > PR (0.76155) > common Q (0.75629)
-- **Beron (mouse):** common Q (0.82422) > GRU D=614 (0.82296) > RFLR (0.82236)
-- **Miller (rat):** RHG (0.61572) > common Q (0.60945) > GRU D=614 (0.60007)
-- **Findling (human):** common Q (0.69077) > Weber-imprecision BI (0.67384) > GRU D=614 (0.65473)
-- **Eckstein (human):** Bayesian inference (0.66005) > counterfactual RL (0.65876) > common Q (0.63162) > GRU D=614 (0.62596)
+- **Lebedeva (mouse):** GRU D=614 (0.76634) > PR (0.76155) > Bari2019 (common Q) (0.75629)
+- **Beron (mouse):** Bari2019 (common Q) (0.82422) > GRU D=614 (0.82296) > RFLR (0.82236)
+- **Miller (rat):** RHG (0.61572) > Bari2019 (common Q) (0.60945) > GRU D=614 (0.60007)
+- **Findling (human):** Bari2019 (common Q) (0.69077) > Weber-imprecision BI (0.67384) > GRU D=614 (0.65473)
+- **Eckstein (human):** Bayesian inference (0.66005) > counterfactual RL (0.65876) > Bari2019 (common Q) (0.63162) > GRU D=614 (0.62596)
 
-For Findling (human), increasing only the fit particle count from 2 to 64 raises held-out likelihood from 0.67384 to 0.68766 (Δ=+0.01382), nearly reaching common Q (0.69077). The released two-particle fitting objective therefore contributes material Monte Carlo instability. The two-particle result remains the primary author-code-parity reference; the 64-particle result is a sensitivity, not a replacement author-selected model.
+For Findling (human), increasing only the fit particle count from 2 to 64 raises held-out likelihood from 0.67384 to 0.68766 (Δ=+0.01382), nearly reaching Bari2019 common Q (0.69077). The released two-particle fitting objective therefore contributes material Monte Carlo instability. The two-particle result remains the primary author-code-parity reference; the 64-particle result is a sensitivity, not a replacement author-selected model.
 
 These rankings concern held-out prediction after equal adaptation data. They do not recreate the papers' original full-data, hierarchical, or information-criterion model-selection analyses.
 
@@ -279,21 +295,21 @@ The reference is zero. Positive values favor the displayed comparison over the a
 
 | cohort | author reference | comparison | median Δ likelihood | mean Δ likelihood | Wilcoxon p |
 |---|---|---|---:|---:|---:|
-| Grossman (mouse) | meta-learning RL | Common Q | +0.00265 | +0.00190 | 0.000147 |
+| Grossman (mouse) | meta-learning RL | Bari2019 | +0.00265 | +0.00190 | 0.000147 |
 | Grossman (mouse) | meta-learning RL | GRU D=10 | +0.00888 | +0.00828 | 1.05e-10 |
 | Grossman (mouse) | meta-learning RL | GRU D=30 | +0.01265 | +0.01159 | 1.47e-12 |
 | Grossman (mouse) | meta-learning RL | GRU D=100 | +0.01340 | +0.01442 | 7.11e-14 |
 | Grossman (mouse) | meta-learning RL | GRU D=300 | +0.01510 | +0.01548 | 2.13e-14 |
 | Grossman (mouse) | meta-learning RL | GRU D=614 | +0.01541 | +0.01576 | 2.13e-14 |
 | Grossman (mouse) | meta-learning RL | E8 GRU D=614 | +0.01449 | +0.01530 | 2.13e-14 |
-| Chen (mouse) | 4-parameter RLCK | Common Q | -0.00504 | -0.00397 | 0.0228 |
+| Chen (mouse) | 4-parameter RLCK | Bari2019 | -0.00504 | -0.00397 | 0.0228 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=10 | -0.00650 | -0.00766 | 3.95e-05 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=30 | -0.00562 | -0.00521 | 0.0111 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=100 | -0.00115 | -0.00010 | 0.846 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=300 | +0.00038 | +0.00165 | 0.379 |
 | Chen (mouse) | 4-parameter RLCK | GRU D=614 | +0.00045 | +0.00135 | 0.454 |
 | Chen (mouse) | 4-parameter RLCK | E8 GRU D=614 | +0.00178 | +0.00343 | 0.106 |
-| Zid (human) | HK2 foraging RL | Common Q | +0.00184 | +0.01034 | 0.0741 |
+| Zid (human) | HK2 foraging RL | Bari2019 | +0.00184 | +0.01034 | 0.0741 |
 | Zid (human) | HK2 foraging RL | traditional RLCK | +0.00098 | +0.00352 | 0.753 |
 | Zid (human) | HK2 foraging RL | GRU D=10 | -0.00559 | +0.00379 | 0.0618 |
 | Zid (human) | HK2 foraging RL | GRU D=30 | -0.00628 | +0.00332 | 0.0862 |
@@ -301,28 +317,28 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Zid (human) | HK2 foraging RL | GRU D=300 | -0.00204 | +0.01233 | 0.982 |
 | Zid (human) | HK2 foraging RL | GRU D=614 | -0.00394 | +0.00863 | 0.532 |
 | Zid (human) | HK2 foraging RL | E8 GRU D=614 | -0.00305 | +0.00550 | 0.359 |
-| Lebedeva (mouse) | PR | Common Q | -0.00457 | -0.00480 | 0.0195 |
+| Lebedeva (mouse) | PR | Bari2019 | -0.00457 | -0.00480 | 0.0195 |
 | Lebedeva (mouse) | PR | GRU D=10 | -0.00246 | -0.00275 | 0.0273 |
 | Lebedeva (mouse) | PR | GRU D=30 | +0.00109 | +0.00107 | 0.232 |
 | Lebedeva (mouse) | PR | GRU D=100 | +0.00381 | +0.00384 | 0.00195 |
 | Lebedeva (mouse) | PR | GRU D=300 | +0.00443 | +0.00412 | 0.00195 |
 | Lebedeva (mouse) | PR | GRU D=614 | +0.00464 | +0.00460 | 0.00195 |
 | Lebedeva (mouse) | PR | E8 GRU D=614 | +0.00504 | +0.00494 | 0.00195 |
-| Beron (mouse) | RFLR | Common Q | +0.00181 | +0.00190 | 0.0312 |
+| Beron (mouse) | RFLR | Bari2019 | +0.00181 | +0.00190 | 0.0312 |
 | Beron (mouse) | RFLR | GRU D=10 | -0.00415 | -0.00460 | 0.0312 |
 | Beron (mouse) | RFLR | GRU D=30 | -0.00278 | -0.00274 | 0.0938 |
 | Beron (mouse) | RFLR | GRU D=100 | +0.00019 | +0.00028 | 0.844 |
 | Beron (mouse) | RFLR | GRU D=300 | +0.00103 | +0.00146 | 0.312 |
 | Beron (mouse) | RFLR | GRU D=614 | +0.00016 | +0.00063 | 0.844 |
 | Beron (mouse) | RFLR | E8 GRU D=614 | +0.00311 | +0.00342 | 0.0625 |
-| Miller (rat) | RHG | Common Q | -0.00471 | -0.00701 | 4.77e-05 |
+| Miller (rat) | RHG | Bari2019 | -0.00471 | -0.00701 | 4.77e-05 |
 | Miller (rat) | RHG | GRU D=10 | -0.01919 | -0.02076 | 1.91e-06 |
 | Miller (rat) | RHG | GRU D=30 | -0.01893 | -0.02034 | 1.91e-06 |
 | Miller (rat) | RHG | GRU D=100 | -0.01542 | -0.01592 | 1.91e-06 |
 | Miller (rat) | RHG | GRU D=300 | -0.01456 | -0.01532 | 3.81e-06 |
 | Miller (rat) | RHG | GRU D=614 | -0.01526 | -0.01634 | 1.91e-06 |
 | Miller (rat) | RHG | E8 GRU D=614 | -0.01151 | -0.01217 | 5.72e-06 |
-| Findling (human) | Weber-imprecision BI | Common Q | +0.01826 | +0.01694 | 3.34e-05 |
+| Findling (human) | Weber-imprecision BI | Bari2019 | +0.01826 | +0.01694 | 3.34e-05 |
 | Findling (human) | Weber-imprecision BI | Weber BI (64-particle fit) | +0.01478 | +0.01389 | 0.000593 |
 | Findling (human) | Weber-imprecision BI | GRU D=10 | -0.02157 | -0.03536 | 1.57e-05 |
 | Findling (human) | Weber-imprecision BI | GRU D=30 | -0.02025 | -0.03165 | 6.53e-05 |
@@ -330,7 +346,7 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Findling (human) | Weber-imprecision BI | GRU D=300 | -0.01011 | -0.01907 | 0.0115 |
 | Findling (human) | Weber-imprecision BI | GRU D=614 | -0.01055 | -0.02024 | 0.0103 |
 | Findling (human) | Weber-imprecision BI | E8 GRU D=614 | -0.00252 | -0.00953 | 0.248 |
-| Eckstein (human) | counterfactual RL | Common Q | -0.01312 | -0.02184 | 5.94e-06 |
+| Eckstein (human) | counterfactual RL | Bari2019 | -0.01312 | -0.02184 | 5.94e-06 |
 | Eckstein (human) | counterfactual RL | Bayesian inference | +0.00030 | +0.00297 | 0.0227 |
 | Eckstein (human) | counterfactual RL | GRU D=10 | -0.04757 | -0.04770 | 5.31e-18 |
 | Eckstein (human) | counterfactual RL | GRU D=30 | -0.04879 | -0.04723 | 1.1e-17 |
@@ -338,7 +354,7 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Eckstein (human) | counterfactual RL | GRU D=300 | -0.04238 | -0.03932 | 8.62e-15 |
 | Eckstein (human) | counterfactual RL | GRU D=614 | -0.04296 | -0.03999 | 4.3e-15 |
 | Eckstein (human) | counterfactual RL | E8 GRU D=614 | -0.03993 | -0.03578 | 4.77e-14 |
-| Eckstein (human) | Bayesian inference | Common Q | -0.01624 | -0.02481 | 7.2e-10 |
+| Eckstein (human) | Bayesian inference | Bari2019 | -0.01624 | -0.02481 | 7.2e-10 |
 | Eckstein (human) | Bayesian inference | counterfactual RL | -0.00030 | -0.00297 | 0.0227 |
 | Eckstein (human) | Bayesian inference | GRU D=10 | -0.05611 | -0.05067 | 8.08e-21 |
 | Eckstein (human) | Bayesian inference | GRU D=30 | -0.05690 | -0.05020 | 1.88e-20 |
@@ -346,6 +362,13 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | Eckstein (human) | Bayesian inference | GRU D=300 | -0.04511 | -0.04229 | 3.92e-17 |
 | Eckstein (human) | Bayesian inference | GRU D=614 | -0.04429 | -0.04296 | 1.23e-17 |
 | Eckstein (human) | Bayesian inference | E8 GRU D=614 | -0.04637 | -0.03875 | 2.99e-17 |
+| Hattori (mouse) | Hattori2019 | Bari2019 | +0.00143 | +0.00159 | 0.0156 |
+| Hattori (mouse) | Hattori2019 | GRU D=10 | +0.00473 | +0.00479 | 0.0156 |
+| Hattori (mouse) | Hattori2019 | GRU D=30 | +0.00497 | +0.00542 | 0.0156 |
+| Hattori (mouse) | Hattori2019 | GRU D=100 | +0.00952 | +0.00896 | 0.0156 |
+| Hattori (mouse) | Hattori2019 | GRU D=300 | +0.01160 | +0.01090 | 0.0156 |
+| Hattori (mouse) | Hattori2019 | GRU D=614 | +0.01207 | +0.01130 | 0.0156 |
+| Hattori (mouse) | Hattori2019 | E8 GRU D=614 | +0.01199 | +0.01098 | 0.0156 |
 
 The correlations below relate each subject's author-model normalized likelihood to that subject's D=614 GRU-minus-author improvement. Negative values mean GRU benefit is concentrated among subjects fit poorly by the author model.
 
@@ -360,14 +383,17 @@ The correlations below relate each subject's author-model normalized likelihood 
 | Findling (human) | Weber-imprecision BI | 22 | -0.49 | -0.37 |
 | Eckstein (human) | counterfactual RL | 306 | -0.70 | -0.73 |
 | Eckstein (human) | Bayesian inference | 306 | -0.71 | -0.74 |
+| Hattori (mouse) | Hattori2019 | 7 | -0.17 | -0.01 |
 
-### Why common Q can beat an author-selected model
+### Why Bari2019 common Q can beat an author-selected model
 
-This report tests held-out generalization after fitting the same adaptation half; it does not reproduce each paper's original model-selection objective. Grossman (mouse) did compare against Q-learning, but our common Q includes forgetting, a one-step choice kernel, and side bias, while the Grossman (mouse) refit omits the paper's hierarchical Stan fit and parameter-ordering constraint. Zid (human) selected its model using all 300 trials and AIC on a smaller analysis cohort, whereas this benchmark fits trials 0–149 and scores 150–299 for all 258 released participants. A ranking reversal here therefore means that common Q generalizes better under this matched protocol; it is not evidence that the papers failed to test Q or selected the wrong model for their own analysis.
+This report tests held-out generalization after fitting the same adaptation half; it does not reproduce each paper's original model-selection objective. Grossman (mouse) did compare against Q-learning, but our Bari2019 common Q includes forgetting, a one-step choice kernel, and side bias, while the Grossman (mouse) refit omits the paper's hierarchical Stan fit and parameter-ordering constraint. Zid (human) selected its model using all 300 trials and AIC on a smaller analysis cohort, whereas this benchmark fits trials 0–149 and scores 150–299 for all 258 released participants. A ranking reversal here therefore means that Bari2019 common Q generalizes better under this matched protocol; it is not evidence that the papers failed to test Q or selected the wrong model for their own analysis.
+
+For Hattori (mouse), the comparison is specifically Bari2019 (`L1F1CK1`) versus Hattori2019 (`L2F1CK0`). Both are `ForagerQLearning` models with five fitted parameters. Bari2019 spends its extra flexibility on a one-trial choice kernel; Hattori2019 instead separates rewarded and unrewarded learning rates. Their small held-out difference therefore tests those two mechanisms under the same mature-session split, not model-size advantage.
 
 ### Representative held-out sessions
 
-Sessions are selected deterministically at neighboring ranks around the lower (10th percentile), median, and upper (90th percentile) session-level D=614 GRU-minus-Q likelihood distribution. For v2, the complete real session is shown with the adaptation/test boundary; for v1, only a real held-out session is shown. No pseudo-sessions are constructed.
+Sessions are selected deterministically at neighboring ranks around the lower (10th percentile), median, and upper (90th percentile) session-level D=614 GRU-minus-Bari2019 likelihood distribution. For v2, the complete real session is shown with the adaptation/test boundary; for v1, only a real held-out session is shown. No pseudo-sessions are constructed.
 
 #### Grossman (mouse)
 
@@ -539,6 +565,20 @@ Tang (macaque) has only four held-out real sessions in the complete release. All
 
 ![Upper tail López-Yépez (mouse) held-out sessions](../fig_example_sessions_lopez_mouse_upper.png)
 
+#### Hattori (mouse)
+
+##### Lower tail
+
+![Lower tail Hattori (mouse) held-out sessions](../fig_example_sessions_hattori_lower.png)
+
+##### Median
+
+![Median Hattori (mouse) held-out sessions](../fig_example_sessions_hattori_median.png)
+
+##### Upper tail
+
+![Upper tail Hattori (mouse) held-out sessions](../fig_example_sessions_hattori_upper.png)
+
 Black and gray marks denote rewarded and unrewarded choices; the black trace is the nine-trial smoothed right-choice fraction. The reward-probability strip is shown only when that schedule is available in the public release. Plots use the pinned [`plot_foraging_session`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis/blob/590e5f085711a8ba99ca0d86e94471f347318daa/src/aind_dynamic_foraging_basic_analysis/plot/plot_foraging_session.py) implementation.
 
 ### Skipped datasets
@@ -548,7 +588,6 @@ Black and gray marks denote rewarded and unrewarded choices; the black trace is 
 | López-Yépez (human) | 19 subjects, 26 sessions, 4,335 valid binary choices; per-subject session counts range 1–4 | `skipped: requires unsupported split structure` | Mixed structure: 15 subjects have one session, two have two, one has three, and one has four. The complete cohort is neither v1 nor v2. |
 | Shin (rat) | 383 released session matrices from 27 rats | `skipped: requires unsupported split structure` | The public release does not map each session matrix to a rat identity, so subject-level v1 adaptation/test membership cannot be reconstructed. |
 | Alsiö (rat) cohort VI PRL | Complete PRL trial records, but dose/reversal labels do not define chronological sessions | `skipped: requires unsupported split structure` | Preserving real session state would require a new grouping rule or pseudo-sessions. |
-| Hattori (mouse) | Pinned Dryad derivative located; original Zenodo archive is about 6.5 GB | `skipped: data access blocked` | The smaller pinned Dryad behavior archive returned authorization/WAF failures during the audit. The available `Hattori2019` model remains a useful Stage-B positive-control candidate if data access is restored. |
 | Samejima (macaque) | No stable public trial-level choice/reward release located | `skipped: no public trial-level data` | Aggregate paper results are insufficient for an immutable held-out trial split. |
 
 ### Author-model feasibility — Stage-B stop gate
@@ -573,7 +612,7 @@ paper's original population-level model-selection analysis.
 | Eckstein (human) | counterfactual RL plus Bayesian inference | Pinned OSF research code | Individual matched-prefix MLE replaces the paper's hierarchical population fit; both co-winners and the 291-versus-306 mismatch remain visible | Implemented | High for equations; moderate for paper-level fit parity |
 | Costa (macaque) | feedback-dependent RL | Published equations | Original optimization and phase-specific fitting details need reconstruction | 3–5 days | Moderate |
 | López-Yépez (mouse) | double-trace RL | Published MATLAB equations | Original data fit code and exact parameter bounds are not in the release | 4–7 days | Moderate |
-| Hattori (mouse) | `Hattori2019` Q family / Bayesian candidates | Existing model family in `aind-dynamic-foraging-models` | Dataset access is currently blocked; paper/model identity must be pinned before claiming parity | 1–3 days after data access | High for existing equations; low for paper-level parity until audited |
+| Hattori (mouse) | asymmetric rewarded/unrewarded Q-learning with unchosen-value forgetting | Existing `Hattori2019` family in `aind-dynamic-foraging-models` | The matched-half subject fits do not reproduce the paper's L2 penalty selected by tenfold cross-validation | Implemented; mature-session fit completed | High for equations; moderate for paper-level fitting parity |
 
 The primary set has passed this gate. Any additional author model remains gated on
 scientific value, effect size, sample/species coverage, code clarity, effort, and
@@ -584,10 +623,10 @@ reproduction confidence; none is added automatically.
 - Every admitted release passed pinned-source checksum and exact-count audits.
 - Every canonical choice and reward is binary.
 - Every manifest is deterministic and uses only schema v1 or v2.
-- Every GRU cell and common-Q baseline has identical ordered held-out `(subject_id, ses_idx, trial, choice)` keys.
+- Every GRU cell and Bari2019 common-Q baseline has identical ordered held-out `(subject_id, ses_idx, trial, choice)` keys.
 - V2 uses the complete first-half prefix with no K condition, then scores the second-half suffix after state replay.
 - Nominal source D is plotted. Realized source-subject counts were D=10: [10], D=30: [29, 30], D=100: [99, 101], D=300: [300, 301], D=614: [614].
-- Every primary-set author model uses the same immutable adaptation and held-out trials as GRU and common Q; model-specific fitting deviations are disclosed in the feasibility table.
+- Every primary-set author model uses the same immutable adaptation and held-out trials as GRU and Bari2019 common Q; model-specific fitting deviations are disclosed in the feasibility table.
 <!-- END result-1 -->
 
 ## Interpretation

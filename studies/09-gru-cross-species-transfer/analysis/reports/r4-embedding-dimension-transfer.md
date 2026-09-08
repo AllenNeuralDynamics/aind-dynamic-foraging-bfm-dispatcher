@@ -8,6 +8,8 @@ wandb_groups:
   - gru-e8-d614-diagnostic@20260907-071400
   - gru-e8-d614-expansion@20260907-132415
   - gru-e8-d614-expansion@20260907-132625
+  - gru-hattori-matched-half@20260907-200329
+  - gru-hattori-matched-half@20260907-200328
 inputs:
   script: analysis/report_embedding_dimension.py
   freezers:
@@ -27,10 +29,10 @@ reproduce: make -C studies/09-gru-cross-species-transfer r4
 
 # Result 4 — does a wider subject embedding improve external transfer?
 
-This report compares E=4 and E=8 source GRUs at D=614 and H=128 across all 12
+This report compares E=4 and E=8 source GRUs at D=614 and H=128 across all 13
 valid external cohorts. Both dimensions use the same three source seeds, AIND
 source snapshot, training recipe, external adaptation observations, 500-step
-adaptation at learning rate 0.001, and immutable held-out trials. Five cohorts
+adaptation at learning rate 0.001, and immutable held-out trials. Six cohorts
 have strict paired current-code E4/E8 reruns; the remaining seven compare the
 current E8 result with the frozen historical E4 screen. The source core stays
 frozen; only each external subject embedding is adapted.
@@ -58,8 +60,9 @@ Dots are subjects; the short bar is the median and the hollow diamond is the mea
 | Costa (macaque) | historical E4 versus current E8 | 11 | 162,960 | 0.58820 ± 0.00291 | 0.60040 ± 0.00146 | +0.00763 | +0.01234 | 0.000977 |
 | López-Yépez (mouse) | historical E4 versus current E8 | 8 | 77,662 | 0.57554 ± 0.01322 | 0.59038 ± 0.00247 | +0.01275 | +0.01440 | 0.00781 |
 | Tang (macaque) | historical E4 versus current E8 | 2 | 7,728 | 0.55416 ± 0.00036 | 0.55711 ± 0.00194 | +0.00295 | +0.00295 | 0.5 |
+| Hattori (mouse) | paired current-code E4/E8 | 7 | 68,972 | 0.56607 ± 0.00067 | 0.56577 ± 0.00002 | -0.00021 | -0.00032 | 0.297 |
 
-E8 has higher mean held-out likelihood in 10/12 cohorts (Chen (mouse), Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), Eckstein (human), Alsiö (rat), Costa (macaque), López-Yépez (mouse), Tang (macaque)) and lower mean likelihood in 2/12 (Grossman (mouse), Zid (human)). Subject-level effect sizes and Wilcoxon tests are reported above; direction alone is not treated as evidence.
+E8 has higher mean held-out likelihood in 10/13 cohorts (Chen (mouse), Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), Eckstein (human), Alsiö (rat), Costa (macaque), López-Yépez (mouse), Tang (macaque)) and lower mean likelihood in 3/13 (Grossman (mouse), Zid (human), Hattori (mouse)). Subject-level effect sizes and Wilcoxon tests are reported above; direction alone is not treated as evidence.
 
-The strict current-code comparison covers Grossman (mouse), Lebedeva (mouse), Miller (rat), Findling (human), Eckstein (human). For Chen (mouse), Zid (human), Beron (mouse), Alsiö (rat), Costa (macaque), López-Yépez (mouse), Tang (macaque), E8 is compared with the frozen historical E4 runs on exactly the same held-out trial keys. Those historical E4 runs were previously shown to agree with the current-code E4 reruns to negligible numerical tolerance, but this remains a weaker comparison than a paired rerun.
+The strict current-code comparison covers Grossman (mouse), Lebedeva (mouse), Miller (rat), Findling (human), Eckstein (human), Hattori (mouse). For Chen (mouse), Zid (human), Beron (mouse), Alsiö (rat), Costa (macaque), López-Yépez (mouse), Tang (macaque), E8 is compared with the frozen historical E4 runs on exactly the same held-out trial keys. Those historical E4 runs were previously shown to agree with the current-code E4 reruns to negligible numerical tolerance, but this remains a weaker comparison than a paired rerun.
 <!-- END result-4 -->

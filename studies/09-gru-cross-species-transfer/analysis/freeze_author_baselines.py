@@ -29,6 +29,7 @@ MODELS_COMMIT = "a75ae23e0d5bce7985d3c4f5f7f30c7a971e0070"
 ORIGINAL_MODELS_COMMIT = "25f5f1ce64705edbf266feb8d57ff83a018b12c5"
 ZID_PARITY_MODELS_COMMIT = "553d1a9eae919bcec5121dc747d09d5559c31bb6"
 PRIMARY_EXPANSION_MODELS_COMMIT = "eaeadec2a56c4a8099f3e8cfa315a9467c2f6a24"
+HATTORI_MODELS_COMMIT = "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf"
 GROUPS = {
     "grossman-meta-learning": {
         "group": "grossman-meta-learning@20260905-124420",
@@ -123,6 +124,14 @@ GROUPS = {
         "author_selected": True,
         "slurm_job_id": "25582240",
         "foraging_models_commit": PRIMARY_EXPANSION_MODELS_COMMIT,
+    },
+    "hattori-q-learning": {
+        "group": "hattori-q-learning@slurm-25585754",
+        "dataset": "hattori",
+        "agent_class": "ForagerQLearning",
+        "author_selected": True,
+        "slurm_job_id": "25585754",
+        "foraging_models_commit": HATTORI_MODELS_COMMIT,
     },
 }
 CACHE = STUDY / "analysis" / "_cache_author_baselines"

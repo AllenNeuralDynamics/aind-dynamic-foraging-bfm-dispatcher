@@ -43,6 +43,7 @@ COLORS = {
     "eckstein": "#2CA02C",
     "costa": "#9467BD",
     "lopez_mouse": "#D62728",
+    "hattori": "#17BECF",
 }
 MARKERS = (".", "o", "^", "s", "D", "v", "P", "X", "<", ">", "h", "p", "*", "8", "d")
 PAPER_LABELS = {
@@ -59,6 +60,7 @@ PAPER_LABELS = {
     "eckstein": "Eckstein (human)",
     "costa": "Costa (macaque)",
     "lopez_mouse": "López-Yépez (mouse)",
+    "hattori": "Hattori (mouse)",
 }
 
 
@@ -422,7 +424,7 @@ Raw coordinates and distance magnitudes are not directly comparable between E=4
 and E=8 because the spaces have different dimensionality and independently
 learned axes. The meaningful comparison is whether the **within-space cohort
 ordering** and downstream performance relationships are stable. The E4/E8 rank
-correlation across the 12 cohorts is **{rank_correlation:+.3f}**.
+correlation across the {len(external)} cohorts is **{rank_correlation:+.3f}**.
 
 | cohort | E4 mean median distance | E4 rank | E8 mean median distance | E8 rank |
 |---|---:|---:|---:|---:|

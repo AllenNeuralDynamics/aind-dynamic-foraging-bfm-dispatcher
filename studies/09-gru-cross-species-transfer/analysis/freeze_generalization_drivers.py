@@ -45,6 +45,7 @@ DATASET_ORDER = (
     "eckstein",
     "costa",
     "lopez_mouse",
+    "hattori",
 )
 BASE_LABELS = {
     "grossman": "Grossman",
@@ -59,6 +60,7 @@ BASE_LABELS = {
     "eckstein": "Eckstein",
     "costa": "Costa",
     "lopez_mouse": "López-Yépez",
+    "hattori": "Hattori",
 }
 N_PERMUTATIONS = 100_000
 N_BOOTSTRAPS = 20_000
@@ -441,8 +443,8 @@ def main() -> None:
                 "the 614-source-mouse centroid, using source covariance per seed"
             ),
             "inference": (
-                "Primary Spearman inference across eight declared primary cohorts; "
-                "all-valid sensitivity across 12 non-quarantined cohorts; deterministic "
+                f"Primary Spearman inference across {len(primary_names)} declared primary cohorts; "
+                f"all-valid sensitivity across {len(sensitivity_names)} non-quarantined cohorts; deterministic "
                 "two-sided permutation p, cohort bootstrap CI, and leave-one-cohort-out range"
             ),
             "rng_seed": RNG_SEED,
