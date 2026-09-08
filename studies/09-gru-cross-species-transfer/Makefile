@@ -3,9 +3,9 @@ CACHE_ROOT ?= data-cache
 SOURCE_DIMENSION ?=
 PYTHONPATH := ../../code
 
-.PHONY: all suite rebuild validate smoke-loaders freeze-matched freeze-authors examples freeze-embeddings freeze-generalization freeze-task-design freeze-source-embedding-manifests freeze-embedding-dimension freeze-embedding-dimension-expansion r1 r2 r3 r4
+.PHONY: all suite rebuild validate smoke-loaders freeze-matched freeze-authors examples freeze-embeddings freeze-generalization freeze-task-design freeze-source-embedding-manifests freeze-embedding-dimension freeze-embedding-dimension-expansion r1 r2 r3 r4 r5
 
-all: r1 r2 r3 r4
+all: r1 r2 r3 r4 r5
 
 suite:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m external_bandit_datasets.cli all --cache-root $(CACHE_ROOT)
@@ -64,3 +64,6 @@ r3:
 
 r4:
 	$(PYTHON) analysis/report_embedding_dimension.py
+
+r5:
+	$(PYTHON) analysis/report_maturity_audit.py
