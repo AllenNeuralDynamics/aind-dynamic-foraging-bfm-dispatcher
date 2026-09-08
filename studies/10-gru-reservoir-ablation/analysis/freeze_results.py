@@ -42,6 +42,7 @@ SOURCE_RESULT_RUNS = {
     2: "ngc7rp78",
 }
 REFERENCE = STUDY / "reference" / "study01-trained-gru.json"
+SPLIT_REFERENCE = STUDY / "reference" / "study01-v2-exact-split.json"
 OUTPUT = STUDY / "analysis" / "reservoir_results.json"
 EXPECTED_SEEDS = (0, 1, 2)
 EXPECTED_SUBJECTS = 149
@@ -73,7 +74,16 @@ def _config_value(run: Any, *path: str) -> Any:
     return _unwrap(value)
 
 
-def _validate_reservoir_config(run: Any) -> None:
+def _normalized_ids(values: Any) -> list[str]:
+    return [str(value) for value in (_unwrap(values) or [])]
+
+
+def _validate_reservoir_config(
+    run: Any,
+    *,
+    expected_source_ids: list[int] | None = None,
+    expected_test_ids: list[int] | None = None,
+) -> None:
     expected = {
         ("model", "architecture", "hidden_size"): 128,
         ("model", "architecture", "subject_embedding_size"): 4,
@@ -90,9 +100,22 @@ def _validate_reservoir_config(run: Any) -> None:
             raise ValueError(
                 f"run {run.id} config {'.'.join(path)}={actual!r}, expected {expected_value!r}"
             )
-    subject_ids = _unwrap(run.config.get("resolved_subject_ids")) or []
+    subject_ids = _normalized_ids(run.config.get("resolved_subject_ids"))
     if len(subject_ids) != 614:
         raise ValueError(f"run {run.id} resolved D={len(subject_ids)}, expected 614")
+    if expected_source_ids is not None:
+        expected_source = _normalized_ids(expected_source_ids)
+        configured_source = _normalized_ids(
+            _config_value(run, "data", "subject_ids")
+        )
+        if configured_source != expected_source or subject_ids != expected_source:
+            raise ValueError(f"run {run.id} does not use the exact ordered source cohort")
+    if expected_test_ids is not None:
+        configured_test = _normalized_ids(
+            _config_value(run, "data", "test_subject_ids")
+        )
+        if configured_test != _normalized_ids(expected_test_ids):
+            raise ValueError(f"run {run.id} does not use the exact held-out cohort")
 
 
 def _per_subject_table(run: Any) -> tuple[Any, dict[str, str]]:
@@ -298,6 +321,8 @@ def _freeze_run(
 
 def main() -> None:
     api = wandb.Api()
+    reference = json.loads(REFERENCE.read_text())
+    split_reference = json.loads(SPLIT_REFERENCE.read_text())
     reservoir_by_seed = {
         seed: api.run(f"{RESERVOIR_PROJECT}/{RESERVOIR_RUNS[seed]}")
         for seed in EXPECTED_SEEDS
@@ -307,9 +332,12 @@ def main() -> None:
             raise ValueError(f"reservoir run {run.id} is {run.state}")
         if run.group != RESERVOIR_GROUP_BY_SEED[seed]:
             raise ValueError(f"reservoir run {run.id} belongs to {run.group!r}")
-        _validate_reservoir_config(run)
+        _validate_reservoir_config(
+            run,
+            expected_source_ids=split_reference["source_subject_ids"],
+            expected_test_ids=split_reference["test_subject_ids"],
+        )
 
-    reference = json.loads(REFERENCE.read_text())
     source_cells = {
         cell["seed"]: cell for cell in reference["cells"] if cell["D"] == 614
     }
