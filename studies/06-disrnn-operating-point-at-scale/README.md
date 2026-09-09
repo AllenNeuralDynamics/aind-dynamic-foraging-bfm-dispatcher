@@ -71,6 +71,30 @@ wave 1 (H1) only.
 **Seed-noise bars to clear** (measured in study 05, same config family): held-out SD ≈ 0.0005;
 generative history-curve corr SD 0.0008–0.0020 at D ≥ 100.
 
+### `wave2-step-budget-and-penalty-extension` — wave 2 (🚧 in progress)
+
+Follow-on to `mult-d-grid`'s close-out, motivated by two observations: (1) the D=614
+generalization gap does not move monotonically with penalty strength across the tested
+range — the lightest tested setting (mult=1, β=3e-4) has the smallest gap, the heaviest
+(mult=10, β=1e-3) the largest, suggesting the tested range's edge, not interior, may be the
+true optimum; (2) training-step count as a tunable.
+
+- **Stage A** (zero new compute, done 2026-09-09): a step-budget proxy analysis of existing
+  `mult-d-grid` runs. Found the grid's true held-out metric was only logged once, at the very
+  end of training, so the literal question can't be answered from existing data — only a
+  within-training (same-mice held-out session) proxy is available, which shows an
+  early-peak-then-decline pattern growing with D.
+- **Stage B** (launched 2026-09-09): an 8-task grid extending the penalty range one step
+  lighter than `mult-d-grid`'s tested floor on each axis in turn (mult=1,β=1e-4 and
+  mult=0.5,β=3e-4), at D∈{300,614}, 2 seeds — testing whether the D=614 gap keeps shrinking
+  below the tested floor or turns around. Also flips `checkpoint_run_heldout_eval` to `true`
+  (was `false` in `mult-d-grid`), so this wave produces a genuine held-out-vs-step curve for
+  future step-budget analysis. Beaker experiment
+  [`01M22QA6NH2MCDCFM8J5YREE61`](https://beaker.org/ex/01M22QA6NH2MCDCFM8J5YREE61), W&B group
+  `wave2-step-budget-and-penalty-extension@20260909-021546`. See
+  [variant notes](variants/wave2-step-budget-and-penalty-extension/notes.md) for the full
+  grid and provenance. Results not yet analyzed.
+
 ## Relation to other studies
 
 - **[03](../03-disrnn-beta-scan)** — the D=100 slice of this surface (penalty axis only).

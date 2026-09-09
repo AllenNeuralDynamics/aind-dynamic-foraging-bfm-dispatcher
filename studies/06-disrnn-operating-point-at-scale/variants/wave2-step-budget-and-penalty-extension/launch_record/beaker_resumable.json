@@ -1,0 +1,19 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 8,
+  "experiment_id": "01M22QA6NH2MCDCFM8J5YREE61",
+  "experiment_url": "https://beaker.org/ex/01M22QA6NH2MCDCFM8J5YREE61",
+  "dispatcher_commit": "9400a91fafdf38fb97d1626941f039dbb4050756",
+  "sweep_file": "studies/06-disrnn-operating-point-at-scale/variants/wave2-step-budget-and-penalty-extension/sweep.yaml",
+  "wandb_group": "wave2-step-budget-and-penalty-extension@20260909-021546",
+  "label": "wave2-penalty-ext",
+  "note": "Stage B: extend penalty range lighter than mult-d-grid's tested floor at D=300,614; checkpoint_run_heldout_eval=true for a real held-out-vs-step curve.",
+  "wrapper_ref_resolved": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "dispatcher_ref_resolved": "4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3",
+  "foraging_models_ref_resolved": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "pruning_note": "Rendered 16 tasks (full cartesian of mult in {1,0.5} x beta in {3e-4,1e-4} x D x seed); pruned to 8 before submission by dropping (mult=1,beta=3e-4) [duplicate of existing mult-d-grid point] and (mult=0.5,beta=1e-4) [untested both-axes-lighter combo, outside this wave's one-axis-at-a-time scope]. See sweep.yaml PRUNING NOTE.",
+  "cluster": [
+    "ai1/octo-hub-onprem-h200"
+  ],
+  "created_utc": "2026-09-09T09:18:08.703019+00:00"
+}

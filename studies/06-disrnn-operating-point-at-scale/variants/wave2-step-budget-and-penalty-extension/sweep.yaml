@@ -1,0 +1,103 @@
+# W&B sweep for 06-disrnn-operating-point-at-scale / wave2-step-budget-and-penalty-extension
+# — Stage B. Consumed by launch_beaker_resumable.py; see PRUNING NOTE below before submitting.
+#
+# QUESTION (Stage B). The merged `mult-d-grid` (PR #69) found that at D=614 the generalization
+# gap (train LL - held-out LL) does NOT move monotonically with penalty strength across the
+# tested range {mult:1,2,5,10} x {beta:3e-4,1e-3}: the LIGHTEST tested setting (mult=1,
+# beta=3e-4) has the SMALLEST gap (0.0069), the HEAVIEST (mult=10, beta=1e-3) has the LARGEST
+# (0.0094) — evidence the tested range's EDGE, not its interior, may hold the true optimum.
+# Stage B tests whether pushing the penalty lighter than mult-d-grid's tested floor keeps
+# shrinking the gap, or turns around (i.e. mult-d-grid's floor was itself already past the
+# optimum in the other direction).
+#
+# GRID — nominal 16 combos as written below, PRUNED to 8 before submission (see PRUNING NOTE):
+#   D           in {300, 614}   — subject_ratio {0.489, 1.0}. Restricted to the two largest
+#                                  cohorts in mult-d-grid's ladder: the non-monotonic gap was
+#                                  established at D=614; D=300 is the nearest neighbor, checking
+#                                  whether the effect is D=614-specific or a general large-D
+#                                  pattern. (D<=100 skipped — mult-d-grid's gap was smallest
+#                                  there regardless of penalty, so the edge-vs-interior question
+#                                  is not live at small D.)
+#   mult        in {1, 0.5}     — 1 is mult-d-grid's tested floor; 0.5 extends one step lighter.
+#   beta        in {3e-4, 1e-4} — 3e-4 is mult-d-grid's tested floor; 1e-4 extends one step
+#                                  lighter.
+#   seed        in {0, 1}       — matches mult-d-grid's 2-seed convention (held-out SD ~0.0005
+#                                  at this config family per study 05; the gap differences this
+#                                  wave is chasing are ~0.002-0.003, well above that noise floor
+#                                  with 2 seeds).
+#
+# PRUNING NOTE. This repo's resumable launcher does a strict `itertools.product` over every
+# listed parameter axis (launch_beaker_resumable.py::_grid_points) — it has no notion of
+# "paired" axes. Listing mult in {1,0.5} and beta in {3e-4,1e-4} as independent axes therefore
+# yields all FOUR (mult,beta) pairs, not the two Stage B actually wants:
+#   (mult=1,   beta=3e-4)  <- DUPLICATE of mult-d-grid's tested point (D>=300, that seed range).
+#                             DROP — do not re-run an existing grid point.
+#   (mult=1,   beta=1e-4)  <- NEW: lighter beta, multiplier held at the tested floor. KEEP.
+#   (mult=0.5, beta=3e-4)  <- NEW: lighter multiplier, beta held at the tested floor. KEEP.
+#   (mult=0.5, beta=1e-4)  <- NEW, but moves BOTH axes lighter at once — outside this wave's
+#                             one-axis-at-a-time scope (confounds which axis drove any change).
+#                             DROP.
+# Workflow: render with `launch_beaker_resumable.py --no-submit`, then delete every task whose
+# command overrides match a DROP pair above (4 tasks per DROP pair x 2 D x ... — 8 of the 16
+# rendered tasks) from the rendered spec before calling `beaker experiment create`. Surviving
+# grid: 2 D x 2 KEPT penalty points x 2 seeds = 8 tasks. (This mirrors the project's existing
+# render-then-hand-edit pattern for per-task overrides — see beaker-launch skill, "per-task
+# cluster/resource splits aren't supported by the launcher".)
+#
+# IMPORTANT CHANGE vs mult-d-grid: `model.training.checkpoint_run_heldout_eval` flipped
+# false -> true below. mult-d-grid's `false` is WHY this variant's Stage A analysis
+# (notes.md) had to fall back to a same-mice-held-out-session PROXY instead of a real
+# held-out-mouse-vs-step curve — the true held-out metric was only ever logged once, at the
+# very end of training. `checkpoint_every_n_steps` stays 10000 (unchanged from mult-d-grid),
+# so the new per-checkpoint held-out evals land on the same ~12-point cadence as the existing
+# within-training proxy and cost only extra wall-clock (held-out eval is cheap; no extra
+# GPU-hours from more training steps).
+#
+# Everything else (architecture, session conditioning, lr, n_steps, length_bucketing) is
+# IDENTICAL to mult-d-grid — see that variant's sweep.yaml for the full rationale; not
+# re-derived here.
+entity: AIND-disRNN
+project: disrnn_data_scaling
+name: disrnn-wave2-penalty-extension    # informational; launcher sets the real W&B group
+method: grid
+metric:
+  name: heldout/eval_likelihood
+  goal: maximize
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_data_scaling
+  # --- cohort: D is a swept axis (below); 2-way output, comparable to mult-d-grid ---
+  - data.ignore_policy=exclude
+  # --- architecture: linear choice net + disRNN defaults, identical to mult-d-grid ---
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  # --- scalar session conditioning (lambda-forward): full SC at 50k, identical to mult-d-grid ---
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  # --- lr pinned to the non-divergent value, identical to mult-d-grid ---
+  - model.training.lr=1e-3
+  # --- training budget: identical to mult-d-grid (GRU-parity + full-SC window) ---
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  - model.training.checkpoint_run_heldout_eval=true   # <-- CHANGED from mult-d-grid's false (see header)
+  # --- length-bucketed batching: identical to mult-d-grid ---
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - ${args_no_hyphens}
+parameters:
+  data.subject_ratio:
+    values: [0.489, 1.0]   # D ~= 300, 614
+  model.penalties.update_net_latent_penalty_multiplier:
+    values: [1, 0.5]
+  model.penalties.beta:
+    values: [3e-4, 1e-4]
+  seed:
+    values: [0, 1]

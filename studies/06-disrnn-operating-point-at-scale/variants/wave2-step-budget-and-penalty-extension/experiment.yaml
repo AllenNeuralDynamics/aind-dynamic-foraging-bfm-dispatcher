@@ -1,0 +1,60 @@
+# Task template for variant wave2-step-budget-and-penalty-extension / Stage B
+# (consumed by launch_beaker_resumable.py). Nominal render is 16 tasks; PRUNE to 8 before
+# submitting — see sweep.yaml's PRUNING NOTE for exactly which (mult,beta) pairs to drop.
+#
+# COMPUTE: same small disRNN as mult-d-grid (latent_size=5, update-net 16x5, LINEAR choice
+# net) — fits comfortably on a single GPU at one 90GiB / 12-CPU bundle. Growing D to 614 grows
+# the subject-embedding table and host-side session cache, not the per-step GPU footprint
+# (already confirmed by mult-d-grid); the penalty axes here are GPU-footprint-neutral too.
+#
+# CLUSTER: onprem-H200 ONLY, per explicit instruction this wave (free GPUs there — verified
+# 10/16 schedulable, 0 cordoned, 0 queued at render time). Unlike mult-d-grid this is NOT
+# spread across multiple clusters for concurrency — see study notes.md for why.
+#
+# IMAGE REF: `han-hou/dynamic-foraging-bfm-wrapper-main-20260902` verified CURRENT at launch
+# time (code/beaker/README.md image table, 2026-09-09) — the first image under the
+# `dynamic-foraging-bfm` identity; it clones to `/workspace/aind-dynamic-foraging-bfm-*`, so
+# this spec uses those paths (NOT the old `/workspace/aind-disrnn-*` paths baked into
+# mult-d-grid's now-stale template placeholder). Only image with the `[bayes]` extra
+# (irrelevant here, but it is also simply the newest `main` build).
+#
+# The launcher pins {priority: low, preemptible: true} by default (AGENTS §10 tier 3): tasks
+# ride the ~unlimited low-preemptible tier; eviction is recovered by autoResume + the
+# trainer's full-state checkpoint (checkpoint_every_n_steps=10000).
+#
+# Runtime refs stay readable as `main`; the launcher resolves them to immutable SHAs before
+# submission (required for resumable/preemptible — a preempted task re-checks-out the ref).
+version: v2
+description: >
+  Wave-2 Stage B — disRNN penalty-extension grid at D in {300, 614}: two new penalty points
+  one step lighter than mult-d-grid's tested floor (mult=1,beta=1e-4 and mult=0.5,beta=3e-4),
+  2 seeds each, checkpoint_run_heldout_eval=true (NEW vs mult-d-grid — gives a real
+  held-out-vs-step curve). Tests whether mult-d-grid's D=614 generalization-gap floor keeps
+  shrinking below the tested range, or turns around (see sweep.yaml header).
+tasks:
+  - name: disrnn-wave2-penalty-ext-template
+    image:
+      beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902   # verified current, see header
+    command:
+      - bash
+      - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+      - wandb
+      - agent
+    constraints:
+      cluster:
+        - ai1/octo-hub-onprem-h200
+    resources:
+      gpuCount: 1
+      cpuCount: 12
+      memory: 90GiB
+    envVars:
+      - name: WANDB_API_KEY
+        secret: han-wandb-api-key
+      - name: WRAPPER_REF
+        value: main  # readable source ref; launcher submits the resolved SHA
+      - name: DISPATCHER_REF
+        value: main  # readable source ref; launcher submits the resolved SHA
+      - name: FORAGING_MODELS_REF
+        value: main  # readable source ref; launcher submits the resolved SHA
+    result:
+      path: /results
