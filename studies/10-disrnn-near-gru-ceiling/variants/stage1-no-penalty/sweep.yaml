@@ -1,0 +1,84 @@
+# W&B sweep for 10-disrnn-near-gru-ceiling / stage1-no-penalty — step 1 of the 3-stage
+# near-GRU ablation. Fixed D=614 (subject_ratio=1.0), 2 seeds.
+#
+# QUESTION (study README). How much of the residual GRU gap (study 06: -0.0114 -> -0.0047
+# at the tuned operating point, mult=1/beta=3e-4/latent_size=5/D=614) closes as disRNN's
+# penalties, update-net nonlinearity, and latent width are relaxed toward a GRU-like model,
+# attributed to each change individually via a STAGED ablation (not all three at once —
+# that would not be attributable to any one relaxation).
+#
+# THIS VARIANT isolates the PENALTY-ONLY effect: start from study 06's tuned operating
+# point and zero ONLY the update-net-latent ("interaction bottleneck") penalty — the
+# bottleneck that caps how much one latent's update can depend on the other latents'
+# state, i.e. the actual disentangling mechanism. latent_size=5 and update_net_n_layers=5
+# are UNCHANGED from the tuned point, so any likelihood movement here is attributable to
+# that one penalty alone.
+#
+# WHICH KNOB, AND WHY THIS ONE ONLY. config_disrnn.yaml's model.penalties block has NINE
+# penalty knobs, all defaulting to `beta`: latent_penalty, choice_net_latent_penalty,
+# update_net_obs_penalty, update_net_latent_penalty (+ update_net_latent_penalty_multiplier),
+# subject_penalty, update_net_subject_penalty, choice_net_subject_penalty. Only
+# update_net_latent_penalty is the interaction bottleneck; the others gate unrelated
+# bottlenecks (subject-embedding, observation-to-update, latent-to-choice) that are NOT
+# part of this ablation's target and must stay at the tuned beta=3e-4 so this stage
+# measures only the interaction-penalty relaxation. The config already ships a multiplier
+# for exactly this: "any <name>_multiplier ... scales its base <name> penalty ... and is
+# then removed" (config_disrnn.yaml header) — so
+# model.penalties.update_net_latent_penalty_multiplier=0.0 zeroes ONLY this one penalty
+# while update_net_latent_penalty itself stays the ${.beta} interpolation (inert once its
+# multiplier is 0), and every other penalty is untouched at beta=3e-4.
+#
+# CAVEAT (study README, restated in every variant's notes.md): this and the following two
+# stages are NOT an interpretable disRNN once stage 2/3 relax nonlinearity/width too, and
+# their results must NOT be folded into study 06's operating-point verdict — that is why
+# this is study 10, not a study-06 wave.
+#
+# TRAINING BUDGET: n_steps=100000, matching study 06's GRU-parity budget (study 01's H256
+# GRU). checkpoint_run_heldout_eval=true (unlike study 06's mult-d-grid, which left it
+# false) — a step-budget curve is a first-class deliverable here, not an afterthought.
+entity: AIND-disRNN
+project: disrnn_near_gru_ceiling
+name: disrnn-stage1-no-penalty       # informational; launcher sets the real group
+method: grid
+metric:
+  name: heldout/eval_likelihood
+  goal: maximize
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_near_gru_ceiling
+  - "wandb.tags=[study10,stage1-no-penalty]"
+  # --- cohort: D=614 fixed (subject_ratio=1.0 below), 2-way output ---
+  - data.ignore_policy=exclude
+  - data.subject_ratio=1.0
+  # --- architecture: tuned operating-point defaults (study 06), UNCHANGED here ---
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  # --- scalar session conditioning, identical to study 06's tuned point ---
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  # --- penalties: tuned beta=3e-4, mult=1 baseline EXCEPT the interaction penalty below ---
+  - model.penalties.beta=3e-4
+  # --- THE ABLATION: zero ONLY the update-net-latent (interaction) penalty ---
+  - model.penalties.update_net_latent_penalty_multiplier=0.0
+  # --- lr pinned to the non-divergent value (study 03: mult=10 NaNs were at lr=5e-3) ---
+  - model.training.lr=1e-3
+  # --- training budget: GRU-parity (see header) ---
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  # --- step-budget curve is a first-class deliverable this time (wave-2 lesson) ---
+  - model.training.checkpoint_run_heldout_eval=true
+  # --- length-bucketed batching, identical to study 03/05/06 ---
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - ${args_no_hyphens}
+parameters:
+  seed:
+    values: [0, 1]

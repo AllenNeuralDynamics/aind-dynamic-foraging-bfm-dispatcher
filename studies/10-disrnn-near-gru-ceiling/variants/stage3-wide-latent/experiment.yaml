@@ -1,0 +1,58 @@
+# Task template for variant stage3-wide-latent (consumed by launch_beaker_resumable.py).
+# The launcher expands the sweep's 2-seed grid into 2 autoResume tasks.
+#
+# COMPUTE: latent_size=256 (vs. 5 for stages 1/2) -- the wide-latent ceiling probe.
+# Sized more generously than stages 1/2's 90GiB/12CPU: 180GiB/24CPU, headroom for the
+# ~51x larger unrolled per-latent-MLP JAX trace (see sweep.yaml's COMPILE-TIME/MEMORY
+# RISK note) while staying safely under one H200 GPU's per-slot bundle (node = 224 CPU /
+# ~3023 GiB / 8 GPUs -> ~28 CPU / ~378 GiB per GPU), so this task cannot accidentally
+# grab a second GPU. Per the wrapper beaker README's GRU precedent, hidden_size=256
+# needed ~37-40 GB *GPU* memory (does not fit a 48 GB L40s); disRNN's per-latent MLPs are
+# individually tiny (obs_size+256 -> 16 -> 2, n_layers=0) so GPU memory should be far
+# lighter than the GRU case, but this is UNTESTED for disRNN -- monitor the first
+# scheduled task before trusting the fan-out (beaker-launch skill: "validate, then fan
+# out" applies here because sizing is genuinely new, not routine).
+#
+# CLUSTER: ai1/octo-hub-onprem-h200 ONLY, per explicit instruction (12/16 schedulable,
+# 0 cordoned, 0 queued as of this launch -- see launch_record for the capacity check).
+#
+# IMAGE: han-hou/dynamic-foraging-bfm-wrapper-main-20260902 (verified via
+# `beaker.image.get` at launch time -- current image under the dynamic-foraging-bfm
+# identity; clones to /workspace/aind-dynamic-foraging-bfm-{wrapper,dispatcher} paths,
+# which this spec's command/entrypoint path matches).
+#
+# Runtime refs stay readable as `main`; the launcher resolves them to immutable SHAs
+# before submission (required for resumable/preemptible -- a preempted task re-checks-out
+# the ref, so a branch could otherwise drift mid-run).
+version: v2
+description: >
+  Study 10 stage 3/3 (final) near-GRU ablation -- the ceiling probe. Stage 2's config
+  (penalty zeroed + linear update net) PLUS latent_size 5 -> 256, matching study 01's
+  H=256 GRU capacity exactly. NOT an interpretable disRNN; see study README caveat.
+tasks:
+  - name: disrnn-stage3-wide-latent-template
+    image:
+      beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+    command:
+      - bash
+      - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+      - wandb
+      - agent
+    constraints:
+      cluster:
+        - ai1/octo-hub-onprem-h200
+    resources:
+      gpuCount: 1
+      cpuCount: 24
+      memory: 180GiB
+    envVars:
+      - name: WANDB_API_KEY
+        secret: han-wandb-api-key
+      - name: WRAPPER_REF
+        value: main  # readable source ref; launcher submits the resolved SHA
+      - name: DISPATCHER_REF
+        value: main  # readable source ref; launcher submits the resolved SHA
+      - name: FORAGING_MODELS_REF
+        value: main  # readable source ref; launcher submits the resolved SHA
+    result:
+      path: /results

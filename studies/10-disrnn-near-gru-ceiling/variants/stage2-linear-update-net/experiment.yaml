@@ -1,0 +1,53 @@
+# Task template for variant stage1-no-penalty (consumed by launch_beaker_resumable.py).
+# The launcher expands the sweep's 2-seed grid into 2 autoResume tasks.
+#
+# COMPUTE: same small disRNN as study 03/05/06 (latent_size=5, update-net 16x5, LINEAR
+# choice net) -- nothing like stage 3's wide latent_size=256. Fits comfortably in a
+# fraction of one H200's per-GPU bundle (node = 224 CPU / ~3023 GiB / 8 GPUs ->
+# ~28 CPU / ~378 GiB per GPU slot); sized here to the same 90GiB/12CPU envelope study
+# 06 used on L40S so this task cannot accidentally grab more than 1 GPU on the H200 node.
+#
+# CLUSTER: ai1/octo-hub-onprem-h200 ONLY, per explicit instruction (12/16 schedulable,
+# 0 cordoned, 0 queued as of this launch -- see launch_record for the capacity check).
+#
+# IMAGE: han-hou/dynamic-foraging-bfm-wrapper-main-20260902 (verified via
+# `beaker.image.get` at launch time -- current image under the dynamic-foraging-bfm
+# identity; clones to /workspace/aind-dynamic-foraging-bfm-{wrapper,dispatcher} paths,
+# which this spec's command/entrypoint path matches).
+#
+# Runtime refs stay readable as `main`; the launcher resolves them to immutable SHAs
+# before submission (required for resumable/preemptible -- a preempted task re-checks-out
+# the ref, so a branch could otherwise drift mid-run).
+version: v2
+description: >
+  Study 10 stage 2/3 near-GRU ablation -- stage 1's penalty-only relaxation PLUS a
+  linear update net (model.architecture.update_net_n_layers=0). latent_size stays 5;
+  stage 3 is the one that widens it. Isolates the nonlinearity-relaxation effect on
+  top of stage 1. NOT an interpretable disRNN; see study README caveat.
+tasks:
+  - name: disrnn-stage2-linear-update-net-template
+    image:
+      beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+    command:
+      - bash
+      - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+      - wandb
+      - agent
+    constraints:
+      cluster:
+        - ai1/octo-hub-onprem-h200
+    resources:
+      gpuCount: 1
+      cpuCount: 12
+      memory: 90GiB
+    envVars:
+      - name: WANDB_API_KEY
+        secret: han-wandb-api-key
+      - name: WRAPPER_REF
+        value: main  # readable source ref; launcher submits the resolved SHA
+      - name: DISPATCHER_REF
+        value: main  # readable source ref; launcher submits the resolved SHA
+      - name: FORAGING_MODELS_REF
+        value: main  # readable source ref; launcher submits the resolved SHA
+    result:
+      path: /results
