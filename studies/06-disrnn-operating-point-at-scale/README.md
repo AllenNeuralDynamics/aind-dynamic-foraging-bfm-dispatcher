@@ -87,11 +87,14 @@ true optimum; (2) training-step count as a tunable.
 - **Stage B** (launched 2026-09-09): an 8-task grid extending the penalty range one step
   lighter than `mult-d-grid`'s tested floor on each axis in turn (mult=1,β=1e-4 and
   mult=0.5,β=3e-4), at D∈{300,614}, 2 seeds — testing whether the D=614 gap keeps shrinking
-  below the tested floor or turns around. Also flips `checkpoint_run_heldout_eval` to `true`
-  (was `false` in `mult-d-grid`), so this wave produces a genuine held-out-vs-step curve for
-  future step-budget analysis. Beaker experiment
-  [`01M22QA6NH2MCDCFM8J5YREE61`](https://beaker.org/ex/01M22QA6NH2MCDCFM8J5YREE61), W&B group
-  `wave2-step-budget-and-penalty-extension@20260909-021546`. See
+  below the tested floor or turns around. Sets `checkpoint_run_heldout_eval=true`, but
+  **correction (same day):** this flag is a no-op for multisubject disRNN/GRU in the current
+  wrapper (`is_multisubject` runs unconditionally skip the per-checkpoint held-out eval,
+  confirmed in this launch's own live logs) — these runs do **not** get a held-out-vs-step
+  curve, only the same single end-of-training held-out value as `mult-d-grid`. The
+  step-budget question from Stage A remains open pending a wrapper fix + relaunch. Beaker
+  experiment [`01M22QA6NH2MCDCFM8J5YREE61`](https://beaker.org/ex/01M22QA6NH2MCDCFM8J5YREE61),
+  W&B group `wave2-step-budget-and-penalty-extension@20260909-021546`. See
   [variant notes](variants/wave2-step-budget-and-penalty-extension/notes.md) for the full
   grid and provenance. Results not yet analyzed.
 

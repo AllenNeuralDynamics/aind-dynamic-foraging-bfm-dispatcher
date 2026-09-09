@@ -48,11 +48,11 @@ to the SAME mice's held-out sessions, not the study's actual generalization targ
 (held-out mice). It does not by itself tell us whether stopping earlier would improve
 `heldout/eval_likelihood`.
 
-**Action taken**: the extended-penalty-range launch in this same wave (Stage B, below) sets
-`checkpoint_run_heldout_eval: true` with intermediate logging enabled, so this wave's new
-runs will carry a genuine held-out-vs-step curve going forward — a real step-budget analysis
-becomes possible once those runs finish, at no extra launch cost beyond wall-clock time for
-the additional periodic held-out evals.
+**Action taken (ORIGINAL, INCORRECT — see CORRECTION below)**: the extended-penalty-range
+launch in this same wave (Stage B, below) set `checkpoint_run_heldout_eval: true`, on the
+premise that this would give this wave's new runs a genuine held-out-vs-step curve. **That
+premise is wrong; see the CORRECTION in Stage B.** The literal step-budget question this
+Stage A section is about therefore remains unanswered by any run in this study, old or new.
 
 ## Stage B — extended penalty range (launched 2026-09-09)
 
@@ -83,10 +83,47 @@ scope. Those 8 were dropped from the rendered spec before submission — see swe
 PRUNING NOTE for the exact mechanics, and `launch_record/beaker_resumable.json` for the
 before/after task list.
 
-**Change vs `mult-d-grid`:** `model.training.checkpoint_run_heldout_eval` is `true` here
-(was `false` in `mult-d-grid`, the reason Stage A above only had a within-training proxy).
-`checkpoint_every_n_steps` is unchanged at 10000, so the new held-out evals land on the same
-~12-point cadence and cost only wall-clock time.
+**CORRECTION (2026-09-09, same day as launch): `checkpoint_run_heldout_eval=true` is a
+NO-OP for this grid — it does NOT produce a held-out-vs-step curve.** The original text
+below ("Change vs `mult-d-grid`") claimed setting this flag `true` would give these 8 runs a
+genuine per-checkpoint held-out curve. That is wrong. `disrnn_trainer.py` (and
+`gru_trainer.py`, identically) has an unconditional branch:
+
+```python
+runtime_heldout_cfg = HeldoutEvalConfig.from_data_cfg(metadata)
+if runtime_heldout_cfg.enabled and is_multisubject:
+    logger.info(
+        "Skipping PER-CHECKPOINT held-out eval (checkpoint_run_heldout_eval) "
+        "for multisubject disRNN; v1 supports seen-subject personalization only. ..."
+    )
+```
+
+`is_multisubject` is `True` for every run in this cohort-scaling study (D≥10), so the
+per-checkpoint held-out eval is skipped **regardless of the `checkpoint_run_heldout_eval`
+value** — the flag simply has no live code path for multisubject runs in this wrapper
+version. Confirmed two ways: (1) reading the source above, and (2) the exact
+"Skipping PER-CHECKPOINT held-out eval ... for multisubject disRNN" log line appearing
+verbatim in this launch's own live Beaker logs (tasks `-000` and `-002` checked directly,
+`WRAPPER_REF=9595dd371ab87de49c281d8ca4bb6ae8af7c32e4`). This matches an independent finding
+from the parallel near-GRU-ablation track (study 10) from its own live logs.
+
+**Consequence for this launch:** these 8 runs will produce exactly the same held-out
+observable as `mult-d-grid` — a single end-of-training `heldout/final/eval_likelihood` value
+per run (from `auto_heldout_finetune`, which is unaffected by this bug) — **not** a
+per-checkpoint held-out-vs-step curve. Because `WRAPPER_REF` is pinned to a fixed SHA at
+submission, this is permanent for these particular 8 runs even if the underlying wrapper
+bug is fixed later; getting a real curve requires a wrapper fix (tracked separately) and a
+fresh launch afterward. The scientific content this Stage B grid was actually designed to
+test — the extended-penalty-range question in the "Question" section above — is **unaffected**
+by this bug: it only depended on the single end-of-training held-out value, same as
+`mult-d-grid`. Leaving `checkpoint_run_heldout_eval=true` in the config is harmless (it only
+emits the skip log line, does no extra compute) but should not be read as evidence these
+runs carry step-wise held-out data.
+
+*(Original text, kept for the record — now known incorrect: "`model.training.checkpoint_run_heldout_eval`
+is `true` here (was `false` in `mult-d-grid`, the reason Stage A above only had a
+within-training proxy). `checkpoint_every_n_steps` is unchanged at 10000, so the new
+held-out evals land on the same ~12-point cadence and cost only wall-clock time.")*
 
 **Launch provenance:**
 - Beaker experiment: [`01M22QA6NH2MCDCFM8J5YREE61`](https://beaker.org/ex/01M22QA6NH2MCDCFM8J5YREE61) (8 tasks, `ai1/aind-dynamic-foraging-foundation-model`)
@@ -102,5 +139,8 @@ before/after task list.
   (the actual 8-task submitted spec), `launch_record/sweep.yaml` (copy of the sweep used).
 
 **Status (as of launch):** 4/8 tasks `idle` (starting), 4/8 `created` (queued) within seconds
-of submission. Results/report land in a future session once the grid finishes — not yet
-analyzed here.
+of submission; confirmed running (warmup phase reached) as of the same-day correction above.
+Results/report land in a future session once the grid finishes — not yet analyzed here. The
+grid still answers the extended-penalty-range question via the single end-of-training
+held-out value; it does **not** produce a per-checkpoint held-out curve (see CORRECTION
+above) — the step-budget question from Stage A remains open.

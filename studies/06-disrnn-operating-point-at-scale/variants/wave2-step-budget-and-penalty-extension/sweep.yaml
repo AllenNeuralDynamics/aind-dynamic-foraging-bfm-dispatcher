@@ -44,14 +44,20 @@
 # render-then-hand-edit pattern for per-task overrides — see beaker-launch skill, "per-task
 # cluster/resource splits aren't supported by the launcher".)
 #
-# IMPORTANT CHANGE vs mult-d-grid: `model.training.checkpoint_run_heldout_eval` flipped
-# false -> true below. mult-d-grid's `false` is WHY this variant's Stage A analysis
-# (notes.md) had to fall back to a same-mice-held-out-session PROXY instead of a real
-# held-out-mouse-vs-step curve — the true held-out metric was only ever logged once, at the
-# very end of training. `checkpoint_every_n_steps` stays 10000 (unchanged from mult-d-grid),
-# so the new per-checkpoint held-out evals land on the same ~12-point cadence as the existing
-# within-training proxy and cost only extra wall-clock (held-out eval is cheap; no extra
-# GPU-hours from more training steps).
+# `model.training.checkpoint_run_heldout_eval` is flipped false -> true below vs
+# mult-d-grid. CORRECTION (2026-09-09, same day as launch): this flag turned out to be a
+# NO-OP for multisubject disRNN/GRU in the current wrapper -- `disrnn_trainer.py` /
+# `gru_trainer.py` unconditionally skip the per-checkpoint held-out eval whenever
+# `is_multisubject` is true (every run in this D-scaling study), regardless of this flag's
+# value ("Skipping PER-CHECKPOINT held-out eval ... for multisubject disRNN; v1 supports
+# seen-subject personalization only" -- confirmed in this launch's own live Beaker logs, and
+# independently by the parallel near-GRU-ablation track). So these runs do NOT get a
+# held-out-mouse-vs-step curve; they get exactly the same single end-of-training held-out
+# value as mult-d-grid (via auto_heldout_finetune, unaffected by this bug). Left as `true`
+# anyway since it is harmless (log line only, no extra compute) and future-proofs against a
+# wrapper fix for LATER launches -- it does nothing for these already-pinned-SHA runs. See
+# notes.md's Stage B CORRECTION for the full account. The step-budget question Stage A
+# raised remains open.
 #
 # Everything else (architecture, session conditioning, lr, n_steps, length_bucketing) is
 # IDENTICAL to mult-d-grid — see that variant's sweep.yaml for the full rationale; not

@@ -7,7 +7,7 @@
   "sweep_file": "studies/06-disrnn-operating-point-at-scale/variants/wave2-step-budget-and-penalty-extension/sweep.yaml",
   "wandb_group": "wave2-step-budget-and-penalty-extension@20260909-021546",
   "label": "wave2-penalty-ext",
-  "note": "Stage B: extend penalty range lighter than mult-d-grid's tested floor at D=300,614; checkpoint_run_heldout_eval=true for a real held-out-vs-step curve.",
+  "note": "Stage B: extend penalty range lighter than mult-d-grid's tested floor at D=300,614. checkpoint_run_heldout_eval=true was set on the (incorrect) premise this would give a held-out-vs-step curve; CORRECTED same day -- this flag is a no-op for multisubject disRNN in the current wrapper (unconditional skip when is_multisubject=true, confirmed in this launch's own live logs). These runs get the same single end-of-training held-out value as mult-d-grid, not a step curve. See notes.md Stage B CORRECTION.",
   "wrapper_ref_resolved": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
   "dispatcher_ref_resolved": "4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3",
   "foraging_models_ref_resolved": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
@@ -15,5 +15,6 @@
   "cluster": [
     "ai1/octo-hub-onprem-h200"
   ],
-  "created_utc": "2026-09-09T09:18:08.703019+00:00"
+  "created_utc": "2026-09-09T09:18:08.703019+00:00",
+  "correction_2026-09-09": "checkpoint_run_heldout_eval=true does NOT produce a per-checkpoint held-out curve for this grid -- disrnn_trainer.py / gru_trainer.py unconditionally skip per-checkpoint held-out eval whenever is_multisubject=True, independent of this flag's value. Verified via source + live logs of tasks -000 and -002 in this experiment (log line: 'Skipping PER-CHECKPOINT held-out eval ... for multisubject disRNN; v1 supports seen-subject personalization only.'). Independently confirmed by the parallel near-GRU-ablation track (study 10) from its own live logs."
 }
