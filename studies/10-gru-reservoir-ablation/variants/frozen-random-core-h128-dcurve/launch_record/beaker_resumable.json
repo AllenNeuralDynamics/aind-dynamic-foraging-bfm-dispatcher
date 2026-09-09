@@ -1,0 +1,9 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 12,
+  "experiment_id": "01M213NMJA2PSGPWX5EN28FYZM",
+  "experiment_url": "https://beaker.org/ex/01M213NMJA2PSGPWX5EN28FYZM",
+  "dispatcher_commit": null,
+  "sweep_file": "studies/10-gru-reservoir-ablation/variants/frozen-random-core-h128-dcurve/sweep.yaml",
+  "created_utc": "2026-09-08T18:14:49.731689+00:00"
+}

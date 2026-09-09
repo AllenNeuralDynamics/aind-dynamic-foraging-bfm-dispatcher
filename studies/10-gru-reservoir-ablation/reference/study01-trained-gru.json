@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "description": "Immutable Study 01 v2 H128/E4 held-out AIND positive control",
+  "source_files": [
+    {
+      "path": "studies/01-gru-scaling-law/analysis/report_data.json",
+      "sha256": "6b17fb3b7728c926161945f9e30d49d6c771466746ad6958c154b73371daf7f1"
+    },
+    {
+      "path": "studies/09-gru-cross-species-transfer/source_runs.json",
+      "sha256": "28196e51f35d0d20255adc0c369f7c137f1af8c1ecf4680a039349a4194aaffb"
+    }
+  ],
+  "architecture": {"hidden_size": 128, "subject_embedding_size": 4},
+  "heldout_result_runs": {
+    "group": "heldout-rerun-v2-retry@20260623-065818",
+    "seed_0": "r63jnufo",
+    "seed_1": "lgg3y0bq",
+    "seed_2": "ngc7rp78"
+  },
+  "cells": [
+    {"D": 10, "seed": 0, "likelihood": 0.7202110886573792},
+    {"D": 10, "seed": 1, "likelihood": 0.7235190272331238},
+    {"D": 10, "seed": 2, "likelihood": 0.721650242805481},
+    {"D": 29, "nominal_D": 30, "seed": 0, "likelihood": 0.7244009375572205},
+    {"D": 30, "nominal_D": 30, "seed": 1, "likelihood": 0.725176990032196},
+    {"D": 30, "nominal_D": 30, "seed": 2, "likelihood": 0.7250411510467529},
+    {"D": 99, "nominal_D": 100, "seed": 0, "likelihood": 0.7272639870643616},
+    {"D": 101, "nominal_D": 100, "seed": 1, "likelihood": 0.7274349331855774},
+    {"D": 101, "nominal_D": 100, "seed": 2, "likelihood": 0.7271736860275269},
+    {"D": 300, "seed": 0, "likelihood": 0.7281753420829773},
+    {"D": 301, "nominal_D": 300, "seed": 1, "likelihood": 0.7278823852539062},
+    {"D": 300, "seed": 2, "likelihood": 0.7280145287513733},
+    {
+      "D": 614,
+      "seed": 0,
+      "likelihood": 0.7282935976982117,
+      "wandb_run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
+      "artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+    },
+    {
+      "D": 614,
+      "seed": 1,
+      "likelihood": 0.7282243967056274,
+      "wandb_run_id": "v2-sc-active-20260622-144622-3603897b",
+      "artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+    },
+    {
+      "D": 614,
+      "seed": 2,
+      "likelihood": 0.7281683683395386,
+      "wandb_run_id": "v2-sc-active-20260622-144622-d6462060",
+      "artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+    }
+  ]
+}

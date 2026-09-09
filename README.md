@@ -147,8 +147,9 @@ studies/01-gru-scaling-law/          # a question, one W&B project
   Makefile                           # regenerates every artifact
 ```
 
-Eight studies exist today, covering GRU and disRNN scaling laws, a disRNN β scan, embedding
-recovery, operating points at scale, timing inputs, and the HB-vs-GRU held-out comparison.
+Ten studies exist today, covering GRU and disRNN scaling laws, a disRNN β scan, embedding
+recovery, operating points at scale, timing inputs, cross-species transfer, reservoir
+ablation, and the HB-vs-GRU held-out comparison.
 Conventions — naming, group scheme, the `meta.*` provenance block, wrap-up — are in the
 `study-conventions` skill.
 

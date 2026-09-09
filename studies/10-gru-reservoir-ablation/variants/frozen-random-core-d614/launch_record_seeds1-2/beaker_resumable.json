@@ -1,0 +1,9 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 2,
+  "experiment_id": "01M1ZATF3VZS00RZ82JQTWWQSG",
+  "experiment_url": "https://beaker.org/ex/01M1ZATF3VZS00RZ82JQTWWQSG",
+  "dispatcher_commit": "7b97adacba0eb79e023b40df9fc37621568230c3",
+  "sweep_file": "studies/10-gru-reservoir-ablation/variants/frozen-random-core-d614/sweep-seeds1-2.yaml",
+  "created_utc": "2026-09-08T01:41:17.914074+00:00"
+}

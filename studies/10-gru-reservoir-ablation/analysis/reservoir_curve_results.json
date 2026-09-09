@@ -1,0 +1,630 @@
+{
+  "_meta": {
+    "produced_by": "analysis/freeze_dcurve.py",
+    "produced_at_pt": "2026-09-09T06:25:09-07:00",
+    "dispatcher_git_sha": null,
+    "wrapper_git_sha": "847a270945a29a0ce6ab78c89df660d084c7be95",
+    "wandb_groups": [
+      "frozen-random-core-h128-dcurve@20260908-111444",
+      "frozen-random-core-d614@20260907-175533",
+      "frozen-random-core-d614@20260907-184115"
+    ]
+  },
+  "cells": [
+    {
+      "nominal_D": 10,
+      "D": 10,
+      "seed": 0,
+      "subject_ratio": 0.016,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-4f5a3b97",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-4f5a3b97",
+      "heldout_likelihood": 0.7124268412590027,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-4f5a3b97:v0",
+        "digest": "4be81df6ad8b19f5cd510e1ff97d8bad"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "668eca74e77a5922a0bf816135ef2b0f0ea994fb6836cf71e822b5c5c981b3f8",
+        "final_params_sha256": "5fd60fddcd715158a888fb18b6ae22328fbcdfe65ae6b9142c95a8111e5b4967",
+        "initial_tree_sha256": "725bab7d7d3f06c7ba196ddfee91fb28e49ab5c27b6148f10d58a7e0649e18e3"
+      }
+    },
+    {
+      "nominal_D": 10,
+      "D": 10,
+      "seed": 1,
+      "subject_ratio": 0.016,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-323b10e3",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-323b10e3",
+      "heldout_likelihood": 0.7114421725273132,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-323b10e3:v0",
+        "digest": "801d7d3c3666e2e62b036dd3dda40447"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "31b075726730d238f58a7666db6e7360cd2cf1bfd83d7581ab3808f0ea12ba12",
+        "final_params_sha256": "be6a417037758afefaf7bfe9416f618d24b97ec33a59f55c09e8e51270722445",
+        "initial_tree_sha256": "9a0601011dcfdd7872801581dfec7532a763ccfbae0cc34d393322195815e10a"
+      }
+    },
+    {
+      "nominal_D": 10,
+      "D": 10,
+      "seed": 2,
+      "subject_ratio": 0.016,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-e3c22e2a",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-e3c22e2a",
+      "heldout_likelihood": 0.7116857767105103,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-e3c22e2a:v0",
+        "digest": "4e15880bd83f04e502fb8b7636463d72"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "903c0609f1086734b48e63163a5c16ae5643049b2cc786b4af8c1b4f0a8e7d56",
+        "final_params_sha256": "74016f4ed16ebca0bf1b673f4ba64688909b993431497771f984c408e54e987e",
+        "initial_tree_sha256": "aa21584b32177af80c1ee7e23810f31e200d9a82fbe4602c248570da5369665f"
+      }
+    },
+    {
+      "nominal_D": 30,
+      "D": 29,
+      "seed": 0,
+      "subject_ratio": 0.049,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-0ad45196",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-0ad45196",
+      "heldout_likelihood": 0.7103367447853088,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-0ad45196:v0",
+        "digest": "908b0d19b46cf660aafcad5f26c2ebbb"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "81ca922836b143388bb6903b7e0681f4200aa4a4265a94f55a1c3edd0357fc88",
+        "final_params_sha256": "210f62a3b8a36f27aaad4e8c1d052f7d951d45ff4ea751085ef02d5d684540e8",
+        "initial_tree_sha256": "cdf5e62e4a0af9fd8842c0f9dafde873bb5d6dd5579454e65f8d0c6035ff887c"
+      }
+    },
+    {
+      "nominal_D": 30,
+      "D": 30,
+      "seed": 1,
+      "subject_ratio": 0.049,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-ac135db5",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-ac135db5",
+      "heldout_likelihood": 0.7111512422561646,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-ac135db5:v0",
+        "digest": "3c08409b05391506679e0c8b12dde528"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "52ae98e5b9ed361ca657c92bde02a61ed39bba3d7c7ce01c49fa98806e7bd2d1",
+        "final_params_sha256": "252b7f69359ec595480875268ec3588d0e3213ef335732383d63ed8b6e5b5def",
+        "initial_tree_sha256": "124691a48169169ad477f25f742077ee92319c26960eedb78adb1c96314c246c"
+      }
+    },
+    {
+      "nominal_D": 30,
+      "D": 30,
+      "seed": 2,
+      "subject_ratio": 0.049,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-cf78e317",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-cf78e317",
+      "heldout_likelihood": 0.711785078048706,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-cf78e317:v0",
+        "digest": "6a3142dbe0422ababaf62b76549b6849"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "2499a41b88ecc24436bace12c5a84f56b318d841a395851c1e8f407905c62874",
+        "final_params_sha256": "c17866bfd57ec37d5861982baca9bfe0dd74076620a87f619acc7d2ce62522a2",
+        "initial_tree_sha256": "5599612bd36a5202978ddc81957c8885287f9b1b999aacb497b2767fc1428386"
+      }
+    },
+    {
+      "nominal_D": 100,
+      "D": 99,
+      "seed": 0,
+      "subject_ratio": 0.163,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-bd56f95c",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-bd56f95c",
+      "heldout_likelihood": 0.7091520428657532,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-bd56f95c:v0",
+        "digest": "f6d3652507c2cc4b7eec66a46b13efc9"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "d5056fa8f2062d038338bc0434721e9fcc89b28f5f7204b8221d9f7f40756228",
+        "final_params_sha256": "0be09c0958d4a4211fdf92dbdd070cfb2e794b3440a3ce664787f82f84db8b87",
+        "initial_tree_sha256": "4c67f6d25a86e2cd7ee6753c4ceecafee05e55e0a9e17c67f02bde596381c026"
+      }
+    },
+    {
+      "nominal_D": 100,
+      "D": 101,
+      "seed": 1,
+      "subject_ratio": 0.163,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-5e07ffdb",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-5e07ffdb",
+      "heldout_likelihood": 0.7113469243049622,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-5e07ffdb:v0",
+        "digest": "7ad98c484b557a57d584d4b74133aba9"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "499c249c43ba267f07037a891b223164af1ae814816a822027dcaa30d2197a17",
+        "final_params_sha256": "7f3b6caa115ce7b74014f15a2c410d8612f10879eec570f10148215d15be7c84",
+        "initial_tree_sha256": "05512e94c6e37a42fbca3113842e6641829c4fe566628c0bf118fefb914091f2"
+      }
+    },
+    {
+      "nominal_D": 100,
+      "D": 101,
+      "seed": 2,
+      "subject_ratio": 0.163,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-17ff8d61",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-17ff8d61",
+      "heldout_likelihood": 0.7127658128738403,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-17ff8d61:v0",
+        "digest": "bfaba3d8a28488d06bb44f5ac760152d"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "a7049e3e6f9272854a9b770b26f61ea05f7c4445183a814c5a38f13df5330251",
+        "final_params_sha256": "dfb57b04f825e9164039cba279d4d4d0f0b7d62fa1ed216094c68f640a0e49d2",
+        "initial_tree_sha256": "b6e8f9375227e8aa86c27e89d81f8961799594d52320b7422c86d719935785fe"
+      }
+    },
+    {
+      "nominal_D": 300,
+      "D": 300,
+      "seed": 0,
+      "subject_ratio": 0.489,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-104f19be",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-104f19be",
+      "heldout_likelihood": 0.7103727459907532,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-104f19be:v0",
+        "digest": "10f469d745cdf46c83443eed73a7a874"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "cec30e4e027219f8b9a84ba18babfa427414acef5e1abec97469ced77dd27d85",
+        "final_params_sha256": "fbc2a5ba2dc14fee6fd6f8eded7a30de170ff5f08c81df04d3b43b92498ac84a",
+        "initial_tree_sha256": "6059dcc36074686d551f9b969514b1a2c083be34a3e56b29a543bcef308a3cdb"
+      }
+    },
+    {
+      "nominal_D": 300,
+      "D": 301,
+      "seed": 1,
+      "subject_ratio": 0.489,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-983e7dea",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-983e7dea",
+      "heldout_likelihood": 0.7113489508628845,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-983e7dea:v0",
+        "digest": "f2e23e5489c8d13bdae7d0df01c7ef4d"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "cda2bf1ce2e4831be97ad88c8ead8a65b6f723348e208dc1398fe26ce93dbeae",
+        "final_params_sha256": "6eb8eea423cc7c80ea248a4a4ee5e08f1a7087310787867732cf9e757428744e",
+        "initial_tree_sha256": "922c87d5e5fd8acd8670802432b7b57a7c8d30323b4d015a9f0525ab42df7faf"
+      }
+    },
+    {
+      "nominal_D": 300,
+      "D": 300,
+      "seed": 2,
+      "subject_ratio": 0.489,
+      "cohort": "dcurve",
+      "wandb_run_id": "frozen-random-core-h128-dcurve-20260908-111444-533646d0",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-h128-dcurve-20260908-111444-533646d0",
+      "heldout_likelihood": 0.7125179767608643,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-h128-dcurve-20260908-111444-533646d0:v0",
+        "digest": "889981a14c629c51ce4d9ab37068e440"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "abdcabe36e92aeb463a21003030043d88780e91c0691b78b77a56f5e3edbfc88",
+        "final_params_sha256": "70f83cbfe2cb99d599b81759a4f8c39c8d1eccc2a19a7e4a1a80ca7be9d62b8a",
+        "initial_tree_sha256": "f1510323592d844f9d9af3ae916b99797cbd0031437cda3f8a2cae4c83dbe993"
+      }
+    },
+    {
+      "nominal_D": 614,
+      "D": 614,
+      "seed": 0,
+      "subject_ratio": 1.0,
+      "cohort": "pilot",
+      "wandb_run_id": "frozen-random-core-d614-20260907-175533-bbcdf2f9",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-d614-20260907-175533-bbcdf2f9",
+      "heldout_likelihood": 0.7104724645614624,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-d614-20260907-175533-bbcdf2f9:v0",
+        "digest": "ea062682da46de340785369e2fcf1d47"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "5c2d0e4f1c3c4e81dc081091a57b0d98f25cbcd3418714399d20287810c09e81",
+        "final_params_sha256": "37c3a45f9fd975190817715f794b7ae7f2b2d7529a5f9013845aa3353597603b",
+        "initial_tree_sha256": "1ce02556c5f5970a13e5a7d43582618143cea45bbca4b8a391255cb4721088a6"
+      }
+    },
+    {
+      "nominal_D": 614,
+      "D": 614,
+      "seed": 1,
+      "subject_ratio": 1.0,
+      "cohort": "pilot",
+      "wandb_run_id": "frozen-random-core-d614-20260907-184115-0c259519",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-d614-20260907-184115-0c259519",
+      "heldout_likelihood": 0.711328387260437,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-d614-20260907-184115-0c259519:v0",
+        "digest": "853bfeba0c3079006537ed4684437b19"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "e378d012488eed57eeb1991dbd06bd40dccbdac2f6bb10b40c4057bb35d747a3",
+        "final_params_sha256": "b2c6ac890290f1fdb41b5ec6a639526a6d5d3d4ed9d872434eaa78e155760343",
+        "initial_tree_sha256": "b2ea7b54e8fb27bb0285cf8a7bd78ddec362266722118eaf8c73e17aa7620bad"
+      }
+    },
+    {
+      "nominal_D": 614,
+      "D": 614,
+      "seed": 2,
+      "subject_ratio": 1.0,
+      "cohort": "pilot",
+      "wandb_run_id": "frozen-random-core-d614-20260907-184115-d2f43380",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_reservoir_ablation/runs/frozen-random-core-d614-20260907-184115-d2f43380",
+      "heldout_likelihood": 0.7132394909858704,
+      "training_steps_completed": 90000,
+      "training_artifact": {
+        "name": "gru-output-frozen-random-core-d614-20260907-184115-d2f43380:v0",
+        "digest": "6d834ef47d07351dec7337a3d13f5d57"
+      },
+      "frozen_parameter_audit": {
+        "passed": true,
+        "frozen_parameters": [
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_1/b",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/w",
+          "multisubject_gru/~compute_session_delta/session_delta_hidden_2/b",
+          "multisubject_gru/~compute_session_delta/session_delta_out/w",
+          "multisubject_gru/~compute_session_delta/session_delta_out/b",
+          "multisubject_gru/~/gru/w_i",
+          "multisubject_gru/~/gru/w_h",
+          "multisubject_gru/~/gru/b"
+        ],
+        "changed_subject_embeddings": [
+          "multisubject_gru/subject_embeddings"
+        ],
+        "changed_readout_parameters": [
+          "multisubject_gru/~/readout/w",
+          "multisubject_gru/~/readout/b"
+        ],
+        "initial_params_sha256": "e0da6597bed901353d870bec6dc27dad648b3a9af223f80d2a1fbad8844d97e1",
+        "final_params_sha256": "fcefa7cef306b0fc28abbccaf703670a5c4faf908b1c3d8cf5c36b7ed95f0bc0",
+        "initial_tree_sha256": "e9ec19c03d3c0b8f17ed21236101570633d2c41361025b2c3d28d72881010198"
+      }
+    }
+  ]
+}
