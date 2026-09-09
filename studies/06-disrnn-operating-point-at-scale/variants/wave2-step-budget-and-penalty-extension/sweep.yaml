@@ -50,8 +50,10 @@
 # `gru_trainer.py` unconditionally skip the per-checkpoint held-out eval whenever
 # `is_multisubject` is true (every run in this D-scaling study), regardless of this flag's
 # value ("Skipping PER-CHECKPOINT held-out eval ... for multisubject disRNN; v1 supports
-# seen-subject personalization only" -- confirmed in this launch's own live Beaker logs, and
-# independently by the parallel near-GRU-ablation track). So these runs do NOT get a
+# seen-subject personalization only" -- confirmed directly in this launch's own live Beaker
+# logs; a user message separately reported the same no-op via a parallel near-GRU-ablation
+# track's logs, but that track's logs were not inspected in this session, so treat that
+# corroboration as user-reported, not independently verified here). So these runs do NOT get a
 # held-out-mouse-vs-step curve; they get exactly the same single end-of-training held-out
 # value as mult-d-grid (via auto_heldout_finetune, unaffected by this bug). Left as `true`
 # anyway since it is harmless (log line only, no extra compute) and future-proofs against a

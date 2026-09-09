@@ -104,8 +104,10 @@ value** — the flag simply has no live code path for multisubject runs in this 
 version. Confirmed two ways: (1) reading the source above, and (2) the exact
 "Skipping PER-CHECKPOINT held-out eval ... for multisubject disRNN" log line appearing
 verbatim in this launch's own live Beaker logs (tasks `-000` and `-002` checked directly,
-`WRAPPER_REF=9595dd371ab87de49c281d8ca4bb6ae8af7c32e4`). This matches an independent finding
-from the parallel near-GRU-ablation track (study 10) from its own live logs.
+`WRAPPER_REF=9595dd371ab87de49c281d8ca4bb6ae8af7c32e4`). A user message reported that a
+parallel near-GRU-ablation track (study 10) independently found the same no-op from its own
+live logs; that track's logs were not inspected in this session, so this corroboration is
+user-reported here, not independently verified by this analysis.
 
 **Consequence for this launch:** these 8 runs will produce exactly the same held-out
 observable as `mult-d-grid` — a single end-of-training `heldout/final/eval_likelihood` value
