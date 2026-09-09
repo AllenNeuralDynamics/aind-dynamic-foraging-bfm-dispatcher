@@ -19,3 +19,5 @@
   retaining the exact-list D=614 rerun as a sensitivity replication.
 - Added the four missing H=128/E=4 reservoir data-scaling ratios with three
   seeds per ratio; the existing pilot supplies the D=614 curve cell.
+- Completed and froze all 15 H128/E=4 scaling-curve cells plus the three-seed
+  exact-split D=614 sensitivity replication. Every frozen-core audit passed.

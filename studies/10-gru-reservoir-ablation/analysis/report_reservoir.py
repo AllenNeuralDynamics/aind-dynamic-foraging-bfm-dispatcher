@@ -20,6 +20,7 @@ from plot_style import apply_presentation_style  # noqa: E402
 
 REFERENCE = STUDY / "reference" / "study01-trained-gru.json"
 FROZEN = STUDY / "analysis" / "reservoir_results.json"
+CURVE = STUDY / "analysis" / "reservoir_curve_results.json"
 SUMMARY = STUDY / "analysis" / "reservoir_analysis.json"
 FIGURE = STUDY / "analysis" / "fig_reservoir_vs_trained.png"
 REPORT = STUDY / "analysis" / "reports" / "r1-frozen-random-reservoir.md"
@@ -75,7 +76,51 @@ def _bootstrap(values: np.ndarray) -> dict:
     }
 
 
-def _make_figure(reference: dict, data: dict, values: np.ndarray, stats: dict) -> None:
+def _curve_summary(reference: dict, curve: dict) -> list[dict]:
+    trained = defaultdict(dict)
+    for cell in reference["cells"]:
+        trained[int(cell.get("nominal_D", cell["D"]))][int(cell["seed"])] = float(
+            cell["likelihood"]
+        )
+    reservoir = defaultdict(dict)
+    realized_d = defaultdict(list)
+    for cell in curve["cells"]:
+        reservoir[int(cell["nominal_D"])][int(cell["seed"])] = float(
+            cell["heldout_likelihood"]
+        )
+        realized_d[int(cell["nominal_D"])].append(int(cell["D"]))
+    summary = []
+    for d in sorted(reservoir):
+        if sorted(reservoir[d]) != [0, 1, 2] or sorted(trained[d]) != [0, 1, 2]:
+            raise ValueError(f"D={d} is missing a seed-paired curve cell")
+        reservoir_values = np.asarray([reservoir[d][seed] for seed in range(3)])
+        trained_values = np.asarray([trained[d][seed] for seed in range(3)])
+        differences = reservoir_values - trained_values
+        summary.append(
+            {
+                "nominal_D": d,
+                "realized_D": realized_d[d],
+                "reservoir_values": reservoir_values.tolist(),
+                "trained_values": trained_values.tolist(),
+                "reservoir_mean": float(reservoir_values.mean()),
+                "reservoir_sd": float(reservoir_values.std(ddof=1)),
+                "trained_mean": float(trained_values.mean()),
+                "trained_sd": float(trained_values.std(ddof=1)),
+                "difference_values": differences.tolist(),
+                "difference_mean": float(differences.mean()),
+                "difference_sd": float(differences.std(ddof=1)),
+            }
+        )
+    return summary
+
+
+def _make_figure(
+    reference: dict,
+    data: dict,
+    curve_summary: list[dict],
+    values: np.ndarray,
+    stats: dict,
+) -> None:
     apply_presentation_style()
     by_nominal_d = defaultdict(list)
     for cell in reference["cells"]:
@@ -83,8 +128,13 @@ def _make_figure(reference: dict, data: dict, values: np.ndarray, stats: dict) -
     ds = sorted(by_nominal_d)
     means = np.asarray([np.mean(by_nominal_d[d]) for d in ds])
     sds = np.asarray([np.std(by_nominal_d[d], ddof=1) for d in ds])
-    reservoir_values = np.asarray(
-        [item["heldout_likelihood"] for item in sorted(data["reservoir"], key=lambda x: x["seed"])]
+    curve_by_d = {item["nominal_D"]: item for item in curve_summary}
+    completed_ds = sorted(curve_by_d)
+    exact_values = np.asarray(
+        [
+            item["heldout_likelihood"]
+            for item in sorted(data["reservoir"], key=lambda x: x["seed"])
+        ]
     )
 
     figure, axes = plt.subplots(1, 2, figsize=(10.5, 4.2))
@@ -99,14 +149,34 @@ def _make_figure(reference: dict, data: dict, values: np.ndarray, stats: dict) -
             s=20,
             alpha=0.75,
         )
-    axis.scatter(
-        [614] * len(reservoir_values), reservoir_values,
-        marker="D", color="#CC5A49", s=34, alpha=0.8,
-    )
+    reservoir_means = [curve_by_d[d]["reservoir_mean"] for d in completed_ds]
+    reservoir_sds = [curve_by_d[d]["reservoir_sd"] for d in completed_ds]
     axis.errorbar(
-        614, reservoir_values.mean(), yerr=reservoir_values.std(ddof=1),
-        marker="D", color="#8C2F23", markersize=8, capsize=4,
-        linestyle="none", label="Frozen random reservoir (E=4)",
+        completed_ds,
+        reservoir_means,
+        yerr=reservoir_sds,
+        marker="D",
+        color="#8C2F23",
+        markersize=7,
+        capsize=4,
+        label="Frozen random reservoir (E=4)",
+    )
+    for d in completed_ds:
+        axis.scatter(
+            [d] * 3,
+            curve_by_d[d]["reservoir_values"],
+            color="#CC5A49",
+            s=24,
+            alpha=0.7,
+        )
+    axis.scatter(
+        [614] * len(exact_values),
+        exact_values,
+        marker="x",
+        color="#7A4EAB",
+        s=48,
+        linewidths=1.5,
+        label="Exact-split D=614 replication",
     )
     axis.set_xscale("log")
     axis.set_xlabel("Source-training subjects (D)")
@@ -158,11 +228,13 @@ def _replace_result(report: str, replacement: str) -> str:
 def main() -> None:
     reference = json.loads(REFERENCE.read_text())
     data = json.loads(FROZEN.read_text())
+    curve = json.loads(CURVE.read_text())
     subject_ids, values = _paired_differences(data)
     stats = _bootstrap(values)
+    curve_summary = _curve_summary(reference, curve)
     reservoir_values = [item["heldout_likelihood"] for item in data["reservoir"]]
     trained_values = [item["heldout_likelihood"] for item in data["trained_gru"]]
-    groups = data["_meta"]["wandb_groups"]
+    groups = data["_meta"]["wandb_groups"] + curve["_meta"]["wandb_groups"]
     summary = {
         "_meta": build_meta(
             "analysis/report_reservoir.py", groups, study_root=STUDY
@@ -175,17 +247,33 @@ def main() -> None:
         "trained_gru_sd": float(np.std(trained_values, ddof=1)),
         "paired_subject_bootstrap": stats,
         "subject_ids": subject_ids,
+        "scaling_curve": curve_summary,
     }
     SUMMARY.write_text(json.dumps(summary, indent=2) + "\n")
-    _make_figure(reference, data, values, stats)
+    _make_figure(reference, data, curve_summary, values, stats)
 
     verdict = "non-inferior" if stats["noninferior"] else "not non-inferior"
+    curve_rows = "\n".join(
+        "| {nominal_D} | {realized_D} | {trained_mean:.6f} | "
+        "{reservoir_mean:.6f} | {difference_mean:+.6f} |".format(
+            nominal_D=cell["nominal_D"],
+            realized_D=", ".join(str(value) for value in cell["realized_D"]),
+            trained_mean=cell["trained_mean"],
+            reservoir_mean=cell["reservoir_mean"],
+            difference_mean=cell["difference_mean"],
+        )
+        for cell in curve_summary
+    )
     result = f"""![Reservoir comparison](../fig_reservoir_vs_trained.png)
 
-| model | mean normalized likelihood | SD across seeds |
+| nominal D | realized D by seed | trained GRU | frozen reservoir | reservoir − trained |
+|---:|---|---:|---:|---:|
+{curve_rows}
+
+| D=614 comparison | mean normalized likelihood | SD across seeds |
 |---|---:|---:|
 | Trained GRU (H=128, D=614, E=4) | {summary['trained_gru_mean']:.6f} | {summary['trained_gru_sd']:.6f} |
-| Frozen reservoir (H=128, D=614, E=4) | {summary['reservoir_mean']:.6f} | {summary['reservoir_sd']:.6f} |
+| Frozen reservoir, exact split (H=128, D=614, E=4) | {summary['reservoir_mean']:.6f} | {summary['reservoir_sd']:.6f} |
 
 Across {stats['n_subjects']} paired held-out subjects, reservoir minus trained-GRU likelihood is
 **{stats['mean']:+.6f}** on average (subject-bootstrap 95% CI
@@ -193,10 +281,12 @@ Across {stats['n_subjects']} paired held-out subjects, reservoir minus trained-G
 criterion is greater than {NONINFERIORITY_MARGIN:+.3f}; therefore the reservoir is
 **{verdict}** in this first-pass source-domain test.
 
-All three reservoir runs passed the bitwise audit: every frozen GRU and
+All 15 scaling-curve runs passed the bitwise audit: every frozen GRU and
 session-conditioning parameter equals its initialized value, while source subject
-embeddings and the readout changed. Held-out subject keys match the paired trained-GRU
-runs for all seeds."""
+embeddings and the readout changed. The D=614 curve cell uses the accepted
+three-subject-drift pilot; its exact-split replication is shown separately and is
+not counted as three additional independent seeds. Held-out subject keys match the
+paired trained-GRU runs for all exact-split D=614 seeds."""
     REPORT.write_text(_replace_result(REPORT.read_text(), result))
     print(f"wrote {SUMMARY}, {FIGURE}, and {REPORT}")
 

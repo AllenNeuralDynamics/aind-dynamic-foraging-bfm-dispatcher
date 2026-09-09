@@ -77,6 +77,10 @@ experiment
 [`01M213NMJA2PSGPWX5EN28FYZM`](https://beaker.org/ex/01M213NMJA2PSGPWX5EN28FYZM),
 W&B group `frozen-random-core-h128-dcurve@20260908-111444`.
 
+All 12 curve cells completed successfully. The frozen, reproducible results and
+the separate exact-split D=614 sensitivity replication are in
+[`analysis/reports/r1-frozen-random-reservoir.md`](analysis/reports/r1-frozen-random-reservoir.md).
+
 ## Scope boundary
 
 This study does not test E=8, tuned reservoir dynamics, or a
