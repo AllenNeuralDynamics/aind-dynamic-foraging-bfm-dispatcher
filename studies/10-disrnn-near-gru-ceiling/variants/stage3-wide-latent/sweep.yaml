@@ -7,21 +7,46 @@
 # attributed to each change individually via a STAGED ablation.
 #
 # THIS VARIANT = stage2-linear-update-net's config (penalty zeroed + linear update net)
-# PLUS widening the latent from 5 to 256 — chosen to match study 01's H=256 GRU
-# reference point exactly (GRU_CEIL at D=614 ~= 0.7267-0.7268), so this is the closest
-# a disRNN-shaped model can get to that architecture's capacity. This is the ceiling
-# probe: if the residual gap does not close even here, it is not explained by
-# capacity/regularization at all.
+# PLUS widening the latent from 5 to 32 — a DOWNGRADED, comfortably-safe width, NOT the
+# original GRU-H256-matched target of latent_size=256. See "DOWNGRADE" note below for why.
 #
-# COMPILE-TIME / MEMORY RISK (untested territory — no prior study used latent_size != 5).
+# DOWNGRADE (2026-09-09): the original ceiling probe (latent_size=256, matching study 01's
+# H=256 GRU exactly) was launched (Beaker exp 01M22Q2AF2JNNJP69RWQ8CG4AA, 2 tasks) and BOTH
+# tasks failed after ~53 min with `RESOURCE_EXHAUSTED: Out of memory while trying to
+# allocate 1513245575640 bytes` (~1.38 TiB requested vs 141GB available on the H200);
+# XLA's own rematerialization pass could only reduce it to 1.38TiB from 1.38TiB
+# originally, i.e. the graph itself (not just activations) is enormous. A batch_size=64
+# smoke test (down from 1024, n_steps=50, same latent_size=256, one-off Beaker exp
+# 01M23R8FKZSW7D1CDQZFSNDGW4) then hit a DIFFERENT, batch-size-independent failure at the
+# training-step JIT compile: `INVALID_ARGUMENT: Can't pack device memory arguments array
+# of size 1793 which is larger than the maximum supported size of 1024` — a fixed PJRT
+# argument-packing ceiling driven by the 256 separate per-latent ResMLP modules (~7 packed
+# buffers/latent x 256 = 1793), not by activation memory. This is direct evidence that the
+# OOM is dominated by the 256x unrolled-module-count term (see COMPILE-TIME/MEMORY RISK
+# note below), NOT by batch-size-scaled activation memory — no batch_size cut can fix it.
+# Per Han's explicit steering, we stopped chasing latent_size=256 via batch-size tricks and
+# downgraded the target width to latent_size=32 instead: ~7 args/latent x 32 = ~224,
+# comfortably under the 1024-arg ceiling. A sizing probe at latent_size=32 (standard
+# batch_size=1024, n_steps=50, Beaker exp 01M23VHJSCFKF6Y80WDZGSJCZ0) reached and passed
+# the exact point where the latent_size=256 runs failed (training-step JIT compile +
+# first warmup step, logged "Running warmup training phase" and began executing without
+# an argument-packing or OOM error) before this grid was launched. True GRU-H256-matched
+# capacity (latent_size=256) remains BLOCKED on a wrapper fix: `update_latents` needs to
+# `vmap` its per-latent-module loop instead of Python-unrolling it (see the tracking
+# GitHub issue filed on aind-dynamic-foraging-bfm-wrapper). This latent_size=32 config is
+# therefore a REDUCED ceiling probe, not the GRU-parity target the study originally asked
+# for — see the study README and this variant's notes.md for the full record.
+#
+# COMPILE-TIME / MEMORY RISK (as originally written, latent_size=256 -- see DOWNGRADE above
+# for what actually happened when this was tested at scale).
 # HkDisentangledRNN.update_latents (disentangled_rnns/library/disrnn.py) builds ONE
 # separate ResMLP per latent in a Python-level `for net_i in range(latent_size)` loop —
 # unrolled at trace time, not vmapped. At latent_size=256 this is a ~51x increase in the
-# number of update-net modules traced into one XLA graph vs. latent_size=5, which may
-# mean much longer JIT compile time (not necessarily more GPU memory, since each
-# per-latent MLP is still tiny: obs_size+256 -> 16 -> 2, n_layers=0). Monitor the first
-# scheduled task's wall-clock-to-first-step before trusting the fan-out; this is exactly
-# the "validate first" case the beaker-launch skill calls out for untested sizing.
+# number of update-net modules traced into one XLA graph vs. latent_size=5, which turned
+# out to blow both the GPU memory budget and a fixed PJRT argument-packing ceiling (see
+# DOWNGRADE). At latent_size=32 (~6.4x vs. latent_size=5) this risk is much smaller but was
+# still validated with a sizing probe rather than assumed, per the beaker-launch skill's
+# "validate, then fan out" rule for untested sizing.
 #
 # CAVEAT (study README, restated in every variant's notes.md): this is NOT an
 # interpretable disRNN (compounding stage1 + stage2 + this), and its results must NOT be
@@ -49,9 +74,10 @@ command:
   # --- cohort: D=614 fixed (subject_ratio=1.0 below), 2-way output ---
   - data.ignore_policy=exclude
   - data.subject_ratio=1.0
-  # --- architecture: stage2's config + THE ABLATION (latent_size 5 -> 256, matches GRU H256) ---
+  # --- architecture: stage2's config + THE ABLATION, DOWNGRADED (latent_size 5 -> 32; see
+  #     DOWNGRADE note above -- 256 hit a batch-size-independent PJRT arg-packing ceiling) ---
   - model.architecture.choice_net_n_layers=0
-  - model.architecture.latent_size=256
+  - model.architecture.latent_size=32
   - model.architecture.update_net_n_units_per_layer=16
   - model.architecture.update_net_n_layers=0
   # --- scalar session conditioning, identical to study 06's tuned point ---

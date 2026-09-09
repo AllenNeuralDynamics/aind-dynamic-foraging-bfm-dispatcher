@@ -80,7 +80,7 @@ mistake a missing per-checkpoint `heldout/*` curve for a bug.
 |---|---|---|---|---|---|---|---|
 | [stage1-no-penalty](variants/stage1-no-penalty/) | interaction penalty -> 0 (mult=0); latent_size=5, update_net_n_layers=5 unchanged | 614 | 0,1 | 100000 | launched | `stage1-no-penalty@20260909-021133` | [01M22PZR6HW7C4ACC09DH6019R](https://beaker.org/ex/01M22PZR6HW7C4ACC09DH6019R) |
 | [stage2-linear-update-net](variants/stage2-linear-update-net/) | stage1 + linear update net (`update_net_n_layers=0`) | 614 | 0,1 | 100000 | launched | `stage2-linear-update-net@20260909-021223` | [01M22Q19MRZ3Z2YPRQEG984323](https://beaker.org/ex/01M22Q19MRZ3Z2YPRQEG984323) |
-| [stage3-wide-latent](variants/stage3-wide-latent/) | stage2 + `latent_size` 5 -> 256 (matches GRU H=256) | 614 | 0,1 | 100000 | launched | `stage3-wide-latent@20260909-021255` | [01M22Q2AF2JNNJP69RWQ8CG4AA](https://beaker.org/ex/01M22Q2AF2JNNJP69RWQ8CG4AA) |
+| [stage3-wide-latent](variants/stage3-wide-latent/) | stage2 + `latent_size` 5 -> **32** (DOWNGRADED; see below) | 614 | 0,1 | 100000 | relaunched (downgraded) | `stage3-wide-latent@20260909-140640` | [01M23ZX664WP1QJQJNVBYY1V13](https://beaker.org/ex/01M23ZX664WP1QJQJNVBYY1V13) |
 
 All three: `ai1/octo-hub-onprem-h200` only (12/16 schedulable, 0 cordoned, 0 queued at
 launch), image `han-hou/dynamic-foraging-bfm-wrapper-main-20260902`, W&B project
@@ -95,6 +95,35 @@ watched for) compiled and completed its pre-warmup eval in ~2m15s without OOM.
 Timing was directly checked against stage1 only (pre-warmup eval logged within
 seconds of model init there); stage2's timing was not checked in this session, so
 the compile-time-risk comparison covers stage1 vs. stage3, not stage2.
+
+### ⚠️ stage3-wide-latent DOWNGRADED from latent_size=256 to latent_size=32 (2026-09-09)
+
+The original stage3-wide-latent launch (`latent_size=256`, matching study 01's H=256
+GRU capacity exactly — the study's intended ceiling probe) **failed on both tasks**
+after ~53 min with `RESOURCE_EXHAUSTED: Out of memory` (~1.38 TiB requested vs 141GB
+available on the H200). Root cause (confirmed by a batch-size diagnostic, not just
+inferred): `HkDisentangledRNN.update_latents` builds one separate `ResMLP` per latent
+in a Python `for` loop unrolled at JAX trace time rather than `vmap`ped — at
+`latent_size=256` this is a ~51x increase in unrolled modules vs. every prior study's
+`latent_size=5`, and it blows both the GPU memory budget and a fixed PJRT
+argument-packing ceiling (1024 packed device-memory arguments per compiled call) that
+is **independent of batch size** — a `batch_size=64` retry did not reproduce the OOM
+but hit the argument-packing ceiling instead, ruling out a config-only fix.
+
+Per explicit steering, this was not chased further with batch-size tricks. Instead,
+**stage3-wide-latent now targets `latent_size=32`** — a value confirmed by a sizing
+probe to clear the same failure point, and comfortably under the packing ceiling and
+memory budget. **This makes stage3-wide-latent a REDUCED ceiling probe, not the
+study's original GRU-H256-matched capacity target.** Any conclusion drawn from its
+results about "how much of the residual gap closes at GRU-matched capacity" must be
+qualified accordingly: it answers "at latent_size=32" only.
+
+True GRU-parity capacity (`latent_size=256`) requires a wrapper code fix — `vmap`ing
+the per-latent update-net loop — tracked in
+[aind-dynamic-foraging-bfm-wrapper#99](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/99).
+Full diagnostic evidence (OOM log, argument-packing error, sizing-probe results,
+Beaker experiment ids) is in `variants/stage3-wide-latent/notes.md` and
+`variants/stage3-wide-latent/launch_record/beaker_resubmit_latent32.json`.
 
 ## Provenance
 

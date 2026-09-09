@@ -1,17 +1,29 @@
 # Task template for variant stage3-wide-latent (consumed by launch_beaker_resumable.py).
 # The launcher expands the sweep's 2-seed grid into 2 autoResume tasks.
 #
-# COMPUTE: latent_size=256 (vs. 5 for stages 1/2) -- the wide-latent ceiling probe.
-# Sized more generously than stages 1/2's 90GiB/12CPU: 180GiB/24CPU, headroom for the
-# ~51x larger unrolled per-latent-MLP JAX trace (see sweep.yaml's COMPILE-TIME/MEMORY
-# RISK note) while staying safely under one H200 GPU's per-slot bundle (node = 224 CPU /
-# ~3023 GiB / 8 GPUs -> ~28 CPU / ~378 GiB per GPU), so this task cannot accidentally
-# grab a second GPU. Per the wrapper beaker README's GRU precedent, hidden_size=256
-# needed ~37-40 GB *GPU* memory (does not fit a 48 GB L40s); disRNN's per-latent MLPs are
-# individually tiny (obs_size+256 -> 16 -> 2, n_layers=0) so GPU memory should be far
-# lighter than the GRU case, but this is UNTESTED for disRNN -- monitor the first
-# scheduled task before trusting the fan-out (beaker-launch skill: "validate, then fan
-# out" applies here because sizing is genuinely new, not routine).
+# COMPUTE: latent_size=32 (DOWNGRADED from the original latent_size=256 target -- see
+# sweep.yaml's DOWNGRADE note for the full record). The original 256-wide launch (Beaker
+# exp 01M22Q2AF2JNNJP69RWQ8CG4AA) OOM'd at ~1.38TiB requested vs 141GB available on the
+# H200 after ~53 min; a batch_size=64 smoke test at latent_size=256 then hit a separate,
+# batch-size-independent PJRT `INVALID_ARGUMENT: Can't pack device memory arguments array
+# of size 1793 ... maximum supported size of 1024` failure at the training-step JIT
+# compile, confirming the failure is dominated by the 256x unrolled per-latent-module
+# count (see disrnn.py's `update_latents` Python-level `for net_i in range(latent_size)`
+# loop, not vmapped), not by batch-size-scaled activation memory. latent_size=32 keeps
+# ~7 packed args/latent x 32 = ~224, comfortably under the 1024-arg ceiling, and was
+# validated with a sizing probe (Beaker exp 01M23VHJSCFKF6Y80WDZGSJCZ0, standard
+# batch_size=1024, n_steps=50) that reached and passed the training-step JIT compile
+# without erroring, before this grid was launched.
+#
+# Resources kept at 180GiB/24CPU (unchanged from the original 256-wide sizing, and the
+# sizing validated by the latent_size=32 probe above) -- still safely under one H200 GPU's
+# per-slot bundle (node = 224 CPU / ~3023 GiB / 8 GPUs -> ~28 CPU / ~378 GiB per GPU), so
+# this task cannot accidentally grab a second GPU.
+#
+# True GRU-H256-matched capacity (latent_size=256) remains BLOCKED on a wrapper fix
+# (vmap the per-latent update-net loop) -- tracked in a GitHub issue on
+# aind-dynamic-foraging-bfm-wrapper. This is a REDUCED ceiling probe, not the study's
+# original GRU-parity target; see the study README and this variant's notes.md.
 #
 # CLUSTER: ai1/octo-hub-onprem-h200 ONLY, per explicit instruction (12/16 schedulable,
 # 0 cordoned, 0 queued as of this launch -- see launch_record for the capacity check).
@@ -26,9 +38,11 @@
 # the ref, so a branch could otherwise drift mid-run).
 version: v2
 description: >
-  Study 10 stage 3/3 (final) near-GRU ablation -- the ceiling probe. Stage 2's config
-  (penalty zeroed + linear update net) PLUS latent_size 5 -> 256, matching study 01's
-  H=256 GRU capacity exactly. NOT an interpretable disRNN; see study README caveat.
+  Study 10 stage 3/3 (final) near-GRU ablation -- DOWNGRADED reduced ceiling probe.
+  Stage 2's config (penalty zeroed + linear update net) PLUS latent_size 5 -> 32 (NOT
+  the original GRU-H256-matched target of 256, which OOM'd / hit a PJRT arg-packing
+  ceiling; see sweep.yaml's DOWNGRADE note). NOT an interpretable disRNN; see study
+  README caveat. True GRU-parity capacity blocked on a wrapper vmap fix (GitHub issue).
 tasks:
   - name: disrnn-stage3-wide-latent-template
     image:

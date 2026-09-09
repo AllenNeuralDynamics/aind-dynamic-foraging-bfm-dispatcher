@@ -1,0 +1,77 @@
+{
+  "_meta": {
+    "produced_by": "launch_record.write_intervention",
+    "produced_at_pt": "2026-09-09T14:09:11-07:00",
+    "dispatcher_git_sha": "9d31f86072013d6f1fefecc980b82590cb8915cf",
+    "wrapper_git_sha": null,
+    "wandb_groups": [
+      "stage3-wide-latent@20260909-140640"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "beaker",
+  "wandb_group": "stage3-wide-latent@20260909-140640",
+  "job_refs": [
+    {
+      "type": "beaker_experiment",
+      "id": "01M23R4PMW6C88W4JQM7A1BSEG"
+    },
+    {
+      "type": "beaker_experiment",
+      "id": "01M23R8FKZSW7D1CDQZFSNDGW4"
+    },
+    {
+      "type": "beaker_experiment",
+      "id": "01M23VHJSCFKF6Y80WDZGSJCZ0"
+    },
+    {
+      "type": "beaker_experiment",
+      "id": "01M23ZX664WP1QJQJNVBYY1V13"
+    }
+  ],
+  "supersedes": [
+    "01M22Q2AF2JNNJP69RWQ8CG4AA"
+  ],
+  "trigger": {
+    "symptom": "Both tasks of the original stage3-wide-latent launch (Beaker exp 01M22Q2AF2JNNJP69RWQ8CG4AA, latent_size=256, batch_size=1024, 2 seeds) failed after ~53 min at JIT-compile time with 'RESOURCE_EXHAUSTED: Out of memory while trying to allocate 1513245575640 bytes' (~1.38 TiB requested vs 141GB available on the H200). hlo_rematerialization.cc:3022 logged: \"Can't reduce memory use below 99.55GiB (106890456652 bytes) by rematerialization; only reduced to 1.38TiB (1513264486324 bytes), down from 1.38TiB (1513264510944 bytes) originally\" -- i.e. XLA's own rematerialization pass could barely touch it.",
+    "cause": "HkDisentangledRNN.update_latents (disentangled_rnns/library/disrnn.py) builds ONE separate ResMLP per latent in a Python-level `for net_i in range(latent_size)` loop, unrolled at JAX trace time rather than vmapped. At latent_size=256 (vs. 5 in all prior studies) this is a ~51x increase in the number of update-net modules traced into one XLA graph. A follow-up batch_size=64 smoke test (n_steps=50, same latent_size=256, one-off exp 01M23R8FKZSW7D1CDQZFSNDGW4) confirmed this is NOT primarily a batch-size-scaled activation-memory problem: it did not reproduce the RESOURCE_EXHAUSTED OOM, but instead hit a different, batch-size-independent failure at the same training-step JIT-compile point: 'INVALID_ARGUMENT: Can't pack device memory arguments array of size 1793 which is larger than the maximum supported size of 1024' -- a fixed PJRT argument-packing ceiling driven by the number of separate per-latent module parameter buffers (~7 packed args/latent x 256 = 1793), independent of batch size. Root cause: the per-latent loop's graph/argument-count term dominates, not activation memory, so no batch_size cut can fix latent_size=256 -- it needs `update_latents` to `vmap` its per-latent loop instead of Python-unrolling it (wrapper code fix, tracked in a GitHub issue on aind-dynamic-foraging-bfm-wrapper).",
+    "evidence": {
+      "original_oom_log": "hlo_rematerialization.cc:3022: Can't reduce memory use below 99.55GiB (106890456652 bytes) by rematerialization; only reduced to 1.38TiB (1513264486324 bytes), down from 1.38TiB (1513264510944 bytes) originally; bfc_allocator.cc:501: Allocator (GPU_0_bfc) ran out of memory trying to allocate 1.38TiB (rounded to 1513245575680) requested by op; RESOURCE_EXHAUSTED: Out of memory while trying to allocate 1513245575640 bytes.",
+      "smoke_test_batch64_log": "jaxlib._jax.XlaRuntimeError: INVALID_ARGUMENT: Can't pack device memory arguments array of size 1793 which is larger than the maximum supported size of 1024, raised from utils/session_regularized_training.py:367 train_step(...).",
+      "sizing_probe_latent32": "latent_size=32, batch_size=1024 (unchanged), n_steps=50: reached 'Running warmup training phase' and executed the first training step without an OOM or argument-packing error (exp 01M23VHJSCFKF6Y80WDZGSJCZ0)."
+    }
+  },
+  "tasks": [
+    {
+      "orig_task": "stage3-wide-latent-20260909-021255-000",
+      "new_task": "stage3-wide-latent-20260909-140640-000",
+      "orig_wandb_run": "stage3-wide-latent-20260909-021255-d128cc6f",
+      "new_wandb_run": null
+    },
+    {
+      "orig_task": "stage3-wide-latent-20260909-021255-001",
+      "new_task": "stage3-wide-latent-20260909-140640-001",
+      "orig_wandb_run": "stage3-wide-latent-20260909-021255-c66208ca",
+      "new_wandb_run": null
+    }
+  ],
+  "deviations": {
+    "fresh_run_ids": true,
+    "config_changed": {
+      "model.architecture.latent_size": {
+        "from": 256,
+        "to": 32
+      }
+    },
+    "reason_for_config_change": "latent_size=256 (the original GRU-H256-matched ceiling-probe target) is infeasible on current hardware/wrapper code (see trigger.cause). Downgraded to latent_size=32 per explicit user steering rather than continuing to chase 256 via batch-size tricks. This makes stage3-wide-latent a REDUCED ceiling probe, not the study's original GRU-parity target; true latent_size=256 remains blocked on a wrapper vmap fix.",
+    "sizing_probes_used": 3,
+    "sizing_probes_budget_note": "Per steering: at most ~2-3 total sizing probes. Used: (1) batch_size=64 smoke test at latent_size=256 [confirmed batch-size-independent failure, did not retry batch_size=16 since the error was unambiguously a fixed argument-count ceiling, not a size-scaled one], (2) latent_size=32 sizing probe at standard batch_size=1024 [passed]. A first smoke-test submission (01M23R4PMW6C88W4JQM7A1BSEG) failed immediately on a config-key error (batch_size lives under `data.batch_size`, not `model.training.batch_size`) and is not counted as a real sizing probe."
+  },
+  "cost": {
+    "progress_discarded_steps": {
+      "stage3-wide-latent-20260909-021255-000": 0,
+      "stage3-wide-latent-20260909-021255-001": 0
+    },
+    "note": "Both original tasks OOM'd before any checkpoint was written; zero progress discarded."
+  }
+}
