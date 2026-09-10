@@ -1,0 +1,38 @@
+# HB sampler-diagnostic probe — D≈30 at the ladder's own settings.
+#
+# Reproduces the rung whose failure is being diagnosed (warmup 2000, 500 draws, 4 chains)
+# with wrapper#90's extra_fields collection, so the fit carries num_steps / energy /
+# accept_prob rather than `diverging` alone.
+#
+# The question it answers, which r_hat and ESS cannot: at D≈29 the ladder has ZERO
+# divergences with bulk ESS ~103 and overlapping chains. That is either trajectories
+# truncated at max_tree_depth -- slow mixing, no divergences, fixed nearly free by raising
+# the cap -- or genuinely slow mixing, fixed by ~4x the draws. Saturation shows as num_steps
+# pinned near 2**10 - 1 = 1023 (NUTS has no tree_depth field; it is log2(num_steps) + 1).
+#
+# Deliberately NOT a settings change: same warmup, same draws. Changing them here would
+# confound the instrument with the thing being measured.
+
+entity: AIND-disRNN
+project: mice_data_scaling
+name: hb-sampler-diag
+
+method: grid
+metric:
+  name: heldout/eval_likelihood
+  goal: maximize
+
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=hb_hattori
+  - seed=0
+  - wandb.entity=AIND-disRNN
+  - wandb.project=mice_data_scaling
+  - ${args_no_hyphens}
+
+parameters:
+  data.subject_ratio:
+    values: [0.049]
