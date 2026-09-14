@@ -124,7 +124,7 @@ This cumulative sensitivity view additionally includes Tang (macaque). Its plot 
 
 ### R1-scale companion: normalized-likelihood difference
 
-These descriptive companion plots use the same normalized-likelihood units as Result 1. They retain Result 3's equal-subject aggregation: each source seed's GRU value is `exp(mean subject log likelihood)` minus the matched Bari2019 value. The bits-per-trial plots above remain primary for additive cross-task inference.
+These descriptive companion plots use the same normalized-likelihood units as Result 1. They retain Result 3's equal-subject aggregation: each source seed's GRU value is `exp(mean subject log likelihood)` minus the matched Bari2019 value. Each point is the three-seed mean, with horizontal and vertical SEM bars. The Bari2019 baseline is shared across source seeds, so its horizontal SEM is zero in the two Bari2019-axis panels. The bits-per-trial plots above remain primary for additive cross-task inference.
 
 #### Primary-inference cohorts
 

@@ -218,6 +218,53 @@ def _relation_title(label: str, relation: dict | None, n_cohorts: int) -> str:
     )
 
 
+def _plot_seed_points(
+    axis: plt.Axes,
+    x: np.ndarray,
+    y: np.ndarray,
+    color: str,
+    marker: str,
+) -> None:
+    axis.plot(x, y, color=color, alpha=0.20, linewidth=0.9)
+    axis.scatter(x, y, color=color, alpha=0.32, s=24, marker=marker)
+    axis.scatter(
+        x.mean(),
+        y.mean(),
+        color=color,
+        edgecolor="white",
+        linewidth=0.8,
+        s=75,
+        marker=marker,
+        zorder=4,
+    )
+
+
+def _plot_seed_mean_sem(
+    axis: plt.Axes,
+    x: np.ndarray,
+    y: np.ndarray,
+    color: str,
+    marker: str,
+) -> None:
+    def sem(values: np.ndarray) -> float:
+        return float(np.std(values, ddof=1) / np.sqrt(len(values)))
+
+    axis.errorbar(
+        x.mean(),
+        y.mean(),
+        xerr=sem(x),
+        yerr=sem(y),
+        fmt=marker,
+        color=color,
+        markeredgecolor="white",
+        markeredgewidth=0.8,
+        markersize=8.7,
+        elinewidth=1.2,
+        capsize=3,
+        zorder=4,
+    )
+
+
 def _plot_main(
     data: dict,
     view: str,
@@ -248,81 +295,15 @@ def _plot_main(
             delta = _seed_values(cohort, "gru_d614_minus_q_bits_per_trial")
             q_predictability = _summary(cohort, "q_bits_above_chance")
 
-        axes[0].plot(centroid, delta, color=color, alpha=0.20, linewidth=0.9)
-        axes[0].scatter(
-            centroid, delta, color=color, alpha=0.32, s=24, marker=marker
+        plotter = _plot_seed_mean_sem if r1_scale else _plot_seed_points
+        plot_values = (
+            (axes[0], centroid, delta),
+            (axes[1], np.full(3, q_likelihood), gru_likelihood),
+            (axes[2], np.full(3, q_predictability), delta),
         )
-        axes[0].scatter(
-            centroid.mean(),
-            delta.mean(),
-            color=color,
-            edgecolor="white",
-            linewidth=0.8,
-            s=75,
-            marker=marker,
-            zorder=4,
-        )
-        _annotate(
-            axes[0], centroid.mean(), delta.mean(), cohort["label"]
-        )
-
-        axes[1].plot(
-            [q_likelihood] * 3,
-            gru_likelihood,
-            color=color,
-            alpha=0.20,
-            linewidth=0.9,
-        )
-        axes[1].scatter(
-            [q_likelihood] * 3,
-            gru_likelihood,
-            color=color,
-            alpha=0.32,
-            s=24,
-            marker=marker,
-        )
-        axes[1].scatter(
-            q_likelihood,
-            gru_likelihood.mean(),
-            color=color,
-            edgecolor="white",
-            linewidth=0.8,
-            s=75,
-            marker=marker,
-            zorder=4,
-        )
-        _annotate(
-            axes[1], q_likelihood, gru_likelihood.mean(), cohort["label"]
-        )
-
-        axes[2].plot(
-            [q_predictability] * 3,
-            delta,
-            color=color,
-            alpha=0.20,
-            linewidth=0.9,
-        )
-        axes[2].scatter(
-            [q_predictability] * 3,
-            delta,
-            color=color,
-            alpha=0.32,
-            s=24,
-            marker=marker,
-        )
-        axes[2].scatter(
-            q_predictability,
-            delta.mean(),
-            color=color,
-            edgecolor="white",
-            linewidth=0.8,
-            s=75,
-            marker=marker,
-            zorder=4,
-        )
-        _annotate(
-            axes[2], q_predictability, delta.mean(), cohort["label"]
-        )
+        for axis, x, y in plot_values:
+            plotter(axis, x, y, color, marker)
+            _annotate(axis, x.mean(), y.mean(), cohort["label"])
 
     relation = (
         relation_source["gru_d614_minus_q_vs_embedding_centroid"]
@@ -393,13 +374,13 @@ def _plot_main(
         frameon=False,
     )
     scale_note = (
-        "R1 scale: normalized-likelihood difference"
+        "R1 scale: mean ± SEM across three source seeds"
         if r1_scale
         else "Primary scale: additive log score"
     )
     fig.suptitle(
         f"Study 09 external transfer — E={dimension}, {VIEW_LABELS[view]} cohorts\n"
-        f"{scale_note}; large labeled points are cohort means, small points are paired source seeds"
+        f"{scale_note}; labeled points are cohort means"
     )
     fig.savefig(output, bbox_inches="tight", pad_inches=0.35)
     plt.close(fig)
@@ -917,7 +898,10 @@ def _result_block(
         "These descriptive companion plots use the same normalized-likelihood units as "
         "Result 1. They retain Result 3's equal-subject aggregation: each source seed's "
         "GRU value is `exp(mean subject log likelihood)` minus the matched Bari2019 value. "
-        "The bits-per-trial plots above remain primary for additive cross-task inference.",
+        "Each point is the three-seed mean, with horizontal and vertical SEM bars. The "
+        "Bari2019 baseline is shared across source seeds, so its horizontal SEM is zero in "
+        "the two Bari2019-axis panels. The bits-per-trial plots above remain primary for "
+        "additive cross-task inference.",
         "",
         "#### Primary-inference cohorts",
         "",
