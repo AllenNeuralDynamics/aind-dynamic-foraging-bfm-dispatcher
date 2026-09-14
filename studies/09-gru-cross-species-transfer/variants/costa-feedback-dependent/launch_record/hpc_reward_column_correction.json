@@ -33,7 +33,20 @@
       "audit_sha256": "d5fd33fb06da8f1fea2810c1673595543b0b8e8b8b3e86bd0f20de740aad0d58"
     }
   },
-  "tasks": [],
+  "tasks": [
+    {
+      "dataset": "costa",
+      "slurm_job": "26383388",
+      "wandb_run": "256a1vmk",
+      "status": "success",
+      "normalized_likelihood": 0.596851652962851,
+      "n_trials": 162960,
+      "ordered_trial_key_sha256": "cfb2fda156b6b3ff4e8e6b555c8b8267ac971964f0957795c9f3db968d09d4a7",
+      "test_metrics_sha256": "f177d0d177925a056f186028fc85eaf43def33a26537678e993969a1b0eb5e5e",
+      "test_trial_predictions_sha256": "19df9c3f4b770ee39d833b46ff5a4dbd3a2b650f93bbfd07ad131607b6ea47d9",
+      "baseline_rl_results_sha256": "b31144f16995ab716c159abce56ddc7bb3c04cc6282c1cfa1b72dff6870f6ecf"
+    }
+  ],
   "deviations": {
     "fresh_run_ids": true,
     "corrected_reward_column": true,
