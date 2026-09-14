@@ -1,0 +1,6 @@
+reference,project,group,seed,heldout_ll,final_step
+study06_tuned_D614_mult1_beta3e-4,AIND-disRNN/disrnn_data_scaling,mult-d-grid@20260718-151409,1,0.7217003107070923,107561
+study06_tuned_D614_mult1_beta3e-4,AIND-disRNN/disrnn_data_scaling,mult-d-grid@20260718-151409,0,0.7224668860435486,107561
+gru_ceiling_H256_D614,AIND-disRNN/mice_data_scaling,nxd-grid@20260623-102649,2,0.7290082573890686,90505
+gru_ceiling_H256_D614,AIND-disRNN/mice_data_scaling,nxd-grid@20260623-102649,1,0.7289615273475647,90505
+gru_ceiling_H256_D614,AIND-disRNN/mice_data_scaling,nxd-grid@20260623-102649,0,0.7290986180305481,90505

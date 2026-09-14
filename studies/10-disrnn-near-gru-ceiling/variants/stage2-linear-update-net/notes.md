@@ -35,6 +35,14 @@ the penalty on it.
 
 ## Result
 
-*(fill in once training finishes — `heldout/final/eval_likelihood` per seed from the
-end-of-training `auto_heldout_finetune`, plus the `checkpoint/eval_likelihood`
-step-budget curve.)*
+Both tasks finished (`n_steps=100000`), no training anomalies.
+
+| seed | heldout/final/eval_likelihood | checkpoint/eval_likelihood |
+|---|---|---|
+| 0 | 0.72083 | 0.72816 |
+| 1 | 0.72269 | 0.72857 |
+
+Mean 0.7218 — statistically flat against both the study06 tuned baseline (0.7221) and stage1's
+healthy seed (0.7229); linearizing the update net on top of the penalty relaxation adds no
+measurable further closure of the GRU gap. See
+[r1](../../analysis/reports/r1-near-gru-attribution.md) for the full attribution.

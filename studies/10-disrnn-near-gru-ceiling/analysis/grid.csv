@@ -1,0 +1,7 @@
+stage,run_name,state,seed,latent_size,update_net_n_layers,heldout_ll,checkpoint_ll,final_step
+stage1-no-penalty,stage1-no-penalty-20260909-021133-4fec023d,finished,0,5,5,0.678375780582428,0.6827481389045715,107562
+stage1-no-penalty,stage1-no-penalty-20260909-021133-b679f864,finished,1,5,5,0.72291100025177,0.7292536497116089,107561
+stage2-linear-update-net,stage2-linear-update-net-20260909-021223-7bcb8c76,finished,0,5,0,0.7208325862884521,0.7281627655029297,107562
+stage2-linear-update-net,stage2-linear-update-net-20260909-021223-2e578b41,finished,1,5,0,0.7226888537406921,0.7285679578781128,107562
+stage3-wide-latent,stage3-wide-latent-20260909-140640-6ebc7ff0,finished,0,32,0,0.7225091457366943,0.728533923625946,107564
+stage3-wide-latent,stage3-wide-latent-20260909-140640-c1ac9510,finished,1,32,0,0.7231311202049255,0.7296702265739441,107564

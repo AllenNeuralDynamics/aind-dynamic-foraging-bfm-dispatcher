@@ -132,9 +132,19 @@ Full evidence trail (trigger symptom/cause/evidence, job refs, deviations):
 
 ## Result
 
-*(fill in once training finishes — `heldout/final/eval_likelihood` per seed from the
-end-of-training `auto_heldout_finetune`, and the `checkpoint/eval_likelihood`
-step-budget curve. NOTE: because this is now `latent_size=32`, not the original
-GRU-H256-matched `latent_size=256`, its result answers a narrower question than the
-study originally asked — see the study README's downgrade note before interpreting
-it as a ceiling on disRNN's GRU-shaped capacity.)*
+Both tasks of the **relaunched** (`latent_size=32`) grid finished (`n_steps=100000`), no
+training anomalies. These are the numbers used everywhere in this study's analysis — the
+original `latent_size=256` launch (group `stage3-wide-latent@20260909-021255`) produced no
+usable data (both tasks OOM'd, see above) and is never a source of any reported metric.
+
+| seed | heldout/final/eval_likelihood | checkpoint/eval_likelihood |
+|---|---|---|
+| 0 | 0.72251 | 0.72853 |
+| 1 | 0.72313 | 0.72967 |
+
+Mean 0.7228 — closes ~11% of the -0.0069 residual gap, back to roughly stage 1's level and not
+beyond it, despite the 6.4x latent widening (5→32) on top of stages 1+2. Because this is
+`latent_size=32`, not the original GRU-H256-matched `latent_size=256`, this result answers a
+narrower question than the study originally asked: it cannot rule out that true GRU-matched
+capacity would close substantially more. See the study README's downgrade note and
+[r1](../../analysis/reports/r1-near-gru-attribution.md) for the full attribution and caveats.

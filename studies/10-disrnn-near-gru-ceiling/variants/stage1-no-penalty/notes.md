@@ -35,6 +35,19 @@ small latent, nonlinear update net) still constrains capacity relative to the GR
 
 ## Result
 
-*(fill in once training finishes — `heldout/final/eval_likelihood` per seed from the
-end-of-training `auto_heldout_finetune`, plus the `checkpoint/eval_likelihood`
-step-budget curve.)*
+Both tasks finished (`n_steps=100000`). **Seed 0 diverged late in training** — its
+`checkpoint/eval_likelihood` history tracks seed 1 closely through step 87500 (0.7307
+vs. 0.7295) then collapses to 0.6811 by step 97500 and stays there through the final
+checkpoint; the collapsed checkpoint feeds a correspondingly collapsed
+`heldout/final/eval_likelihood`. Excluded from all summary statistics — see
+[r1](../../analysis/reports/r1-near-gru-attribution.md) for the full diagnosis.
+
+| seed | heldout/final/eval_likelihood | checkpoint/eval_likelihood | status |
+|---|---|---|---|
+| 0 | 0.67838 | 0.68275 | **COLLAPSED after step ~90k — excluded** |
+| 1 | 0.72291 | 0.72925 | healthy |
+
+Using the one healthy seed: 0.7229, vs. the study06 tuned baseline 0.7221 (verified) and the
+verified GRU ceiling 0.7290 (H=256, D=614 — see r1 for why this revises the commonly-quoted
+0.7268/-0.0047). Closes ~12% of the -0.0069 residual gap on its own — most of what this whole
+3-stage ablation ever recovers.

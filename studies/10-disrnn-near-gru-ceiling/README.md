@@ -78,9 +78,9 @@ mistake a missing per-checkpoint `heldout/*` curve for a bug.
 
 | variant | what differs | D | seeds | n_steps | status | W&B group | Beaker experiment |
 |---|---|---|---|---|---|---|---|
-| [stage1-no-penalty](variants/stage1-no-penalty/) | interaction penalty -> 0 (mult=0); latent_size=5, update_net_n_layers=5 unchanged | 614 | 0,1 | 100000 | launched | `stage1-no-penalty@20260909-021133` | [01M22PZR6HW7C4ACC09DH6019R](https://beaker.org/ex/01M22PZR6HW7C4ACC09DH6019R) |
-| [stage2-linear-update-net](variants/stage2-linear-update-net/) | stage1 + linear update net (`update_net_n_layers=0`) | 614 | 0,1 | 100000 | launched | `stage2-linear-update-net@20260909-021223` | [01M22Q19MRZ3Z2YPRQEG984323](https://beaker.org/ex/01M22Q19MRZ3Z2YPRQEG984323) |
-| [stage3-wide-latent](variants/stage3-wide-latent/) | stage2 + `latent_size` 5 -> **32** (DOWNGRADED; see below) | 614 | 0,1 | 100000 | relaunched (downgraded) | `stage3-wide-latent@20260909-140640` | [01M23ZX664WP1QJQJNVBYY1V13](https://beaker.org/ex/01M23ZX664WP1QJQJNVBYY1V13) |
+| [stage1-no-penalty](variants/stage1-no-penalty/) | interaction penalty -> 0 (mult=0); latent_size=5, update_net_n_layers=5 unchanged | 614 | 0,1 | 100000 | ✅ complete (seed 0 collapsed, excluded) | `stage1-no-penalty@20260909-021133` | [01M22PZR6HW7C4ACC09DH6019R](https://beaker.org/ex/01M22PZR6HW7C4ACC09DH6019R) |
+| [stage2-linear-update-net](variants/stage2-linear-update-net/) | stage1 + linear update net (`update_net_n_layers=0`) | 614 | 0,1 | 100000 | ✅ complete | `stage2-linear-update-net@20260909-021223` | [01M22Q19MRZ3Z2YPRQEG984323](https://beaker.org/ex/01M22Q19MRZ3Z2YPRQEG984323) |
+| [stage3-wide-latent](variants/stage3-wide-latent/) | stage2 + `latent_size` 5 -> **32** (DOWNGRADED; see below) | 614 | 0,1 | 100000 | ✅ complete (relaunch; original latent=256 OOM'd) | `stage3-wide-latent@20260909-140640` | [01M23ZX664WP1QJQJNVBYY1V13](https://beaker.org/ex/01M23ZX664WP1QJQJNVBYY1V13) |
 
 All three: `ai1/octo-hub-onprem-h200` only (12/16 schedulable, 0 cordoned, 0 queued at
 launch), image `han-hou/dynamic-foraging-bfm-wrapper-main-20260902`, W&B project
@@ -125,10 +125,83 @@ Full diagnostic evidence (OOM log, argument-packing error, sizing-probe results,
 Beaker experiment ids) is in `variants/stage3-wide-latent/notes.md` and
 `variants/stage3-wide-latent/launch_record/beaker_resubmit_latent32.json`.
 
+## Verdict
+
+**At most ~11% of the residual GRU gap closes, and it does not close monotonically or
+completely at any stage.** Full attribution table, figure, and the two things that had to be
+re-verified before this verdict was trustworthy (a stale hardcoded GRU reference in study 06's
+own report, and a late-training collapse in one of stage1's two seeds) are in
+[r1](analysis/reports/r1-near-gru-attribution.md).
+
+| stage (cumulative) | mean held-out LL | % of baseline gap closed | note |
+|---|---|---|---|
+| disRNN tuned (study 06 baseline) | 0.7221 | 0% | verified GRU ceiling is 0.7290 (not the stale 0.7268 study 06's report quotes) → baseline gap is **-0.0069**, not -0.0047 |
+| +stage1 (interaction penalty → 0) | 0.7229 | +11.9% | seed 0 collapsed late in training and is excluded (n=1 for this stage) |
+| +stage1+2 (+ linear update net) | 0.7218 | -4.6% | statistically flat vs. baseline — linearizing the update net adds nothing measurable |
+| +stage1+2+3 (+ latent 5→32) | 0.7228 | +10.6% | back to roughly stage 1's level, not beyond it |
+
+**Bottom line for the study's motivating question.** Removing the interaction-bottleneck penalty
+closes essentially all of the (small) gain this ablation achieves; linearizing the update net and
+widening the latent 6.4x add nothing further on top of it. **~89% of the residual gap remains
+even after all three relaxations.** Because stage 3 only reached latent_size=32 (not the
+GRU-H256-matched 256 originally planned — see the downgrade note above), this study **cannot rule
+out** that true GRU-matched capacity would close substantially more; it can only say that the
+first 6.4x of latent widening, combined with removing the penalty and the update-net
+nonlinearity, does not. True GRU-parity capacity is blocked on
+[wrapper#99](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/99).
+
+The generalization gap (checkpoint − held-out) is flat across all four settings (0.0059-0.0073,
+tighter at 0.0063-0.0069 excluding the collapsed run) — relaxing disRNN toward GRU-like capacity
+does **not** measurably change overfitting behavior at D=614, n_steps=100000.
+
+## ⚠️ Reminder: none of this folds into study 06's operating-point verdict
+
+Stage 2 and stage 3 are not interpretable disentangled RNNs (see the caveat above). This study's
+verdict answers "how much of the residual gap is capacity/regularization vs. something else,"
+not "what should the disRNN's operating point be." Study 06's verdict — mult=1, β=3e-4,
+latent_size=5 — is unaffected by anything in this study.
+
 ## Provenance
 
-Reconcile with:
+Reconcile per variant (this validator requires `--variant`; the sandbox's `wandb.Api()` cannot
+reach W&B here — see the deviation note below — so the live `--wandb` reconciliation was
+substituted with an independent GraphQL pull, committed in `analysis/pull_grid.py` /
+`analysis/grid.csv` / `analysis/reference_points.csv`):
 
 ```bash
-python studies/util/validate_provenance.py studies/10-disrnn-near-gru-ceiling --beaker --wandb --strict
+python studies/util/validate_provenance.py studies/10-disrnn-near-gru-ceiling \
+  --variant stage1-no-penalty --wandb-group "stage1-no-penalty@20260909-021133" \
+  --beaker --project AIND-disRNN/disrnn_near_gru_ceiling --strict
+python studies/util/validate_provenance.py studies/10-disrnn-near-gru-ceiling \
+  --variant stage2-linear-update-net --wandb-group "stage2-linear-update-net@20260909-021223" \
+  --beaker --project AIND-disRNN/disrnn_near_gru_ceiling --strict
+python studies/util/validate_provenance.py studies/10-disrnn-near-gru-ceiling \
+  --variant stage3-wide-latent --wandb-group "stage3-wide-latent@20260909-140640" \
+  --beaker --project AIND-disRNN/disrnn_near_gru_ceiling --strict
 ```
+
+**Known, non-actionable findings** (all three variants; verified against direct Beaker API calls,
+not just the validator's own output):
+
+- `records: N/N record(s) predate the schema (no _meta/kind)` — the launcher's own
+  `beaker_resumable.json` for a study's *first* launch has never carried `_meta`/`kind`; this is
+  systemic across every study in the pack (confirmed on study 09's launch records too, not
+  specific to study 10) and is not a study-10 defect.
+- `beaker: N recorded experiment(s) not seen in the last <scan-limit> workspace experiments` on
+  `stage3-wide-latent` — the validator's `check_beaker` collects every `job_refs` id across
+  **both** of stage3's launch records (the failed original + the resubmit intervention, which by
+  design also lists the diagnostic smoke-test/sizing-probe experiments in its audit trail) and
+  compares them all against Beaker experiments tagged with **one** target `WANDB_RUN_GROUP`. The
+  3 non-matching ids genuinely belong to *other* groups (`stage3-wide-latent@20260909-021255` —
+  the failed original, `stage3-wide-latent-smoketest@batch64`, `stage3-wide-latent-sizing-probe@latent32`)
+  by design, not because they're missing. Confirmed directly via `Beaker().experiment.spec(id)`
+  for all 5 ids in the intervention record: all exist, all tagged exactly as the intervention
+  record and `variants/stage3-wide-latent/notes.md` describe. Only
+  `01M23ZX664WP1QJQJNVBYY1V13` (the relaunch) belongs to the group whose 2 finished runs are the
+  ones reported in `grid.csv` and r1 — confirmed by matching those 2 runs' W&B run names/seeds
+  against grid.csv.
+- `wandb: could not query W&B (AuthenticationError)` — `wandb.Api()`'s live-sweep-reconciliation
+  check cannot spawn its background service in this sandbox (same failure documented in study 03's
+  `beta_scan_analysis.py` and study 04's `run_recovery_analysis.py`). Substituted with a direct
+  GraphQL pull (`analysis/pull_grid.py`), which is how every number in this study's r1 report and
+  README was independently verified.
