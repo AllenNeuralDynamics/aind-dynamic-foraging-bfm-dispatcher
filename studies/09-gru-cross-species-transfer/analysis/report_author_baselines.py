@@ -1035,11 +1035,9 @@ def _stage_a_read(matched: dict) -> list[str]:
     lines += [
         "",
         "This screen therefore supports broad transfer, but not universal superiority over "
-        "a fitted subject-level Q model. López-Yépez (mouse), Grossman (mouse), Lebedeva "
-        "(mouse), and Chen (mouse) are the positive-transfer cases; Findling (human), "
-        "Eckstein (human), Miller (rat), and subject-balanced Zid (human) are the main "
-        "valid stress tests that motivated the primary-set author-model reproductions "
-        "reported below.",
+        "a fitted subject-level Q model. The cohort lists and effect sizes above are generated "
+        "directly from the frozen subject-level results; the author-model comparisons below "
+        "test whether those conclusions depend on the shared Bari2019 reference family.",
     ]
     return lines
 
@@ -1303,7 +1301,7 @@ def _result_block(
             "## Skipped cohorts", "## Stage-B author-model feasibility gate"
         ),
         "",
-        "### Author-model feasibility — Stage-B stop gate",
+        "### Author-model feasibility and reproduction limits",
         "",
         _survey_section("## Stage-B author-model feasibility gate"),
         "",
@@ -1319,9 +1317,9 @@ def _result_block(
         "- Nominal source D is plotted. Realized source-subject counts were "
         + ", ".join(f"D={d}: {actual_ds[d]}" for d in DS)
         + ".",
-        "- Every primary-set author model uses the same immutable adaptation and held-out "
-        "trials as GRU and Bari2019 common Q; model-specific fitting deviations are disclosed in "
-        "the feasibility table.",
+        "- Every reproduced author model and the Alsiö (rat) cohort-mismatched sensitivity "
+        "uses the same immutable adaptation and held-out trials as GRU and Bari2019 common Q; "
+        "model-specific fitting deviations are disclosed in the feasibility table.",
     ]
     return "\n".join(lines)
 
