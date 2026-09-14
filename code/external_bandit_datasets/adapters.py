@@ -1013,7 +1013,7 @@ def adapt_costa(path: str | Path) -> AdapterResult:
             source_choice = int(record.iloc[13])
             if source_choice not in {10, 20}:
                 raise ValueError(f"Unexpected Costa chosen shape {source_choice!r}.")
-            reward = int(record.iloc[8])
+            reward = int(record.iloc[10])
             rows.append(
                 {
                     "subject_id": f"macaque-{int(subject):02d}",
@@ -1026,6 +1026,8 @@ def adapt_costa(path: str | Path) -> AdapterResult:
                     "species": source.species,
                     "source_trial": int(record.iloc[2]),
                     "source_block": int(record.iloc[3]),
+                    "source_choice_phase_code": int(record.iloc[8]),
+                    "programmed_phase": int(record.iloc[9]),
                     "reward_schedule_code": int(record.iloc[11]),
                     "response_time_ms": int(record.iloc[12]),
                     "source_chosen_shape": source_choice,

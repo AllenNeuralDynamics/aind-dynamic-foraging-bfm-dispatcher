@@ -438,10 +438,12 @@ class TestExternalBanditDatasets(unittest.TestCase):
             for date in (1012020, 1022020):
                 for trial, (choice, reward) in enumerate(((10, 1), (20, 0)), 1):
                     row = np.zeros(16, dtype=int)
-                    row[[0, 1, 2, 3, 8, 11, 12, 13, 14, 15]] = (
+                    row[[0, 1, 2, 3, 8, 9, 10, 11, 12, 13, 14, 15]] = (
                         subject,
                         date,
                         trial,
+                        1,
+                        1 - reward,
                         1,
                         reward,
                         7030,
@@ -470,6 +472,8 @@ class TestExternalBanditDatasets(unittest.TestCase):
                 table, manifest, audit = adapt_costa(path)
 
             self.assertEqual(table["animal_response"].tolist()[:2], [0, 1])
+            self.assertEqual(table["rewarded"].tolist()[:2], [1, 0])
+            self.assertEqual(table["source_choice_phase_code"].tolist()[:2], [0, 1])
             self.assertEqual(
                 manifest["subjects"][0]["adapt_session_ids"], ["2020-01-01"]
             )
