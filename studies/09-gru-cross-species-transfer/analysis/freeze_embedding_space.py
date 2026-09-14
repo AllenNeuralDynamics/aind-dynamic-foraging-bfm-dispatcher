@@ -36,6 +36,7 @@ E8_TARGET_GROUPS = (
     "gru-e8-d614-expansion@20260907-132415",
     "gru-e8-d614-expansion@20260907-132625",
     "gru-hattori-matched-half@20260907-200328",
+    "gru-e8-d614-expansion@20260914-162554",
 )
 VALIDATION_DATA = STUDY / "analysis" / "dataset_suite_validation.json"
 SOURCE_MANIFESTS = {
