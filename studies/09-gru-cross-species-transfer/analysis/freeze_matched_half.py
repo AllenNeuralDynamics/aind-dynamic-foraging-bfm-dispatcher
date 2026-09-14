@@ -42,6 +42,8 @@ WANDB_GROUPS = [
     "q-expanded-matched-half@20260906-kwak-choicefix",
     "gru-hattori-matched-half@20260907-200329",
     "q-hattori-matched-half@slurm-25585753",
+    "gru-costa-matched-half@20260914-162457",
+    "q-expanded-matched-half@slurm-26383387",
 ]
 GRU_LAUNCHES = {
     "grossman": (WANDB_GROUPS[0], "01M1RE7RE42MHTHFDDRYJWTWHV"),
@@ -55,7 +57,7 @@ GRU_LAUNCHES = {
     "tang": (WANDB_GROUPS[8], "01M1TPMY71W6PEGRPTRHMYQQDM"),
     "alsio": (WANDB_GROUPS[9], "01M1TPNT60G2REHV0BS2JYJH32"),
     "eckstein": (WANDB_GROUPS[10], "01M1TPN53SDJYVN9TE5YQ6ZEXY"),
-    "costa": (WANDB_GROUPS[11], "01M1TPN1PNEMN6Q1036ZAXDCNV"),
+    "costa": (WANDB_GROUPS[18], "01M2H3T9JD04B74HFZ9W4YHKCV"),
     "lopez_mouse": (WANDB_GROUPS[12], "01M1TPMW5BXV82QQ0MS3AWWZE3"),
     "hattori": (WANDB_GROUPS[16], "01M1ZFJ3BPJSZNJ403DPD3FS6C"),
 }
@@ -66,6 +68,7 @@ Q_LAUNCHES = [
 ]
 Q_OVERRIDES = {
     "kwak": (WANDB_GROUPS[15], "25581496"),
+    "costa": (WANDB_GROUPS[19], "26383387"),
 }
 CACHE = STUDY / "analysis" / "_cache_matched_half"
 OUTPUT = STUDY / "analysis" / "matched_half_results.json"

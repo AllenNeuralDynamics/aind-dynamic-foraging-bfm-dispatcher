@@ -42,17 +42,20 @@ DATASET_ORDER = (
 )
 VARIANT = STUDY / "variants" / "gru-e8-d614-expansion"
 LAUNCHES = (
-    (VARIANT / "launch_record_primary", 9, {"zid", "chen", "beron"}),
+    (VARIANT / "launch_record_primary", 9, {"zid", "chen", "beron"}, set()),
     (
         VARIANT / "launch_record_boundary",
         12,
         {"lopez_mouse", "alsio", "costa", "tang"},
+        {"costa"},
     ),
     (
         STUDY / "variants" / "gru-hattori-matched-half" / "launch_record" / "mature-e8-full",
         3,
         {"hattori"},
+        set(),
     ),
+    (VARIANT / "launch_record_costa_reward_fix", 3, {"costa"}, set()),
 )
 VALIDATION = STUDY / "analysis" / "dataset_suite_validation.json"
 HISTORICAL = STUDY / "analysis" / "matched_half_results.json"
@@ -78,6 +81,7 @@ def _launch(
     root: Path,
     expected_tasks: int,
     expected_datasets: set[str],
+    excluded_datasets: set[str],
     manifest: dict,
     manifest_digest: str,
 ) -> tuple[str, str, dict[str, list[dict]]]:
@@ -97,7 +101,9 @@ def _launch(
     tasks = _beaker_tasks(record["experiment_id"])
     if len(tasks) != expected_tasks or len(runs) != expected_tasks:
         raise AssertionError(f"{root.name} is not a complete {expected_tasks}-cell launch")
-    records = {name: [] for name in expected_datasets}
+    records = {
+        name: [] for name in expected_datasets if name not in excluded_datasets
+    }
     for task in tasks:
         job = task["jobs"][-1]
         status = job["status"]
@@ -112,8 +118,10 @@ def _launch(
         source = _unwrapped(config, "source")
         target = _unwrapped(config, "target")
         dataset = target.get("dataset")
-        if dataset not in records:
+        if dataset not in expected_datasets:
             raise AssertionError(f"Unexpected target dataset {dataset!r}")
+        if dataset in excluded_datasets:
+            continue
         if source.get("manifest") != MANIFEST.name:
             raise AssertionError(f"{run_id} used {source.get('manifest')!r}")
         if source.get("manifest_sha256") != manifest_digest:
@@ -169,11 +177,12 @@ def main() -> None:
     groups = []
     experiments = []
     e8 = {}
-    for root, expected_tasks, expected_datasets in LAUNCHES:
+    for root, expected_tasks, expected_datasets, excluded_datasets in LAUNCHES:
         group, experiment, records = _launch(
             root,
             expected_tasks,
             expected_datasets,
+            excluded_datasets,
             manifest,
             manifest_digest,
         )
