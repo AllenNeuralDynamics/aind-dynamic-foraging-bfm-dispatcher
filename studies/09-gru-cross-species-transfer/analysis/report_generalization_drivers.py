@@ -55,6 +55,30 @@ E8_MAIN_FIGURES = {
     / "fig_generalization_drivers_primary_plus_stress_e8.png",
     "all_valid": STUDY / "analysis" / "fig_generalization_drivers_all_valid_e8.png",
 }
+R1_SCALE_MAIN_FIGURES = {
+    4: {
+        "primary": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_r1_scale.png",
+        "primary_plus_stress": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_primary_plus_stress_r1_scale.png",
+        "all_valid": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_all_valid_r1_scale.png",
+    },
+    8: {
+        "primary": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_e8_r1_scale.png",
+        "primary_plus_stress": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png",
+        "all_valid": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_all_valid_e8_r1_scale.png",
+    },
+}
 E8_ROBUSTNESS_FIGURES = {
     "primary": STUDY / "analysis" / "fig_generalization_robustness_e8.png",
     "primary_plus_stress": STUDY
@@ -194,25 +218,35 @@ def _relation_title(label: str, relation: dict | None, n_cohorts: int) -> str:
     )
 
 
-def _plot_main(data: dict, view: str, output: Path) -> None:
+def _plot_main(
+    data: dict,
+    view: str,
+    output: Path,
+    *,
+    r1_scale: bool = False,
+) -> None:
     apply_presentation_style()
     dimension = int(data["contract"]["subject_embedding_size"])
     fig, axes = plt.subplots(1, 3, figsize=(18.5, 6.2), constrained_layout=True)
     cohorts = _view_cohorts(data, view)
-    relation_source = _relation_source(data, view)
+    relation_source = None if r1_scale else _relation_source(data, view)
 
     for cohort in cohorts:
         color = SPECIES_COLORS[cohort["species"]]
         marker = TIER_MARKERS[cohort["analysis_tier"]]
         centroid = _seed_values(cohort, "embedding_centroid_mahalanobis")
-        delta = _seed_values(cohort, "gru_d614_minus_q_bits_per_trial")
         q_likelihood = _summary(
             cohort, "q_subject_balanced_normalized_likelihood"
         )
         gru_likelihood = _seed_values(
             cohort, "gru_d614_subject_balanced_normalized_likelihood"
         )
-        q_predictability = _summary(cohort, "q_bits_above_chance")
+        if r1_scale:
+            delta = gru_likelihood - q_likelihood
+            q_predictability = q_likelihood
+        else:
+            delta = _seed_values(cohort, "gru_d614_minus_q_bits_per_trial")
+            q_predictability = _summary(cohort, "q_bits_above_chance")
 
         axes[0].plot(centroid, delta, color=color, alpha=0.20, linewidth=0.9)
         axes[0].scatter(
@@ -299,9 +333,15 @@ def _plot_main(data: dict, view: str, output: Path) -> None:
     axes[0].set_xlabel(
         f"External-centroid distance from source\n({dimension}D Mahalanobis)"
     )
-    axes[0].set_ylabel(
-        f"GRU E={dimension}, D=614 − Bari2019\n(subject-balanced bits/trial)"
+    delta_label = (
+        f"GRU E={dimension}, D=614 − Bari2019\n"
+        + (
+            "(subject-balanced normalized likelihood)"
+            if r1_scale
+            else "(subject-balanced bits/trial)"
+        )
     )
+    axes[0].set_ylabel(delta_label)
     axes[0].set_title(
         _relation_title(
             "Transfer advantage vs embedding displacement", relation, len(cohorts)
@@ -334,10 +374,12 @@ def _plot_main(data: dict, view: str, output: Path) -> None:
         else None
     )
     axes[2].axhline(0, color="#777777", linestyle="--", linewidth=1)
-    axes[2].set_xlabel("Bari2019 predictability (bits above chance)")
-    axes[2].set_ylabel(
-        f"GRU E={dimension}, D=614 − Bari2019\n(subject-balanced bits/trial)"
+    axes[2].set_xlabel(
+        "Bari2019 normalized likelihood"
+        if r1_scale
+        else "Bari2019 predictability (bits above chance)"
     )
+    axes[2].set_ylabel(delta_label)
     axes[2].set_title(
         _relation_title(
             "Advantage vs Bari2019 predictability†", coupled, len(cohorts)
@@ -350,9 +392,14 @@ def _plot_main(data: dict, view: str, output: Path) -> None:
         ncol=4,
         frameon=False,
     )
+    scale_note = (
+        "R1 scale: normalized-likelihood difference"
+        if r1_scale
+        else "Primary scale: additive log score"
+    )
     fig.suptitle(
         f"Study 09 external transfer — E={dimension}, {VIEW_LABELS[view]} cohorts\n"
-        "Large labeled points are cohort means; small points are paired source seeds"
+        f"{scale_note}; large labeled points are cohort means, small points are paired source seeds"
     )
     fig.savefig(output, bbox_inches="tight", pad_inches=0.35)
     plt.close(fig)
@@ -865,6 +912,43 @@ def _result_block(
         f"annotations report the frozen {valid_n}-cohort all-valid sensitivity relationships; "
         "Tang (macaque) remains descriptive-only because the release has two subjects.",
         "",
+        "### R1-scale companion: normalized-likelihood difference",
+        "",
+        "These descriptive companion plots use the same normalized-likelihood units as "
+        "Result 1. They retain Result 3's equal-subject aggregation: each source seed's "
+        "GRU value is `exp(mean subject log likelihood)` minus the matched Bari2019 value. "
+        "The bits-per-trial plots above remain primary for additive cross-task inference.",
+        "",
+        "#### Primary-inference cohorts",
+        "",
+        "**E=4**",
+        "",
+        "![Primary cohorts on the R1 normalized-likelihood scale](../fig_generalization_drivers_r1_scale.png)",
+        "",
+        "**E=8**",
+        "",
+        "![Primary cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_e8_r1_scale.png)",
+        "",
+        "#### Primary + stress-test cohorts",
+        "",
+        "**E=4**",
+        "",
+        "![Primary plus stress-test cohorts on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_r1_scale.png)",
+        "",
+        "**E=8**",
+        "",
+        "![Primary plus stress-test cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png)",
+        "",
+        "#### All valid cohorts",
+        "",
+        "**E=4**",
+        "",
+        "![All valid cohorts on the R1 normalized-likelihood scale](../fig_generalization_drivers_all_valid_r1_scale.png)",
+        "",
+        "**E=8**",
+        "",
+        "![All valid cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_all_valid_e8_r1_scale.png)",
+        "",
         f"For E=4, the D=614 GRU has higher subject-balanced mean log likelihood than Bari2019 common Q in "
         f"{len(positive)} cohorts ({', '.join(positive)}) and lower mean log likelihood in "
         f"{len(negative)} ({', '.join(negative)}). This direction summary does not replace "
@@ -1168,6 +1252,8 @@ def main() -> None:
         main_figures, robustness_figures, task_figures = FIGURE_SETS[dimension]
         for view, output in main_figures.items():
             _plot_main(data, view, output)
+        for view, output in R1_SCALE_MAIN_FIGURES[dimension].items():
+            _plot_main(data, view, output, r1_scale=True)
         for view, output in robustness_figures.items():
             _plot_robustness(data, view, output)
         for view, output in task_figures.items():
@@ -1182,6 +1268,11 @@ def main() -> None:
             output
             for figure_sets in FIGURE_SETS.values()
             for figures in figure_sets
+            for output in figures.values()
+        ),
+        *(
+            output
+            for figures in R1_SCALE_MAIN_FIGURES.values()
             for output in figures.values()
         ),
         REPORT,
