@@ -106,8 +106,9 @@ genuine interior optimum rather than an artifact of the tested range's edge.
   the β-axis D=614 result is the only one clean enough (z≈5) to trust without more seeds, the rest
   are suggestive-but-not-definitive on their own and are reported with that hedge.
 - **D=300's "seed 1" side of the old tuned point is a backfilled, early-stopped run**
-  (`mult-d-grid-rescue1-…`, crashed at step 78,400 of 107,560, value recovered from the per-subject
-  table by `backfill_lost_heldout.py`) — its wave-2 counterparts both ran the full budget. Given
+  (`mult-d-grid-20260718-151409-33c0e6f5`, D=301 nominal-300, `state=="crashed"` at step 78,400 of
+  107,560, value recovered from the per-subject table by `backfill_lost_heldout.py`) — its wave-2
+  counterparts both ran the full budget. Given
   Stage A's finding that within-training likelihood keeps declining toward the final checkpoint,
   an early-stopped comparator is if anything *biased toward* the old point (not against it), so this
   does not undermine the D=300 β-axis win, but it does mean the D=300 numbers for the old point are
