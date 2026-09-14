@@ -22,7 +22,11 @@ outside the D in {300,614}/beta,mult settings compared here EXCEPT one -- see NO
 OUTPUTS:
   analysis/r3_summary.json               - curated per-(D,mult,beta) stats + provenance
   analysis/reports/fig_r3_penalty_edge_extension.png - the verdict figure
-Regenerates the <!-- BEGIN result-1 --> / result-2 blocks in reports/r3-penalty-edge-extension.md.
+Does NOT regenerate reports/r3-penalty-edge-extension.md -- unlike scaling_report.py (r2), this
+producer has no markdown-block updater; the report's prose and tables were written by hand
+against this script's output and must be checked/updated by hand if grid.csv or grid_wave2.csv
+changes. If the report needs to track this producer's numbers automatically in the future,
+implement an updater following scaling_report.py's pattern rather than assuming one exists.
 """
 from __future__ import annotations
 
@@ -45,7 +49,6 @@ from _meta import build_meta  # noqa: E402
 
 GRID_CSV = HERE / "grid.csv"
 WAVE2_CSV = HERE / "grid_wave2.csv"
-REPORT = HERE / "reports" / "r3-penalty-edge-extension.md"
 FIG = HERE / "reports" / "fig_r3_penalty_edge_extension.png"
 WANDB_GROUPS = [
     "mult-d-grid@20260718-151409",
@@ -112,7 +115,14 @@ def main() -> None:
     wave2 = read_csv_usable(WAVE2_CSV)
     all_rows = orig + wave2
 
-    n_wave2_total, n_wave2_finished = 8, sum(1 for r in wave2 if r["state"] == "finished")
+    with WAVE2_CSV.open() as f:
+        n_wave2_total = sum(1 for _ in csv.DictReader(f))   # actual pulled row count, not assumed
+    n_wave2_finished = sum(1 for r in wave2 if r["state"] == "finished")
+    n_wave2_backfilled = sum(1 for r in wave2 if str(r.get("heldout_backfilled")).lower() == "true")
+    if n_wave2_total != n_wave2_finished:
+        print(f"WARNING: grid_wave2.csv has {n_wave2_total} rows but only {n_wave2_finished} "
+              f"finished -- re-run pull_wave2_grid.py once the rest complete before trusting r3's "
+              f"numbers as final.")
 
     beta_axis_settings = [(1.0, 0.0010), (1.0, 0.0003), (1.0, 0.0001)]     # heavy -> light
     mult_axis_settings = [(10.0, 0.0003), (5.0, 0.0003), (2.0, 0.0003), (1.0, 0.0003), (0.5, 0.0003)]
@@ -126,12 +136,24 @@ def main() -> None:
                 continue  # already added by the beta-axis loop above; avoid double count in JSON
             cells.append({**cell_stats(all_rows, D, mult, beta), "axis": "mult"})
 
+    used_settings = set(beta_axis_settings) | set(mult_axis_settings)
+    n_orig_backfilled_used = sum(
+        1 for r in orig
+        if r["D_nom"] in (300, 614) and (r["mult"], r["beta"]) in used_settings
+        and str(r.get("heldout_backfilled")).lower() == "true"
+    )
+
     summary = {
         "_meta": build_meta("analysis/r3_penalty_edge_extension.py", WANDB_GROUPS, study_root=STUDY),
-        "note": ("wave2 pulled via W&B GraphQL from the sandbox (wandb.Api() is blocked there); "
-                 "see analysis/pull_wave2_grid.py docstring. All 8 wave2 runs state=='finished', "
-                 "no backfilled rows used."),
-        "progress": {"wave2_total": n_wave2_total, "wave2_finished": n_wave2_finished},
+        "note": (f"wave2 pulled via W&B GraphQL from the sandbox (wandb.Api() is blocked there); "
+                 f"see analysis/pull_wave2_grid.py docstring. {n_wave2_finished}/{n_wave2_total} "
+                 f"wave2 rows state=='finished', {n_wave2_backfilled} wave2 rows backfilled. "
+                 f"The COMBINED analysis (wave2 + wave1) is not backfill-free: {n_orig_backfilled_used} "
+                 f"wave-1 (mult-d-grid) row(s) used in these cells are heldout_backfilled=True -- see "
+                 f"the r3 report's caveats section for which cell and why."),
+        "progress": {"wave2_total": n_wave2_total, "wave2_finished": n_wave2_finished,
+                     "wave2_backfilled": n_wave2_backfilled,
+                     "wave1_backfilled_rows_used": n_orig_backfilled_used},
         "cells": cells,
         "gru_reference": GRU,
         "rl_baseline": RL_BASELINE,

@@ -28,9 +28,12 @@ version: v2
 description: >
   Wave-2 Stage B — disRNN penalty-extension grid at D in {300, 614}: two new penalty points
   one step lighter than mult-d-grid's tested floor (mult=1,beta=1e-4 and mult=0.5,beta=3e-4),
-  2 seeds each, checkpoint_run_heldout_eval=true (NEW vs mult-d-grid — gives a real
-  held-out-vs-step curve). Tests whether mult-d-grid's D=614 generalization-gap floor keeps
-  shrinking below the tested range, or turns around (see sweep.yaml header).
+  2 seeds each. checkpoint_run_heldout_eval=true is set (NEW vs mult-d-grid) but is a CONFIRMED
+  NO-OP for multisubject disRNN in the current wrapper -- these runs do NOT get a
+  held-out-vs-step curve, only the same single end-of-training held-out value as mult-d-grid
+  (see notes.md's Stage B CORRECTION, same-day as launch). Tests whether mult-d-grid's D=614
+  generalization-gap floor keeps shrinking below the tested range, or turns around (see
+  sweep.yaml header); results analyzed in r3 (../../analysis/reports/r3-penalty-edge-extension.md).
 tasks:
   - name: disrnn-wave2-penalty-ext-template
     image:

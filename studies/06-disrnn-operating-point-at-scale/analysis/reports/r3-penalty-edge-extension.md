@@ -105,15 +105,19 @@ genuine interior optimum rather than an artifact of the tested range's edge.
 - **n=2 seeds/cell throughout** (both grids) — every comparison here is a 2-vs-2 seed comparison;
   the β-axis D=614 result is the only one clean enough (z≈5) to trust without more seeds, the rest
   are suggestive-but-not-definitive on their own and are reported with that hedge.
-- **D=300's "seed 1" side of the old tuned point is a backfilled, early-stopped run**
-  (`mult-d-grid-20260718-151409-33c0e6f5`, D=301 nominal-300, `state=="crashed"` at step 78,400 of
-  107,560, value recovered from the per-subject table by `backfill_lost_heldout.py`) — its wave-2
-  counterparts both ran the full budget. Given
-  Stage A's finding that within-training likelihood keeps declining toward the final checkpoint,
-  an early-stopped comparator is if anything *biased toward* the old point (not against it), so this
-  does not undermine the D=300 β-axis win, but it does mean the D=300 numbers for the old point are
-  not on fully equal footing with wave 2's fresh, full-budget runs — D=614 (both seeds full-budget,
-  no backfill on either side) is the cleaner comparison and the one the ≈5σ claim rests on.
+- **D=300 leans on `mult-d-grid`'s backfilled, early-stopped runs; D=614 does not.** Four of
+  `mult-d-grid`'s 6 historically-backfilled cells fall inside the (D, mult, β) settings this report
+  compares, and **all four are at D=300**: the old tuned point's seed-1 side
+  (`…-33c0e6f5`, crashed at step 78,400 of 107,560), mult=2's seed-0 side (`…-d9e2902c`, step
+  63,680), and **both** seeds of mult=5 (`…-5d00f24c` step 59,900, `…-eb2f9dc2` step 50,250) — every
+  one recovered from the per-subject table by `backfill_lost_heldout.py`, not a fresh end-of-training
+  value. Every D=614 cell used here, including the old tuned point, mult=2, mult=5, and mult=10, is
+  `state=="finished"` on both seeds with zero backfilled rows. Given Stage A's finding that
+  within-training likelihood keeps declining toward the final checkpoint, an early-stopped comparator
+  is if anything *biased toward whatever point it sits at* (not systematically toward or against the
+  new wave-2 points), so this does not undermine the D=300 β-axis win, but it does mean the D=300
+  numbers — including the multiplier-axis interior-peak shape in panel b — are not all on fully
+  equal training-budget footing. D=614 is the cleaner comparison and the one the ≈5σ claim rests on.
 - **Different axes, not a single "penalty knob."** β scales five of six penalty terms uniformly;
   mult scales only the interaction term on top of β. The two "one step lighter" points therefore are
   not comparable points on one 1-D line — this is deliberate (Stage B tested each axis independently,

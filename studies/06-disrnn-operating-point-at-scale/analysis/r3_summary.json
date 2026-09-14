@@ -1,7 +1,7 @@
 {
   "_meta": {
     "produced_by": "analysis/r3_penalty_edge_extension.py",
-    "produced_at_pt": "2026-09-14T14:53:42-07:00",
+    "produced_at_pt": "2026-09-14T15:18:15-07:00",
     "dispatcher_git_sha": null,
     "wrapper_git_sha": null,
     "wandb_groups": [
@@ -9,10 +9,12 @@
       "wave2-step-budget-and-penalty-extension@20260909-021546"
     ]
   },
-  "note": "wave2 pulled via W&B GraphQL from the sandbox (wandb.Api() is blocked there); see analysis/pull_wave2_grid.py docstring. All 8 wave2 runs state=='finished', no backfilled rows used.",
+  "note": "wave2 pulled via W&B GraphQL from the sandbox (wandb.Api() is blocked there); see analysis/pull_wave2_grid.py docstring. 8/8 wave2 rows state=='finished', 0 wave2 rows backfilled. The COMBINED analysis (wave2 + wave1) is not backfill-free: 4 wave-1 (mult-d-grid) row(s) used in these cells are heldout_backfilled=True -- see the r3 report's caveats section for which cell and why.",
   "progress": {
     "wave2_total": 8,
-    "wave2_finished": 8
+    "wave2_finished": 8,
+    "wave2_backfilled": 0,
+    "wave1_backfilled_rows_used": 4
   },
   "cells": [
     {
