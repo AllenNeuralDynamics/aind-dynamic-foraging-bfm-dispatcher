@@ -1,0 +1,15 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "26383281",
+  "wandb_group": "alsio-dual-rate-sticky@slurm-26383281",
+  "dispatcher_commit": "533a2dd783c3708e5e442478452a45552cf81829",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "d855a1a2b4075ee02c8d6597e97f768174eb031c",
+  "script": "studies/09-gru-cross-species-transfer/variants/alsio-dual-rate-sticky/alsio_dual_rate_sticky.slurm",
+  "dataset": "alsio",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-alsio-dual-rate-sticky-26383281",
+  "submitted_at": "2026-09-14T15:38:27-07:00",
+  "started_at": "2026-09-14T15:38:39-07:00",
+  "status": "running"
+}

@@ -1,0 +1,15 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "26383278",
+  "wandb_group": "lopez-double-trace@slurm-26383278",
+  "dispatcher_commit": "533a2dd783c3708e5e442478452a45552cf81829",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "d855a1a2b4075ee02c8d6597e97f768174eb031c",
+  "script": "studies/09-gru-cross-species-transfer/variants/lopez-double-trace/lopez_double_trace.slurm",
+  "dataset": "lopez_mouse",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-lopez-double-trace-26383278",
+  "submitted_at": "2026-09-14T15:38:27-07:00",
+  "started_at": "2026-09-14T15:38:39-07:00",
+  "status": "running"
+}
