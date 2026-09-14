@@ -1,0 +1,9 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 2,
+  "experiment_id": "01M22PZR6HW7C4ACC09DH6019R",
+  "experiment_url": "https://beaker.org/ex/01M22PZR6HW7C4ACC09DH6019R",
+  "dispatcher_commit": null,
+  "sweep_file": "../studies/10-disrnn-near-gru-ceiling/variants/stage1-no-penalty/sweep.yaml",
+  "created_utc": "2026-09-09T09:11:37.907343+00:00"
+}
