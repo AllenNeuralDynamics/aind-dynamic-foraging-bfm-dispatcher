@@ -6,6 +6,7 @@ One report per scan. Regenerated from committed data via the study Makefile.
 |---|---|---|---|
 | r1 | [Penalty selection](r1-penalty-selection.md) | existing 03+05 data (zero new compute) | ✅ live |
 | r2 | [Scaling surface (live)](r2-scaling-surface.md) | `mult-d-grid` (80 runs) | 🔴 live — regenerates as the grid progresses (`make pull && make r2`) |
+| r3 | [Penalty-edge extension](r3-penalty-edge-extension.md) | `wave2-step-budget-and-penalty-extension` (8 runs) | ✅ live — β axis keeps helping, multiplier axis reverses |
 
 ## Planned content
 
@@ -22,5 +23,12 @@ One report per scan. Regenerated from committed data via the study Makefile.
   +1 rescue off a second bad node, +1 tier-1 relaunch of the final 3 cells. **`grid.csv` also
   contains 6 held-out values recovered post-hoc** (flagged `heldout_backfilled`) — see notes.md
   before using the data.
+- **r3 — penalty-edge extension.** DONE. Wave 2's 8-run grid pushed one step lighter than
+  `mult-d-grid`'s tested penalty floor on each axis independently. Finding: the global-β axis
+  (mult=1) keeps improving past the tested floor (new best: β=1e-4, beating β=3e-4 by +0.0020 at
+  D=614, ≈5σ) with the generalization gap flat rather than shrinking further; the
+  interaction-multiplier axis (β=3e-4) reverses — mult=1 is an interior peak, and the new mult=0.5
+  point is worse on both held-out likelihood and the gap. Updates study 06's tuned operating
+  point to (mult=1, β=1e-4), provisionally — the β axis is not yet bracketed on both sides.
 - **(H2, follow-on)** generative switch-curve shape at the selected point — added with a
   `generative-*` rollout variant once r2 confirms which checkpoint(s) are worth rolling out.

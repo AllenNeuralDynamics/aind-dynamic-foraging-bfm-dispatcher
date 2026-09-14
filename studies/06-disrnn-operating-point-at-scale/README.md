@@ -39,6 +39,7 @@ values of D**. This study measures that surface.
 |---|---|---|---|
 | penalty selection (existing 03+05 data, **zero new compute**) | Can β be picked from data we already have; does the pick depend on D? | **No** — free at D=100, but the generalization gap **grows with D** (β=3e-4: +0.0027→+0.0083) and the held-out-optimal β is also the most overfit β. Motivates scanning β jointly with D, not fixing it. | [r1](analysis/reports/r1-penalty-selection.md) |
 | `mult-d-grid` (D×mult×β, 80 runs, 2 seeds) | Does 05's peak-then-decline vanish at some point on the penalty×D surface? | **Yes** — at mult=1, β=3e-4, held-out transfer rises monotonically to 0.7221 at D=614, clears the best per-mouse RL baseline, and halves the GRU gap (−0.0114 → −0.0047). The decline was a penalty artifact: the right β must scale *down* as the cohort grows, not stay fixed. ✅ complete 2026-08-02 | [r2](analysis/reports/r2-scaling-surface.md) |
+| `wave2-step-budget-and-penalty-extension` (penalty edge, 8 runs, 2 seeds) | Does going lighter than `mult-d-grid`'s tested floor keep helping, on either penalty axis? | **Split verdict.** The **global-β axis** (mult=1) keeps improving past the tested floor — β=1e-4 beats β=3e-4 by +0.0020 at D=614 (≈5σ) and +0.0038 at D=300, a **new best point**, though the generalization gap is flat rather than shrinking further. The **interaction-multiplier axis** (β=3e-4) reverses — mult=1 is an interior peak; the new mult=0.5 point is worse on both held-out LL and the gap. **Tuned operating point updated to (mult=1, β=1e-4)**, provisionally — the β axis is not yet bracketed on both sides. ✅ complete 2026-09-14 | [r3](analysis/reports/r3-penalty-edge-extension.md) |
 
 ## Scans (variants)
 
@@ -71,7 +72,7 @@ wave 1 (H1) only.
 **Seed-noise bars to clear** (measured in study 05, same config family): held-out SD ≈ 0.0005;
 generative history-curve corr SD 0.0008–0.0020 at D ≥ 100.
 
-### `wave2-step-budget-and-penalty-extension` — wave 2 (🚧 in progress)
+### `wave2-step-budget-and-penalty-extension` — wave 2 (✅ Stage B complete 2026-09-14, Stage A step-budget question still open)
 
 Follow-on to `mult-d-grid`'s close-out, motivated by two observations: (1) the D=614
 generalization gap does not move monotonically with penalty strength across the tested
@@ -96,7 +97,20 @@ true optimum; (2) training-step count as a tunable.
   experiment [`01M22QA6NH2MCDCFM8J5YREE61`](https://beaker.org/ex/01M22QA6NH2MCDCFM8J5YREE61),
   W&B group `wave2-step-budget-and-penalty-extension@20260909-021546`. See
   [variant notes](variants/wave2-step-budget-and-penalty-extension/notes.md) for the full
-  grid and provenance. Results not yet analyzed.
+  grid and provenance.
+
+  **Results (r3, 2026-09-14) — 8/8 runs finished, verified independently via W&B GraphQL.**
+  The two lighter-penalty axes disagree. The **global-β axis** (mult=1 fixed) keeps improving
+  past `mult-d-grid`'s tested floor: β=1e-4 beats β=3e-4 by +0.0020 at D=614 (≈5σ against this
+  cell's own seed SEM) and +0.0038 at D=300 — a new best point at both cohorts — while the
+  generalization gap stays flat rather than shrinking further (0.0069→0.0069 at D=614). The
+  **interaction-multiplier axis** (β=3e-4 fixed) reverses instead of extending: mult=1 turns
+  out to be an interior peak on both held-out likelihood and the gap, and the new mult=0.5
+  point is worse on both, at both D. Net: the tested-range-edge hypothesis that motivated this
+  wave is confirmed on the β axis and rejected on the multiplier axis. See
+  [r3](analysis/reports/r3-penalty-edge-extension.md) for the full breakdown, caveats (n=2
+  seeds/cell throughout; D=300's old-tuned-point comparator is a backfilled early-stopped run),
+  and the β-axis follow-up this suggests (bracket the peak with one more, lighter β).
 
 ## Relation to other studies
 

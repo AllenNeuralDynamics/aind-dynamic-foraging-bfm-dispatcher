@@ -142,7 +142,28 @@ held-out evals land on the same ~12-point cadence and cost only wall-clock time.
 
 **Status (as of launch):** 4/8 tasks `idle` (starting), 4/8 `created` (queued) within seconds
 of submission; confirmed running (warmup phase reached) as of the same-day correction above.
-Results/report land in a future session once the grid finishes — not yet analyzed here. The
-grid still answers the extended-penalty-range question via the single end-of-training
+The grid still answers the extended-penalty-range question via the single end-of-training
 held-out value; it does **not** produce a per-checkpoint held-out curve (see CORRECTION
 above) — the step-budget question from Stage A remains open.
+
+## Stage B results (2026-09-14) — see [r3](../../analysis/reports/r3-penalty-edge-extension.md)
+
+**8/8 tasks finished**, independently re-verified via a fresh W&B GraphQL pull (not the chat
+report from launch time) — final step 107,559–107,562 each, zero backfilled rows, committed
+to `analysis/grid_wave2.csv` (`pull_wave2_grid.py`).
+
+The Question section above asked whether the D=614 gap keeps shrinking past `mult-d-grid`'s
+tested floor or turns around. **Answer: it depends which axis.** Lightening the global penalty
+β (mult=1 fixed, β 3e-4→1e-4) keeps *raising held-out likelihood* at both D=300 and D=614 (new
+best point, +0.0020 at D=614 ≈5σ, +0.0038 at D=300), while the gap itself goes flat rather than
+shrinking further (0.0069→0.0069 at D=614) — the extra likelihood is not coming from less
+overfitting, same pattern r2 found for the original tuned point. Lightening only the
+interaction multiplier (β=3e-4 fixed, mult 1→0.5) reverses instead: mult=1 turns out to be an
+interior peak on both held-out likelihood and the gap, and mult=0.5 is worse on both, at both D.
+Full breakdown, exact numbers, caveats, and the figure: r3.
+
+**Consequence for the study's tuned operating point:** updated to **(mult=1, β=1e-4)**,
+provisionally — see README verdict table. The β axis is not yet bracketed (only 2 of the
+grid's tested β values sit on the "post-floor" side of the original best), so a natural next
+step would test one lighter β still (e.g. ≈3e-5) to find where this axis actually peaks; not
+in scope for this wave.
