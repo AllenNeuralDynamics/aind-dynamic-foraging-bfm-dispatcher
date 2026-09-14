@@ -30,6 +30,7 @@ ORIGINAL_MODELS_COMMIT = "25f5f1ce64705edbf266feb8d57ff83a018b12c5"
 ZID_PARITY_MODELS_COMMIT = "553d1a9eae919bcec5121dc747d09d5559c31bb6"
 PRIMARY_EXPANSION_MODELS_COMMIT = "eaeadec2a56c4a8099f3e8cfa315a9467c2f6a24"
 HATTORI_MODELS_COMMIT = "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf"
+SECONDARY_MODELS_COMMIT = "d855a1a2b4075ee02c8d6597e97f768174eb031c"
 GROUPS = {
     "grossman-meta-learning": {
         "group": "grossman-meta-learning@20260905-124420",
@@ -132,6 +133,39 @@ GROUPS = {
         "author_selected": True,
         "slurm_job_id": "25585754",
         "foraging_models_commit": HATTORI_MODELS_COMMIT,
+    },
+    "lopez-double-trace": {
+        "group": "lopez-double-trace@slurm-26383278",
+        "dataset": "lopez_mouse",
+        "agent_class": "ForagerLopezDoubleTrace",
+        "author_selected": True,
+        "slurm_job_id": "26383278",
+        "foraging_models_commit": SECONDARY_MODELS_COMMIT,
+    },
+    "costa-feedback-dependent": {
+        "group": "costa-feedback-dependent@slurm-26383290",
+        "dataset": "costa",
+        "agent_class": "ForagerFeedbackDependentRL",
+        "author_selected": True,
+        "slurm_job_id": "26383290",
+        "foraging_models_commit": SECONDARY_MODELS_COMMIT,
+    },
+    "tang-block-type-rl": {
+        "group": "tang-block-type-rl@slurm-26383280",
+        "dataset": "tang",
+        "agent_class": "TangBlockTypeFeedbackDependentRL",
+        "author_selected": True,
+        "slurm_job_id": "26383280",
+        "foraging_models_commit": SECONDARY_MODELS_COMMIT,
+    },
+    "alsio-dual-rate-sticky": {
+        "group": "alsio-dual-rate-sticky@slurm-26383281",
+        "dataset": "alsio",
+        "agent_class": "ForagerAlsioRL",
+        "author_selected": False,
+        "comparison_role": "author-model sensitivity from a different cohort",
+        "slurm_job_id": "26383281",
+        "foraging_models_commit": SECONDARY_MODELS_COMMIT,
     },
 }
 CACHE = STUDY / "analysis" / "_cache_author_baselines"

@@ -115,6 +115,10 @@ AUTHOR_LABELS = {
     "eckstein-rl": "counterfactual RL",
     "eckstein-bi": "Bayesian inference",
     "hattori-q-learning": "Hattori2019",
+    "lopez-double-trace": "double-trace RL",
+    "costa-feedback-dependent": "feedback-dependent RL",
+    "tang-block-type-rl": "block-type RL",
+    "alsio-dual-rate-sticky": "dual-rate RL + stickiness",
 }
 AUTHOR_REFERENCE_PANELS = (
     ("grossman", "grossman-meta-learning"),
@@ -127,6 +131,9 @@ AUTHOR_REFERENCE_PANELS = (
     ("eckstein", "eckstein-rl"),
     ("eckstein", "eckstein-bi"),
     ("hattori", "hattori-q-learning"),
+    ("lopez_mouse", "lopez-double-trace"),
+    ("costa", "costa-feedback-dependent"),
+    ("tang", "tang-block-type-rl"),
 )
 EXAMPLE_CATEGORIES = (
     ("lower", "Lower tail"),
@@ -1087,7 +1094,10 @@ def _result_block(
         "Author-model lines include the existing Grossman (mouse), Chen (mouse), and "
         "Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), "
         "Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) "
-        "co-winners, and Hattori2019 for Hattori (mouse).",
+        "co-winners, Hattori2019 for Hattori (mouse), double-trace RL for "
+        "López-Yépez (mouse), feedback-dependent RL for Costa (macaque), and "
+        "block-type-specific RL for Tang (macaque). Alsiö (rat) is shown as a "
+        "dotted cohort-mismatched author-model sensitivity.",
         "",
         "Kwak (mouse) is omitted from every figure, table, direction count, and inference in "
         "this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, "
