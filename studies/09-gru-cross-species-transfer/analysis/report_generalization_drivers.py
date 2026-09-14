@@ -138,7 +138,20 @@ def _seed_values(cohort: dict, key: str) -> np.ndarray:
     return np.asarray([float(row[key]) for row in cohort["seeds"]])
 
 
-def _annotate(axis: plt.Axes, x: float, y: float, label: str) -> None:
+def _annotate(
+    axis: plt.Axes,
+    x: float,
+    y: float,
+    label: str,
+    *,
+    color: str | None = None,
+    rotation: float = 0,
+) -> None:
+    rotation_options = (
+        {"rotation_mode": "anchor", "ha": "left", "va": "bottom"}
+        if rotation
+        else {}
+    )
     axis.annotate(
         label,
         (x, y),
@@ -146,6 +159,9 @@ def _annotate(axis: plt.Axes, x: float, y: float, label: str) -> None:
         textcoords="offset points",
         fontsize=8.5,
         alpha=0.9,
+        color=color,
+        rotation=rotation,
+        **rotation_options,
     )
 
 
@@ -303,7 +319,15 @@ def _plot_main(
         )
         for axis, x, y in plot_values:
             plotter(axis, x, y, color, marker)
-            _annotate(axis, x.mean(), y.mean(), cohort["label"])
+            is_r1_left_panel = r1_scale and axis is axes[0]
+            _annotate(
+                axis,
+                x.mean(),
+                y.mean(),
+                cohort["label"],
+                color=color if is_r1_left_panel else None,
+                rotation=30 if is_r1_left_panel else 0,
+            )
 
     relation = (
         relation_source["gru_d614_minus_q_vs_embedding_centroid"]

@@ -5,7 +5,8 @@
 - Added descriptive Result 3 companion figures that show GRU-minus-Bari2019 in
   normalized-likelihood units, matching Result 1's scale while retaining Result
   3's equal-subject aggregation and E4/E8 inclusion-tier views. Companion points
-  show the three-seed mean with horizontal and vertical SEM bars.
+  show the three-seed mean with horizontal and vertical SEM bars; left-panel
+  study labels are rotated 30 degrees and colored by species.
 
 ## 2026-09-07
 
