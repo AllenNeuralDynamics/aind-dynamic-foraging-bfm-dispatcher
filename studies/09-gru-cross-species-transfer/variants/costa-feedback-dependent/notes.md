@@ -14,4 +14,9 @@ Allen HPC job; never submit to Beaker. The job reads the persistent canonical
 suite after verifying that its Parquet, split-manifest, and audit-file SHA-256
 digests match the local audited copies; this avoids a redundant Zenodo download.
 
+The first completed fit used the invalid original canonical reward mapping and
+is excluded. The corrected fit must use
+`/allen/aind/scratch/han.hou/datasets/study09-costa-reward-fix-20260914/canonical`,
+where reward is released column 11.
+
 Tracking: dispatcher #160.

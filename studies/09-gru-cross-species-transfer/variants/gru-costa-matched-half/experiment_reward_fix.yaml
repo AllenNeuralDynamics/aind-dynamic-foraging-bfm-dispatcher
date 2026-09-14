@@ -1,0 +1,42 @@
+version: v2
+description: Study 09 Costa reward-column correction, E4 transfer
+tasks:
+  - name: study09-gru-costa-reward-fix-e4
+    image:
+      beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+    command:
+      - bash
+      - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+      - bash
+      - -c
+      - 'echo "Launcher-only template: use code/launch_beaker_resumable.py" >&2; exit 2'
+    context:
+      priority: low
+      preemptible: true
+    constraints:
+      cluster:
+        - ai1/octo-hub-aws-h200
+        - ai1/octo-hub-aws-l40s
+        - ai1/octo-hub-onprem-h200
+    resources:
+      gpuCount: 1
+      cpuCount: 12
+      memory: 90GiB
+    datasets:
+      - mountPath: /external
+        source:
+          beaker: 01M2H3GAY254P1VRW26DWY625T
+      - mountPath: /deps
+        source:
+          beaker: 01M1RDVWF18JF5QMEB618WJPSF
+    envVars:
+      - name: WANDB_API_KEY
+        secret: han-wandb-api-key
+      - name: WRAPPER_REF
+        value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+      - name: DISPATCHER_REF
+        value: study/09-secondary-author-baselines
+      - name: FORAGING_MODELS_REF
+        value: feat/study09-secondary-author-models
+    result:
+      path: /results
