@@ -9,7 +9,9 @@ Stage-A expansion [#134](https://github.com/AllenNeuralDynamics/aind-dynamic-for
 through [#138](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/138);
 author-aligned baselines [#131](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/131),
 [#132](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/132),
-and [#133](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/133);
+[#133](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/133),
+and secondary author baselines [#159](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/159)
+through [#162](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/162);
 wrapper [#91](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/91)
 and [#92](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/92).
 
@@ -204,13 +206,19 @@ instead of the model selected by each dataset's authors:
 - `findling-weber`: Weber-imprecision Bayesian inference;
 - `eckstein-rl` and `eckstein-bi`: the two reported co-winning families;
 - `hattori-q-learning`: Hattori2019 (`L2F1CK0`), with separate rewarded and
-  unrewarded learning rates and no choice kernel.
+  unrewarded learning rates and no choice kernel;
+- `lopez-double-trace`: reward value plus fast and slow choice traces;
+- `costa-feedback-dependent`: separate rewarded and unrewarded learning rates;
+- `tang-block-type-rl`: separate feedback-dependent fits for object-valued What
+  blocks and action-valued Where blocks;
+- `alsio-dual-rate-sticky`: the paper's dual-rate model plus spatial stickiness,
+  labeled as a cohort-mismatched sensitivity rather than an author-aligned fit.
 
 They use the same subject-level adaptation observations and identical held-out
 trial keys as the GRU and common-Q comparisons in Result 1. These fits are
 CPU-only SLURM jobs on Allen HPC; they must not be sent to Beaker.
 
-The completed consolidated comparison is
+The completed primary comparison is
 [Result 1](analysis/reports/r1-author-aligned-baselines.md).
 The author-selected refit beats Bari2019 common Q for Chen (mouse), Lebedeva
 (mouse), Miller (rat), and both Eckstein (human) co-winners; Bari2019 is better
@@ -218,7 +226,8 @@ for Grossman (mouse), Zid (human), Beron (mouse), Findling (human), and Hattori
 (mouse). Result 1 reports every subject-paired comparison and the known
 paper-parity limitations. In particular, Hattori2019 does not reproduce the
 paper's cross-validated L2 penalty, so equation parity is high but paper-level
-fit-procedure parity is moderate.
+fit-procedure parity is moderate. The four secondary fits are in progress and
+will enter the same report only after immutable trial-key parity passes.
 
 ## Subject embedding space
 
