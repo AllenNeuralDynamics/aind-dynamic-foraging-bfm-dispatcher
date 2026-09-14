@@ -145,7 +145,7 @@ GROUPS = {
     "costa-feedback-dependent": {
         "group": "costa-feedback-dependent@slurm-26383290",
         "dataset": "costa",
-        "agent_class": "ForagerFeedbackDependentRL",
+        "agent_class": "CostaBlockResetFeedbackDependentRL",
         "author_selected": True,
         "slurm_job_id": "26383290",
         "foraging_models_commit": SECONDARY_MODELS_COMMIT,

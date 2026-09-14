@@ -28,8 +28,7 @@ DISPATCHER_COMMIT="$(git -C "${DISPATCHER_ROOT}" rev-parse HEAD)"
 WRAPPER_COMMIT="$(git -C "${WRAPPER_ROOT}" rev-parse HEAD)"
 FORAGING_MODELS_COMMIT="$(git -C "${MODELS_ROOT}" rev-parse HEAD)"
 
-python "${DISPATCHER_ROOT}/studies/09-gru-cross-species-transfer/run_published_baseline.py" \
-  --baseline costa-feedback-dependent \
+python "${DISPATCHER_ROOT}/studies/09-gru-cross-species-transfer/run_costa_author_baseline.py" \
   --data-root "${DATA_ROOT}" \
   --output-root "${RUN_ROOT}" \
   --subject-workers 11
