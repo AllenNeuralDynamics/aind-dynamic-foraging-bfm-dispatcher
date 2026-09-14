@@ -143,11 +143,11 @@ GROUPS = {
         "foraging_models_commit": SECONDARY_MODELS_COMMIT,
     },
     "costa-feedback-dependent": {
-        "group": "costa-feedback-dependent@slurm-26383290",
+        "group": "costa-feedback-dependent@slurm-26383372",
         "dataset": "costa",
         "agent_class": "CostaBlockResetFeedbackDependentRL",
         "author_selected": True,
-        "slurm_job_id": "26383290",
+        "slurm_job_id": "26383372",
         "foraging_models_commit": SECONDARY_MODELS_COMMIT,
     },
     "tang-block-type-rl": {
