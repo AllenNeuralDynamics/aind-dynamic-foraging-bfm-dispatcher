@@ -11,5 +11,8 @@
   "output_root": "/allen/aind/scratch/han.hou/outputs/study09-costa-feedback-dependent-26383279",
   "submitted_at": "2026-09-14T15:38:27-07:00",
   "started_at": "2026-09-14T15:38:39-07:00",
-  "status": "running"
+  "completed_at": "2026-09-14T15:39:12-07:00",
+  "elapsed": "00:00:33",
+  "exit_code": "1:0",
+  "status": "failed"
 }
