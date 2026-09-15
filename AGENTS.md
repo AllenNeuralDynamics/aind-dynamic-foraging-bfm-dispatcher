@@ -84,15 +84,22 @@ These guidelines are working when diffs contain fewer unnecessary changes, solut
 
 ## 5. HPC Execution Safety
 
-**Never run *any* Python on the login node (where the agent runs) — no exceptions.** This
-covers training, sweeps, analysis, data generation, and "quick" smoke tests or single-worker
-checks, interactive or shipped ad-hoc via `call_command`/SSH. All workload Python goes
-through `srun`/`sbatch`/`salloc` onto a compute node.
+**Never run workload Python on the HPC login node.** This covers training, sweeps, data
+generation, extraction, and analysis that imports loader/model code, accesses cluster-only
+data, or starts workers. Those workloads go through `srun`/`sbatch`/`salloc` onto a compute
+node.
 
-The only exception is a *submit-only launcher* that creates a sweep, submits, or probes
-capacity and returns — never importing loader/model/training code, never starting a
-`multiprocessing` Pool. Which scripts qualify, and the real incident behind this rule (an
-unguarded spawn-Pool that forked into a 260 MB / 65k-error cascade): **hpc-launch**.
+Two narrow exceptions may run on the agent's local machine (not the HPC login node):
+
+- A *submit-only launcher* that creates a sweep, submits, or probes capacity and returns —
+  never importing loader/model/training code or starting a `multiprocessing` Pool.
+- A pure offline report formatter that reads only committed frozen JSON/CSV artifacts and
+  writes figures or report markers. It must not access W&B, raw data, `/allen`, loaders,
+  models, or multiprocessing. These plotting steps stay local and must not require HPC.
+
+Which launchers qualify, and the real incident behind this rule (an unguarded spawn-Pool
+that forked into a 260 MB / 65k-error cascade): **hpc-launch**. Formatter/extractor boundaries
+are defined by **posthoc-reporting**.
 
 ## 6. Semantic Commit Messages
 
