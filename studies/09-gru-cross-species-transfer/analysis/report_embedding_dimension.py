@@ -40,7 +40,6 @@ DATASET_ORDER = (
     "alsio",
     "costa",
     "lopez_mouse",
-    "tang",
     "hattori",
 )
 LABELS = {
@@ -55,7 +54,6 @@ LABELS = {
     "alsio": "Alsiö (rat)",
     "costa": "Costa (macaque)",
     "lopez_mouse": "López-Yépez (mouse)",
-    "tang": "Tang (macaque)",
     "hattori": "Hattori (mouse)",
 }
 SPECIES_COLORS = {

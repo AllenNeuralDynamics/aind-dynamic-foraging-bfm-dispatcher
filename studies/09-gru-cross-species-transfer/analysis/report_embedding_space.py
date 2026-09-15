@@ -38,7 +38,6 @@ COLORS = {
     "kwak": "#937860",
     "miller": "#CCB974",
     "findling": "#DA8BC3",
-    "tang": "#8C8C8C",
     "alsio": "#1F77B4",
     "eckstein": "#2CA02C",
     "costa": "#9467BD",
@@ -55,7 +54,6 @@ PAPER_LABELS = {
     "kwak": "Kwak (mouse)",
     "miller": "Miller (rat)",
     "findling": "Findling (human)",
-    "tang": "Tang (macaque)",
     "alsio": "Alsiö (rat)",
     "eckstein": "Eckstein (human)",
     "costa": "Costa (macaque)",
@@ -68,7 +66,7 @@ def _group_order(data: dict) -> tuple[str, ...]:
     order = tuple(data["groups"])
     if order[:2] != ("aind_source", "aind_heldout"):
         raise AssertionError("Embedding reference group order drifted")
-    return tuple(name for name in order if name != "kwak")
+    return tuple(name for name in order if name != "kwak" and name in COLORS)
 
 
 def _display_label(data: dict, name: str) -> str:

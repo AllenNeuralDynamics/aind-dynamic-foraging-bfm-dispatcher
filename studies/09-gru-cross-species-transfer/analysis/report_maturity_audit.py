@@ -145,9 +145,6 @@ adapter, split manifest, common-Q fit, E4 transfer, and E8 transfer are regenera
   participants whom the paper omitted from model-based analyses. They passed the
   prespecified task-understanding screen, and removing hard-to-fit behavior would
   change the predictive estimand.
-- Tang (macaque) retains within-block learning and reversal. Those dynamics are the
-  mature task, not pretraining; the cohort remains descriptive because it has two
-  subjects.
 - Costa (macaque) is mature-eligible because lesion group is fixed between subjects,
   so adaptation and test never cross treatment. It remains a stress-test cohort.
 - Eckstein (human) is post-tutorial, but the public release has 306 valid files while

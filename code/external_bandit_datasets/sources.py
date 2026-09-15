@@ -156,22 +156,6 @@ SOURCES: dict[str, Source] = {
         digest_algorithm="sha256",
         digest="ac6d8acb50cdb7b3877f40f57b5e17182d73b4228c78a4ed01b8fa38b19ca296",
     ),
-    "tang": Source(
-        dataset_id="tang-bartolo-averbeck-2021",
-        species="macaque",
-        title=(
-            "Reward-related choices determine information timing and flow "
-            "across macaque lateral prefrontal cortex"
-        ),
-        repository="Mendeley Data",
-        doi="10.17632/m4f38w49fb.1",
-        version="1",
-        license="CC-BY-4.0",
-        url="https://data.mendeley.com/public-api/zip/m4f38w49fb/download/1",
-        filename="tang-mendeley-v1.zip",
-        digest_algorithm="sha256",
-        digest="bd9c9aab489b36518cd1f5c3fa26182f10d20d61bb01bcc5e84fe573eb3b5de5",
-    ),
     "alsio": Source(
         dataset_id="alsio-et-al-2019-vpvd-tsvr",
         species="rat",

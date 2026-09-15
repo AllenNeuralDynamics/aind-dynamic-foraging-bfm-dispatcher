@@ -36,7 +36,6 @@ DATASETS = (
     "kwak",
     "miller",
     "findling",
-    "tang",
     "alsio",
     "eckstein",
     "costa",
@@ -262,10 +261,6 @@ def main() -> None:
             "gru_source_seeds": 3,
             "multi_session_example": "ranked held-out real session",
             "within_session_example": "full session with the adaptation/test boundary shown",
-            "small_cohort_exception": (
-                "Tang has only four held-out real sessions; all four are shown once "
-                "instead of duplicating sessions to manufacture three per category"
-            ),
         },
         "plotting": _plot_source(),
         "datasets": datasets,

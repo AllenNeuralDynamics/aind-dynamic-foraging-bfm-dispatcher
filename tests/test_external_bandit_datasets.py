@@ -43,7 +43,6 @@ from external_bandit_datasets.adapters import (  # noqa: E402
     adapt_kwak,
     adapt_lebedeva,
     adapt_miller,
-    adapt_tang,
 )
 from external_bandit_datasets.cli import _names, run  # noqa: E402
 
@@ -269,57 +268,6 @@ class TestExternalBanditDatasets(unittest.TestCase):
                 manifest["subjects"][0]["adapt_session_ids"], ["session-002"]
             )
             self.assertEqual(audit["num_trials"], 4)
-
-    def test_tang_adapter_preserves_sessions_and_binary_actions(self) -> None:
-        from scipy.io import savemat
-
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "tang.zip"
-            with zipfile.ZipFile(path, "w") as archive:
-                for subject, date in (
-                    ("V", "20160929"),
-                    ("V", "20160930"),
-                    ("w", "20160112"),
-                    ("w", "20160113"),
-                ):
-                    payload = io.BytesIO()
-                    savemat(
-                        payload,
-                        {
-                            "beh": {
-                                "trialDirection": np.array([0, 1]),
-                                "reward": np.array([1, 0]),
-                                "blockType": np.array([1, 2]),
-                                "blockIndex": np.array([1, 1]),
-                                "trialObject": np.array([1, 2]),
-                                "trialValue": np.array([0.2, 0.8]),
-                                "optimal": np.array([0, 1]),
-                            }
-                        },
-                    )
-                    archive.writestr(
-                        f"Neurophysiology/{subject}{date}_neurons.mat",
-                        payload.getvalue(),
-                    )
-            source = replace(
-                SOURCES["tang"], digest=hashlib.sha256(path.read_bytes()).hexdigest()
-            )
-            expected = {
-                "num_subjects": 2,
-                "num_sessions": 4,
-                "num_trials": 8,
-                "excluded_trials": 0,
-            }
-            with (
-                mock.patch.dict(SOURCES, {"tang": source}),
-                mock.patch.dict(EXPECTED_AUDITS, {"tang": expected}),
-            ):
-                table, manifest, audit = adapt_tang(path)
-
-            self.assertEqual(set(table["subject_id"]), {"voltaire", "waldo"})
-            self.assertEqual(table["animal_response"].tolist()[:2], [0, 1])
-            self.assertEqual(manifest["subjects"][0]["adapt_session_ids"], ["20160929"])
-            self.assertEqual(audit["num_trials"], 8)
 
     def test_alsio_adapter_keeps_complete_supported_cohorts(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

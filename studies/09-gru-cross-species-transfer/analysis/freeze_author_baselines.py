@@ -150,14 +150,6 @@ GROUPS = {
         "slurm_job_id": "26383388",
         "foraging_models_commit": SECONDARY_MODELS_COMMIT,
     },
-    "tang-block-type-rl": {
-        "group": "tang-block-type-rl@slurm-26383280",
-        "dataset": "tang",
-        "agent_class": "TangBlockTypeFeedbackDependentRL",
-        "author_selected": True,
-        "slurm_job_id": "26383280",
-        "foraging_models_commit": SECONDARY_MODELS_COMMIT,
-    },
     "alsio-dual-rate-sticky": {
         "group": "alsio-dual-rate-sticky@slurm-26383281",
         "dataset": "alsio",

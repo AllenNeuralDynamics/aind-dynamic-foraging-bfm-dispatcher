@@ -49,7 +49,7 @@ Generated files are:
 - `$CACHE_ROOT/canonical/<dataset>.audit.json`: provenance, checksums, and counts.
 
 The admitted dataset keys are `grossman`, `chen`, `zid`, `lebedeva`, `beron`,
-`kwak`, `miller`, `findling`, `tang`, `alsio`, `eckstein`, `costa`,
+`kwak`, `miller`, `findling`, `alsio`, `eckstein`, `costa`,
 `lopez_mouse`, and `hattori`. Run `make validate` after generation to verify the exact release
 counts, binary choices/rewards, v1/v2 contract, deterministic manifest
 regeneration, and non-empty adaptation/test partitions. Its committed summary
@@ -165,14 +165,14 @@ Hattori (mouse) uses the separate mature-only canonical dataset
 
 The Bari2019 common-Q comparison is consolidated into
 [Result 1](analysis/reports/r1-author-aligned-baselines.md).
-All 14 raw cohort matrices and all 210 E4 GRU cells are frozen. Kwak (mouse) and
-its 15 cells are quarantined, leaving 13 valid cohorts and 195 valid E4 cells.
+All 13 retained cohort matrices and all 195 E4 GRU cells are frozen. Kwak (mouse) and
+its 15 cells are quarantined, leaving 12 valid cohorts and 180 valid E4 cells.
 Exact ordered trial-key equality passes between every GRU cell and its cohort's
 Bari2019 baseline; parity alone does not rescue an invalid scientific split.
-Across the 13 valid cohorts at D=614, the exploratory subject-paired result favors
+Across the 12 valid cohorts at D=614, the exploratory subject-paired result favors
 GRU for Grossman (mouse), Chen (mouse), Lebedeva (mouse), López-Yépez (mouse),
 and Hattori (mouse); it favors Bari2019 common Q for Zid (human), Miller (rat), Findling (human), and
-Eckstein (human); Beron (mouse), Tang (macaque), Alsiö (rat), and Costa (macaque) are
+Eckstein (human); Beron (mouse), Alsiö (rat), and Costa (macaque) are
 unresolved at the unadjusted 0.05 level. Every valid cohort improves in trial-pooled
 GRU likelihood from D=10 to D=614,
 although several curves peak at D=100 or D=300.
@@ -209,8 +209,6 @@ instead of the model selected by each dataset's authors:
   unrewarded learning rates and no choice kernel;
 - `lopez-double-trace`: reward value plus fast and slow choice traces;
 - `costa-feedback-dependent`: separate rewarded and unrewarded learning rates;
-- `tang-block-type-rl`: separate feedback-dependent fits for object-valued What
-  blocks and action-valued Where blocks;
 - `alsio-dual-rate-sticky`: the paper's dual-rate model plus spatial stickiness,
   labeled as a cohort-mismatched sensitivity rather than an author-aligned fit.
 
@@ -227,8 +225,8 @@ for Grossman (mouse), Zid (human), Beron (mouse), Findling (human), and Hattori
 paper-parity limitations. In particular, Hattori2019 does not reproduce the
 paper's cross-validated L2 penalty, so equation parity is high but paper-level
 fit-procedure parity is moderate. Among the second-round cohorts, the
-López-Yépez (mouse) double-trace and Tang (macaque) block-type models outperform
-both GRU dimensions and Bari2019 common Q. Costa (macaque) instead orders E8 GRU,
+López-Yépez (mouse) double-trace outperforms both GRU dimensions and Bari2019 common Q.
+Costa (macaque) instead orders E8 GRU,
 Bari2019, E4 GRU, then the feedback-dependent author model after correcting the
 released reward-column mapping. The Alsiö (rat) sensitivity model is close to
 Bari2019 and both GRU dimensions, but is not a direct author-aligned comparison

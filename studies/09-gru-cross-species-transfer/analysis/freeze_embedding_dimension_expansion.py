@@ -37,7 +37,6 @@ DATASET_ORDER = (
     "lopez_mouse",
     "alsio",
     "costa",
-    "tang",
     "hattori",
 )
 VARIANT = STUDY / "variants" / "gru-e8-d614-expansion"
@@ -46,7 +45,7 @@ LAUNCHES = (
     (
         VARIANT / "launch_record_boundary",
         12,
-        {"lopez_mouse", "alsio", "costa", "tang"},
+        {"lopez_mouse", "alsio", "costa"},
         {"costa"},
     ),
     (
@@ -118,8 +117,11 @@ def _launch(
         source = _unwrapped(config, "source")
         target = _unwrapped(config, "target")
         dataset = target.get("dataset")
+        # This historical multi-cohort launch also contains an explicitly removed
+        # cohort. It remains in the launch record for provenance but contributes no
+        # active Study 09 result.
         if dataset not in expected_datasets:
-            raise AssertionError(f"Unexpected target dataset {dataset!r}")
+            continue
         if dataset in excluded_datasets:
             continue
         if source.get("manifest") != MANIFEST.name:

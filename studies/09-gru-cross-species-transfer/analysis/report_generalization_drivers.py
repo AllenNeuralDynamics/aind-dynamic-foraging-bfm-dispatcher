@@ -913,9 +913,8 @@ def _result_block(
         "",
         "![All valid cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid_e8.png)",
         "",
-        "This cumulative sensitivity view additionally includes Tang (macaque). Its plot "
-        f"annotations report the frozen {valid_n}-cohort all-valid sensitivity relationships; "
-        "Tang (macaque) remains descriptive-only because the release has two subjects.",
+        f"This cumulative sensitivity view reports the frozen {valid_n}-cohort all-valid "
+        "sensitivity relationships.",
         "",
         "### R1-scale companion: normalized-likelihood difference",
         "",
@@ -1050,8 +1049,8 @@ def _result_block(
         "",
         "### All-valid sensitivity — E=4",
         "",
-        "This sensitivity adds Alsiö (rat), Costa (macaque), López-Yépez (mouse), and "
-        "descriptive-only Tang (macaque). It still excludes quarantined Kwak (mouse).",
+        "This sensitivity adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse). "
+        "It still excludes quarantined Kwak (mouse).",
         "",
         "| relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |",
         "|---|---:|---:|---:|---:|---:|",

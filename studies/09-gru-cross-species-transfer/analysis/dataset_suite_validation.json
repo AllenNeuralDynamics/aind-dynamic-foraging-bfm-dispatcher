@@ -156,24 +156,6 @@
       "source_digest_algorithm": "sha256"
     },
     {
-      "dataset": "tang",
-      "dataset_id": "tang-bartolo-averbeck-2021",
-      "species": "macaque",
-      "schema_version": 1,
-      "split_strategy": "interleaved_sessions_odd_adapt_even_test",
-      "num_subjects": 2,
-      "num_sessions": 8,
-      "num_trials": 15375,
-      "num_adapt_trials": 7647,
-      "num_test_trials": 7728,
-      "excluded_trials": 0,
-      "table_sha256": "94324fb9132461070bfec9fe96f384a261fca7a192d714fbcae0c3b9f79a7f4e",
-      "manifest_sha256": "c2fa26dac41115d333d039bd3cce585ca05ace9958ac4ba4e164aaab598fbf7f",
-      "audit_sha256": "5036eee8efbe0c3fb425986b90dda9ec8657ef779175bd5c330d464999adaf19",
-      "source_digest": "bd9c9aab489b36518cd1f5c3fa26182f10d20d61bb01bcc5e84fe573eb3b5de5",
-      "source_digest_algorithm": "sha256"
-    },
-    {
       "dataset": "alsio",
       "dataset_id": "alsio-et-al-2019-vpvd-tsvr",
       "species": "rat",

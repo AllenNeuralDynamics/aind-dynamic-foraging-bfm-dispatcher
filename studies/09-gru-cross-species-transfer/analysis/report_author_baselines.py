@@ -48,7 +48,6 @@ ALL_DATASET_ORDER = (
     "kwak",
     "miller",
     "findling",
-    "tang",
     "alsio",
     "eckstein",
     "costa",
@@ -79,7 +78,6 @@ LABELS = {
     "kwak": "Kwak (mouse)",
     "miller": "Miller (rat)",
     "findling": "Findling (human)",
-    "tang": "Tang (macaque)",
     "alsio": "Alsiö (rat)",
     "eckstein": "Eckstein (human)",
     "costa": "Costa (macaque)",
@@ -95,7 +93,6 @@ TASKS = {
     "kwak": "dynamic bandit under D1/D2 manipulation",
     "miller": "large dynamic bandit",
     "findling": "variable-volatility reversal",
-    "tang": "blockwise action/object values",
     "alsio": "discrimination and reversal",
     "eckstein": "developmental stochastic reversal",
     "costa": "stochastic stimulus reversal",
@@ -117,7 +114,6 @@ AUTHOR_LABELS = {
     "hattori-q-learning": "Hattori2019",
     "lopez-double-trace": "double-trace RL",
     "costa-feedback-dependent": "feedback-dependent RL",
-    "tang-block-type-rl": "block-type RL",
     "alsio-dual-rate-sticky": "dual-rate RL + stickiness",
 }
 AUTHOR_REFERENCE_PANELS = (
@@ -133,7 +129,6 @@ AUTHOR_REFERENCE_PANELS = (
     ("hattori", "hattori-q-learning"),
     ("lopez_mouse", "lopez-double-trace"),
     ("costa", "costa-feedback-dependent"),
-    ("tang", "tang-block-type-rl"),
 )
 EXAMPLE_CATEGORIES = (
     ("lower", "Lower tail"),
@@ -827,6 +822,8 @@ def _author_rows(
     correlations = []
     for baseline, record in author_data["records"].items():
         dataset_name = record["dataset"]
+        if dataset_name not in DATASET_ORDER:
+            continue
         dataset = matched["datasets"][dataset_name]
         d614 = _gru_for_d(dataset, 614)
         e8 = embedding_dimension["datasets"][dataset_name]["e8"]
@@ -1003,7 +1000,7 @@ def _stage_a_read(matched: dict) -> list[str]:
         "",
         "The remaining cohorts are unresolved at the 0.05 level: "
         + describe(unresolved)
-        + ". Tang (macaque) has only two subjects, so its inferential result is especially limited.",
+        + ".",
         "",
         f"Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614. "
         f"The largest gains are "
@@ -1093,8 +1090,8 @@ def _result_block(
         "Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), "
         "Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) "
         "co-winners, Hattori2019 for Hattori (mouse), double-trace RL for "
-        "López-Yépez (mouse), feedback-dependent RL for Costa (macaque), and "
-        "block-type-specific RL for Tang (macaque). Alsiö (rat) is shown as a "
+        "López-Yépez (mouse), and feedback-dependent RL for Costa (macaque). "
+        "Alsiö (rat) is shown as a "
         "dotted cohort-mismatched author-model sensitivity.",
         "",
         "Kwak (mouse) is omitted from every figure, table, direction count, and inference in "
@@ -1282,13 +1279,6 @@ def _result_block(
                     f"![{category_label} {LABELS[dataset_name]} held-out sessions]({path})",
                     "",
                 ]
-        if dataset_name == "tang":
-            lines += [
-                "Tang (macaque) has only four held-out real sessions in the complete release. All four "
-                "are shown once across the three rank regions; sessions are not duplicated to "
-                "manufacture nine examples.",
-                "",
-            ]
     lines += [
         "Black and gray marks denote rewarded and unrewarded choices; the black trace is "
         "the nine-trial smoothed right-choice fraction. The reward-probability strip is "
@@ -1332,16 +1322,22 @@ def main() -> None:
     embedding_dimension = json.loads(EMBEDDING_DIMENSION_DATA.read_text())
     embedding_expansion = json.loads(EMBEDDING_DIMENSION_EXPANSION_DATA.read_text())
     task_design = json.loads(TASK_DESIGN_DATA.read_text())
-    if tuple(matched["datasets"]) != ALL_DATASET_ORDER:
+    if tuple(name for name in matched["datasets"] if name in ALL_DATASET_ORDER) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen matched-result dataset membership drifted")
-    if tuple(examples["datasets"]) != ALL_DATASET_ORDER:
+    if tuple(name for name in examples["datasets"] if name in ALL_DATASET_ORDER) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen example dataset membership drifted")
     overlap = set(embedding_dimension["datasets"]) & set(
         embedding_expansion["datasets"]
     )
     if overlap:
         raise AssertionError(f"Duplicate E8 datasets across frozen inputs: {sorted(overlap)}")
-    embedding_dimension["datasets"].update(embedding_expansion["datasets"])
+    embedding_dimension["datasets"].update(
+        {
+            name: value
+            for name, value in embedding_expansion["datasets"].items()
+            if name in DATASET_ORDER
+        }
+    )
     if set(embedding_dimension["datasets"]) != set(DATASET_ORDER):
         raise AssertionError("E8 frozen inputs do not cover every displayed dataset")
     _plot_summary(

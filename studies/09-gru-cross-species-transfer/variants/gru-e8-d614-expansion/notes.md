@@ -14,7 +14,6 @@ adds the remaining valid cohorts in the Report 1 order:
 
 - primary: Zid (human), Chen (mouse), and Beron (mouse);
 - stress test: López-Yépez (mouse), Alsiö (rat), and Costa (macaque);
-- descriptive: Tang (macaque).
 
 Kwak (mouse) remains quarantined because its frozen manifest adapts on CNO
 sessions and tests on DMSO sessions. E8 is not run on that invalid estimand.
