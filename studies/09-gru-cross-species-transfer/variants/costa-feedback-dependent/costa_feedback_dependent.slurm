@@ -17,7 +17,7 @@ MODELS_ROOT="${MODELS_ROOT:?MODELS_ROOT is required}"
 RUN_ROOT="${BFM_OUTPUT_DIR:?BFM_OUTPUT_DIR is required}/study09-costa-feedback-dependent-${SLURM_JOB_ID}"
 DATA_ROOT="${EXTERNAL_DATA_ROOT:?EXTERNAL_DATA_ROOT is required}"
 
-export WANDB_RUN_GROUP="${WANDB_RUN_GROUP:-costa-feedback-dependent@slurm-${SLURM_JOB_ID}}"
+export WANDB_RUN_GROUP="${WANDB_RUN_GROUP:-costa-feedback-dependent-bias@slurm-${SLURM_JOB_ID}}"
 export BFM_META_VARIANT="costa-feedback-dependent"
 export PYTHONPATH="${MODELS_ROOT}/src:${DISPATCHER_ROOT}/code:${WRAPPER_ROOT}/code:${PYTHONPATH:-}"
 export BFM_WRAPPER_CODE="${WRAPPER_ROOT}/code"
@@ -29,7 +29,7 @@ WRAPPER_COMMIT="$(git -C "${WRAPPER_ROOT}" rev-parse HEAD)"
 FORAGING_MODELS_COMMIT="$(git -C "${MODELS_ROOT}" rev-parse HEAD)"
 
 python "${DISPATCHER_ROOT}/studies/09-gru-cross-species-transfer/run_published_baseline.py" \
-  --baseline costa-feedback-dependent \
+  --baseline costa-feedback-dependent-bias \
   --data-root "${DATA_ROOT}" \
   --output-root "${RUN_ROOT}" \
   --subject-workers 11

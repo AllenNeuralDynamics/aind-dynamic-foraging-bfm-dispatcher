@@ -1,13 +1,18 @@
 # Costa (macaque) feedback-dependent RL baseline
 
-Fit the paper-selected Rescorla-Wagner model with separate rewarded and
-unrewarded learning rates independently for each macaque on the matched
-odd-session adaptation half, then score the held-out even sessions. Latent
-values reset to 0.5 at each real held-out session, exactly as in the Bari2019
-common-Q and E4 GRU matched-half comparison.
+Fit Costa's Rescorla-Wagner family with separate rewarded and unrewarded
+learning rates, augmented with a fixed choice bias, independently
+for each macaque on the matched odd-session adaptation half. Then score the
+held-out even sessions. Latent values reset to 0.5 at each real held-out
+session, exactly as in the Bari2019 common-Q and E4 GRU matched-half comparison.
 
-The equation family is paper-aligned: one rewarded learning rate, one omission
-learning rate, and inverse temperature (no unchosen-value forgetting term).
+The paper's equation family has one rewarded learning rate, one omission
+learning rate, and inverse temperature, with no unchosen-value forgetting or
+choice-kernel term. The matched comparison adds one log-odds intercept because
+Bari2019 fits an intercept and the GRU can represent a stable subject preference.
+For Costa's shape-coded canonical choice, this is a stimulus-shape preference,
+not a screen-side preference.
+
 The paper instead fits individual session/schedule phases and resets values at
 each 80-trial stimulus block, with limited carryover for repeated stimuli.
 That is appropriate for its within-session lesion analysis, but it is not the

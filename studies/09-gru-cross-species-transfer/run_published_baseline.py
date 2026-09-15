@@ -88,6 +88,15 @@ BASELINES = {
         "agent_class": "ForagerFeedbackDependentRL",
         "citation": "Costa et al., Neuron (2016), feedback-dependent RL",
     },
+    "costa-feedback-dependent-bias": {
+        "dataset": "costa",
+        "dataset_id": "costa-averbeck-2016-stochastic",
+        "agent_class": "ForagerFeedbackDependentRLBias",
+        "citation": (
+            "Costa et al., Neuron (2016), feedback-dependent RL, "
+            "augmented with a fitted choice bias"
+        ),
+    },
     "alsio-dual-rate-sticky": {
         "dataset": "alsio",
         "dataset_id": "alsio-et-al-2019-vpvd-tsvr",
