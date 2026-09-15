@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_task_design_features.py",
-    "produced_at_pt": "2026-09-07T21:08:32-07:00",
-    "dispatcher_git_sha": "703e750eb44e9103214aca1ced8c82557925849f",
+    "produced_at_pt": "2026-09-14T17:53:44-07:00",
+    "dispatcher_git_sha": "393339ef16353acf72712c62d418e03bf74f33f5",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
@@ -23,15 +23,18 @@
       "q-expanded-matched-half@20260906-kwak-choicefix",
       "gru-hattori-matched-half@20260907-200329",
       "q-hattori-matched-half@slurm-25585753",
+      "gru-costa-matched-half@20260914-162457",
+      "q-expanded-matched-half@slurm-26383387",
       "e4-e8-d614-source@20260906-195409",
       "gru-e8-d614-diagnostic@20260907-071400",
       "gru-e8-d614-expansion@20260907-132415",
       "gru-e8-d614-expansion@20260907-132625",
-      "gru-hattori-matched-half@20260907-200328"
+      "gru-hattori-matched-half@20260907-200328",
+      "gru-e8-d614-expansion@20260914-162554"
     ]
   },
   "inputs": {
-    "analysis/generalization_drivers_e8.json": "f343074d0259c0e94b912d2e476a732b5a8d92b125b5b9fb48943439eb836ebf",
+    "analysis/generalization_drivers_e8.json": "6dc9c0c641fb003aa3703f1872f88ee71e5476e564ee59ff583739bb83250c13",
     "analysis/task_design_annotations.json": "8f2806e9dfa8001af5f858f9d136aea762358ea53485511cc0043f25b39f58ab",
     "code/config/data/mice_snapshot.yaml": "9c2b4855c1a7e2686e3059f736b279142ccabfea0447da54bc50ef4e0008632b",
     "code/config/data/task/uncoupled_block.yaml": "80a3f2153909eee9578d6649eae7d5b961c5143d0a169f0b5e7f0a5308ec18df",
@@ -5475,14 +5478,14 @@
           "1": 158513
         },
         "reward_counts": {
-          "0": 156855,
-          "1": 172985
+          "0": 140665,
+          "1": 189175
         },
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": 0.020081182525729102,
-        "embedding_centroid_mahalanobis": 13.72311953538791
+        "gru_d614_minus_q_bits_per_trial": 0.0029134265232752463,
+        "embedding_centroid_mahalanobis": 5.401773780760595
       }
     },
     "lopez_mouse": {
@@ -5865,66 +5868,66 @@
   "sensitivity_relationships": {
     "gru_d614_minus_q_vs_task_structure_distance": {
       "n_cohorts": 13,
-      "spearman_rho": -0.18218129503725905,
-      "permutation_p_two_sided": 0.5511844881551184,
+      "spearman_rho": -0.280738389073809,
+      "permutation_p_two_sided": 0.35350646493535065,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.7824812652576142,
-        0.5024682308987887
+        -0.8307471607356972,
+        0.3790480595592617
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.4198595613798157,
-        -0.015562199727669562
+        -0.5343667144834018,
+        -0.14395034748094346
       ]
     },
     "embedding_centroid_vs_task_structure_distance": {
       "n_cohorts": 13,
-      "spearman_rho": 0.7406714945777089,
-      "permutation_p_two_sided": 0.005529944700552994,
+      "spearman_rho": 0.6421144005411589,
+      "permutation_p_two_sided": 0.021529784702152978,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        0.337265623788446,
-        0.9301443647766956
+        0.16443644884575356,
+        0.905227336389949
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.6730651382217085,
-        0.8726617108241095
+        0.5446769904684347,
+        0.7593290211066926
       ]
     },
     "gru_d614_minus_q_vs_full_design_distance": {
       "n_cohorts": 13,
-      "spearman_rho": -0.4932158914706558,
-      "permutation_p_two_sided": 0.09026909730902691,
+      "spearman_rho": -0.4960668503808908,
+      "permutation_p_two_sided": 0.08703912960870391,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.8667210812426815,
-        0.017771201439425535
+        -0.8879115246162855,
+        0.034865203537804104
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.6117641492073348,
-        -0.38284978563534633
+        -0.6153627618497309,
+        -0.3937883509392133
       ]
     },
     "embedding_centroid_vs_full_design_distance": {
       "n_cohorts": 13,
-      "spearman_rho": 0.7555041112122762,
-      "permutation_p_two_sided": 0.0036499635003649964,
+      "spearman_rho": 0.7811627414043912,
+      "permutation_p_two_sided": 0.002009979900200998,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        0.27599247955141987,
-        0.9424487931588964
+        0.3735168387640823,
+        0.9475304439388297
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.6917649186512956,
-        0.8132864571815157
+        0.7283662370984542,
+        0.8420753583206844
       ]
     }
   },

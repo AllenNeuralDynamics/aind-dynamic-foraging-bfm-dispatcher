@@ -213,7 +213,7 @@ E8 was run only at D=614, so the source-population scaling panel is available on
 | E=4 | Tang (macaque) | descriptive only | 2 | 0.5547 | 0.5542 | -0.0012 | -0.0005 | 2.81 | 2.85 | +0.0052 |
 | E=4 | Alsiö (rat) | stress test | 95 | 0.5297 | 0.5303 | +0.0015 | +0.0007 | 8.08 | 8.88 | +0.0510 |
 | E=4 | Eckstein (human) | primary | 306 | 0.6315 | 0.6259 | -0.0128 | -0.0180 | 10.21 | 10.87 | +0.0134 |
-| E=4 | Costa (macaque) | stress test | 11 | 0.5865 | 0.5832 | -0.0083 | -0.0036 | 7.62 | 7.51 | +0.0347 |
+| E=4 | Costa (macaque) | stress test | 11 | 0.6239 | 0.6218 | -0.0049 | -0.0027 | 2.50 | 2.45 | +0.0076 |
 | E=4 | López-Yépez (mouse) | stress test | 8 | 0.5272 | 0.5747 | +0.1243 | +0.0472 | 11.21 | 12.54 | +0.0976 |
 | E=4 | Hattori (mouse) | primary | 7 | 0.5625 | 0.5722 | +0.0247 | +0.0097 | 4.45 | 4.60 | +0.0165 |
 | E=8 | Grossman (mouse) | primary | 48 | 0.7341 | 0.7478 | +0.0267 | +0.0134 | 0.89 | 3.89 | — |
@@ -226,7 +226,7 @@ E8 was run only at D=614, so the source-population scaling panel is available on
 | E=8 | Tang (macaque) | descriptive only | 2 | 0.5547 | 0.5572 | +0.0065 | +0.0024 | 8.40 | 8.77 | — |
 | E=8 | Alsiö (rat) | stress test | 95 | 0.5297 | 0.5316 | +0.0052 | +0.0020 | 13.25 | 14.48 | — |
 | E=8 | Eckstein (human) | primary | 306 | 0.6315 | 0.6308 | -0.0015 | -0.0138 | 16.90 | 19.85 | — |
-| E=8 | Costa (macaque) | stress test | 11 | 0.5865 | 0.5948 | +0.0201 | +0.0087 | 13.72 | 15.19 | — |
+| E=8 | Costa (macaque) | stress test | 11 | 0.6239 | 0.6252 | +0.0029 | +0.0010 | 5.40 | 5.93 | — |
 | E=8 | López-Yépez (mouse) | stress test | 8 | 0.5272 | 0.5889 | +0.1597 | +0.0616 | 18.47 | 22.19 | — |
 | E=8 | Hattori (mouse) | primary | 7 | 0.5625 | 0.5719 | +0.0239 | +0.0094 | 5.25 | 5.70 | — |
 
@@ -255,18 +255,18 @@ This sensitivity adds Alsiö (rat), Costa (macaque), López-Yépez (mouse), and 
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs embedding centroid distance | 13 | -0.214 | [-0.82, +0.45] | 0.4839 | [-0.55, -0.08] |
-| GRU614−Q vs median subject embedding distance | 13 | -0.022 | [-0.68, +0.63] | 0.9492 | [-0.30, +0.16] |
-| GRU614−Bari2019 vs Bari2019 predictability† | 13 | -0.176 | [-0.74, +0.43] | 0.5649 | [-0.34, +0.05] |
-| GRU614−GRU10 vs embedding centroid distance | 13 | +0.599 | [+0.03, +0.94] | 0.0344 | [+0.49, +0.76] |
+| GRU614−Q vs embedding centroid distance | 13 | -0.121 | [-0.74, +0.53] | 0.6981 | [-0.43, +0.03] |
+| GRU614−Q vs median subject embedding distance | 13 | +0.049 | [-0.61, +0.69] | 0.8631 | [-0.21, +0.25] |
+| GRU614−Bari2019 vs Bari2019 predictability† | 13 | -0.165 | [-0.72, +0.45] | 0.5901 | [-0.33, +0.06] |
+| GRU614−GRU10 vs embedding centroid distance | 13 | +0.555 | [-0.06, +0.91] | 0.0512 | [+0.43, +0.67] |
 
 ### All-valid sensitivity — E=8
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs embedding centroid distance | 13 | -0.187 | [-0.81, +0.50] | 0.5408 | [-0.51, -0.05] |
-| GRU614−Q vs median subject embedding distance | 13 | -0.027 | [-0.65, +0.59] | 0.9353 | [-0.31, +0.13] |
-| GRU614−Bari2019 vs Bari2019 predictability† | 13 | -0.236 | [-0.74, +0.42] | 0.4361 | [-0.41, -0.03] |
+| GRU614−Q vs embedding centroid distance | 13 | -0.253 | [-0.84, +0.44] | 0.4040 | [-0.59, -0.13] |
+| GRU614−Q vs median subject embedding distance | 13 | -0.115 | [-0.72, +0.55] | 0.7095 | [-0.42, +0.03] |
+| GRU614−Bari2019 vs Bari2019 predictability† | 13 | -0.209 | [-0.75, +0.47] | 0.4908 | [-0.38, +0.01] |
 
 † The Bari2019 relationship shares the same baseline between the horizontal axis and the GRU-minus-Bari2019 vertical axis. Its correlation is not an independent test of whether intrinsically easier tasks transfer better.
 
@@ -313,11 +313,11 @@ For E=8, task-structure distance has ρ=+0.645 with embedding displacement and �
 |---|---|---:|---:|---:|---:|---:|---:|
 | E=4 | Mouse | 6 | +0.0342 | +0.0213 | [-0.0023, +0.1243] | 4.67 | 0.21 |
 | E=4 | Rat | 2 | -0.0103 | -0.0103 | [-0.0222, +0.0015] | 6.99 | 0.38 |
-| E=4 | Macaque | 2 | -0.0047 | -0.0047 | [-0.0083, -0.0012] | 5.22 | 0.38 |
+| E=4 | Macaque | 2 | -0.0030 | -0.0030 | [-0.0049, -0.0012] | 2.66 | 0.38 |
 | E=4 | Human | 3 | -0.0238 | -0.0128 | [-0.0776, +0.0190] | 8.39 | 0.42 |
 | E=8 | Mouse | 6 | +0.0416 | +0.0212 | [+0.0026, +0.1597] | 7.34 | 0.21 |
 | E=8 | Rat | 2 | -0.0035 | -0.0035 | [-0.0122, +0.0052] | 11.50 | 0.38 |
-| E=8 | Macaque | 2 | +0.0133 | +0.0133 | [+0.0065, +0.0201] | 11.06 | 0.38 |
+| E=8 | Macaque | 2 | +0.0047 | +0.0047 | [+0.0029, +0.0065] | 6.90 | 0.38 |
 | E=8 | Human | 3 | -0.0149 | -0.0015 | [-0.0549, +0.0116] | 14.84 | 0.42 |
 
 These are equal-cohort descriptive summaries, not species effects. Each species is represented by only two to six studies, and task design differs systematically by species. In particular, a species contrast would currently relabel the same design and apparatus contrasts rather than isolate biology.
@@ -386,18 +386,18 @@ Every metric is computed using only within-session transitions. Subjects are sum
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
 | GRU614−Q vs task-structure distance | 13 | -0.215 | [-0.81, +0.46] | 0.4803 (monte_carlo) | [-0.46, -0.06] |
-| embedding vs task-structure distance | 13 | +0.684 | [+0.26, +0.91] | 0.0129 (monte_carlo) | [+0.60, +0.81] |
+| embedding vs task-structure distance | 13 | +0.529 | [+0.00, +0.87] | 0.0659 (monte_carlo) | [+0.40, +0.67] |
 | GRU614−Q vs full-design distance | 13 | -0.399 | [-0.87, +0.17] | 0.1764 (monte_carlo) | [-0.55, -0.28] |
-| embedding vs full-design distance | 13 | +0.738 | [+0.29, +0.93] | 0.0052 (monte_carlo) | [+0.68, +0.80] |
+| embedding vs full-design distance | 13 | +0.704 | [+0.30, +0.92] | 0.0084 (monte_carlo) | [+0.64, +0.75] |
 
 ### All-valid categorical sensitivity — E=8
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs task-structure distance | 13 | -0.182 | [-0.78, +0.50] | 0.5512 (monte_carlo) | [-0.42, -0.02] |
-| embedding vs task-structure distance | 13 | +0.741 | [+0.34, +0.93] | 0.0055 (monte_carlo) | [+0.67, +0.87] |
-| GRU614−Q vs full-design distance | 13 | -0.493 | [-0.87, +0.02] | 0.0903 (monte_carlo) | [-0.61, -0.38] |
-| embedding vs full-design distance | 13 | +0.756 | [+0.28, +0.94] | 0.0036 (monte_carlo) | [+0.69, +0.81] |
+| GRU614−Q vs task-structure distance | 13 | -0.281 | [-0.83, +0.38] | 0.3535 (monte_carlo) | [-0.53, -0.14] |
+| embedding vs task-structure distance | 13 | +0.642 | [+0.16, +0.91] | 0.0215 (monte_carlo) | [+0.54, +0.76] |
+| GRU614−Q vs full-design distance | 13 | -0.496 | [-0.89, +0.03] | 0.0870 (monte_carlo) | [-0.62, -0.39] |
+| embedding vs full-design distance | 13 | +0.781 | [+0.37, +0.95] | 0.0020 (monte_carlo) | [+0.73, +0.84] |
 
 ### Individual schedule-feature screen
 

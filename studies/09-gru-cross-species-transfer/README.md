@@ -218,7 +218,7 @@ They use the same subject-level adaptation observations and identical held-out
 trial keys as the GRU and common-Q comparisons in Result 1. These fits are
 CPU-only SLURM jobs on Allen HPC; they must not be sent to Beaker.
 
-The completed primary comparison is
+The completed comparison is
 [Result 1](analysis/reports/r1-author-aligned-baselines.md).
 The author-selected refit beats Bari2019 common Q for Chen (mouse), Lebedeva
 (mouse), Miller (rat), and both Eckstein (human) co-winners; Bari2019 is better
@@ -226,8 +226,14 @@ for Grossman (mouse), Zid (human), Beron (mouse), Findling (human), and Hattori
 (mouse). Result 1 reports every subject-paired comparison and the known
 paper-parity limitations. In particular, Hattori2019 does not reproduce the
 paper's cross-validated L2 penalty, so equation parity is high but paper-level
-fit-procedure parity is moderate. The four secondary fits are in progress and
-will enter the same report only after immutable trial-key parity passes.
+fit-procedure parity is moderate. Among the second-round cohorts, the
+López-Yépez (mouse) double-trace and Tang (macaque) block-type models outperform
+both GRU dimensions and Bari2019 common Q. Costa (macaque) instead orders E8 GRU,
+Bari2019, E4 GRU, then the feedback-dependent author model after correcting the
+released reward-column mapping. The Alsiö (rat) sensitivity model is close to
+Bari2019 and both GRU dimensions, but is not a direct author-aligned comparison
+because the paper selected it in a separate excluded cohort. All reported fits
+pass immutable held-out trial-key parity.
 
 ## Subject embedding space
 

@@ -63,7 +63,7 @@ GRU_LAUNCHES = {
 }
 Q_LAUNCHES = [
     (WANDB_GROUPS[13], "25580070", set()),
-    (WANDB_GROUPS[14], "25581304", {"kwak"}),
+    (WANDB_GROUPS[14], "25581304", {"kwak", "costa"}),
     (WANDB_GROUPS[17], "25585753", set()),
 ]
 Q_OVERRIDES = {

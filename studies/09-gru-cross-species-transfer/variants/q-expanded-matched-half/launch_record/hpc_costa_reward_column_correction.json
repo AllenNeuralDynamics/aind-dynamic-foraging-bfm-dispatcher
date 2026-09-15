@@ -33,7 +33,21 @@
       "audit_sha256": "d5fd33fb06da8f1fea2810c1673595543b0b8e8b8b3e86bd0f20de740aad0d58"
     }
   },
-  "tasks": [],
+  "tasks": [
+    {
+      "array_task_id": "26383387_8",
+      "dataset": "costa",
+      "wandb_run_id": "ekngwz1z",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_cross_species_transfer/runs/ekngwz1z",
+      "status": "success",
+      "normalized_likelihood": 0.6310437182159756,
+      "n_trials": 162960,
+      "ordered_trial_key_sha256": "cfb2fda156b6b3ff4e8e6b555c8b8267ac971964f0957795c9f3db968d09d4a7",
+      "test_metrics_sha256": "58c308cecc781c22147757971bbd904c93570781ce11038d5ba56936522804eb",
+      "test_trial_predictions_sha256": "8ca648e99200351513d02d4c74f6258282ee0aebdcaedbcba08e8225e9c37a34",
+      "artifact_digest": "da0a52beb30e0dab317aade9c34bc16c"
+    }
+  ],
   "deviations": {
     "fresh_run_ids": true,
     "corrected_reward_column": true,
@@ -41,5 +55,6 @@
     "beaker_input_dataset": "01M2H3GAY254P1VRW26DWY625T",
     "hpc_canonical_root": "/allen/aind/scratch/han.hou/datasets/study09-costa-reward-fix-20260914/canonical"
   },
-  "cost": {}
+  "cost": {},
+  "status_note": "The committed W&B run and artifact report success; SLURM accounting could not be refreshed while Cisco DNS did not resolve the HPC host."
 }

@@ -26,3 +26,20 @@ The corrected fit uses source `0=right, 1=left` converted to canonical
 `0=left, 1=right`. Its held-out normalized likelihood is `0.62607851`, only
 `9.7e-8` above the superseded value, as expected from arm-swap symmetry. Exact
 ordered trial-key parity passes against every corrected Kwak GRU cell.
+
+## Costa reward-column correction
+
+- **W&B group:** `q-expanded-matched-half@slurm-26383387`
+- **W&B run:** [ekngwz1z](https://wandb.ai/AIND-disRNN/gru_cross_species_transfer/runs/ekngwz1z)
+- **SLURM array task:** `26383387_8` (CPU-only)
+- **Status:** success, verified from the committed W&B artifact
+- **Held-out trials:** 162,960
+- **Normalized likelihood:** 0.6310437182
+- **Supersedes:** Costa task `25581304_8` only
+
+The rerun uses released column 11 as rewarded/unrewarded feedback, following
+the official Costa (macaque) coding template. Its ordered held-out trial-key
+digest exactly matches the corrected E4 GRU, E8 GRU, and author-model outputs.
+SLURM accounting could not be refreshed while Cisco DNS did not resolve the
+HPC host; the immutable W&B result artifact is frozen in
+`analysis/matched_half_results.json`.
