@@ -208,7 +208,8 @@ instead of the model selected by each dataset's authors:
 - `hattori-q-learning`: Hattori2019 (`L2F1CK0`), with separate rewarded and
   unrewarded learning rates and no choice kernel;
 - `lopez-double-trace`: reward value plus fast and slow choice traces;
-- `costa-feedback-dependent`: separate rewarded and unrewarded learning rates;
+- `costa-feedback-dependent`: separate rewarded and unrewarded learning rates,
+  augmented in the matched benchmark with a fitted shape-choice bias;
 - `alsio-dual-rate-sticky`: the paper's dual-rate model plus spatial stickiness,
   labeled as a cohort-mismatched sensitivity rather than an author-aligned fit.
 

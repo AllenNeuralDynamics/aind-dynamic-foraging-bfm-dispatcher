@@ -113,7 +113,7 @@ AUTHOR_LABELS = {
     "eckstein-bi": "Bayesian inference",
     "hattori-q-learning": "Hattori2019",
     "lopez-double-trace": "double-trace RL",
-    "costa-feedback-dependent": "feedback-dependent RL",
+    "costa-feedback-dependent": "feedback-dependent RL + bias",
     "alsio-dual-rate-sticky": "dual-rate RL + stickiness",
 }
 AUTHOR_REFERENCE_PANELS = (
@@ -1090,7 +1090,8 @@ def _result_block(
         "Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), "
         "Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) "
         "co-winners, Hattori2019 for Hattori (mouse), double-trace RL for "
-        "López-Yépez (mouse), and feedback-dependent RL for Costa (macaque). "
+        "López-Yépez (mouse), and feedback-dependent RL plus a fitted shape-choice "
+        "bias for Costa (macaque). "
         "Alsiö (rat) is shown as a "
         "dotted cohort-mismatched author-model sensitivity.",
         "",
@@ -1246,6 +1247,14 @@ def _result_block(
         "therefore means that Bari2019 common Q generalizes better under this matched protocol; it is "
         "not evidence that the papers failed to test Q or selected the wrong model for their "
         "own analysis.",
+        "",
+        "For Costa (macaque), the paper's feedback-dependent RL equation has separate "
+        "rewarded and unrewarded learning rates but no intercept. The matched benchmark "
+        "reported here adds a fitted shape-choice bias so that a stable preference is not "
+        "reserved for Bari2019 and the GRU. It still intentionally omits Bari2019's "
+        "one-step choice kernel and unchosen-value forgetting. Any remaining held-out gap "
+        "therefore concerns the full model families under the shared split, not the missing "
+        "intercept alone.",
         "",
         "For Hattori (mouse), the comparison is specifically Bari2019 (`L1F1CK1`) "
         "versus Hattori2019 (`L2F1CK0`). Both are `ForagerQLearning` models with five "

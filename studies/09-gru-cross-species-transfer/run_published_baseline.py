@@ -97,6 +97,16 @@ BASELINES = {
             "augmented with a fitted choice bias"
         ),
     },
+    "costa-feedback-dependent-bias-ck1": {
+        "dataset": "costa",
+        "dataset_id": "costa-averbeck-2016-stochastic",
+        "agent_class": "ForagerFeedbackDependentRLBiasCK1",
+        "citation": (
+            "Costa et al., Neuron (2016), feedback-dependent RL, augmented "
+            "with fitted choice bias and Bari2019 one-step choice kernel"
+        ),
+        "comparison_role": "mechanism sensitivity: Costa dual-rate + bias + Bari CK1",
+    },
     "alsio-dual-rate-sticky": {
         "dataset": "alsio",
         "dataset_id": "alsio-et-al-2019-vpvd-tsvr",

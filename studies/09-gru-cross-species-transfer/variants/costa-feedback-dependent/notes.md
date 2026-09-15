@@ -13,6 +13,17 @@ Bari2019 fits an intercept and the GRU can represent a stable subject preference
 For Costa's shape-coded canonical choice, this is a stimulus-shape preference,
 not a screen-side preference.
 
+Two requested diagnostics challenge the remaining gap without changing the
+held-out estimand:
+
+- rerun Bari2019 common Q from scratch on the same corrected split;
+- add Bari2019's one-step choice kernel (`CK1`) to the dual-rate plus bias model,
+  while continuing to omit unchosen-value forgetting.
+
+The CK1 sensitivity therefore has five fitted parameters: rewarded learning
+rate, unrewarded learning rate, inverse temperature, shape-choice bias, and
+choice-kernel relative weight. The choice-kernel step size is fixed at one.
+
 The paper instead fits individual session/schedule phases and resets values at
 each 80-trial stimulus block, with limited carryover for repeated stimuli.
 That is appropriate for its within-session lesion analysis, but it is not the
