@@ -93,9 +93,10 @@ Two narrow exceptions may run on the agent's local machine (not the HPC login no
 
 - A *submit-only launcher* that creates a sweep, submits, or probes capacity and returns —
   never importing loader/model/training code or starting a `multiprocessing` Pool.
-- A pure offline report formatter that reads only committed frozen JSON/CSV artifacts and
-  writes figures or report markers. It must not access W&B, raw data, `/allen`, loaders,
-  models, or multiprocessing. These plotting steps stay local and must not require HPC.
+- A pure offline post-hoc producer that reads only committed frozen JSON/CSV artifacts and
+  writes derived summary JSON, figures, or report markers. It must not access W&B, raw
+  data, `/allen`, loaders, models, or multiprocessing. These statistics and plotting steps
+  stay local and must not require HPC.
 
 Which launchers qualify, and the real incident behind this rule (an unguarded spawn-Pool
 that forked into a 260 MB / 65k-error cascade): **hpc-launch**. Formatter/extractor boundaries

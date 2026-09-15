@@ -267,6 +267,9 @@ def _seed_record(
         "gru_d614_subject_mean_log_likelihood_nats": gru614_mean,
         "gru_d614_subject_balanced_normalized_likelihood": math.exp(gru614_mean),
         "gru_d614_minus_q_bits_per_trial": (gru614_mean - q_mean) / log_two,
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": (
+            math.exp(gru614_mean) - math.exp(q_mean)
+        ),
         "gru_d614_minus_q_mean_subject_normalized_likelihood": float(
             np.mean(np.exp(gru614_values) - np.exp(q_values))
         ),
@@ -309,6 +312,9 @@ def _seed_record(
                     gru614_mean - author_mean
                 )
                 / log_two,
+                "gru_d614_minus_author_subject_balanced_normalized_likelihood": (
+                    math.exp(gru614_mean) - math.exp(author_mean)
+                ),
                 "gru_d614_minus_author_mean_subject_normalized_likelihood": float(
                     np.mean(np.exp(gru614_values) - np.exp(author_values))
                 ),
@@ -415,6 +421,7 @@ def main() -> None:
                     "q_bits_above_chance",
                     "gru_d614_subject_balanced_normalized_likelihood",
                     "gru_d614_minus_q_bits_per_trial",
+                    "gru_d614_minus_q_subject_balanced_normalized_likelihood",
                     "gru_d614_minus_q_mean_subject_normalized_likelihood",
                     "embedding_centroid_mahalanobis",
                     "embedding_median_subject_mahalanobis",
@@ -424,6 +431,7 @@ def main() -> None:
                             "author_subject_balanced_normalized_likelihood",
                             "author_bits_above_chance",
                             "gru_d614_minus_author_bits_per_trial",
+                            "gru_d614_minus_author_subject_balanced_normalized_likelihood",
                             "gru_d614_minus_author_mean_subject_normalized_likelihood",
                         )
                         if dataset_name in author_references
@@ -496,6 +504,59 @@ def main() -> None:
                 _correlation_summary(
                     centroid, values("gru_d614_minus_d10_bits_per_trial"), rng
                 )
+            )
+        normalized_rng = np.random.default_rng(RNG_SEED)
+        normalized_delta = values(
+            "gru_d614_minus_q_subject_balanced_normalized_likelihood"
+        )
+        relationships.update(
+            {
+                "gru_d614_minus_q_normalized_likelihood_vs_embedding_centroid": (
+                    _correlation_summary(centroid, normalized_delta, normalized_rng)
+                ),
+                "gru_d614_minus_q_normalized_likelihood_vs_common_q_normalized_likelihood": (
+                    _correlation_summary(
+                        values("q_subject_balanced_normalized_likelihood"),
+                        normalized_delta,
+                        normalized_rng,
+                    )
+                ),
+            }
+        )
+        if len(author_names) >= 3:
+            author_normalized_delta = [
+                cohorts[name]["summary"][
+                    "gru_d614_minus_author_subject_balanced_normalized_likelihood"
+                ]["mean"]
+                for name in author_names
+            ]
+            relationships.update(
+                {
+                    "gru_d614_minus_author_normalized_likelihood_vs_embedding_centroid": (
+                        _correlation_summary(
+                            [
+                                cohorts[name]["summary"][
+                                    "embedding_centroid_mahalanobis"
+                                ]["mean"]
+                                for name in author_names
+                            ],
+                            author_normalized_delta,
+                            normalized_rng,
+                        )
+                    ),
+                    "gru_d614_minus_author_normalized_likelihood_vs_author_normalized_likelihood": (
+                        _correlation_summary(
+                            [
+                                cohorts[name]["summary"][
+                                    "author_subject_balanced_normalized_likelihood"
+                                ]["mean"]
+                                for name in author_names
+                            ],
+                            author_normalized_delta,
+                            normalized_rng,
+                        )
+                    ),
+                }
             )
         return relationships
 

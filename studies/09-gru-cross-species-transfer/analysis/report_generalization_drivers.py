@@ -288,7 +288,7 @@ def _plot_main(
     cohorts = _view_cohorts(data, view)
     if reference == "author":
         cohorts = [cohort for cohort in cohorts if cohort["author_reference"] is not None]
-    relation_source = None if r1_scale else _relation_source(data, view)
+    relation_source = _relation_source(data, view)
     reference_label = "Bari2019" if reference == "q" else "author model"
     reference_key = f"{reference}_subject_balanced_normalized_likelihood"
     reference_bits_key = f"{reference}_bits_above_chance"
@@ -336,8 +336,13 @@ def _plot_main(
                 offset=offset,
             )
 
+    embedding_relationship_key = (
+        f"gru_d614_minus_{reference}_normalized_likelihood_vs_embedding_centroid"
+        if r1_scale
+        else f"gru_d614_minus_{reference}_vs_embedding_centroid"
+    )
     relation = (
-        relation_source[f"gru_d614_minus_{reference}_vs_embedding_centroid"]
+        relation_source[embedding_relationship_key]
         if relation_source is not None
         else None
     )
@@ -381,14 +386,21 @@ def _plot_main(
     axes[1].set_ylabel(f"GRU E={dimension}, D=614 normalized likelihood")
     axes[1].set_title("Absolute held-out predictability\n(identity line = equal performance)")
 
+    coupled_relationship_key = (
+        (
+            "gru_d614_minus_q_normalized_likelihood_vs_common_q_normalized_likelihood"
+            if reference == "q"
+            else "gru_d614_minus_author_normalized_likelihood_vs_author_normalized_likelihood"
+        )
+        if r1_scale
+        else (
+            "gru_d614_minus_q_vs_common_q_predictability"
+            if reference == "q"
+            else "gru_d614_minus_author_vs_author_predictability"
+        )
+    )
     coupled = (
-        relation_source[
-            (
-                "gru_d614_minus_q_vs_common_q_predictability"
-                if reference == "q"
-                else "gru_d614_minus_author_vs_author_predictability"
-            )
-        ]
+        relation_source[coupled_relationship_key]
         if relation_source is not None
         else None
     )
@@ -634,6 +646,18 @@ def _relationship_rows(relationships: dict) -> list[str]:
         ),
         "gru_d614_minus_author_vs_author_predictability": (
             "GRU614−author vs author predictability†"
+        ),
+        "gru_d614_minus_q_normalized_likelihood_vs_embedding_centroid": (
+            "Normalized-likelihood GRU614−Bari2019 vs embedding centroid distance"
+        ),
+        "gru_d614_minus_q_normalized_likelihood_vs_common_q_normalized_likelihood": (
+            "Normalized-likelihood GRU614−Bari2019 vs Bari2019 likelihood†"
+        ),
+        "gru_d614_minus_author_normalized_likelihood_vs_embedding_centroid": (
+            "Normalized-likelihood GRU614−author vs embedding centroid distance"
+        ),
+        "gru_d614_minus_author_normalized_likelihood_vs_author_normalized_likelihood": (
+            "Normalized-likelihood GRU614−author vs author likelihood†"
         ),
         "gru_d614_minus_d10_vs_embedding_centroid": (
             "GRU614−GRU10 vs embedding centroid distance"
@@ -947,13 +971,14 @@ def _result_block(
         "",
         "### R1-scale companion: normalized-likelihood difference",
         "",
-        "These descriptive companion plots use the same normalized-likelihood units as "
+        "These companion plots use the same normalized-likelihood units as "
         "Result 1. They retain Result 3's equal-subject aggregation: each source seed's "
         "GRU value is `exp(mean subject log likelihood)` minus the matched Bari2019 value. "
         "Each point is the three-seed mean, with horizontal and vertical SEM bars. The "
         "Bari2019 baseline is shared across source seeds, so its horizontal SEM is zero in "
-        "the two Bari2019-axis panels. The bits-per-trial plots above remain primary for "
-        "additive cross-task inference.",
+        "the two Bari2019-axis panels. Panel titles report cross-cohort Spearman ρ and "
+        "two-sided permutation p for the exact plotted normalized-likelihood quantities. "
+        "The bits-per-trial plots above remain primary for additive cross-task inference.",
         "",
         "#### Primary-inference cohorts",
         "",
