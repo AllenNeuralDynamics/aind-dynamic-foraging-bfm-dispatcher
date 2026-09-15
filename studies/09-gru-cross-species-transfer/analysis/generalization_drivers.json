@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_generalization_drivers.py",
-    "produced_at_pt": "2026-09-15T10:14:33-07:00",
-    "dispatcher_git_sha": "b7edadbda8542cac672b30b95ce96e4b6e094b88",
+    "produced_at_pt": "2026-09-15T16:48:42-07:00",
+    "dispatcher_git_sha": "e0c1c23909b88fc2d269fd86b52c37ba3ca7ab6c",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
@@ -149,6 +149,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.2902727658412173,
           "gru_d614_subject_balanced_normalized_likelihood": 0.7480594946704269,
           "gru_d614_minus_q_bits_per_trial": 0.027163266821565422,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.013952805365106902,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.013624719916360618,
           "embedding_centroid_mahalanobis": 0.6132394205248289,
           "embedding_median_subject_mahalanobis": 2.5550155899897327,
@@ -166,6 +167,7 @@
           "author_subject_balanced_normalized_likelihood": 0.7323108935276745,
           "author_bits_above_chance": 0.5505281619954128,
           "gru_d614_minus_author_bits_per_trial": 0.030696758220339744,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.01574860114275234,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.01552851620523169,
           "author_wandb_run_id": "ti1b81e8",
           "author_artifact_digest": "c79649a5bb54805dde704928738bd98e",
@@ -182,6 +184,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.2898367006138825,
           "gru_d614_subject_balanced_normalized_likelihood": 0.7483857685372041,
           "gru_d614_minus_q_bits_per_trial": 0.027792375962545458,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.014279079231884095,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.013962398542028973,
           "embedding_centroid_mahalanobis": 0.6021772909195384,
           "embedding_median_subject_mahalanobis": 2.4505071499463567,
@@ -199,6 +202,7 @@
           "author_subject_balanced_normalized_likelihood": 0.7323108935276745,
           "author_bits_above_chance": 0.5505281619954128,
           "gru_d614_minus_author_bits_per_trial": 0.03132586736131978,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.016074875009529532,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.015866194830900047,
           "author_wandb_run_id": "ti1b81e8",
           "author_artifact_digest": "c79649a5bb54805dde704928738bd98e",
@@ -215,6 +219,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.2898045131066897,
           "gru_d614_subject_balanced_normalized_likelihood": 0.7484098575971931,
           "gru_d614_minus_q_bits_per_trial": 0.027838812719551097,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.01430316829187317,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.013983094150803989,
           "embedding_centroid_mahalanobis": 0.528204299846055,
           "embedding_median_subject_mahalanobis": 2.305264084621126,
@@ -232,6 +237,7 @@
           "author_subject_balanced_normalized_likelihood": 0.7323108935276745,
           "author_bits_above_chance": 0.5505281619954128,
           "gru_d614_minus_author_bits_per_trial": 0.031372304118325416,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.016098964069518606,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.01588689043967506,
           "author_wandb_run_id": "ti1b81e8",
           "author_artifact_digest": "c79649a5bb54805dde704928738bd98e",
@@ -257,6 +263,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": 0.027598151834553993,
           "sd_across_source_seeds": 0.0003773364864306816
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": 0.014178350962954722,
+          "sd_across_source_seeds": 0.00019569921623294092
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": 0.01385673753639786,
@@ -286,6 +296,10 @@
           "mean": 0.031131643233328316,
           "sd_across_source_seeds": 0.00037733648643068044
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": 0.01597414674060016,
+          "sd_across_source_seeds": 0.00019569921623294092
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": 0.015760533825268933,
           "sd_across_source_seeds": 0.00020119942609622866
@@ -311,6 +325,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5252508042176643,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5914070183901259,
           "gru_d614_minus_q_bits_per_trial": 0.013107278893728619,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.005348760192807278,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.005266434791394353,
           "embedding_centroid_mahalanobis": 8.763181902160284,
           "embedding_median_subject_mahalanobis": 10.508243582452744,
@@ -328,6 +343,7 @@
           "author_subject_balanced_normalized_likelihood": 0.5900607158519691,
           "author_bits_above_chance": 0.23893531713246097,
           "gru_d614_minus_author_bits_per_trial": 0.0032879523997748415,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.0013463025381568183,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.0012974507826562266,
           "author_wandb_run_id": "jzsgvam3",
           "author_artifact_digest": "e6faf9a23860f1d47c7e44f50aaf9335",
@@ -344,6 +360,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5274394905410564,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5901140294272026,
           "gru_d614_minus_q_bits_per_trial": 0.009949671988909359,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.0040557712298839865,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.004131452498304669,
           "embedding_centroid_mahalanobis": 5.540162959236731,
           "embedding_median_subject_mahalanobis": 6.561174351356685,
@@ -361,6 +378,7 @@
           "author_subject_balanced_normalized_likelihood": 0.5900607158519691,
           "author_bits_above_chance": 0.23893531713246097,
           "gru_d614_minus_author_bits_per_trial": 0.00013034549495558064,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 5.3313575233526755e-05,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.0001624684895665425,
           "author_wandb_run_id": "jzsgvam3",
           "author_artifact_digest": "e6faf9a23860f1d47c7e44f50aaf9335",
@@ -377,6 +395,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5230635187424604,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5927020101133842,
           "gru_d614_minus_q_bits_per_trial": 0.016262864801813846,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.006643751916065588,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.006602769713077054,
           "embedding_centroid_mahalanobis": 7.073522723598334,
           "embedding_median_subject_mahalanobis": 8.453311563500295,
@@ -394,6 +413,7 @@
           "author_subject_balanced_normalized_likelihood": 0.5900607158519691,
           "author_bits_above_chance": 0.23893531713246097,
           "gru_d614_minus_author_bits_per_trial": 0.006443538307860069,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.002641294261415128,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.002633785704338927,
           "author_wandb_run_id": "jzsgvam3",
           "author_artifact_digest": "e6faf9a23860f1d47c7e44f50aaf9335",
@@ -419,6 +439,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": 0.013106605228150608,
           "sd_across_source_seeds": 0.0031565964603661647
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": 0.005349427779585618,
+          "sd_across_source_seeds": 0.0012939904722471213
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": 0.005333552334258692,
@@ -448,6 +472,10 @@
           "mean": 0.0032872787341968308,
           "sd_across_source_seeds": 0.003156596460366166
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": 0.0013469701249351578,
+          "sd_across_source_seeds": 0.0012939904722471213
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": 0.0013645683255205654,
           "sd_across_source_seeds": 0.0012370249663720186
@@ -473,6 +501,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.3362555324804915,
           "gru_d614_subject_balanced_normalized_likelihood": 0.7144405197305428,
           "gru_d614_minus_q_bits_per_trial": 0.020685301848352523,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.010170532064313398,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0005919778473502027,
           "embedding_centroid_mahalanobis": 7.841609972664571,
           "embedding_median_subject_mahalanobis": 11.377555281444652,
@@ -490,6 +519,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6830631867155855,
           "author_bits_above_chance": 0.45009094621183815,
           "gru_d614_minus_author_bits_per_trial": 0.06479486460707896,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.031377333014957265,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.0097459912167191,
           "author_wandb_run_id": "7xcefdqr",
           "author_artifact_digest": "1c68f41802097c8003def996e22014c9",
@@ -506,6 +536,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.3404617856053072,
           "gru_d614_subject_balanced_normalized_likelihood": 0.7114417133526603,
           "gru_d614_minus_q_bits_per_trial": 0.014616961324457197,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.007171725686430874,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0034205025360943783,
           "embedding_centroid_mahalanobis": 5.683083672492276,
           "embedding_median_subject_mahalanobis": 9.272139744462166,
@@ -523,6 +554,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6830631867155855,
           "author_bits_above_chance": 0.45009094621183815,
           "gru_d614_minus_author_bits_per_trial": 0.058726524083183636,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.02837852663707474,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.006917466527974924,
           "author_wandb_run_id": "7xcefdqr",
           "author_artifact_digest": "1c68f41802097c8003def996e22014c9",
@@ -539,6 +571,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.3354518022907688,
           "gru_d614_subject_balanced_normalized_likelihood": 0.7150149679647819,
           "gru_d614_minus_q_bits_per_trial": 0.021844839407278185,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.010744980298552531,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0004858337967250508,
           "embedding_centroid_mahalanobis": 7.75320348890792,
           "embedding_median_subject_mahalanobis": 10.740802440658538,
@@ -556,6 +589,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6830631867155855,
           "author_bits_above_chance": 0.45009094621183815,
           "gru_d614_minus_author_bits_per_trial": 0.06595440216600462,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.0319517812491964,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.009852135267344252,
           "author_wandb_run_id": "7xcefdqr",
           "author_artifact_digest": "1c68f41802097c8003def996e22014c9",
@@ -581,6 +615,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": 0.019049034193362634,
           "sd_across_source_seeds": 0.00388182744002172
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": 0.009362412683098934,
+          "sd_across_source_seeds": 0.0019188094828520648
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": -0.0014994380600565442,
@@ -610,6 +648,10 @@
           "mean": 0.06315859695208907,
           "sd_across_source_seeds": 0.00388182744002172
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": 0.030569213633742803,
+          "sd_across_source_seeds": 0.0019188094828520648
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": 0.008838531004012759,
           "sd_across_source_seeds": 0.0016645369268032683
@@ -635,6 +677,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.27492690077662674,
           "gru_d614_subject_balanced_normalized_likelihood": 0.7596276493867071,
           "gru_d614_minus_q_bits_per_trial": 0.01714527845902625,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.008974137144634797,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.009011601752087683,
           "embedding_centroid_mahalanobis": 1.878608853957882,
           "embedding_median_subject_mahalanobis": 2.535624511520072,
@@ -652,6 +695,7 @@
           "author_subject_balanced_normalized_likelihood": 0.7553996763232921,
           "author_bits_above_chance": 0.5953120707190507,
           "gru_d614_minus_author_bits_per_trial": 0.008052252923537763,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.004227973063415047,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.004215816607603329,
           "author_wandb_run_id": "irgeujwo",
           "author_artifact_digest": "2abbe21ab30ca56e8fcc8569cf245994",
@@ -668,6 +712,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.27438882248285984,
           "gru_d614_subject_balanced_normalized_likelihood": 0.7600364985227456,
           "gru_d614_minus_q_bits_per_trial": 0.01792156134505375,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.009382986280673244,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.009434324457667065,
           "embedding_centroid_mahalanobis": 1.6880030857839434,
           "embedding_median_subject_mahalanobis": 2.4057030538794213,
@@ -685,6 +730,7 @@
           "author_subject_balanced_normalized_likelihood": 0.7553996763232921,
           "author_bits_above_chance": 0.5953120707190507,
           "gru_d614_minus_author_bits_per_trial": 0.00882853580956526,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.004636822199453494,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.00463853931318271,
           "author_wandb_run_id": "irgeujwo",
           "author_artifact_digest": "2abbe21ab30ca56e8fcc8569cf245994",
@@ -701,6 +747,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.2739713456412014,
           "gru_d614_subject_balanced_normalized_likelihood": 0.7603538624011195,
           "gru_d614_minus_q_bits_per_trial": 0.018523853114200364,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.009700350159047133,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.009736700042919011,
           "embedding_centroid_mahalanobis": 2.8954955652164407,
           "embedding_median_subject_mahalanobis": 3.3898529430277877,
@@ -718,6 +765,7 @@
           "author_subject_balanced_normalized_likelihood": 0.7553996763232921,
           "author_bits_above_chance": 0.5953120707190507,
           "gru_d614_minus_author_bits_per_trial": 0.009430827578711875,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.004954186077827383,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.004940914898434656,
           "author_wandb_run_id": "irgeujwo",
           "author_artifact_digest": "2abbe21ab30ca56e8fcc8569cf245994",
@@ -743,6 +791,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": 0.017863564306093455,
           "sd_across_source_seeds": 0.0006911148691557922
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": 0.009352491194785059,
+          "sd_across_source_seeds": 0.00036406565104793773
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": 0.009394208750891253,
@@ -772,6 +824,10 @@
           "mean": 0.008770538770604965,
           "sd_across_source_seeds": 0.0006911148691557913
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": 0.004606327113565308,
+          "sd_across_source_seeds": 0.00036406565104793773
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": 0.004598423606406899,
           "sd_across_source_seeds": 0.0003642098780774901
@@ -797,6 +853,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.1966984407403399,
           "gru_d614_subject_balanced_normalized_likelihood": 0.8214383082945447,
           "gru_d614_minus_q_bits_per_trial": -0.002217551678038878,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.0012635952382490379,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0012010164237501082,
           "embedding_centroid_mahalanobis": 2.637452826151727,
           "embedding_median_subject_mahalanobis": 2.8221197491564762,
@@ -814,6 +871,7 @@
           "author_subject_balanced_normalized_likelihood": 0.8207961116393181,
           "author_bits_above_chance": 0.715095801588842,
           "gru_d614_minus_author_bits_per_trial": 0.0011283334044779527,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.000642196655226579,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.0007003156127345181,
           "author_wandb_run_id": "kx7rc3xy",
           "author_artifact_digest": "66c1858d85bd79d8849cf47f09a8676c",
@@ -830,6 +888,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.19753468969937302,
           "gru_d614_subject_balanced_normalized_likelihood": 0.8207516685052426,
           "gru_d614_minus_q_bits_per_trial": -0.0034240039041845104,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.001950235027551095,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0018815639674095903,
           "embedding_centroid_mahalanobis": 2.3641995684330146,
           "embedding_median_subject_mahalanobis": 2.4988929697399564,
@@ -847,6 +906,7 @@
           "author_subject_balanced_normalized_likelihood": 0.8207961116393181,
           "author_bits_above_chance": 0.715095801588842,
           "gru_d614_minus_author_bits_per_trial": -7.811882166767959e-05,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -4.4443134075478063e-05,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 1.976806907503607e-05,
           "author_wandb_run_id": "kx7rc3xy",
           "author_artifact_digest": "66c1858d85bd79d8849cf47f09a8676c",
@@ -863,6 +923,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.19609635842379172,
           "gru_d614_subject_balanced_normalized_likelihood": 0.8219330306909625,
           "gru_d614_minus_q_bits_per_trial": -0.001348930505747879,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.0007688728418312474,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0007171568612267162,
           "embedding_centroid_mahalanobis": 2.4570205422024185,
           "embedding_median_subject_mahalanobis": 2.5948016231245443,
@@ -880,6 +941,7 @@
           "author_subject_balanced_normalized_likelihood": 0.8207961116393181,
           "author_bits_above_chance": 0.715095801588842,
           "gru_d614_minus_author_bits_per_trial": 0.0019969545767689516,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.0011369190516443695,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.0011841751752579104,
           "author_wandb_run_id": "kx7rc3xy",
           "author_artifact_digest": "66c1858d85bd79d8849cf47f09a8676c",
@@ -905,6 +967,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": -0.002330162029323756,
           "sd_across_source_seeds": 0.001042109984904288
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": -0.0013275677025437933,
+          "sd_across_source_seeds": 0.0005932735546130062
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": -0.001266579084128805,
@@ -934,6 +1000,10 @@
           "mean": 0.0010157230531930748,
           "sd_across_source_seeds": 0.001042109984904288
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": 0.0005782241909318234,
+          "sd_across_source_seeds": 0.0005932735546130062
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": 0.0006347529523558215,
           "sd_across_source_seeds": 0.0005849656605812372
@@ -959,6 +1029,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5075169721293827,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6019884787596975,
           "gru_d614_minus_q_bits_per_trial": -0.019931935105161846,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.008374649007903079,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.008423451459341124,
           "embedding_centroid_mahalanobis": 6.8255441217184165,
           "embedding_median_subject_mahalanobis": 6.61686415643041,
@@ -976,6 +1047,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6173729680981069,
           "author_bits_above_chance": 0.30421422051695063,
           "gru_d614_minus_author_bits_per_trial": -0.03640643937499338,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.015384489338409413,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.015434270153270813,
           "author_wandb_run_id": "1rfk72im",
           "author_artifact_digest": "6cc448548744e8e49705439b2ea00664",
@@ -992,6 +1064,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5140458751256209,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5980709568531476,
           "gru_d614_minus_q_bits_per_trial": -0.0293511510802798,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.012292170914453004,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.012255520394902802,
           "embedding_centroid_mahalanobis": 4.277319657351485,
           "embedding_median_subject_mahalanobis": 4.357466289129663,
@@ -1009,6 +1082,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6173729680981069,
           "author_bits_above_chance": 0.30421422051695063,
           "gru_d614_minus_author_bits_per_trial": -0.045825655350111336,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.01930201124495934,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.01926633908883249,
           "author_wandb_run_id": "1rfk72im",
           "author_artifact_digest": "6cc448548744e8e49705439b2ea00664",
@@ -1025,6 +1099,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5056438202769356,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6031171513514019,
           "gru_d614_minus_q_bits_per_trial": -0.017229548216804315,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.0072459764161987295,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.007290552805363943,
           "embedding_centroid_mahalanobis": 6.613229885380634,
           "embedding_median_subject_mahalanobis": 6.048050264634593,
@@ -1042,6 +1117,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6173729680981069,
           "author_bits_above_chance": 0.30421422051695063,
           "gru_d614_minus_author_bits_per_trial": -0.03370405248663585,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.014255816746705063,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.014301371499293631,
           "author_wandb_run_id": "1rfk72im",
           "author_artifact_digest": "6cc448548744e8e49705439b2ea00664",
@@ -1067,6 +1143,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": -0.022170878134081987,
           "sd_across_source_seeds": 0.006363408159942032
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": -0.009304265446184937,
+          "sd_across_source_seeds": 0.0026484259042487512
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": -0.009323174886535958,
@@ -1096,6 +1176,10 @@
           "mean": -0.03864538240391352,
           "sd_across_source_seeds": 0.006363408159942033
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": -0.016314105776691273,
+          "sd_across_source_seeds": 0.0026484259042487512
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": -0.016333993580465642,
           "sd_across_source_seeds": 0.002601894016937515
@@ -1121,6 +1205,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.42148683462543884,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6560706257522256,
           "gru_d614_minus_q_bits_per_trial": -0.07423637810898162,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.03464291516928075,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.035765190104862184,
           "embedding_centroid_mahalanobis": 9.71736488425409,
           "embedding_median_subject_mahalanobis": 10.042052154429634,
@@ -1138,6 +1223,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6737431568878564,
           "author_bits_above_chance": 0.43027061980658876,
           "gru_d614_minus_author_bits_per_trial": -0.03834758592069603,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.01767253113563072,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.018823630958441005,
           "author_wandb_run_id": "sls99so5",
           "author_artifact_digest": "49f381c8b16cce27254b7ae52645268b",
@@ -1154,6 +1240,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.43114617671840816,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6497639234743792,
           "gru_d614_minus_q_bits_per_trial": -0.08817186304475846,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.04094961744712722,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.04184839175823517,
           "embedding_centroid_mahalanobis": 5.602731854156389,
           "embedding_median_subject_mahalanobis": 6.14721086608815,
@@ -1171,6 +1258,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6737431568878564,
           "author_bits_above_chance": 0.43027061980658876,
           "gru_d614_minus_author_bits_per_trial": -0.05228307085647288,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.023979233413477186,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.02490683261181399,
           "author_wandb_run_id": "sls99so5",
           "author_artifact_digest": "49f381c8b16cce27254b7ae52645268b",
@@ -1187,6 +1275,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.4187228200907576,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6578865229245839,
           "gru_d614_minus_q_bits_per_trial": -0.070248748046852,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.03282701799692245,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.03388366878032087,
           "embedding_centroid_mahalanobis": 8.287150862426326,
           "embedding_median_subject_mahalanobis": 8.00219944024824,
@@ -1204,6 +1293,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6737431568878564,
           "author_bits_above_chance": 0.43027061980658876,
           "gru_d614_minus_author_bits_per_trial": -0.03435995585856641,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.015856633963272415,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.01694210963389969,
           "author_wandb_run_id": "sls99so5",
           "author_artifact_digest": "49f381c8b16cce27254b7ae52645268b",
@@ -1229,6 +1319,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": -0.0775523297335307,
           "sd_across_source_seeds": 0.009410428480643546
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": -0.03613985020444347,
+          "sd_across_source_seeds": 0.004263187344199164
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": -0.03716575021447274,
@@ -1258,6 +1352,10 @@
           "mean": -0.041663537545245106,
           "sd_across_source_seeds": 0.009410428480643546
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": -0.01916946617079344,
+          "sd_across_source_seeds": 0.004263187344199164
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": -0.020224191068051563,
           "sd_across_source_seeds": 0.004162977239212731
@@ -1283,6 +1381,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.6344159517832368,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5302450865958804,
           "gru_d614_minus_q_bits_per_trial": 0.0015040616391821637,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.0005525115797789804,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.0006150125205795772,
           "embedding_centroid_mahalanobis": 9.419218053997543,
           "embedding_median_subject_mahalanobis": 10.090202904032699,
@@ -1308,6 +1407,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.6362614848774585,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5292674041906348,
           "gru_d614_minus_q_bits_per_trial": -0.0011584798036478616,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.00042517082546666973,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0003220952136101056,
           "embedding_centroid_mahalanobis": 6.528906193345529,
           "embedding_median_subject_mahalanobis": 7.43111182511036,
@@ -1333,6 +1433,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.6324910607391869,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5312667335783327,
           "gru_d614_minus_q_bits_per_trial": 0.004281092402684554,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.0015741585622311982,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.0016644303448892783,
           "embedding_centroid_mahalanobis": 8.284074176529352,
           "embedding_median_subject_mahalanobis": 9.12134149144777,
@@ -1367,6 +1468,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": 0.0015422247460729524,
           "sd_across_source_seeds": 0.0027199869051195255
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": 0.0005671664388478362,
+          "sd_across_source_seeds": 0.0009997452544517674
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": 0.00065244921728625,
@@ -1405,6 +1510,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.46204883551524967,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6299915732275827,
           "gru_d614_minus_q_bits_per_trial": -0.003410443774672671,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.001491023606793651,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.014183691329065658,
           "embedding_centroid_mahalanobis": 12.159235023612306,
           "embedding_median_subject_mahalanobis": 12.64351471618799,
@@ -1422,6 +1528,7 @@
           "author_subject_balanced_normalized_likelihood": 0.659711229189957,
           "author_bits_above_chance": 0.39990656688401544,
           "gru_d614_minus_author_bits_per_trial": -0.0665021305303865,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.029719655962374247,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.0389971117366932,
           "author_wandb_run_id": "m8568oly",
           "author_artifact_digest": "b0b8cac61a8b949da7844fe54c3dc0ce",
@@ -1438,6 +1545,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.4845428983925082,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6159786972749208,
           "gru_d614_minus_q_bits_per_trial": -0.03586251673713808,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.015503899559455525,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.02728580092243388,
           "embedding_centroid_mahalanobis": 8.216400378721941,
           "embedding_median_subject_mahalanobis": 9.227891960224515,
@@ -1455,6 +1563,7 @@
           "author_subject_balanced_normalized_likelihood": 0.659711229189957,
           "author_bits_above_chance": 0.39990656688401544,
           "gru_d614_minus_author_bits_per_trial": -0.09895420349285192,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.04373253191503612,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.05209922133006143,
           "author_wandb_run_id": "m8568oly",
           "author_artifact_digest": "b0b8cac61a8b949da7844fe54c3dc0ce",
@@ -1471,6 +1580,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.4590860248130503,
           "gru_d614_subject_balanced_normalized_likelihood": 0.631860886846794,
           "gru_d614_minus_q_bits_per_trial": 0.0008639885324831394,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.00037829001241762583,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.01263624292424404,
           "embedding_centroid_mahalanobis": 10.266426765155854,
           "embedding_median_subject_mahalanobis": 10.72402051181761,
@@ -1488,6 +1598,7 @@
           "author_subject_balanced_normalized_likelihood": 0.659711229189957,
           "author_bits_above_chance": 0.39990656688401544,
           "gru_d614_minus_author_bits_per_trial": -0.0622276982232307,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.02785034234316297,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.037449663331871594,
           "author_wandb_run_id": "m8568oly",
           "author_artifact_digest": "b0b8cac61a8b949da7844fe54c3dc0ce",
@@ -1513,6 +1624,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": -0.012802990659775871,
           "sd_across_source_seeds": 0.020084172874966125
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": -0.00553887771794385,
+          "sd_across_source_seeds": 0.008680427902937488
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": -0.018035245058581194,
@@ -1542,6 +1657,10 @@
           "mean": -0.0758946774154897,
           "sd_across_source_seeds": 0.020084172874966128
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": -0.033767510073524444,
+          "sd_across_source_seeds": 0.00868042790293749
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": -0.042848665466208746,
           "sd_across_source_seeds": 0.008048492839289278
@@ -1567,6 +1686,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.4744650277627157,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6222178367111706,
           "gru_d614_minus_q_bits_per_trial": -0.0040089060392797405,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.0017313996891876737,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.002290194732452864,
           "embedding_centroid_mahalanobis": 2.8690860101048314,
           "embedding_median_subject_mahalanobis": 2.4876418871565753,
@@ -1584,6 +1704,7 @@
           "author_subject_balanced_normalized_likelihood": 0.5788742773508443,
           "author_bits_above_chance": 0.2113219560258361,
           "gru_d614_minus_author_bits_per_trial": 0.1041697013456496,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.0433435593603263,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.04458713394228688,
           "author_wandb_run_id": "1qyvsk6u",
           "author_artifact_digest": "4b923bfd13af5dbde9937197dbe24619",
@@ -1600,6 +1721,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.4761542603913421,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6211676532910598,
           "gru_d614_minus_q_bits_per_trial": -0.0064459535755068955,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.0027815831092984356,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.003444517907348192,
           "embedding_centroid_mahalanobis": 1.8258377472368565,
           "embedding_median_subject_mahalanobis": 2.142572315555676,
@@ -1617,6 +1739,7 @@
           "author_subject_balanced_normalized_likelihood": 0.5788742773508443,
           "author_bits_above_chance": 0.2113219560258361,
           "gru_d614_minus_author_bits_per_trial": 0.10173265380942244,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.04229337594021554,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.043432810767391555,
           "author_wandb_run_id": "1qyvsk6u",
           "author_artifact_digest": "4b923bfd13af5dbde9937197dbe24619",
@@ -1633,6 +1756,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.4746667411033556,
           "gru_d614_subject_balanced_normalized_likelihood": 0.6220923397303549,
           "gru_d614_minus_q_bits_per_trial": -0.004299916875502067,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": -0.0018568966700033274,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": -0.0024896434700297483,
           "embedding_centroid_mahalanobis": 2.805122813876528,
           "embedding_median_subject_mahalanobis": 2.732061681400453,
@@ -1650,6 +1774,7 @@
           "author_subject_balanced_normalized_likelihood": 0.5788742773508443,
           "author_bits_above_chance": 0.2113219560258361,
           "gru_d614_minus_author_bits_per_trial": 0.10387869050942727,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.04321806237951065,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.044387685204709995,
           "author_wandb_run_id": "1qyvsk6u",
           "author_artifact_digest": "4b923bfd13af5dbde9937197dbe24619",
@@ -1675,6 +1800,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": -0.004918258830096234,
           "sd_across_source_seeds": 0.0013309997194087659
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": -0.0021232931561631454,
+          "sd_across_source_seeds": 0.0005735386820848337
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": -0.0027414520366102683,
@@ -1704,6 +1833,10 @@
           "mean": 0.10326034855483311,
           "sd_across_source_seeds": 0.0013309997194087683
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": 0.04295166589335083,
+          "sd_across_source_seeds": 0.0005735386820848337
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": 0.04413587663812948,
           "sd_across_source_seeds": 0.000616985545760683
@@ -1729,6 +1862,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5362962147170515,
           "gru_d614_subject_balanced_normalized_likelihood": 0.584910628791812,
           "gru_d614_minus_q_bits_per_trial": 0.1499368931059376,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.057736594672153974,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.05743389576665161,
           "embedding_centroid_mahalanobis": 15.34472125162659,
           "embedding_median_subject_mahalanobis": 17.238246741710867,
@@ -1746,6 +1880,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6134861263358529,
           "author_bits_above_chance": 0.2951026235847105,
           "gru_d614_minus_author_bits_per_trial": -0.06881451300452339,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.028575497544040873,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.029169087399683644,
           "author_wandb_run_id": "06aep00b",
           "author_artifact_digest": "d1d74ee7e8708fc75d860e79cde8cc72",
@@ -1762,6 +1897,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5481915363097958,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5779941472016118,
           "gru_d614_minus_q_bits_per_trial": 0.13277557163430598,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.05082011308195378,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.05068115344586387,
           "embedding_centroid_mahalanobis": 9.30209011030111,
           "embedding_median_subject_mahalanobis": 10.333561506484665,
@@ -1779,6 +1915,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6134861263358529,
           "author_bits_above_chance": 0.2951026235847105,
           "gru_d614_minus_author_bits_per_trial": -0.085975834476155,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.03549197913424107,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.03592182972047138,
           "author_wandb_run_id": "06aep00b",
           "author_artifact_digest": "d1d74ee7e8708fc75d860e79cde8cc72",
@@ -1795,6 +1932,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5776137024149719,
           "gru_d614_subject_balanced_normalized_likelihood": 0.561236046101346,
           "gru_d614_minus_q_bits_per_trial": 0.09032835850215704,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.03406201198168801,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.03334688670704982,
           "embedding_centroid_mahalanobis": 8.972579074603889,
           "embedding_median_subject_mahalanobis": 10.056717056848562,
@@ -1812,6 +1950,7 @@
           "author_subject_balanced_normalized_likelihood": 0.6134861263358529,
           "author_bits_above_chance": 0.2951026235847105,
           "gru_d614_minus_author_bits_per_trial": -0.12842304760830395,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": -0.052250080234506835,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": -0.05325609645928543,
           "author_wandb_run_id": "06aep00b",
           "author_artifact_digest": "d1d74ee7e8708fc75d860e79cde8cc72",
@@ -1837,6 +1976,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": 0.1243469410808002,
           "sd_across_source_seeds": 0.030685105656623454
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": 0.047539573245265254,
+          "sd_across_source_seeds": 0.012173451548636603
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": 0.0471539786398551,
@@ -1866,6 +2009,10 @@
           "mean": -0.09440446502966078,
           "sd_across_source_seeds": 0.030685105656623447
         },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": -0.03877251897092959,
+          "sd_across_source_seeds": 0.012173451548636603
+        },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": -0.039449004526480154,
           "sd_across_source_seeds": 0.012424842974598992
@@ -1891,6 +2038,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5592293784574566,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5716494195107001,
           "gru_d614_minus_q_bits_per_trial": 0.02321971662071234,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.009126871056677088,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.00912732787003201,
           "embedding_centroid_mahalanobis": 4.56393152163019,
           "embedding_median_subject_mahalanobis": 4.998253904497801,
@@ -1908,6 +2056,7 @@
           "author_subject_balanced_normalized_likelihood": 0.5609205320134845,
           "author_bits_above_chance": 0.16586829770961023,
           "gru_d614_minus_author_bits_per_trial": 0.02733425127039983,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.010728887497215678,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.010714726530853511,
           "author_wandb_run_id": "1pb53uvj",
           "author_artifact_digest": "caee4e6e758025ce599edc704576fc2c",
@@ -1924,6 +2073,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5584393008071414,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5721012454061388,
           "gru_d614_minus_q_bits_per_trial": 0.02435955772873919,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.009578696952115773,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.009586658916126931,
           "embedding_centroid_mahalanobis": 4.268045898530083,
           "embedding_median_subject_mahalanobis": 4.244430477930303,
@@ -1941,6 +2091,7 @@
           "author_subject_balanced_normalized_likelihood": 0.5609205320134845,
           "author_bits_above_chance": 0.16586829770961023,
           "gru_d614_minus_author_bits_per_trial": 0.028474092378426682,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.011180713392654362,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.011174057576948433,
           "author_wandb_run_id": "1pb53uvj",
           "author_artifact_digest": "caee4e6e758025ce599edc704576fc2c",
@@ -1957,6 +2108,7 @@
           "gru_d614_subject_mean_log_likelihood_nats": -0.5569632071141962,
           "gru_d614_subject_balanced_normalized_likelihood": 0.5729463440151268,
           "gru_d614_minus_q_bits_per_trial": 0.026489110779438725,
+          "gru_d614_minus_q_subject_balanced_normalized_likelihood": 0.010423795561103733,
           "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.010432535057582935,
           "embedding_centroid_mahalanobis": 4.516496775747538,
           "embedding_median_subject_mahalanobis": 4.562839085741088,
@@ -1974,6 +2126,7 @@
           "author_subject_balanced_normalized_likelihood": 0.5609205320134845,
           "author_bits_above_chance": 0.16586829770961023,
           "gru_d614_minus_author_bits_per_trial": 0.030603645429126216,
+          "gru_d614_minus_author_subject_balanced_normalized_likelihood": 0.012025812001642322,
           "gru_d614_minus_author_mean_subject_normalized_likelihood": 0.012019933718404438,
           "author_wandb_run_id": "1pb53uvj",
           "author_artifact_digest": "caee4e6e758025ce599edc704576fc2c",
@@ -1999,6 +2152,10 @@
         "gru_d614_minus_q_bits_per_trial": {
           "mean": 0.024689461709630083,
           "sd_across_source_seeds": 0.001659476429098737
+        },
+        "gru_d614_minus_q_subject_balanced_normalized_likelihood": {
+          "mean": 0.009709787856632198,
+          "sd_across_source_seeds": 0.0006583250803978039
         },
         "gru_d614_minus_q_mean_subject_normalized_likelihood": {
           "mean": 0.009715507281247291,
@@ -2027,6 +2184,10 @@
         "gru_d614_minus_author_bits_per_trial": {
           "mean": 0.028803996359317578,
           "sd_across_source_seeds": 0.0016594764290987372
+        },
+        "gru_d614_minus_author_subject_balanced_normalized_likelihood": {
+          "mean": 0.011311804297170788,
+          "sd_across_source_seeds": 0.0006583250803978039
         },
         "gru_d614_minus_author_mean_subject_normalized_likelihood": {
           "mean": 0.011302905942068793,
@@ -2129,6 +2290,66 @@
         0.0,
         0.4285714285714286
       ]
+    },
+    "gru_d614_minus_q_normalized_likelihood_vs_embedding_centroid": {
+      "n_cohorts": 9,
+      "spearman_rho": -0.6333333333333333,
+      "permutation_p_two_sided": 0.07760922390776093,
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -0.9816513761467889,
+        0.052631578947368425
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.7380952380952381,
+        -0.4761904761904762
+      ]
+    },
+    "gru_d614_minus_q_normalized_likelihood_vs_common_q_normalized_likelihood": {
+      "n_cohorts": 9,
+      "spearman_rho": 0.08333333333333334,
+      "permutation_p_two_sided": 0.8110618893811062,
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -0.7247706422018347,
+        0.6981132075471697
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.11904761904761905,
+        0.4047619047619048
+      ]
+    },
+    "gru_d614_minus_author_normalized_likelihood_vs_embedding_centroid": {
+      "n_cohorts": 9,
+      "spearman_rho": -0.6,
+      "permutation_p_two_sided": 0.0984090159098409,
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -1.0,
+        0.19658119658119655
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.8333333333333335,
+        -0.4285714285714286
+      ]
+    },
+    "gru_d614_minus_author_normalized_likelihood_vs_author_normalized_likelihood": {
+      "n_cohorts": 9,
+      "spearman_rho": 0.15,
+      "permutation_p_two_sided": 0.7080629193708063,
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -0.6491228070175438,
+        0.6695652173913045
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        0.0,
+        0.38095238095238104
+      ]
     }
   },
   "sensitivity_relationships": {
@@ -2220,6 +2441,66 @@
       "leave_one_out_range": [
         0.4090909090909091,
         0.690909090909091
+      ]
+    },
+    "gru_d614_minus_q_normalized_likelihood_vs_embedding_centroid": {
+      "n_cohorts": 12,
+      "spearman_rho": -0.15384615384615385,
+      "permutation_p_two_sided": 0.6358236417635824,
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -0.7956204379562045,
+        0.5109888025534329
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.5,
+        0.0
+      ]
+    },
+    "gru_d614_minus_q_normalized_likelihood_vs_common_q_normalized_likelihood": {
+      "n_cohorts": 12,
+      "spearman_rho": -0.16083916083916086,
+      "permutation_p_two_sided": 0.6050539494605054,
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -0.7435897435897437,
+        0.5125448028673835
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.3272727272727273,
+        0.09090909090909091
+      ]
+    },
+    "gru_d614_minus_author_normalized_likelihood_vs_embedding_centroid": {
+      "n_cohorts": 11,
+      "spearman_rho": -0.6727272727272727,
+      "permutation_p_two_sided": 0.02810971890281097,
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -0.9719626168224298,
+        -0.06602230647152313
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.8060606060606059,
+        -0.5636363636363636
+      ]
+    },
+    "gru_d614_minus_author_normalized_likelihood_vs_author_normalized_likelihood": {
+      "n_cohorts": 11,
+      "spearman_rho": -0.045454545454545456,
+      "permutation_p_two_sided": 0.9027309726902731,
+      "permutations": 100000,
+      "bootstrap_95_ci": [
+        -0.6542056074766355,
+        0.6296296296296297
+      ],
+      "bootstraps": 20000,
+      "leave_one_out_range": [
+        -0.17575757575757575,
+        0.23636363636363633
       ]
     }
   }

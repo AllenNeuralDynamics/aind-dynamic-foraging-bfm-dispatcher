@@ -1150,9 +1150,10 @@ def _result_block(
         "|---|---:|---:|---:|---:|---:|",
         *_relationship_rows(data_e8["sensitivity_relationships"]),
         "",
-        "† The Bari2019 relationship shares the same baseline between the horizontal axis and the "
-        "GRU-minus-Bari2019 vertical axis. Its correlation is not an independent test of whether "
-        "intrinsically easier tasks transfer better.",
+        "† In baseline-predictability panels, the same Bari2019 or author-model value appears on "
+        "the horizontal axis and inside the GRU-minus-baseline vertical axis. These correlations "
+        "are mathematically coupled and are not independent tests of whether intrinsically easier "
+        "tasks transfer better.",
         "",
         "## Task-design meta-analysis",
         "",

@@ -131,7 +131,7 @@ This cumulative sensitivity view adds Alsiö (rat), Costa (macaque), and López-
 
 ### R1-scale companion: normalized-likelihood difference
 
-These descriptive companion plots use the same normalized-likelihood units as Result 1. They retain Result 3's equal-subject aggregation: each source seed's GRU value is `exp(mean subject log likelihood)` minus the matched Bari2019 value. Each point is the three-seed mean, with horizontal and vertical SEM bars. The Bari2019 baseline is shared across source seeds, so its horizontal SEM is zero in the two Bari2019-axis panels. The bits-per-trial plots above remain primary for additive cross-task inference.
+These companion plots use the same normalized-likelihood units as Result 1. They retain Result 3's equal-subject aggregation: each source seed's GRU value is `exp(mean subject log likelihood)` minus the matched Bari2019 value. Each point is the three-seed mean, with horizontal and vertical SEM bars. The Bari2019 baseline is shared across source seeds, so its horizontal SEM is zero in the two Bari2019-axis panels. Panel titles report cross-cohort Spearman ρ and two-sided permutation p for the exact plotted normalized-likelihood quantities. The bits-per-trial plots above remain primary for additive cross-task inference.
 
 #### Primary-inference cohorts
 
@@ -268,6 +268,10 @@ Normalized likelihoods in this table are `exp(mean subject log likelihood)`, not
 | GRU614−Bari2019 vs Bari2019 predictability† | 9 | +0.083 | [-0.72, +0.70] | 0.8088 | [-0.12, +0.40] |
 | GRU614−author vs embedding centroid distance | 9 | -0.600 | [-1.00, +0.19] | 0.0974 | [-0.83, -0.43] |
 | GRU614−author vs author predictability† | 9 | +0.150 | [-0.63, +0.67] | 0.7081 | [+0.00, +0.38] |
+| Normalized-likelihood GRU614−Bari2019 vs embedding centroid distance | 9 | -0.633 | [-0.98, +0.05] | 0.0776 | [-0.74, -0.48] |
+| Normalized-likelihood GRU614−Bari2019 vs Bari2019 likelihood† | 9 | +0.083 | [-0.72, +0.70] | 0.8111 | [-0.12, +0.40] |
+| Normalized-likelihood GRU614−author vs embedding centroid distance | 9 | -0.600 | [-1.00, +0.20] | 0.0984 | [-0.83, -0.43] |
+| Normalized-likelihood GRU614−author vs author likelihood† | 9 | +0.150 | [-0.65, +0.67] | 0.7081 | [+0.00, +0.38] |
 | GRU614−GRU10 vs embedding centroid distance | 9 | +0.217 | [-0.59, +0.88] | 0.5511 | [+0.00, +0.43] |
 
 ### Primary cross-cohort inference — E=8
@@ -279,6 +283,10 @@ Normalized likelihoods in this table are `exp(mean subject log likelihood)`, not
 | GRU614−Bari2019 vs Bari2019 predictability† | 9 | +0.050 | [-0.74, +0.72] | 0.9124 | [-0.19, +0.36] |
 | GRU614−author vs embedding centroid distance | 9 | -0.483 | [-0.98, +0.37] | 0.1776 | [-0.79, -0.26] |
 | GRU614−author vs author predictability† | 9 | +0.183 | [-0.59, +0.75] | 0.6132 | [+0.05, +0.43] |
+| Normalized-likelihood GRU614−Bari2019 vs embedding centroid distance | 9 | -0.733 | [-1.00, -0.11] | 0.0257 | [-0.83, -0.62] |
+| Normalized-likelihood GRU614−Bari2019 vs Bari2019 likelihood† | 9 | +0.167 | [-0.73, +0.73] | 0.6480 | [-0.05, +0.36] |
+| Normalized-likelihood GRU614−author vs embedding centroid distance | 9 | -0.483 | [-0.98, +0.36] | 0.1791 | [-0.79, -0.26] |
+| Normalized-likelihood GRU614−author vs author likelihood† | 9 | +0.183 | [-0.61, +0.75] | 0.6138 | [+0.05, +0.43] |
 
 ### All-valid sensitivity — E=4
 
@@ -291,6 +299,10 @@ This sensitivity adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse). 
 | GRU614−Bari2019 vs Bari2019 predictability† | 12 | -0.161 | [-0.74, +0.51] | 0.6011 | [-0.33, +0.09] |
 | GRU614−author vs embedding centroid distance | 11 | -0.673 | [-0.97, -0.06] | 0.0280 | [-0.81, -0.56] |
 | GRU614−author vs author predictability† | 11 | -0.045 | [-0.66, +0.62] | 0.9036 | [-0.18, +0.24] |
+| Normalized-likelihood GRU614−Bari2019 vs embedding centroid distance | 12 | -0.154 | [-0.80, +0.51] | 0.6358 | [-0.50, +0.00] |
+| Normalized-likelihood GRU614−Bari2019 vs Bari2019 likelihood† | 12 | -0.161 | [-0.74, +0.51] | 0.6051 | [-0.33, +0.09] |
+| Normalized-likelihood GRU614−author vs embedding centroid distance | 11 | -0.673 | [-0.97, -0.07] | 0.0281 | [-0.81, -0.56] |
+| Normalized-likelihood GRU614−author vs author likelihood† | 11 | -0.045 | [-0.65, +0.63] | 0.9027 | [-0.18, +0.24] |
 | GRU614−GRU10 vs embedding centroid distance | 12 | +0.545 | [-0.09, +0.94] | 0.0666 | [+0.41, +0.69] |
 
 ### All-valid sensitivity — E=8
@@ -302,8 +314,12 @@ This sensitivity adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse). 
 | GRU614−Bari2019 vs Bari2019 predictability† | 12 | -0.224 | [-0.80, +0.47] | 0.4824 | [-0.41, +0.01] |
 | GRU614−author vs embedding centroid distance | 11 | -0.573 | [-0.91, +0.09] | 0.0669 | [-0.75, -0.44] |
 | GRU614−author vs author predictability† | 11 | -0.045 | [-0.66, +0.63] | 0.9050 | [-0.18, +0.24] |
+| Normalized-likelihood GRU614−Bari2019 vs embedding centroid distance | 12 | -0.273 | [-0.90, +0.45] | 0.3779 | [-0.65, -0.15] |
+| Normalized-likelihood GRU614−Bari2019 vs Bari2019 likelihood† | 12 | -0.126 | [-0.75, +0.56] | 0.7009 | [-0.30, +0.14] |
+| Normalized-likelihood GRU614−author vs embedding centroid distance | 11 | -0.573 | [-0.91, +0.09] | 0.0657 | [-0.75, -0.44] |
+| Normalized-likelihood GRU614−author vs author likelihood† | 11 | -0.045 | [-0.65, +0.63] | 0.9029 | [-0.18, +0.24] |
 
-† The Bari2019 relationship shares the same baseline between the horizontal axis and the GRU-minus-Bari2019 vertical axis. Its correlation is not an independent test of whether intrinsically easier tasks transfer better.
+† In baseline-predictability panels, the same Bari2019 or author-model value appears on the horizontal axis and inside the GRU-minus-baseline vertical axis. These correlations are mathematically coupled and are not independent tests of whether intrinsically easier tasks transfer better.
 
 ## Task-design meta-analysis
 
