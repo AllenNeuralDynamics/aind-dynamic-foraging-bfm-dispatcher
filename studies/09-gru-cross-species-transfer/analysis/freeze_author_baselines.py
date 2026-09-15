@@ -143,11 +143,11 @@ GROUPS = {
         "foraging_models_commit": SECONDARY_MODELS_COMMIT,
     },
     "costa-feedback-dependent": {
-        "group": "costa-feedback-dependent@slurm-26383388",
+        "group": "costa-feedback-dependent@slurm-26384790",
         "dataset": "costa",
-        "agent_class": "CostaBlockResetFeedbackDependentRL",
+        "agent_class": "ForagerFeedbackDependentRL",
         "author_selected": True,
-        "slurm_job_id": "26383388",
+        "slurm_job_id": "26384790",
         "foraging_models_commit": SECONDARY_MODELS_COMMIT,
     },
     "alsio-dual-rate-sticky": {

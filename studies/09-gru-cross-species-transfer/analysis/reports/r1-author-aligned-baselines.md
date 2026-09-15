@@ -267,7 +267,7 @@ This screen therefore supports broad transfer, but not universal superiority ove
 | Eckstein (human) | Bayesian inference | author-selected | 0.63162 | 0.66005 | 0.62596 ± 0.00871 | 0.63093 ± 0.00288 |
 | Hattori (mouse) | Hattori2019 | author-selected | 0.55730 | 0.55570 | 0.56607 ± 0.00067 | 0.56577 ± 0.00002 |
 | López-Yépez (mouse) | double-trace RL | author-selected | 0.53130 | 0.61568 | 0.57554 ± 0.01322 | 0.59038 ± 0.00247 |
-| Costa (macaque) | feedback-dependent RL | author-selected | 0.63104 | 0.59685 | 0.62857 ± 0.00063 | 0.63222 ± 0.00107 |
+| Costa (macaque) | feedback-dependent RL | author-selected | 0.63104 | 0.58336 | 0.62857 ± 0.00063 | 0.63222 ± 0.00107 |
 | Alsiö (rat) | dual-rate RL + stickiness | author-model sensitivity from a different cohort | 0.52676 | 0.52745 | 0.52710 ± 0.00098 | 0.52843 ± 0.00057 |
 
 ### Primary author-model scientific read
@@ -371,13 +371,13 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | López-Yépez (mouse) | double-trace RL | GRU D=300 | -0.03003 | -0.03515 | 0.0156 |
 | López-Yépez (mouse) | double-trace RL | GRU D=614 | -0.03526 | -0.03971 | 0.0156 |
 | López-Yépez (mouse) | double-trace RL | E8 GRU D=614 | -0.02740 | -0.02509 | 0.0156 |
-| Costa (macaque) | feedback-dependent RL | Bari2019 | +0.03564 | +0.03518 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=10 | +0.03210 | +0.02930 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=30 | +0.03371 | +0.03071 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=100 | +0.03407 | +0.03240 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=300 | +0.03516 | +0.03232 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=614 | +0.03558 | +0.03243 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | E8 GRU D=614 | +0.03659 | +0.03613 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL | Bari2019 | +0.04301 | +0.04838 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL | GRU D=10 | +0.04270 | +0.04250 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL | GRU D=30 | +0.04511 | +0.04391 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL | GRU D=100 | +0.04631 | +0.04560 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL | GRU D=300 | +0.04680 | +0.04552 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL | GRU D=614 | +0.04731 | +0.04563 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL | E8 GRU D=614 | +0.04947 | +0.04933 | 0.000977 |
 
 The correlations below relate each subject's author-model normalized likelihood to that subject's D=614 GRU-minus-author improvement. Negative values mean GRU benefit is concentrated among subjects fit poorly by the author model.
 
@@ -394,7 +394,7 @@ The correlations below relate each subject's author-model normalized likelihood 
 | Eckstein (human) | Bayesian inference | 306 | -0.71 | -0.74 |
 | Hattori (mouse) | Hattori2019 | 7 | -0.17 | -0.01 |
 | López-Yépez (mouse) | double-trace RL | 8 | -0.81 | -0.67 |
-| Costa (macaque) | feedback-dependent RL | 11 | +0.39 | +0.55 |
+| Costa (macaque) | feedback-dependent RL | 11 | +0.54 | +0.63 |
 
 ### Why Bari2019 common Q can beat an author-selected model
 
