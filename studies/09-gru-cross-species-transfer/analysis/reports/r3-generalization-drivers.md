@@ -62,40 +62,28 @@ inputs:
     - analysis/task_design_features_e8.json
   figures:
     - analysis/fig_generalization_drivers.png
-    - analysis/fig_generalization_drivers_primary_plus_stress.png
     - analysis/fig_generalization_drivers_all_valid.png
     - analysis/fig_generalization_drivers_e8.png
-    - analysis/fig_generalization_drivers_primary_plus_stress_e8.png
     - analysis/fig_generalization_drivers_all_valid_e8.png
     - analysis/fig_generalization_drivers_r1_scale.png
-    - analysis/fig_generalization_drivers_primary_plus_stress_r1_scale.png
     - analysis/fig_generalization_drivers_all_valid_r1_scale.png
     - analysis/fig_generalization_drivers_e8_r1_scale.png
-    - analysis/fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png
     - analysis/fig_generalization_drivers_all_valid_e8_r1_scale.png
     - analysis/fig_generalization_drivers_author.png
-    - analysis/fig_generalization_drivers_primary_plus_stress_author.png
     - analysis/fig_generalization_drivers_all_valid_author.png
     - analysis/fig_generalization_drivers_e8_author.png
-    - analysis/fig_generalization_drivers_primary_plus_stress_e8_author.png
     - analysis/fig_generalization_drivers_all_valid_e8_author.png
     - analysis/fig_generalization_drivers_author_r1_scale.png
-    - analysis/fig_generalization_drivers_primary_plus_stress_author_r1_scale.png
     - analysis/fig_generalization_drivers_all_valid_author_r1_scale.png
     - analysis/fig_generalization_drivers_e8_author_r1_scale.png
-    - analysis/fig_generalization_drivers_primary_plus_stress_e8_author_r1_scale.png
     - analysis/fig_generalization_drivers_all_valid_e8_author_r1_scale.png
     - analysis/fig_generalization_robustness.png
-    - analysis/fig_generalization_robustness_primary_plus_stress.png
     - analysis/fig_generalization_robustness_all_valid.png
     - analysis/fig_generalization_robustness_e8.png
-    - analysis/fig_generalization_robustness_primary_plus_stress_e8.png
     - analysis/fig_generalization_robustness_all_valid_e8.png
     - analysis/fig_task_design_drivers.png
-    - analysis/fig_task_design_drivers_primary_plus_stress.png
     - analysis/fig_task_design_drivers_all_valid.png
     - analysis/fig_task_design_drivers_e8.png
-    - analysis/fig_task_design_drivers_primary_plus_stress_e8.png
     - analysis/fig_task_design_drivers_all_valid_e8.png
 reproduce: make -C studies/09-gru-cross-species-transfer r3
 ---
@@ -115,6 +103,8 @@ result remains quarantined.
 
 ## First-pass result
 
+Result 3 contains 24 figures: 16 main comparison panels (Bari2019 or author reference × bits/trial or normalized-likelihood scale × E=4 or E=8 × primary or all-valid inclusion), four robustness panels, and four task-design panels. All cohort markers are means across three source seeds with SEM error bars. A fixed baseline or task-design coordinate has zero horizontal SEM by design.
+
 ### Primary-inference cohorts
 
 **E=4**
@@ -125,21 +115,9 @@ result remains quarantined.
 
 ![Primary cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_e8.png)
 
-Primary inference uses 9 equal-weight cross-study cohorts. Performance is the arithmetic mean held-out log likelihood across subjects, converted to bits per trial. Embedding distance is calculated separately in the full E=4 or E=8 space for each source seed. Large labeled points average the three paired seeds; small points show the seed-specific values. Inclusion tiers are shown in separate figures, so secondary cohorts no longer obscure the 9-cohort inference. All 12 valid cohorts remain included in the numerical sensitivity table. Species is descriptive rather than an inferential grouping because species, study, and task design are confounded.
+Primary inference uses 9 equal-weight cross-study cohorts. Performance is the arithmetic mean held-out log likelihood across subjects, converted to bits per trial. Embedding distance is calculated separately in the full E=4 or E=8 space for each source seed. Every marker is the mean across the three paired source seeds, with horizontal and vertical SEM bars. Inclusion tiers are shown in separate figures, so secondary cohorts no longer obscure the 9-cohort inference. All 12 valid cohorts remain included in the numerical sensitivity table. Species is descriptive rather than an inferential grouping because species, study, and task design are confounded.
 
-### Primary + stress-test cohorts
-
-**E=4**
-
-![Primary plus stress-test cohorts: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress.png)
-
-**E=8**
-
-![Primary plus stress-test cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress_e8.png)
-
-This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse) to the primary cohorts. It is displayed descriptively because this 11-cohort combination was not a predeclared inferential tier.
-
-### All valid cohorts
+### All valid cohorts (primary + stress-test)
 
 **E=4**
 
@@ -149,7 +127,7 @@ This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mous
 
 ![All valid cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid_e8.png)
 
-This cumulative sensitivity view reports the frozen 12-cohort all-valid sensitivity relationships.
+This cumulative sensitivity view adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse), for 12 cohorts total. No descriptive-only cohort remains after Tang (macaque) was removed, so primary + stress-test and all valid are the same set and are shown only once.
 
 ### R1-scale companion: normalized-likelihood difference
 
@@ -165,17 +143,7 @@ These descriptive companion plots use the same normalized-likelihood units as Re
 
 ![Primary cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_e8_r1_scale.png)
 
-#### Primary + stress-test cohorts
-
-**E=4**
-
-![Primary plus stress-test cohorts on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_r1_scale.png)
-
-**E=8**
-
-![Primary plus stress-test cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png)
-
-#### All valid cohorts
+#### All valid cohorts (primary + stress-test)
 
 **E=4**
 
@@ -207,25 +175,7 @@ These panels repeat the same cross-cohort views with GRU minus the strongest mod
 
 ![Primary cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_e8_author_r1_scale.png)
 
-#### Primary + stress-test cohorts
-
-**E=4, bits/trial**
-
-![Primary plus stress-test cohorts relative to author models](../fig_generalization_drivers_primary_plus_stress_author.png)
-
-**E=8, bits/trial**
-
-![Primary plus stress-test cohorts, E8, relative to author models](../fig_generalization_drivers_primary_plus_stress_e8_author.png)
-
-**E=4, normalized-likelihood difference**
-
-![Primary plus stress-test cohorts relative to author models on the R1 scale](../fig_generalization_drivers_primary_plus_stress_author_r1_scale.png)
-
-**E=8, normalized-likelihood difference**
-
-![Primary plus stress-test cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_primary_plus_stress_e8_author_r1_scale.png)
-
-#### All valid cohorts
+#### All valid cohorts (primary + stress-test)
 
 **E=4, bits/trial**
 
@@ -266,17 +216,7 @@ The identity plot is the primary view of baseline predictability. The right pane
 
 Median individual-subject embedding distance tests whether the centroid result is hiding a dispersed or bimodal cohort. The scaling panel asks whether increasing the source population from D=10 to D=614 helps cohorts that land farther from the source embedding distribution. Its cross-cohort Spearman ρ is +0.217 (permutation p=0.5511).
 
-### Primary + stress-test robustness and scaling
-
-**E=4**
-
-![Primary plus stress-test cohorts: robustness and source-population scaling](../fig_generalization_robustness_primary_plus_stress.png)
-
-**E=8**
-
-![Primary plus stress-test cohorts, E8: robustness](../fig_generalization_robustness_primary_plus_stress_e8.png)
-
-### All-valid robustness and scaling
+### All-valid robustness and scaling (primary + stress-test)
 
 **E=4**
 
@@ -382,17 +322,7 @@ The categorical analysis is outcome-blind. Task-structure distance is the equal-
 Task-structure distance is associated with adapted embedding-centroid displacement (ρ=+0.581, permutation p=0.1314) but not with GRU advantage (ρ=-0.581, p=0.1336). The same separation is stronger for the full-design score: embedding ρ=+0.778 (p=0.0185), versus GRU advantage ρ=-0.641 (p=0.0721). Thus the transferred embedding geometry carries an auditable task/apparatus-distance signal, but categorical closeness alone does not explain whether GRU beats Bari2019 common Q.
 For E=8, task-structure distance has ρ=+0.645 with embedding displacement and ρ=-0.710 with GRU advantage. Full-design distance has ρ=+0.821 with embedding displacement and ρ=-0.778 with GRU advantage.
 
-### Primary + stress-test task-design view
-
-**E=4**
-
-![Primary plus stress-test cohorts: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_primary_plus_stress.png)
-
-**E=8**
-
-![Primary plus stress-test cohorts, E8: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_primary_plus_stress_e8.png)
-
-### All-valid task-design view
+### All-valid task-design view (primary + stress-test)
 
 **E=4**
 
