@@ -19,6 +19,7 @@ from _meta import build_meta  # noqa: E402
 
 
 MATCHED = STUDY / "analysis" / "matched_half_results.json"
+AUTHOR_RESULTS = STUDY / "analysis" / "author_baseline_results.json"
 EMBEDDINGS = {
     4: STUDY / "analysis" / "embedding_space_results.json",
     8: STUDY / "analysis" / "embedding_space_results_e8.json",
@@ -81,6 +82,7 @@ def _performance_by_dataset(
         name: dataset
         for document in documents
         for name, dataset in document["datasets"].items()
+        if name in DATASET_ORDER
     }
     if set(datasets) != set(DATASET_ORDER):
         raise AssertionError("E8 performance cohort membership drifted")
@@ -109,6 +111,25 @@ def _subject_ll(record: dict) -> dict[str, float]:
             "per_subject_mean_log_likelihood_nats"
         ].items()
     }
+
+
+def _author_references(document: dict) -> dict[str, tuple[str, dict]]:
+    """Choose the strongest held-out author-selected model per cohort.
+
+    This is conservative for GRU comparisons. Sensitivity-only models, including
+    Costa +CK1, are deliberately excluded from the author reference.
+    """
+    references: dict[str, tuple[str, dict]] = {}
+    for key, record in document["records"].items():
+        if not record["author_selected"]:
+            continue
+        dataset = record["dataset"]
+        incumbent = references.get(dataset)
+        if incumbent is None or float(record["metrics"]["normalized_likelihood"]) > float(
+            incumbent[1]["metrics"]["normalized_likelihood"]
+        ):
+            references[dataset] = (key, record)
+    return references
 
 
 def _embedding_map(group: dict) -> dict[str, np.ndarray]:
@@ -191,6 +212,7 @@ def _seed_record(
     performance_dataset: dict,
     embedding_seed: dict,
     dimension: int,
+    author_reference: tuple[str, dict] | None,
 ) -> dict:
     q_record = matched_dataset["q"]
     d614 = (
@@ -268,6 +290,32 @@ def _seed_record(
             "aind_source"
         ]["provenance"]["artifact_digest"],
     }
+    if author_reference is not None:
+        author_key, author_record = author_reference
+        author = _subject_ll(author_record)
+        if set(subject_ids) != set(author):
+            raise AssertionError(
+                f"Author/GRU subject mismatch for {dataset_name}, seed {seed}"
+            )
+        author_values = np.asarray([author[subject] for subject in subject_ids])
+        author_mean = float(author_values.mean())
+        record.update(
+            {
+                "author_baseline_key": author_key,
+                "author_subject_mean_log_likelihood_nats": author_mean,
+                "author_subject_balanced_normalized_likelihood": math.exp(author_mean),
+                "author_bits_above_chance": (author_mean + log_two) / log_two,
+                "gru_d614_minus_author_bits_per_trial": (
+                    gru614_mean - author_mean
+                )
+                / log_two,
+                "gru_d614_minus_author_mean_subject_normalized_likelihood": float(
+                    np.mean(np.exp(gru614_values) - np.exp(author_values))
+                ),
+                "author_wandb_run_id": author_record["wandb_run_id"],
+                "author_artifact_digest": author_record["output_artifact"]["digest"],
+            }
+        )
     if dimension == 4:
         d10 = _gru_by_seed(performance_dataset, 10)[seed]
         gru10 = _subject_ll(d10)
@@ -301,13 +349,20 @@ def main() -> None:
     dimension = _parser().parse_args().dimension
     output_path = OUTPUTS[dimension]
     matched = json.loads(MATCHED.read_text())
+    author_document = json.loads(AUTHOR_RESULTS.read_text())
+    author_references = _author_references(author_document)
     embedding_path = EMBEDDINGS[dimension]
     embeddings = json.loads(embedding_path.read_text())
     performance, performance_paths = _performance_by_dataset(dimension, matched)
     annotations = json.loads(ANNOTATIONS.read_text())
     if not set(DATASET_ORDER).issubset(matched["datasets"]):
         raise AssertionError("Matched-result cohort membership drifted")
-    if tuple(embeddings["groups"])[2:] != DATASET_ORDER:
+    retained_embedding_groups = tuple(
+        name
+        for name in embeddings["groups"]
+        if name not in {"aind_source", "aind_heldout", "tang"}
+    )
+    if retained_embedding_groups != DATASET_ORDER:
         raise AssertionError("Embedding cohort order drifted")
     embedding_seeds = {int(row["seed"]): row for row in embeddings["seeds"]}
     if tuple(sorted(embedding_seeds)) != (0, 1, 2):
@@ -337,6 +392,7 @@ def main() -> None:
                 performance[dataset_name],
                 embedding_seeds[seed],
                 dimension,
+                author_references.get(dataset_name),
             )
             for seed in (0, 1, 2)
         ]
@@ -347,6 +403,11 @@ def main() -> None:
             "analysis_tier": tier_by_cohort[dataset_name],
             "n_subjects": records[0]["n_subjects"],
             "seeds": records,
+            "author_reference": (
+                author_references[dataset_name][0]
+                if dataset_name in author_references
+                else None
+            ),
             "summary": {
                 key: _mean_sd(records, key)
                 for key in (
@@ -358,6 +419,16 @@ def main() -> None:
                     "embedding_centroid_mahalanobis",
                     "embedding_median_subject_mahalanobis",
                     "embedding_fraction_outside_source_95pct",
+                    *(
+                        (
+                            "author_subject_balanced_normalized_likelihood",
+                            "author_bits_above_chance",
+                            "gru_d614_minus_author_bits_per_trial",
+                            "gru_d614_minus_author_mean_subject_normalized_likelihood",
+                        )
+                        if dataset_name in author_references
+                        else ()
+                    ),
                     *(
                         ("gru_d614_minus_d10_bits_per_trial",)
                         if dimension == 4
@@ -388,6 +459,38 @@ def main() -> None:
                 values("q_bits_above_chance"), delta, rng
             ),
         }
+        author_names = tuple(
+            name for name in names if cohorts[name]["author_reference"] is not None
+        )
+        if len(author_names) >= 3:
+            author_delta = [
+                cohorts[name]["summary"]["gru_d614_minus_author_bits_per_trial"][
+                    "mean"
+                ]
+                for name in author_names
+            ]
+            relationships.update(
+                {
+                    "gru_d614_minus_author_vs_embedding_centroid": _correlation_summary(
+                        [
+                            cohorts[name]["summary"]["embedding_centroid_mahalanobis"][
+                                "mean"
+                            ]
+                            for name in author_names
+                        ],
+                        author_delta,
+                        rng,
+                    ),
+                    "gru_d614_minus_author_vs_author_predictability": _correlation_summary(
+                        [
+                            cohorts[name]["summary"]["author_bits_above_chance"]["mean"]
+                            for name in author_names
+                        ],
+                        author_delta,
+                        rng,
+                    ),
+                }
+            )
         if dimension == 4:
             relationships["gru_d614_minus_d10_vs_embedding_centroid"] = (
                 _correlation_summary(
@@ -401,9 +504,11 @@ def main() -> None:
             [
                 *matched["_meta"]["wandb_groups"],
                 *embeddings["_meta"]["wandb_groups"],
+                *author_document["_meta"]["wandb_groups"],
             ]
         )
     )
+    groups = [group for group in groups if "tang" not in group.lower()]
     output = {
         "_meta": build_meta(
             "analysis/freeze_generalization_drivers.py",
@@ -414,6 +519,7 @@ def main() -> None:
             str(MATCHED.relative_to(STUDY)): _sha256(MATCHED),
             str(embedding_path.relative_to(STUDY)): _sha256(embedding_path),
             str(ANNOTATIONS.relative_to(STUDY)): _sha256(ANNOTATIONS),
+            str(AUTHOR_RESULTS.relative_to(STUDY)): _sha256(AUTHOR_RESULTS),
             **{
                 str(path.relative_to(STUDY)): _sha256(path)
                 for path in performance_paths
@@ -435,6 +541,10 @@ def main() -> None:
             "seed_rule": (
                 "pair each source seed's D=614 prediction and adapted embedding; "
                 "average only after seed-specific estimates"
+            ),
+            "author_reference_rule": (
+                "strongest trial-pooled held-out result among models marked author_selected; "
+                "sensitivity-only models are excluded"
             ),
             "embedding_distance": (
                 f"full-{dimension}D Mahalanobis distance from external cohort centroid to "

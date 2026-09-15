@@ -79,6 +79,33 @@ R1_SCALE_MAIN_FIGURES = {
         / "fig_generalization_drivers_all_valid_e8_r1_scale.png",
     },
 }
+AUTHOR_MAIN_FIGURES = {
+    4: {
+        "primary": STUDY / "analysis" / "fig_generalization_drivers_author.png",
+        "primary_plus_stress": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_primary_plus_stress_author.png",
+        "all_valid": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_all_valid_author.png",
+    },
+    8: {
+        "primary": STUDY / "analysis" / "fig_generalization_drivers_e8_author.png",
+        "primary_plus_stress": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_primary_plus_stress_e8_author.png",
+        "all_valid": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_all_valid_e8_author.png",
+    },
+}
+AUTHOR_R1_SCALE_MAIN_FIGURES = {
+    dimension: {
+        view: path.with_name(path.stem + "_r1_scale.png")
+        for view, path in figures.items()
+    }
+    for dimension, figures in AUTHOR_MAIN_FIGURES.items()
+}
 E8_ROBUSTNESS_FIGURES = {
     "primary": STUDY / "analysis" / "fig_generalization_robustness_e8.png",
     "primary_plus_stress": STUDY
@@ -146,6 +173,7 @@ def _annotate(
     *,
     color: str | None = None,
     rotation: float = 0,
+    offset: tuple[float, float] = (4, 4),
 ) -> None:
     rotation_options = (
         {"rotation_mode": "anchor", "ha": "left", "va": "bottom"}
@@ -155,7 +183,7 @@ def _annotate(
     axis.annotate(
         label,
         (x, y),
-        xytext=(4, 4),
+        xytext=offset,
         textcoords="offset points",
         fontsize=8.5,
         alpha=0.9,
@@ -287,35 +315,43 @@ def _plot_main(
     output: Path,
     *,
     r1_scale: bool = False,
+    reference: str = "q",
 ) -> None:
+    if reference not in {"q", "author"}:
+        raise ValueError("reference must be 'q' or 'author'")
     apply_presentation_style()
     dimension = int(data["contract"]["subject_embedding_size"])
     fig, axes = plt.subplots(1, 3, figsize=(18.5, 6.2), constrained_layout=True)
     cohorts = _view_cohorts(data, view)
+    if reference == "author":
+        cohorts = [cohort for cohort in cohorts if cohort["author_reference"] is not None]
     relation_source = None if r1_scale else _relation_source(data, view)
+    reference_label = "Bari2019" if reference == "q" else "author model"
+    reference_key = f"{reference}_subject_balanced_normalized_likelihood"
+    reference_bits_key = f"{reference}_bits_above_chance"
+    delta_bits_key = f"gru_d614_minus_{reference}_bits_per_trial"
 
-    for cohort in cohorts:
+    author_offsets = ((4, 4), (4, 12), (4, -10), (4, 20), (4, -18))
+    for cohort_index, cohort in enumerate(cohorts):
         color = SPECIES_COLORS[cohort["species"]]
         marker = TIER_MARKERS[cohort["analysis_tier"]]
         centroid = _seed_values(cohort, "embedding_centroid_mahalanobis")
-        q_likelihood = _summary(
-            cohort, "q_subject_balanced_normalized_likelihood"
-        )
+        reference_likelihood = _summary(cohort, reference_key)
         gru_likelihood = _seed_values(
             cohort, "gru_d614_subject_balanced_normalized_likelihood"
         )
         if r1_scale:
-            delta = gru_likelihood - q_likelihood
-            q_predictability = q_likelihood
+            delta = gru_likelihood - reference_likelihood
+            reference_predictability = reference_likelihood
         else:
-            delta = _seed_values(cohort, "gru_d614_minus_q_bits_per_trial")
-            q_predictability = _summary(cohort, "q_bits_above_chance")
+            delta = _seed_values(cohort, delta_bits_key)
+            reference_predictability = _summary(cohort, reference_bits_key)
 
         plotter = _plot_seed_mean_sem if r1_scale else _plot_seed_points
         plot_values = (
             (axes[0], centroid, delta),
-            (axes[1], np.full(3, q_likelihood), gru_likelihood),
-            (axes[2], np.full(3, q_predictability), delta),
+            (axes[1], np.full(3, reference_likelihood), gru_likelihood),
+            (axes[2], np.full(3, reference_predictability), delta),
         )
         for axis, x, y in plot_values:
             plotter(axis, x, y, color, marker)
@@ -327,10 +363,15 @@ def _plot_main(
                 cohort["label"],
                 color=color if is_r1_left_panel else None,
                 rotation=30 if is_r1_left_panel else 0,
+                offset=(
+                    author_offsets[cohort_index % len(author_offsets)]
+                    if reference == "author"
+                    else (4, 4)
+                ),
             )
 
     relation = (
-        relation_source["gru_d614_minus_q_vs_embedding_centroid"]
+        relation_source[f"gru_d614_minus_{reference}_vs_embedding_centroid"]
         if relation_source is not None
         else None
     )
@@ -339,7 +380,7 @@ def _plot_main(
         f"External-centroid distance from source\n({dimension}D Mahalanobis)"
     )
     delta_label = (
-        f"GRU E={dimension}, D=614 − Bari2019\n"
+        f"GRU E={dimension}, D=614 − {reference_label}\n"
         + (
             "(subject-balanced normalized likelihood)"
             if r1_scale
@@ -357,7 +398,7 @@ def _plot_main(
         value
         for cohort in cohorts
         for value in [
-            _summary(cohort, "q_subject_balanced_normalized_likelihood"),
+            _summary(cohort, reference_key),
             *_seed_values(
                 cohort, "gru_d614_subject_balanced_normalized_likelihood"
             ),
@@ -369,25 +410,31 @@ def _plot_main(
     axes[1].set_xlim(lower, upper)
     axes[1].set_ylim(lower, upper)
     axes[1].set_aspect("equal", adjustable="box")
-    axes[1].set_xlabel("Bari2019 normalized likelihood")
+    axes[1].set_xlabel(f"{reference_label.capitalize()} normalized likelihood")
     axes[1].set_ylabel(f"GRU E={dimension}, D=614 normalized likelihood")
     axes[1].set_title("Absolute held-out predictability\n(identity line = equal performance)")
 
     coupled = (
-        relation_source["gru_d614_minus_q_vs_common_q_predictability"]
+        relation_source[
+            (
+                "gru_d614_minus_q_vs_common_q_predictability"
+                if reference == "q"
+                else "gru_d614_minus_author_vs_author_predictability"
+            )
+        ]
         if relation_source is not None
         else None
     )
     axes[2].axhline(0, color="#777777", linestyle="--", linewidth=1)
     axes[2].set_xlabel(
-        "Bari2019 normalized likelihood"
+        f"{reference_label.capitalize()} normalized likelihood"
         if r1_scale
-        else "Bari2019 predictability (bits above chance)"
+        else f"{reference_label.capitalize()} predictability (bits above chance)"
     )
     axes[2].set_ylabel(delta_label)
     axes[2].set_title(
         _relation_title(
-            "Advantage vs Bari2019 predictability†", coupled, len(cohorts)
+            f"Advantage vs {reference_label} predictability†", coupled, len(cohorts)
         )
     )
 
@@ -403,7 +450,8 @@ def _plot_main(
         else "Primary scale: additive log score"
     )
     fig.suptitle(
-        f"Study 09 external transfer — E={dimension}, {VIEW_LABELS[view]} cohorts\n"
+        f"Study 09 external transfer vs {reference_label} — E={dimension}, "
+        f"{VIEW_LABELS[view]} cohorts\n"
         f"{scale_note}; labeled points are cohort means"
     )
     fig.savefig(output, bbox_inches="tight", pad_inches=0.35)
@@ -623,6 +671,12 @@ def _relationship_rows(relationships: dict) -> list[str]:
         "gru_d614_minus_q_vs_common_q_predictability": (
             "GRU614−Bari2019 vs Bari2019 predictability†"
         ),
+        "gru_d614_minus_author_vs_embedding_centroid": (
+            "GRU614−author vs embedding centroid distance"
+        ),
+        "gru_d614_minus_author_vs_author_predictability": (
+            "GRU614−author vs author predictability†"
+        ),
         "gru_d614_minus_d10_vs_embedding_centroid": (
             "GRU614−GRU10 vs embedding centroid distance"
         ),
@@ -644,6 +698,14 @@ def _relationship_rows(relationships: dict) -> list[str]:
 def _cohort_rows(data: dict, dimension: int) -> list[str]:
     rows = []
     for cohort in _valid_cohorts(data):
+        if cohort["author_reference"] is None:
+            author_values = "— | — | —"
+        else:
+            author_values = (
+                f"{cohort['author_reference']} | "
+                f"{_summary(cohort, 'author_subject_balanced_normalized_likelihood'):.4f} | "
+                f"{_summary(cohort, 'gru_d614_minus_author_bits_per_trial'):+.4f}"
+            )
         rows.append(
             f"| E={dimension} | {cohort['label']} | {cohort['analysis_tier'].replace('_', ' ')} | "
             f"{cohort['n_subjects']} | "
@@ -651,6 +713,7 @@ def _cohort_rows(data: dict, dimension: int) -> list[str]:
             f"{_summary(cohort, 'gru_d614_subject_balanced_normalized_likelihood'):.4f} | "
             f"{_summary(cohort, 'gru_d614_minus_q_bits_per_trial'):+.4f} | "
             f"{_summary(cohort, 'gru_d614_minus_q_mean_subject_normalized_likelihood'):+.4f} | "
+            f"{author_values} | "
             f"{_summary(cohort, 'embedding_centroid_mahalanobis'):.2f} | "
             f"{_summary(cohort, 'embedding_median_subject_mahalanobis'):.2f} | "
             + (
@@ -672,7 +735,9 @@ def _value_text(value: object) -> str:
 
 def _task_rows(task_data: dict) -> list[str]:
     rows = []
-    for cohort in task_data["cohorts"].values():
+    for name, cohort in task_data["cohorts"].items():
+        if name == "tang":
+            continue
         annotation = cohort["annotation"]
         rows.append(
             f"| [{cohort['label']}]({annotation['evidence_url']}) | "
@@ -823,6 +888,18 @@ def _result_block(
     q_relation_e8 = data_e8["relationships"][
         "gru_d614_minus_q_vs_common_q_predictability"
     ]
+    author_centroid = data["relationships"][
+        "gru_d614_minus_author_vs_embedding_centroid"
+    ]
+    author_relation = data["relationships"][
+        "gru_d614_minus_author_vs_author_predictability"
+    ]
+    author_centroid_e8 = data_e8["relationships"][
+        "gru_d614_minus_author_vs_embedding_centroid"
+    ]
+    author_relation_e8 = data_e8["relationships"][
+        "gru_d614_minus_author_vs_author_predictability"
+    ]
     scaling = data["relationships"][
         "gru_d614_minus_d10_vs_embedding_centroid"
     ]
@@ -956,6 +1033,78 @@ def _result_block(
         "",
         "![All valid cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_all_valid_e8_r1_scale.png)",
         "",
+        "### Author-model companion",
+        "",
+        "These panels repeat the same cross-cohort views with GRU minus the strongest "
+        "model marked `author_selected` for each cohort. When a paper has multiple "
+        "author-selected co-winners, the stronger trial-pooled held-out refit is used as "
+        "a conservative comparator. Sensitivity-only models are excluded: Costa (macaque) "
+        "therefore uses dual-rate RL plus fitted shape-choice bias, while the additional "
+        "CK1 model remains a separately labeled mechanism sensitivity in Result 1. "
+        "Alsiö (rat) has no cohort-aligned author model and is omitted from author-reference "
+        "panels.",
+        "",
+        "#### Primary-inference cohorts",
+        "",
+        "**E=4, bits/trial**",
+        "",
+        "![Primary cohorts relative to author models](../fig_generalization_drivers_author.png)",
+        "",
+        "**E=8, bits/trial**",
+        "",
+        "![Primary cohorts, E8, relative to author models](../fig_generalization_drivers_e8_author.png)",
+        "",
+        "**E=4, normalized-likelihood difference**",
+        "",
+        "![Primary cohorts relative to author models on the R1 scale](../fig_generalization_drivers_author_r1_scale.png)",
+        "",
+        "**E=8, normalized-likelihood difference**",
+        "",
+        "![Primary cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_e8_author_r1_scale.png)",
+        "",
+        "#### Primary + stress-test cohorts",
+        "",
+        "**E=4, bits/trial**",
+        "",
+        "![Primary plus stress-test cohorts relative to author models](../fig_generalization_drivers_primary_plus_stress_author.png)",
+        "",
+        "**E=8, bits/trial**",
+        "",
+        "![Primary plus stress-test cohorts, E8, relative to author models](../fig_generalization_drivers_primary_plus_stress_e8_author.png)",
+        "",
+        "**E=4, normalized-likelihood difference**",
+        "",
+        "![Primary plus stress-test cohorts relative to author models on the R1 scale](../fig_generalization_drivers_primary_plus_stress_author_r1_scale.png)",
+        "",
+        "**E=8, normalized-likelihood difference**",
+        "",
+        "![Primary plus stress-test cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_primary_plus_stress_e8_author_r1_scale.png)",
+        "",
+        "#### All valid cohorts",
+        "",
+        "**E=4, bits/trial**",
+        "",
+        "![All valid cohorts relative to author models](../fig_generalization_drivers_all_valid_author.png)",
+        "",
+        "**E=8, bits/trial**",
+        "",
+        "![All valid cohorts, E8, relative to author models](../fig_generalization_drivers_all_valid_e8_author.png)",
+        "",
+        "**E=4, normalized-likelihood difference**",
+        "",
+        "![All valid cohorts relative to author models on the R1 scale](../fig_generalization_drivers_all_valid_author_r1_scale.png)",
+        "",
+        "**E=8, normalized-likelihood difference**",
+        "",
+        "![All valid cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_all_valid_e8_author_r1_scale.png)",
+        "",
+        f"Across the primary cohorts with author references, GRU-minus-author advantage "
+        f"versus embedding-centroid distance has Spearman ρ={author_centroid['spearman_rho']:+.3f} "
+        f"for E=4 and ρ={author_centroid_e8['spearman_rho']:+.3f} for E=8. "
+        f"The mathematically coupled GRU-minus-author versus author-predictability "
+        f"relationships are ρ={author_relation['spearman_rho']:+.3f} and "
+        f"ρ={author_relation_e8['spearman_rho']:+.3f}, respectively.",
+        "",
         f"For E=4, the D=614 GRU has higher subject-balanced mean log likelihood than Bari2019 common Q in "
         f"{len(positive)} cohorts ({', '.join(positive)}) and lower mean log likelihood in "
         f"{len(negative)} ({', '.join(negative)}). This direction summary does not replace "
@@ -1026,8 +1175,8 @@ def _result_block(
         "",
         "### Valid cohort estimates",
         "",
-        "| space | cohort | tier | subjects | Bari2019 likelihood | GRU614 likelihood | GRU614−Bari2019 bits/trial | mean subject Δ likelihood | centroid distance | median subject distance | GRU614−GRU10 bits/trial |",
-        "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| space | cohort | tier | subjects | Bari2019 likelihood | GRU614 likelihood | GRU614−Bari2019 bits/trial | mean subject Δ likelihood | author reference | author likelihood | GRU614−author bits/trial | centroid distance | median subject distance | GRU614−GRU10 bits/trial |",
+        "|---|---|---|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|",
         *_cohort_rows(data, 4),
         *_cohort_rows(data_e8, 8),
         "",
@@ -1261,6 +1410,16 @@ def main() -> None:
             _plot_main(data, view, output)
         for view, output in R1_SCALE_MAIN_FIGURES[dimension].items():
             _plot_main(data, view, output, r1_scale=True)
+        for view, output in AUTHOR_MAIN_FIGURES[dimension].items():
+            _plot_main(data, view, output, reference="author")
+        for view, output in AUTHOR_R1_SCALE_MAIN_FIGURES[dimension].items():
+            _plot_main(
+                data,
+                view,
+                output,
+                r1_scale=True,
+                reference="author",
+            )
         for view, output in robustness_figures.items():
             _plot_robustness(data, view, output)
         for view, output in task_figures.items():
@@ -1280,6 +1439,12 @@ def main() -> None:
         *(
             output
             for figures in R1_SCALE_MAIN_FIGURES.values()
+            for output in figures.values()
+        ),
+        *(
+            output
+            for figure_map in (AUTHOR_MAIN_FIGURES, AUTHOR_R1_SCALE_MAIN_FIGURES)
+            for figures in figure_map.values()
             for output in figures.values()
         ),
         REPORT,

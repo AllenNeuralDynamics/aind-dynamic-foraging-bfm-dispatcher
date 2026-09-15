@@ -42,7 +42,7 @@ WANDB_GROUPS = [
     "gru-hattori-matched-half@20260907-200329",
     "q-hattori-matched-half@slurm-25585753",
     "gru-costa-matched-half@20260914-162457",
-    "q-expanded-matched-half@slurm-26383387",
+    "q-expanded-matched-half@slurm-26386210",
 ]
 GRU_LAUNCHES = {
     "grossman": (WANDB_GROUPS[0], "01M1RE7RE42MHTHFDDRYJWTWHV"),
@@ -61,12 +61,12 @@ GRU_LAUNCHES = {
 }
 Q_LAUNCHES = [
     (WANDB_GROUPS[12], "25580070", set()),
-    (WANDB_GROUPS[13], "25581304", {"kwak", "costa"}),
+    (WANDB_GROUPS[13], "25581304", {"kwak", "costa", "tang"}),
     (WANDB_GROUPS[16], "25585753", set()),
 ]
 Q_OVERRIDES = {
     "kwak": (WANDB_GROUPS[14], "25581496"),
-    "costa": (WANDB_GROUPS[18], "26383387"),
+    "costa": (WANDB_GROUPS[18], "26386210_7"),
 }
 CACHE = STUDY / "analysis" / "_cache_matched_half"
 OUTPUT = STUDY / "analysis" / "matched_half_results.json"
@@ -338,7 +338,7 @@ def _freeze_q(
         if dataset_name in records:
             raise AssertionError(f"Q group contains duplicate runs for {dataset_name}")
         artifact = _artifact(node, "baseline-rl-output-")
-        root = CACHE / "q" / dataset_name
+        root = CACHE / "q" / dataset_name / artifact["digest"]
         files = _cached_wandb_report_files(artifact, root)
         metrics_bytes = files["test_metrics.json"]
         predictions_bytes = files["test_trial_predictions.csv"]

@@ -114,6 +114,7 @@ AUTHOR_LABELS = {
     "hattori-q-learning": "Hattori2019",
     "lopez-double-trace": "double-trace RL",
     "costa-feedback-dependent": "feedback-dependent RL + bias",
+    "costa-feedback-dependent-ck1": "feedback-dependent RL + bias + CK1",
     "alsio-dual-rate-sticky": "dual-rate RL + stickiness",
 }
 AUTHOR_REFERENCE_PANELS = (
