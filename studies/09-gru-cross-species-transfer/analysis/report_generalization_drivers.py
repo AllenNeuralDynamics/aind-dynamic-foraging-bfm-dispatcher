@@ -29,30 +29,18 @@ ROBUSTNESS_FIGURE = STUDY / "analysis" / "fig_generalization_robustness.png"
 TASK_FIGURE = STUDY / "analysis" / "fig_task_design_drivers.png"
 MAIN_FIGURES = {
     "primary": MAIN_FIGURE,
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_generalization_drivers_primary_plus_stress.png",
     "all_valid": STUDY / "analysis" / "fig_generalization_drivers_all_valid.png",
 }
 ROBUSTNESS_FIGURES = {
     "primary": ROBUSTNESS_FIGURE,
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_generalization_robustness_primary_plus_stress.png",
     "all_valid": STUDY / "analysis" / "fig_generalization_robustness_all_valid.png",
 }
 TASK_FIGURES = {
     "primary": TASK_FIGURE,
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_task_design_drivers_primary_plus_stress.png",
     "all_valid": STUDY / "analysis" / "fig_task_design_drivers_all_valid.png",
 }
 E8_MAIN_FIGURES = {
     "primary": STUDY / "analysis" / "fig_generalization_drivers_e8.png",
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_generalization_drivers_primary_plus_stress_e8.png",
     "all_valid": STUDY / "analysis" / "fig_generalization_drivers_all_valid_e8.png",
 }
 R1_SCALE_MAIN_FIGURES = {
@@ -60,9 +48,6 @@ R1_SCALE_MAIN_FIGURES = {
         "primary": STUDY
         / "analysis"
         / "fig_generalization_drivers_r1_scale.png",
-        "primary_plus_stress": STUDY
-        / "analysis"
-        / "fig_generalization_drivers_primary_plus_stress_r1_scale.png",
         "all_valid": STUDY
         / "analysis"
         / "fig_generalization_drivers_all_valid_r1_scale.png",
@@ -71,9 +56,6 @@ R1_SCALE_MAIN_FIGURES = {
         "primary": STUDY
         / "analysis"
         / "fig_generalization_drivers_e8_r1_scale.png",
-        "primary_plus_stress": STUDY
-        / "analysis"
-        / "fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png",
         "all_valid": STUDY
         / "analysis"
         / "fig_generalization_drivers_all_valid_e8_r1_scale.png",
@@ -82,18 +64,12 @@ R1_SCALE_MAIN_FIGURES = {
 AUTHOR_MAIN_FIGURES = {
     4: {
         "primary": STUDY / "analysis" / "fig_generalization_drivers_author.png",
-        "primary_plus_stress": STUDY
-        / "analysis"
-        / "fig_generalization_drivers_primary_plus_stress_author.png",
         "all_valid": STUDY
         / "analysis"
         / "fig_generalization_drivers_all_valid_author.png",
     },
     8: {
         "primary": STUDY / "analysis" / "fig_generalization_drivers_e8_author.png",
-        "primary_plus_stress": STUDY
-        / "analysis"
-        / "fig_generalization_drivers_primary_plus_stress_e8_author.png",
         "all_valid": STUDY
         / "analysis"
         / "fig_generalization_drivers_all_valid_e8_author.png",
@@ -108,18 +84,12 @@ AUTHOR_R1_SCALE_MAIN_FIGURES = {
 }
 E8_ROBUSTNESS_FIGURES = {
     "primary": STUDY / "analysis" / "fig_generalization_robustness_e8.png",
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_generalization_robustness_primary_plus_stress_e8.png",
     "all_valid": STUDY
     / "analysis"
     / "fig_generalization_robustness_all_valid_e8.png",
 }
 E8_TASK_FIGURES = {
     "primary": STUDY / "analysis" / "fig_task_design_drivers_e8.png",
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_task_design_drivers_primary_plus_stress_e8.png",
     "all_valid": STUDY / "analysis" / "fig_task_design_drivers_all_valid_e8.png",
 }
 FIGURE_SETS = {
@@ -137,13 +107,11 @@ SPECIES_COLORS = {
 }
 VIEW_TIERS = {
     "primary": ("primary",),
-    "primary_plus_stress": ("primary", "stress_test"),
     "all_valid": ("primary", "stress_test", "descriptive_only"),
 }
 VIEW_LABELS = {
     "primary": "Primary-inference",
-    "primary_plus_stress": "Primary + stress-test",
-    "all_valid": "All valid",
+    "all_valid": "All valid (primary + stress-test)",
 }
 TIER_MARKERS = {
     "primary": "o",
@@ -278,27 +246,6 @@ def _relation_title(label: str, relation: dict | None, n_cohorts: int) -> str:
     )
 
 
-def _plot_seed_points(
-    axis: plt.Axes,
-    x: np.ndarray,
-    y: np.ndarray,
-    color: str,
-    marker: str,
-) -> None:
-    axis.plot(x, y, color=color, alpha=0.20, linewidth=0.9)
-    axis.scatter(x, y, color=color, alpha=0.32, s=24, marker=marker)
-    axis.scatter(
-        x.mean(),
-        y.mean(),
-        color=color,
-        edgecolor="white",
-        linewidth=0.8,
-        s=75,
-        marker=marker,
-        zorder=4,
-    )
-
-
 def _plot_seed_mean_sem(
     axis: plt.Axes,
     x: np.ndarray,
@@ -362,14 +309,17 @@ def _plot_main(
             delta = _seed_values(cohort, delta_bits_key)
             reference_predictability = _summary(cohort, reference_bits_key)
 
-        plotter = _plot_seed_mean_sem if r1_scale else _plot_seed_points
         plot_values = (
             (axes[0], centroid, delta),
-            (axes[1], np.full(3, reference_likelihood), gru_likelihood),
-            (axes[2], np.full(3, reference_predictability), delta),
+            (
+                axes[1],
+                np.full(len(gru_likelihood), reference_likelihood),
+                gru_likelihood,
+            ),
+            (axes[2], np.full(len(delta), reference_predictability), delta),
         )
         for panel_index, (axis, x, y) in enumerate(plot_values):
-            plotter(axis, x, y, color, marker)
+            _plot_seed_mean_sem(axis, x, y, color, marker)
             is_r1_left_panel = r1_scale and axis is axes[0]
             offset = (4, 4)
             if reference == "author":
@@ -462,10 +412,10 @@ def _plot_main(
         ncol=4,
         frameon=False,
     )
-    scale_note = (
-        "R1 scale: mean ± SEM across three source seeds"
+    scale_note = "mean ± SEM across three source seeds; " + (
+        "R1 normalized-likelihood scale"
         if r1_scale
-        else "Primary scale: additive log score"
+        else "primary additive-log-score scale"
     )
     fig.suptitle(
         f"Study 09 external transfer vs {reference_label} — E={dimension}, "
@@ -508,18 +458,7 @@ def _plot_robustness(data: dict, view: str, output: Path) -> None:
                 )
             )
         for axis, x, y in plot_values:
-            axis.plot(x, y, color=color, alpha=0.20, linewidth=0.9)
-            axis.scatter(x, y, color=color, alpha=0.32, s=24, marker=marker)
-            axis.scatter(
-                x.mean(),
-                y.mean(),
-                color=color,
-                edgecolor="white",
-                linewidth=0.8,
-                s=75,
-                marker=marker,
-                zorder=4,
-            )
+            _plot_seed_mean_sem(axis, x, y, color, marker)
             _annotate(axis, x.mean(), y.mean(), cohort["label"])
 
     median_relation = (
@@ -576,7 +515,12 @@ def _plot_robustness(data: dict, view: str, output: Path) -> None:
     plt.close(fig)
 
 
-def _plot_task_design(task_data: dict, view: str, output: Path) -> None:
+def _plot_task_design(
+    task_data: dict,
+    generalization_data: dict,
+    view: str,
+    output: Path,
+) -> None:
     apply_presentation_style()
     dimension = int(task_data["contract"]["subject_embedding_size"])
     all_columns = (
@@ -604,6 +548,10 @@ def _plot_task_design(task_data: dict, view: str, output: Path) -> None:
         constrained_layout=True,
     )
     cohorts = _view_cohorts(task_data, view)
+    generalization_by_label = {
+        cohort["label"]: cohort
+        for cohort in generalization_data["cohorts"].values()
+    }
     relation_source = _relation_source(task_data, view)
     outcomes = (
         (
@@ -635,18 +583,10 @@ def _plot_task_design(task_data: dict, view: str, output: Path) -> None:
                     continue
                 color = SPECIES_COLORS[cohort["species"]]
                 marker = TIER_MARKERS[cohort["analysis_tier"]]
-                y = float(cohort["outcomes"][outcome])
-                axis.scatter(
-                    x,
-                    y,
-                    color=color,
-                    edgecolor="white",
-                    linewidth=0.8,
-                    s=78,
-                    marker=marker,
-                    zorder=4,
-                )
-                _annotate(axis, x, y, cohort["label"])
+                y = _seed_values(generalization_by_label[cohort["label"]], outcome)
+                x_values = np.full(len(y), x)
+                _plot_seed_mean_sem(axis, x_values, y, color, marker)
+                _annotate(axis, x, y.mean(), cohort["label"])
             relationship = (
                 relation_source[f"{relationship_y}_vs_{relationship_x}"]
                 if relation_source is not None
@@ -668,7 +608,8 @@ def _plot_task_design(task_data: dict, view: str, output: Path) -> None:
     if view == "primary":
         subtitle += "; schedule scores use complete trial-wise probabilities"
     fig.suptitle(
-        f"Task-design distance — E={dimension}, {VIEW_LABELS[view]} cohorts\n{subtitle}"
+        f"Task-design distance — E={dimension}, {VIEW_LABELS[view]} cohorts\n"
+        f"{subtitle}; outcomes are mean ± SEM across three source seeds"
     )
     fig.savefig(output, bbox_inches="tight", pad_inches=0.35)
     plt.close(fig)
@@ -978,27 +919,13 @@ def _result_block(
         f"Primary inference uses {primary_n} equal-weight cross-study cohorts. Performance is the arithmetic "
         "mean held-out log likelihood across subjects, converted to bits per trial. "
         "Embedding distance is calculated separately in the full E=4 or E=8 space for each "
-        "source seed. Large labeled points average the three paired seeds; small "
-        "points show the seed-specific values. Inclusion tiers are shown in separate figures, "
+        "source seed. Every marker is the mean across the three paired source seeds, with "
+        "horizontal and vertical SEM bars. Inclusion tiers are shown in separate figures, "
         f"so secondary cohorts no longer obscure the {primary_n}-cohort inference. All {valid_n} valid cohorts "
         "remain included in the numerical sensitivity table. Species is descriptive rather than an inferential "
         "grouping because species, study, and task design are confounded.",
         "",
-        "### Primary + stress-test cohorts",
-        "",
-        "**E=4**",
-        "",
-        "![Primary plus stress-test cohorts: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress.png)",
-        "",
-        "**E=8**",
-        "",
-        "![Primary plus stress-test cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress_e8.png)",
-        "",
-        "This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse) "
-        "to the primary cohorts. It is displayed descriptively because this 11-cohort "
-        "combination was not a predeclared inferential tier.",
-        "",
-        "### All valid cohorts",
+        "### All valid cohorts (primary + stress-test)",
         "",
         "**E=4**",
         "",
@@ -1008,8 +935,10 @@ def _result_block(
         "",
         "![All valid cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid_e8.png)",
         "",
-        f"This cumulative sensitivity view reports the frozen {valid_n}-cohort all-valid "
-        "sensitivity relationships.",
+        f"This cumulative sensitivity view adds Alsiö (rat), Costa (macaque), and "
+        f"López-Yépez (mouse), for {valid_n} cohorts total. No descriptive-only cohort "
+        "remains after Tang (macaque) was removed, so primary + stress-test and all valid "
+        "are the same set and are shown only once.",
         "",
         "### R1-scale companion: normalized-likelihood difference",
         "",
@@ -1031,17 +960,7 @@ def _result_block(
         "",
         "![Primary cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_e8_r1_scale.png)",
         "",
-        "#### Primary + stress-test cohorts",
-        "",
-        "**E=4**",
-        "",
-        "![Primary plus stress-test cohorts on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_r1_scale.png)",
-        "",
-        "**E=8**",
-        "",
-        "![Primary plus stress-test cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png)",
-        "",
-        "#### All valid cohorts",
+        "#### All valid cohorts (primary + stress-test)",
         "",
         "**E=4**",
         "",
@@ -1080,25 +999,7 @@ def _result_block(
         "",
         "![Primary cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_e8_author_r1_scale.png)",
         "",
-        "#### Primary + stress-test cohorts",
-        "",
-        "**E=4, bits/trial**",
-        "",
-        "![Primary plus stress-test cohorts relative to author models](../fig_generalization_drivers_primary_plus_stress_author.png)",
-        "",
-        "**E=8, bits/trial**",
-        "",
-        "![Primary plus stress-test cohorts, E8, relative to author models](../fig_generalization_drivers_primary_plus_stress_e8_author.png)",
-        "",
-        "**E=4, normalized-likelihood difference**",
-        "",
-        "![Primary plus stress-test cohorts relative to author models on the R1 scale](../fig_generalization_drivers_primary_plus_stress_author_r1_scale.png)",
-        "",
-        "**E=8, normalized-likelihood difference**",
-        "",
-        "![Primary plus stress-test cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_primary_plus_stress_e8_author_r1_scale.png)",
-        "",
-        "#### All valid cohorts",
+        "#### All valid cohorts (primary + stress-test)",
         "",
         "**E=4, bits/trial**",
         "",
@@ -1167,17 +1068,7 @@ def _result_block(
         f"{scaling['spearman_rho']:+.3f} "
         f"(permutation p={scaling['permutation_p_two_sided']:.4f}).",
         "",
-        "### Primary + stress-test robustness and scaling",
-        "",
-        "**E=4**",
-        "",
-        "![Primary plus stress-test cohorts: robustness and source-population scaling](../fig_generalization_robustness_primary_plus_stress.png)",
-        "",
-        "**E=8**",
-        "",
-        "![Primary plus stress-test cohorts, E8: robustness](../fig_generalization_robustness_primary_plus_stress_e8.png)",
-        "",
-        "### All-valid robustness and scaling",
+        "### All-valid robustness and scaling (primary + stress-test)",
         "",
         "**E=4**",
         "",
@@ -1269,17 +1160,7 @@ def _result_block(
         f"with embedding displacement and ρ={full_performance_e8['spearman_rho']:+.3f} "
         "with GRU advantage.",
         "",
-        "### Primary + stress-test task-design view",
-        "",
-        "**E=4**",
-        "",
-        "![Primary plus stress-test cohorts: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_primary_plus_stress.png)",
-        "",
-        "**E=8**",
-        "",
-        "![Primary plus stress-test cohorts, E8: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_primary_plus_stress_e8.png)",
-        "",
-        "### All-valid task-design view",
+        "### All-valid task-design view (primary + stress-test)",
         "",
         "**E=4**",
         "",
@@ -1415,10 +1296,22 @@ def main() -> None:
     }
     expected = tuple(data_by_dimension[4]["contract"]["cohort_order"])
     for dimension, data in data_by_dimension.items():
+        task_data = task_data_by_dimension[dimension]
         if tuple(data["cohorts"]) != expected:
             raise AssertionError("Generalization-driver cohort order drifted")
+        if tuple(task_data["cohorts"]) != expected:
+            raise AssertionError("Task-design cohort order drifted")
         if int(data["contract"]["subject_embedding_size"]) != dimension:
             raise AssertionError("Generalization embedding-dimension contract drifted")
+        if int(task_data["contract"]["subject_embedding_size"]) != dimension:
+            raise AssertionError("Task-design embedding-dimension contract drifted")
+        if any(len(cohort["seeds"]) != 3 for cohort in data["cohorts"].values()):
+            raise AssertionError("Each cohort must contain exactly three source seeds")
+        if any(
+            data["cohorts"][name]["label"] != task_data["cohorts"][name]["label"]
+            for name in expected
+        ):
+            raise AssertionError("Generalization and task-design cohort labels drifted")
         if set(cohort["species"] for cohort in data["cohorts"].values()) != set(
             SPECIES_COLORS
         ):
@@ -1441,7 +1334,12 @@ def main() -> None:
         for view, output in robustness_figures.items():
             _plot_robustness(data, view, output)
         for view, output in task_figures.items():
-            _plot_task_design(task_data_by_dimension[dimension], view, output)
+            _plot_task_design(
+                task_data_by_dimension[dimension],
+                data,
+                view,
+                output,
+            )
     body = _result_block(data_by_dimension, task_data_by_dimension)
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
