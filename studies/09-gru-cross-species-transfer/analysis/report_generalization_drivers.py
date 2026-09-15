@@ -156,6 +156,22 @@ TIER_LEGEND_LABELS = {
     "descriptive_only": "Descriptive only",
 }
 
+AUTHOR_LABEL_OFFSETS = {
+    # Cohort-specific offsets keep the compact author-reference panels legible.
+    # Each tuple is (left, absolute-predictability, right) in display points.
+    "Beron (mouse)": ((4, -13), (4, 4), (4, -13)),
+    "Chen (mouse)": ((4, 8), (4, -12), (4, 8)),
+    "Costa (macaque)": ((4, 10), (4, -12), (4, 10)),
+    "Eckstein (human)": ((4, -13), (4, -12), (4, -13)),
+    "Findling (human)": ((4, -13), (4, 5), (4, -13)),
+    "Grossman (mouse)": ((4, 7), (4, 4), (4, 7)),
+    "Hattori (mouse)": ((4, 8), (4, -12), (4, 8)),
+    "Lebedeva (mouse)": ((4, -12), (4, 4), (4, -12)),
+    "López-Yépez (mouse)": ((4, 9), (4, -12), (4, 9)),
+    "Miller (rat)": ((4, 8), (4, 4), (4, 8)),
+    "Zid (human)": ((4, -11), (4, -12), (4, -11)),
+}
+
 
 def _summary(cohort: dict, key: str) -> float:
     return float(cohort["summary"][key]["mean"])
@@ -331,8 +347,7 @@ def _plot_main(
     reference_bits_key = f"{reference}_bits_above_chance"
     delta_bits_key = f"gru_d614_minus_{reference}_bits_per_trial"
 
-    author_offsets = ((4, 4), (4, 12), (4, -10), (4, 20), (4, -18))
-    for cohort_index, cohort in enumerate(cohorts):
+    for cohort in cohorts:
         color = SPECIES_COLORS[cohort["species"]]
         marker = TIER_MARKERS[cohort["analysis_tier"]]
         centroid = _seed_values(cohort, "embedding_centroid_mahalanobis")
@@ -353,9 +368,16 @@ def _plot_main(
             (axes[1], np.full(3, reference_likelihood), gru_likelihood),
             (axes[2], np.full(3, reference_predictability), delta),
         )
-        for axis, x, y in plot_values:
+        for panel_index, (axis, x, y) in enumerate(plot_values):
             plotter(axis, x, y, color, marker)
             is_r1_left_panel = r1_scale and axis is axes[0]
+            offset = (4, 4)
+            if reference == "author":
+                offset = AUTHOR_LABEL_OFFSETS.get(
+                    cohort["label"], ((4, 4), (4, 4), (4, 4))
+                )[panel_index]
+                if is_r1_left_panel and cohort["label"] == "Costa (macaque)":
+                    offset = (4, -24)
             _annotate(
                 axis,
                 x.mean(),
@@ -363,11 +385,7 @@ def _plot_main(
                 cohort["label"],
                 color=color if is_r1_left_panel else None,
                 rotation=30 if is_r1_left_panel else 0,
-                offset=(
-                    author_offsets[cohort_index % len(author_offsets)]
-                    if reference == "author"
-                    else (4, 4)
-                ),
+                offset=offset,
             )
 
     relation = (

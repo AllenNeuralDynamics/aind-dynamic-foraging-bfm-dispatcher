@@ -22,3 +22,18 @@ not include it. One matched-half parameter set per subject replaces the paper's
 separate phase-, schedule-, and session-specific fits. The model uses the same
 real-session reset convention as Bari2019 and GRU rather than the paper's more
 flexible phase-, schedule-, and session-specific protocol.
+
+## Mechanism checks
+
+- A fresh Bari2019 common-Q rerun reproduced the previous pooled held-out
+  normalized likelihood exactly: **0.6310437182** (`26386210_7`, run
+  `im1e7wb5`). This rules out a lucky or stale common-Q fit.
+- Adding the Bari-style CK1 term to the bias-augmented Costa model improved
+  normalized likelihood from **0.5851518426** to **0.6122294730**
+  (`26386211`, run `7xjez5i7`). It remains below both Bari2019 common Q
+  (**0.6310437182**) and the E4 GRU D=614 mean (approximately **0.6286**).
+
+The CK1 result is a declared sensitivity analysis, not the author-selected
+Costa reference. The main author comparison remains the dual-rate model with a
+fitted bias; the paper equations omit that bias, but the fair matched-half
+comparison requires allowing a stable side preference.

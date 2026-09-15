@@ -13,13 +13,13 @@ wandb_groups:
   - gru-beron-matched-half@20260905-232924
   - gru-miller-matched-half@20260905-232924
   - gru-findling-matched-half@20260905-232924
-  - gru-tang-matched-half@20260905-232924
   - gru-alsio-matched-half@20260905-232925
   - gru-eckstein-matched-half@20260905-232924
-  - gru-costa-matched-half@20260905-232924
+  - gru-costa-matched-half@20260914-162457
   - gru-lopez-mouse-matched-half@20260905-232924
   - q-matched-half@20260905-024031
   - q-expanded-matched-half@20260906-001656
+  - q-expanded-matched-half@slurm-26386210
   - e4-e8-d614-source@20260906-195409
   - gru-e8-d614-diagnostic@20260907-071400
   - gru-e8-d614-expansion@20260907-132415
@@ -27,6 +27,22 @@ wandb_groups:
   - gru-hattori-matched-half@20260907-200329
   - gru-hattori-matched-half@20260907-200328
   - q-hattori-matched-half@slurm-25585753
+  - grossman-meta-learning@20260905-124420
+  - chen-rlck@20260905-123624
+  - zid-history-kernel@20260905-123624
+  - zid-history-kernel@20260905-151851
+  - lebedeva-pr@slurm-25582232
+  - beron-rflr@slurm-25582233
+  - miller-rhg@slurm-25582234
+  - findling-weber@slurm-25582235
+  - findling-weber@slurm-25582241
+  - eckstein-rl@slurm-25582239
+  - eckstein-bi@slurm-25582240
+  - hattori-q-learning@slurm-25585754
+  - lopez-double-trace@slurm-26383278
+  - alsio-dual-rate-sticky@slurm-26383281
+  - costa-feedback-dependent-bias@slurm-26386087
+  - costa-feedback-dependent-bias-ck1@slurm-26386211
 inputs:
   scripts:
     - analysis/freeze_generalization_drivers.py
@@ -38,6 +54,7 @@ inputs:
     - analysis/task_design_annotations.json
     - analysis/task_design_features.json
     - analysis/matched_half_results.json
+    - analysis/author_baseline_results.json
     - analysis/embedding_space_results.json
     - analysis/embedding_space_results_e8.json
     - analysis/embedding_dimension_results.json
@@ -56,6 +73,18 @@ inputs:
     - analysis/fig_generalization_drivers_e8_r1_scale.png
     - analysis/fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png
     - analysis/fig_generalization_drivers_all_valid_e8_r1_scale.png
+    - analysis/fig_generalization_drivers_author.png
+    - analysis/fig_generalization_drivers_primary_plus_stress_author.png
+    - analysis/fig_generalization_drivers_all_valid_author.png
+    - analysis/fig_generalization_drivers_e8_author.png
+    - analysis/fig_generalization_drivers_primary_plus_stress_e8_author.png
+    - analysis/fig_generalization_drivers_all_valid_e8_author.png
+    - analysis/fig_generalization_drivers_author_r1_scale.png
+    - analysis/fig_generalization_drivers_primary_plus_stress_author_r1_scale.png
+    - analysis/fig_generalization_drivers_all_valid_author_r1_scale.png
+    - analysis/fig_generalization_drivers_e8_author_r1_scale.png
+    - analysis/fig_generalization_drivers_primary_plus_stress_e8_author_r1_scale.png
+    - analysis/fig_generalization_drivers_all_valid_e8_author_r1_scale.png
     - analysis/fig_generalization_robustness.png
     - analysis/fig_generalization_robustness_primary_plus_stress.png
     - analysis/fig_generalization_robustness_all_valid.png
@@ -76,7 +105,7 @@ reproduce: make -C studies/09-gru-cross-species-transfer r3
 This result compares E=4 and E=8 D=614 GRU improvement over the matched Bari2019 common-Q
 baseline against dimension-specific external-cohort embedding displacement,
 baseline predictability, an auditable categorical task-design matrix, and
-empirical reward-schedule distance. It uses all 13 valid Stage-A cohorts for
+empirical reward-schedule distance. It uses all 12 valid Stage-A cohorts for
 categorical analyses and the seven primary cohorts with complete trial-wise arm
 probabilities for schedule analyses. The invalid cross-treatment Kwak (mouse)
 result remains quarantined.
@@ -96,7 +125,7 @@ result remains quarantined.
 
 ![Primary cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_e8.png)
 
-Primary inference uses 9 equal-weight cross-study cohorts. Performance is the arithmetic mean held-out log likelihood across subjects, converted to bits per trial. Embedding distance is calculated separately in the full E=4 or E=8 space for each source seed. Large labeled points average the three paired seeds; small points show the seed-specific values. Inclusion tiers are shown in separate figures, so secondary cohorts no longer obscure the 9-cohort inference. All 13 valid cohorts remain included in the numerical sensitivity table. Species is descriptive rather than an inferential grouping because species, study, and task design are confounded.
+Primary inference uses 9 equal-weight cross-study cohorts. Performance is the arithmetic mean held-out log likelihood across subjects, converted to bits per trial. Embedding distance is calculated separately in the full E=4 or E=8 space for each source seed. Large labeled points average the three paired seeds; small points show the seed-specific values. Inclusion tiers are shown in separate figures, so secondary cohorts no longer obscure the 9-cohort inference. All 12 valid cohorts remain included in the numerical sensitivity table. Species is descriptive rather than an inferential grouping because species, study, and task design are confounded.
 
 ### Primary + stress-test cohorts
 
@@ -120,7 +149,7 @@ This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mous
 
 ![All valid cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid_e8.png)
 
-This cumulative sensitivity view reports the frozen 13-cohort all-valid sensitivity relationships.
+This cumulative sensitivity view reports the frozen 12-cohort all-valid sensitivity relationships.
 
 ### R1-scale companion: normalized-likelihood difference
 
@@ -156,6 +185,66 @@ These descriptive companion plots use the same normalized-likelihood units as Re
 
 ![All valid cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_all_valid_e8_r1_scale.png)
 
+### Author-model companion
+
+These panels repeat the same cross-cohort views with GRU minus the strongest model marked `author_selected` for each cohort. When a paper has multiple author-selected co-winners, the stronger trial-pooled held-out refit is used as a conservative comparator. Sensitivity-only models are excluded: Costa (macaque) therefore uses dual-rate RL plus fitted shape-choice bias, while the additional CK1 model remains a separately labeled mechanism sensitivity in Result 1. Alsiö (rat) has no cohort-aligned author model and is omitted from author-reference panels.
+
+#### Primary-inference cohorts
+
+**E=4, bits/trial**
+
+![Primary cohorts relative to author models](../fig_generalization_drivers_author.png)
+
+**E=8, bits/trial**
+
+![Primary cohorts, E8, relative to author models](../fig_generalization_drivers_e8_author.png)
+
+**E=4, normalized-likelihood difference**
+
+![Primary cohorts relative to author models on the R1 scale](../fig_generalization_drivers_author_r1_scale.png)
+
+**E=8, normalized-likelihood difference**
+
+![Primary cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_e8_author_r1_scale.png)
+
+#### Primary + stress-test cohorts
+
+**E=4, bits/trial**
+
+![Primary plus stress-test cohorts relative to author models](../fig_generalization_drivers_primary_plus_stress_author.png)
+
+**E=8, bits/trial**
+
+![Primary plus stress-test cohorts, E8, relative to author models](../fig_generalization_drivers_primary_plus_stress_e8_author.png)
+
+**E=4, normalized-likelihood difference**
+
+![Primary plus stress-test cohorts relative to author models on the R1 scale](../fig_generalization_drivers_primary_plus_stress_author_r1_scale.png)
+
+**E=8, normalized-likelihood difference**
+
+![Primary plus stress-test cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_primary_plus_stress_e8_author_r1_scale.png)
+
+#### All valid cohorts
+
+**E=4, bits/trial**
+
+![All valid cohorts relative to author models](../fig_generalization_drivers_all_valid_author.png)
+
+**E=8, bits/trial**
+
+![All valid cohorts, E8, relative to author models](../fig_generalization_drivers_all_valid_e8_author.png)
+
+**E=4, normalized-likelihood difference**
+
+![All valid cohorts relative to author models on the R1 scale](../fig_generalization_drivers_all_valid_author_r1_scale.png)
+
+**E=8, normalized-likelihood difference**
+
+![All valid cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_all_valid_e8_author_r1_scale.png)
+
+Across the primary cohorts with author references, GRU-minus-author advantage versus embedding-centroid distance has Spearman ρ=-0.600 for E=4 and ρ=-0.483 for E=8. The mathematically coupled GRU-minus-author versus author-predictability relationships are ρ=+0.150 and ρ=+0.183, respectively.
+
 For E=4, the D=614 GRU has higher subject-balanced mean log likelihood than Bari2019 common Q in 5 cohorts (Grossman (mouse), Chen (mouse), Zid (human), Lebedeva (mouse), Hattori (mouse)) and lower mean log likelihood in 4 (Beron (mouse), Miller (rat), Findling (human), Eckstein (human)). This direction summary does not replace the paired subject tests in Result 1.
 
 The additive log-score estimand is primary for cross-task comparison. Zid (human) is the only direction reversal under the mean subject normalized-likelihood difference: its log-score difference is positive, whereas its mean normalized-likelihood difference is negative, consistent with Result 1. Both values are retained below.
@@ -175,7 +264,7 @@ The identity plot is the primary view of baseline predictability. The right pane
 
 ![Primary cohorts, E8: robustness](../fig_generalization_robustness_e8.png)
 
-Median individual-subject embedding distance tests whether the centroid result is hiding a dispersed or bimodal cohort. The scaling panel asks whether increasing the source population from D=10 to D=614 helps cohorts that land farther from the source embedding distribution. Its cross-cohort Spearman ρ is +0.217 (permutation p=0.5563).
+Median individual-subject embedding distance tests whether the centroid result is hiding a dispersed or bimodal cohort. The scaling panel asks whether increasing the source population from D=10 to D=614 helps cohorts that land farther from the source embedding distribution. Its cross-cohort Spearman ρ is +0.217 (permutation p=0.5511).
 
 ### Primary + stress-test robustness and scaling
 
@@ -201,34 +290,32 @@ E8 was run only at D=614, so the source-population scaling panel is available on
 
 ### Valid cohort estimates
 
-| space | cohort | tier | subjects | Bari2019 likelihood | GRU614 likelihood | GRU614−Bari2019 bits/trial | mean subject Δ likelihood | centroid distance | median subject distance | GRU614−GRU10 bits/trial |
-|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| E=4 | Grossman (mouse) | primary | 48 | 0.7341 | 0.7483 | +0.0276 | +0.0139 | 0.58 | 2.44 | +0.0148 |
-| E=4 | Chen (mouse) | primary | 32 | 0.5861 | 0.5914 | +0.0131 | +0.0053 | 7.13 | 8.51 | +0.0225 |
-| E=4 | Zid (human) | primary | 258 | 0.7043 | 0.7136 | +0.0190 | -0.0015 | 7.09 | 10.46 | +0.0103 |
-| E=4 | Lebedeva (mouse) | primary | 10 | 0.7507 | 0.7600 | +0.0179 | +0.0094 | 2.15 | 2.78 | +0.0142 |
-| E=4 | Beron (mouse) | primary | 6 | 0.8227 | 0.8214 | -0.0023 | -0.0013 | 2.49 | 2.64 | +0.0092 |
-| E=4 | Miller (rat) | primary | 20 | 0.6104 | 0.6011 | -0.0222 | -0.0093 | 5.91 | 5.67 | +0.0108 |
-| E=4 | Findling (human) | primary | 22 | 0.6907 | 0.6546 | -0.0776 | -0.0372 | 7.87 | 8.06 | +0.0323 |
-| E=4 | Tang (macaque) | descriptive only | 2 | 0.5547 | 0.5542 | -0.0012 | -0.0005 | 2.81 | 2.85 | +0.0052 |
-| E=4 | Alsiö (rat) | stress test | 95 | 0.5297 | 0.5303 | +0.0015 | +0.0007 | 8.08 | 8.88 | +0.0510 |
-| E=4 | Eckstein (human) | primary | 306 | 0.6315 | 0.6259 | -0.0128 | -0.0180 | 10.21 | 10.87 | +0.0134 |
-| E=4 | Costa (macaque) | stress test | 11 | 0.6239 | 0.6218 | -0.0049 | -0.0027 | 2.50 | 2.45 | +0.0076 |
-| E=4 | López-Yépez (mouse) | stress test | 8 | 0.5272 | 0.5747 | +0.1243 | +0.0472 | 11.21 | 12.54 | +0.0976 |
-| E=4 | Hattori (mouse) | primary | 7 | 0.5625 | 0.5722 | +0.0247 | +0.0097 | 4.45 | 4.60 | +0.0165 |
-| E=8 | Grossman (mouse) | primary | 48 | 0.7341 | 0.7478 | +0.0267 | +0.0134 | 0.89 | 3.89 | — |
-| E=8 | Chen (mouse) | primary | 32 | 0.5861 | 0.5935 | +0.0183 | +0.0074 | 11.77 | 14.86 | — |
-| E=8 | Zid (human) | primary | 258 | 0.7043 | 0.7100 | +0.0116 | -0.0046 | 13.25 | 20.21 | — |
-| E=8 | Lebedeva (mouse) | primary | 10 | 0.7507 | 0.7603 | +0.0185 | +0.0097 | 2.83 | 3.58 | — |
-| E=8 | Beron (mouse) | primary | 6 | 0.8227 | 0.8242 | +0.0026 | +0.0015 | 4.82 | 5.31 | — |
-| E=8 | Miller (rat) | primary | 20 | 0.6104 | 0.6052 | -0.0122 | -0.0052 | 9.76 | 8.99 | — |
-| E=8 | Findling (human) | primary | 22 | 0.6907 | 0.6649 | -0.0549 | -0.0265 | 14.38 | 14.83 | — |
-| E=8 | Tang (macaque) | descriptive only | 2 | 0.5547 | 0.5572 | +0.0065 | +0.0024 | 8.40 | 8.77 | — |
-| E=8 | Alsiö (rat) | stress test | 95 | 0.5297 | 0.5316 | +0.0052 | +0.0020 | 13.25 | 14.48 | — |
-| E=8 | Eckstein (human) | primary | 306 | 0.6315 | 0.6308 | -0.0015 | -0.0138 | 16.90 | 19.85 | — |
-| E=8 | Costa (macaque) | stress test | 11 | 0.6239 | 0.6252 | +0.0029 | +0.0010 | 5.40 | 5.93 | — |
-| E=8 | López-Yépez (mouse) | stress test | 8 | 0.5272 | 0.5889 | +0.1597 | +0.0616 | 18.47 | 22.19 | — |
-| E=8 | Hattori (mouse) | primary | 7 | 0.5625 | 0.5719 | +0.0239 | +0.0094 | 5.25 | 5.70 | — |
+| space | cohort | tier | subjects | Bari2019 likelihood | GRU614 likelihood | GRU614−Bari2019 bits/trial | mean subject Δ likelihood | author reference | author likelihood | GRU614−author bits/trial | centroid distance | median subject distance | GRU614−GRU10 bits/trial |
+|---|---|---|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|
+| E=4 | Grossman (mouse) | primary | 48 | 0.7341 | 0.7483 | +0.0276 | +0.0139 | grossman-meta-learning | 0.7323 | +0.0311 | 0.58 | 2.44 | +0.0148 |
+| E=4 | Chen (mouse) | primary | 32 | 0.5861 | 0.5914 | +0.0131 | +0.0053 | chen-rlck | 0.5901 | +0.0033 | 7.13 | 8.51 | +0.0225 |
+| E=4 | Zid (human) | primary | 258 | 0.7043 | 0.7136 | +0.0190 | -0.0015 | zid-history-kernel-foraging | 0.6831 | +0.0632 | 7.09 | 10.46 | +0.0103 |
+| E=4 | Lebedeva (mouse) | primary | 10 | 0.7507 | 0.7600 | +0.0179 | +0.0094 | lebedeva-pr | 0.7554 | +0.0088 | 2.15 | 2.78 | +0.0142 |
+| E=4 | Beron (mouse) | primary | 6 | 0.8227 | 0.8214 | -0.0023 | -0.0013 | beron-rflr | 0.8208 | +0.0010 | 2.49 | 2.64 | +0.0092 |
+| E=4 | Miller (rat) | primary | 20 | 0.6104 | 0.6011 | -0.0222 | -0.0093 | miller-rhg | 0.6174 | -0.0386 | 5.91 | 5.67 | +0.0108 |
+| E=4 | Findling (human) | primary | 22 | 0.6907 | 0.6546 | -0.0776 | -0.0372 | findling-weber-imprecision | 0.6737 | -0.0417 | 7.87 | 8.06 | +0.0323 |
+| E=4 | Alsiö (rat) | stress test | 95 | 0.5297 | 0.5303 | +0.0015 | +0.0007 | — | — | — | 8.08 | 8.88 | +0.0510 |
+| E=4 | Eckstein (human) | primary | 306 | 0.6315 | 0.6259 | -0.0128 | -0.0180 | eckstein-bi | 0.6597 | -0.0759 | 10.21 | 10.87 | +0.0134 |
+| E=4 | Costa (macaque) | stress test | 11 | 0.6239 | 0.6218 | -0.0049 | -0.0027 | costa-feedback-dependent | 0.5789 | +0.1033 | 2.50 | 2.45 | +0.0076 |
+| E=4 | López-Yépez (mouse) | stress test | 8 | 0.5272 | 0.5747 | +0.1243 | +0.0472 | lopez-double-trace | 0.6135 | -0.0944 | 11.21 | 12.54 | +0.0976 |
+| E=4 | Hattori (mouse) | primary | 7 | 0.5625 | 0.5722 | +0.0247 | +0.0097 | hattori-q-learning | 0.5609 | +0.0288 | 4.45 | 4.60 | +0.0165 |
+| E=8 | Grossman (mouse) | primary | 48 | 0.7341 | 0.7478 | +0.0267 | +0.0134 | grossman-meta-learning | 0.7323 | +0.0302 | 0.89 | 3.89 | — |
+| E=8 | Chen (mouse) | primary | 32 | 0.5861 | 0.5935 | +0.0183 | +0.0074 | chen-rlck | 0.5901 | +0.0084 | 11.77 | 14.86 | — |
+| E=8 | Zid (human) | primary | 258 | 0.7043 | 0.7100 | +0.0116 | -0.0046 | zid-history-kernel-foraging | 0.6831 | +0.0557 | 13.25 | 20.21 | — |
+| E=8 | Lebedeva (mouse) | primary | 10 | 0.7507 | 0.7603 | +0.0185 | +0.0097 | lebedeva-pr | 0.7554 | +0.0094 | 2.83 | 3.58 | — |
+| E=8 | Beron (mouse) | primary | 6 | 0.8227 | 0.8242 | +0.0026 | +0.0015 | beron-rflr | 0.8208 | +0.0059 | 4.82 | 5.31 | — |
+| E=8 | Miller (rat) | primary | 20 | 0.6104 | 0.6052 | -0.0122 | -0.0052 | miller-rhg | 0.6174 | -0.0287 | 9.76 | 8.99 | — |
+| E=8 | Findling (human) | primary | 22 | 0.6907 | 0.6649 | -0.0549 | -0.0265 | findling-weber-imprecision | 0.6737 | -0.0190 | 14.38 | 14.83 | — |
+| E=8 | Alsiö (rat) | stress test | 95 | 0.5297 | 0.5316 | +0.0052 | +0.0020 | — | — | — | 13.25 | 14.48 | — |
+| E=8 | Eckstein (human) | primary | 306 | 0.6315 | 0.6308 | -0.0015 | -0.0138 | eckstein-bi | 0.6597 | -0.0646 | 16.90 | 19.85 | — |
+| E=8 | Costa (macaque) | stress test | 11 | 0.6239 | 0.6252 | +0.0029 | +0.0010 | costa-feedback-dependent | 0.5789 | +0.1111 | 5.40 | 5.93 | — |
+| E=8 | López-Yépez (mouse) | stress test | 8 | 0.5272 | 0.5889 | +0.1597 | +0.0616 | lopez-double-trace | 0.6135 | -0.0591 | 18.47 | 22.19 | — |
+| E=8 | Hattori (mouse) | primary | 7 | 0.5625 | 0.5719 | +0.0239 | +0.0094 | hattori-q-learning | 0.5609 | +0.0280 | 5.25 | 5.70 | — |
 
 Normalized likelihoods in this table are `exp(mean subject log likelihood)`, not trial-pooled values. This prevents large cohorts or long sessions from dominating a cross-study comparison.
 
@@ -239,7 +326,9 @@ Normalized likelihoods in this table are `exp(mean subject log likelihood)`, not
 | GRU614−Q vs embedding centroid distance | 9 | -0.633 | [-0.98, +0.05] | 0.0776 | [-0.74, -0.48] |
 | GRU614−Q vs median subject embedding distance | 9 | -0.400 | [-0.89, +0.42] | 0.2903 | [-0.60, -0.14] |
 | GRU614−Bari2019 vs Bari2019 predictability† | 9 | +0.083 | [-0.72, +0.70] | 0.8088 | [-0.12, +0.40] |
-| GRU614−GRU10 vs embedding centroid distance | 9 | +0.217 | [-0.58, +0.86] | 0.5563 | [+0.00, +0.43] |
+| GRU614−author vs embedding centroid distance | 9 | -0.600 | [-1.00, +0.19] | 0.0974 | [-0.83, -0.43] |
+| GRU614−author vs author predictability† | 9 | +0.150 | [-0.63, +0.67] | 0.7081 | [+0.00, +0.38] |
+| GRU614−GRU10 vs embedding centroid distance | 9 | +0.217 | [-0.59, +0.88] | 0.5511 | [+0.00, +0.43] |
 
 ### Primary cross-cohort inference — E=8
 
@@ -248,6 +337,8 @@ Normalized likelihoods in this table are `exp(mean subject log likelihood)`, not
 | GRU614−Q vs embedding centroid distance | 9 | -0.700 | [-0.98, -0.08] | 0.0432 | [-0.79, -0.57] |
 | GRU614−Q vs median subject embedding distance | 9 | -0.483 | [-0.86, +0.24] | 0.1774 | [-0.60, -0.31] |
 | GRU614−Bari2019 vs Bari2019 predictability† | 9 | +0.050 | [-0.74, +0.72] | 0.9124 | [-0.19, +0.36] |
+| GRU614−author vs embedding centroid distance | 9 | -0.483 | [-0.98, +0.37] | 0.1776 | [-0.79, -0.26] |
+| GRU614−author vs author predictability† | 9 | +0.183 | [-0.59, +0.75] | 0.6132 | [+0.05, +0.43] |
 
 ### All-valid sensitivity — E=4
 
@@ -255,18 +346,22 @@ This sensitivity adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse). 
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs embedding centroid distance | 13 | -0.121 | [-0.74, +0.53] | 0.6981 | [-0.43, +0.03] |
-| GRU614−Q vs median subject embedding distance | 13 | +0.049 | [-0.61, +0.69] | 0.8631 | [-0.21, +0.25] |
-| GRU614−Bari2019 vs Bari2019 predictability† | 13 | -0.165 | [-0.72, +0.45] | 0.5901 | [-0.33, +0.06] |
-| GRU614−GRU10 vs embedding centroid distance | 13 | +0.555 | [-0.06, +0.91] | 0.0512 | [+0.43, +0.67] |
+| GRU614−Q vs embedding centroid distance | 12 | -0.154 | [-0.80, +0.50] | 0.6357 | [-0.50, +0.00] |
+| GRU614−Q vs median subject embedding distance | 12 | +0.035 | [-0.66, +0.69] | 0.9024 | [-0.25, +0.25] |
+| GRU614−Bari2019 vs Bari2019 predictability† | 12 | -0.161 | [-0.74, +0.51] | 0.6011 | [-0.33, +0.09] |
+| GRU614−author vs embedding centroid distance | 11 | -0.673 | [-0.97, -0.06] | 0.0280 | [-0.81, -0.56] |
+| GRU614−author vs author predictability† | 11 | -0.045 | [-0.66, +0.62] | 0.9036 | [-0.18, +0.24] |
+| GRU614−GRU10 vs embedding centroid distance | 12 | +0.545 | [-0.09, +0.94] | 0.0666 | [+0.41, +0.69] |
 
 ### All-valid sensitivity — E=8
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs embedding centroid distance | 13 | -0.253 | [-0.84, +0.44] | 0.4040 | [-0.59, -0.13] |
-| GRU614−Q vs median subject embedding distance | 13 | -0.115 | [-0.72, +0.55] | 0.7095 | [-0.42, +0.03] |
-| GRU614−Bari2019 vs Bari2019 predictability† | 13 | -0.209 | [-0.75, +0.47] | 0.4908 | [-0.38, +0.01] |
+| GRU614−Q vs embedding centroid distance | 12 | -0.245 | [-0.87, +0.48] | 0.4278 | [-0.62, -0.12] |
+| GRU614−Q vs median subject embedding distance | 12 | -0.098 | [-0.72, +0.59] | 0.7657 | [-0.43, +0.05] |
+| GRU614−Bari2019 vs Bari2019 predictability† | 12 | -0.224 | [-0.80, +0.47] | 0.4824 | [-0.41, +0.01] |
+| GRU614−author vs embedding centroid distance | 11 | -0.573 | [-0.91, +0.09] | 0.0669 | [-0.75, -0.44] |
+| GRU614−author vs author predictability† | 11 | -0.045 | [-0.66, +0.63] | 0.9050 | [-0.18, +0.24] |
 
 † The Bari2019 relationship shares the same baseline between the horizontal axis and the GRU-minus-Bari2019 vertical axis. Its correlation is not an independent test of whether intrinsically easier tasks transfer better.
 
@@ -313,11 +408,11 @@ For E=8, task-structure distance has ρ=+0.645 with embedding displacement and �
 |---|---|---:|---:|---:|---:|---:|---:|
 | E=4 | Mouse | 6 | +0.0342 | +0.0213 | [-0.0023, +0.1243] | 4.67 | 0.21 |
 | E=4 | Rat | 2 | -0.0103 | -0.0103 | [-0.0222, +0.0015] | 6.99 | 0.38 |
-| E=4 | Macaque | 2 | -0.0030 | -0.0030 | [-0.0049, -0.0012] | 2.66 | 0.38 |
+| E=4 | Macaque | 1 | -0.0049 | -0.0049 | [-0.0049, -0.0049] | 2.50 | 0.50 |
 | E=4 | Human | 3 | -0.0238 | -0.0128 | [-0.0776, +0.0190] | 8.39 | 0.42 |
 | E=8 | Mouse | 6 | +0.0416 | +0.0212 | [+0.0026, +0.1597] | 7.34 | 0.21 |
 | E=8 | Rat | 2 | -0.0035 | -0.0035 | [-0.0122, +0.0052] | 11.50 | 0.38 |
-| E=8 | Macaque | 2 | +0.0047 | +0.0047 | [+0.0029, +0.0065] | 6.90 | 0.38 |
+| E=8 | Macaque | 1 | +0.0029 | +0.0029 | [+0.0029, +0.0029] | 5.40 | 0.50 |
 | E=8 | Human | 3 | -0.0149 | -0.0015 | [-0.0549, +0.0116] | 14.84 | 0.42 |
 
 These are equal-cohort descriptive summaries, not species effects. Each species is represented by only two to six studies, and task design differs systematically by species. In particular, a species contrast would currently relabel the same design and apparatus contrasts rather than isolate biology.
@@ -336,7 +431,6 @@ For E=8, schedule distance versus GRU advantage is ρ=-0.393 (p=0.3956), while s
 | [Beron (mouse)](https://pmc.ncbi.nlm.nih.gov/articles/PMC9169659/) | primary | blockwise | coupled | no | spatial action | freely moving | nose poke | water | 0.25 | 0.43 |
 | [Miller (rat)](https://www.biorxiv.org/content/10.1101/461129v3) | primary | random walk | independent | no | spatial action | freely moving | nose poke | liquid food | 0.25 | 0.57 |
 | [Findling (human)](https://pmc.ncbi.nlm.nih.gov/articles/PMC12728203/) | primary | blockwise | coupled | no | visual stimulus | laboratory | handheld button | monetary points | 0.50 | 0.71 |
-| [Tang (macaque)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7873307/) | descriptive only | blockwise | coupled | no | spatial action, visual stimulus | head fixed | saccade | juice | 0.25 | 0.43 |
 | [Alsiö (rat)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6695374/) | stress test | criterion reversal | coupled | no | spatial action, visual stimulus | freely moving | touchscreen | food pellet | 0.50 | 0.71 |
 | [Eckstein (human)](https://pmc.ncbi.nlm.nih.gov/articles/PMC9108470/) | primary | blockwise | coupled | no | spatial action | laboratory | keyboard | monetary points | 0.25 | 0.57 |
 | [Costa (macaque)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5074688/) | stress test | blockwise | coupled | no | visual stimulus | head fixed | saccade | juice | 0.50 | 0.57 |
@@ -385,19 +479,19 @@ Every metric is computed using only within-session transitions. Subjects are sum
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs task-structure distance | 13 | -0.215 | [-0.81, +0.46] | 0.4803 (monte_carlo) | [-0.46, -0.06] |
-| embedding vs task-structure distance | 13 | +0.529 | [+0.00, +0.87] | 0.0659 (monte_carlo) | [+0.40, +0.67] |
-| GRU614−Q vs full-design distance | 13 | -0.399 | [-0.87, +0.17] | 0.1764 (monte_carlo) | [-0.55, -0.28] |
-| embedding vs full-design distance | 13 | +0.704 | [+0.30, +0.92] | 0.0084 (monte_carlo) | [+0.64, +0.75] |
+| GRU614−Q vs task-structure distance | 12 | -0.230 | [-0.83, +0.47] | 0.4664 (monte_carlo) | [-0.49, -0.07] |
+| embedding vs task-structure distance | 12 | +0.544 | [+0.00, +0.88] | 0.0710 (monte_carlo) | [+0.41, +0.68] |
+| GRU614−Q vs full-design distance | 12 | -0.436 | [-0.89, +0.15] | 0.1589 (monte_carlo) | [-0.58, -0.32] |
+| embedding vs full-design distance | 12 | +0.681 | [+0.18, +0.93] | 0.0169 (monte_carlo) | [+0.60, +0.75] |
 
 ### All-valid categorical sensitivity — E=8
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs task-structure distance | 13 | -0.281 | [-0.83, +0.38] | 0.3535 (monte_carlo) | [-0.53, -0.14] |
-| embedding vs task-structure distance | 13 | +0.642 | [+0.16, +0.91] | 0.0215 (monte_carlo) | [+0.54, +0.76] |
-| GRU614−Q vs full-design distance | 13 | -0.496 | [-0.89, +0.03] | 0.0870 (monte_carlo) | [-0.62, -0.39] |
-| embedding vs full-design distance | 13 | +0.781 | [+0.37, +0.95] | 0.0020 (monte_carlo) | [+0.73, +0.84] |
+| GRU614−Q vs task-structure distance | 12 | -0.268 | [-0.84, +0.42] | 0.3954 (monte_carlo) | [-0.53, -0.12] |
+| embedding vs task-structure distance | 12 | +0.646 | [+0.15, +0.91] | 0.0272 (monte_carlo) | [+0.54, +0.78] |
+| GRU614−Q vs full-design distance | 12 | -0.501 | [-0.90, +0.09] | 0.0997 (monte_carlo) | [-0.61, -0.39] |
+| embedding vs full-design distance | 12 | +0.750 | [+0.26, +0.95] | 0.0063 (monte_carlo) | [+0.68, +0.83] |
 
 ### Individual schedule-feature screen
 
@@ -424,7 +518,7 @@ No individual schedule feature survives the eight-feature FDR correction. The co
 
 ## What this version can and cannot answer
 
-Embedding distance is measured after embedding-only adaptation, so it can reflect both task structure and cohort behavior. Species, study, apparatus, reward schedule, and data volume remain confounded, and even the 13-cohort sensitivity set is too small for a causal species effect or a stable multivariable regression. Species colors are descriptive only.
+Embedding distance is measured after embedding-only adaptation, so it can reflect both task structure and cohort behavior. Species, study, apparatus, reward schedule, and data volume remain confounded, and even the 12-cohort sensitivity set is too small for a causal species effect or a stable multivariable regression. Species colors are descriptive only.
 
 ### Quarantined result
 

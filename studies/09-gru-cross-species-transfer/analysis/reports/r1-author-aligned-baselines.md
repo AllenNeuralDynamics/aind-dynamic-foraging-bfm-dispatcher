@@ -12,13 +12,13 @@ wandb_groups:
   - gru-kwak-matched-half@20260906-071413
   - gru-miller-matched-half@20260905-232924
   - gru-findling-matched-half@20260905-232924
-  - gru-tang-matched-half@20260905-232924
   - gru-alsio-matched-half@20260905-232925
   - gru-eckstein-matched-half@20260905-232924
-  - gru-costa-matched-half@20260905-232924
+  - gru-costa-matched-half@20260914-162457
   - gru-lopez-mouse-matched-half@20260905-232924
   - q-matched-half@20260905-024031
   - q-expanded-matched-half@20260906-001656
+  - q-expanded-matched-half@slurm-26386210
   - q-expanded-matched-half@20260906-kwak-choicefix
   - grossman-meta-learning@20260905-124420
   - chen-rlck@20260905-123624
@@ -39,6 +39,10 @@ wandb_groups:
   - gru-hattori-matched-half@20260907-200328
   - q-hattori-matched-half@slurm-25585753
   - hattori-q-learning@slurm-25585754
+  - lopez-double-trace@slurm-26383278
+  - alsio-dual-rate-sticky@slurm-26383281
+  - costa-feedback-dependent-bias@slurm-26386087
+  - costa-feedback-dependent-bias-ck1@slurm-26386211
 inputs:
   script: analysis/report_author_baselines.py
   data:
@@ -76,9 +80,6 @@ inputs:
     - analysis/fig_example_sessions_findling_lower.png
     - analysis/fig_example_sessions_findling_median.png
     - analysis/fig_example_sessions_findling_upper.png
-    - analysis/fig_example_sessions_tang_lower.png
-    - analysis/fig_example_sessions_tang_median.png
-    - analysis/fig_example_sessions_tang_upper.png
     - analysis/fig_example_sessions_alsio_lower.png
     - analysis/fig_example_sessions_alsio_median.png
     - analysis/fig_example_sessions_alsio_upper.png
@@ -111,7 +112,7 @@ particle-count sensitivity and the paper comparators retained from round one.
 
 ![GRU, Bari2019 common Q, and available author baselines](../fig_author_baseline_likelihood.png)
 
-Every model uses the same immutable adaptation and held-out observations. Panels are grouped as primary, stress test, and descriptive, then ordered within each tier by descending E4 D=614 GRU advantage over the strongest available author-selected model. Stress-test and descriptive cohorts without a reproduced author model use Bari2019 common Q as the ordering reference. Panel-title color encodes species using the same palette as the task-design figures. Light-blue GRU points and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now appear for every displayed cohort. The five-cohort diagnostic E8 values have a paired current-code E4 comparator in Result 4. Of the eight expansion values, seven use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. GRU points are the three source-training seeds; summaries are their mean ± SD. The common Q baseline is the Bari2019 preset and is fitted independently per target subject on the identical adaptation half. Author-model lines include the existing Grossman (mouse), Chen (mouse), and Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) co-winners, Hattori2019 for Hattori (mouse), double-trace RL for López-Yépez (mouse), and feedback-dependent RL for Costa (macaque). Alsiö (rat) is shown as a dotted cohort-mismatched author-model sensitivity.
+Every model uses the same immutable adaptation and held-out observations. Panels are grouped as primary, stress test, and descriptive, then ordered within each tier by descending E4 D=614 GRU advantage over the strongest available author-selected model. Stress-test and descriptive cohorts without a reproduced author model use Bari2019 common Q as the ordering reference. Panel-title color encodes species using the same palette as the task-design figures. Light-blue GRU points and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now appear for every displayed cohort. The five-cohort diagnostic E8 values have a paired current-code E4 comparator in Result 4. Of the eight expansion values, seven use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. GRU points are the three source-training seeds; summaries are their mean ± SD. The common Q baseline is the Bari2019 preset and is fitted independently per target subject on the identical adaptation half. Author-model lines include the existing Grossman (mouse), Chen (mouse), and Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) co-winners, Hattori2019 for Hattori (mouse), double-trace RL for López-Yépez (mouse), and feedback-dependent RL plus a fitted shape-choice bias for Costa (macaque). Alsiö (rat) is shown as a dotted cohort-mismatched author-model sensitivity.
 
 Kwak (mouse) is omitted from every figure, table, direction count, and inference in this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, which confounds subject adaptation with treatment transfer. Readmission requires a new DMSO/control-only run using chronological odd DMSO sessions for adaptation and chronological even DMSO sessions for testing.
 
@@ -267,7 +268,8 @@ This screen therefore supports broad transfer, but not universal superiority ove
 | Eckstein (human) | Bayesian inference | author-selected | 0.63162 | 0.66005 | 0.62596 ± 0.00871 | 0.63093 ± 0.00288 |
 | Hattori (mouse) | Hattori2019 | author-selected | 0.55730 | 0.55570 | 0.56607 ± 0.00067 | 0.56577 ± 0.00002 |
 | López-Yépez (mouse) | double-trace RL | author-selected | 0.53130 | 0.61568 | 0.57554 ± 0.01322 | 0.59038 ± 0.00247 |
-| Costa (macaque) | feedback-dependent RL | author-selected | 0.63104 | 0.58336 | 0.62857 ± 0.00063 | 0.63222 ± 0.00107 |
+| Costa (macaque) | feedback-dependent RL + bias | author-selected | 0.63104 | 0.58515 | 0.62857 ± 0.00063 | 0.63222 ± 0.00107 |
+| Costa (macaque) | feedback-dependent RL + bias + CK1 | mechanism sensitivity: dual-rate + bias + Bari CK1 | 0.63104 | 0.61223 | 0.62857 ± 0.00063 | 0.63222 ± 0.00107 |
 | Alsiö (rat) | dual-rate RL + stickiness | author-model sensitivity from a different cohort | 0.52676 | 0.52745 | 0.52710 ± 0.00098 | 0.52843 ± 0.00057 |
 
 ### Primary author-model scientific read
@@ -371,13 +373,14 @@ The reference is zero. Positive values favor the displayed comparison over the a
 | López-Yépez (mouse) | double-trace RL | GRU D=300 | -0.03003 | -0.03515 | 0.0156 |
 | López-Yépez (mouse) | double-trace RL | GRU D=614 | -0.03526 | -0.03971 | 0.0156 |
 | López-Yépez (mouse) | double-trace RL | E8 GRU D=614 | -0.02740 | -0.02509 | 0.0156 |
-| Costa (macaque) | feedback-dependent RL | Bari2019 | +0.04301 | +0.04838 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=10 | +0.04270 | +0.04250 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=30 | +0.04511 | +0.04391 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=100 | +0.04631 | +0.04560 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=300 | +0.04680 | +0.04552 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | GRU D=614 | +0.04731 | +0.04563 | 0.000977 |
-| Costa (macaque) | feedback-dependent RL | E8 GRU D=614 | +0.04947 | +0.04933 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL + bias | Bari2019 | +0.04421 | +0.04688 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL + bias | feedback-dependent RL + bias + CK1 | +0.02733 | +0.02802 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL + bias | GRU D=10 | +0.04454 | +0.04101 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL + bias | GRU D=30 | +0.04615 | +0.04242 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL + bias | GRU D=100 | +0.04651 | +0.04410 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL + bias | GRU D=300 | +0.04759 | +0.04403 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL + bias | GRU D=614 | +0.04801 | +0.04414 | 0.000977 |
+| Costa (macaque) | feedback-dependent RL + bias | E8 GRU D=614 | +0.04902 | +0.04784 | 0.000977 |
 
 The correlations below relate each subject's author-model normalized likelihood to that subject's D=614 GRU-minus-author improvement. Negative values mean GRU benefit is concentrated among subjects fit poorly by the author model.
 
@@ -394,11 +397,13 @@ The correlations below relate each subject's author-model normalized likelihood 
 | Eckstein (human) | Bayesian inference | 306 | -0.71 | -0.74 |
 | Hattori (mouse) | Hattori2019 | 7 | -0.17 | -0.01 |
 | López-Yépez (mouse) | double-trace RL | 8 | -0.81 | -0.67 |
-| Costa (macaque) | feedback-dependent RL | 11 | +0.54 | +0.63 |
+| Costa (macaque) | feedback-dependent RL + bias | 11 | +0.57 | +0.66 |
 
 ### Why Bari2019 common Q can beat an author-selected model
 
 This report tests held-out generalization after fitting the same adaptation half; it does not reproduce each paper's original model-selection objective. Grossman (mouse) did compare against Q-learning, but our Bari2019 common Q includes forgetting, a one-step choice kernel, and side bias, while the Grossman (mouse) refit omits the paper's hierarchical Stan fit and parameter-ordering constraint. Zid (human) selected its model using all 300 trials and AIC on a smaller analysis cohort, whereas this benchmark fits trials 0–149 and scores 150–299 for all 258 released participants. A ranking reversal here therefore means that Bari2019 common Q generalizes better under this matched protocol; it is not evidence that the papers failed to test Q or selected the wrong model for their own analysis.
+
+For Costa (macaque), the paper's feedback-dependent RL equation has separate rewarded and unrewarded learning rates but no intercept. The matched benchmark reported here adds a fitted shape-choice bias so that a stable preference is not reserved for Bari2019 and the GRU. It still intentionally omits Bari2019's one-step choice kernel and unchosen-value forgetting. Any remaining held-out gap therefore concerns the full model families under the shared split, not the missing intercept alone.
 
 For Hattori (mouse), the comparison is specifically Bari2019 (`L1F1CK1`) versus Hattori2019 (`L2F1CK0`). Both are `ForagerQLearning` models with five fitted parameters. Bari2019 spends its extra flexibility on a one-trial choice kernel; Hattori2019 instead separates rewarded and unrewarded learning rates. Their small held-out difference therefore tests those two mechanisms under the same mature-session split, not model-size advantage.
 
@@ -604,7 +609,7 @@ paper's original population-level model-selection analysis.
 | Findling (human) | Weber-imprecision inference | Pinned research code and exact released Sobol grid | Released fit uses two stochastic particles and no seed; our seed is fixed and held-out prediction uses 256 particles | Implemented | High for code-path reproduction; moderate for stochastic fit stability |
 | Alsiö (rat) | separate positive/negative-rate RL plus spatial stickiness | Paper equations; no pinned package | Selected model was evaluated on excluded PRL cohort VI, not admitted II–V cohorts | Implemented; matched-half sensitivity completed | High for equations; low for a direct author-aligned claim on the admitted cohort |
 | Eckstein (human) | counterfactual RL plus Bayesian inference | Pinned OSF research code | Individual matched-prefix MLE replaces the paper's hierarchical population fit; both co-winners and the 291-versus-306 mismatch remain visible | Implemented | High for equations; moderate for paper-level fit parity |
-| Costa (macaque) | feedback-dependent RL | Published equations | Matched-half subject fitting replaces the paper's phase-specific fitting protocol | Implemented; corrected matched-half fit completed | High for equations; moderate for paper-level fitting parity |
+| Costa (macaque) | feedback-dependent RL plus fitted shape-choice bias | Published equations for the three-parameter core; bias is our declared augmentation | Matched-half subject fitting replaces the paper's phase-specific fitting protocol | Implemented; bias-augmented matched-half fit completed | High for core equations; moderate for paper-level fitting parity |
 | López-Yépez (mouse) | double-trace RL | Published MATLAB equations | Original data-fit code and initialization details are not in the release | Implemented; matched-half fit completed | High for equations; moderate for paper-level fitting parity |
 | Hattori (mouse) | asymmetric rewarded/unrewarded Q-learning with unchosen-value forgetting | Existing `Hattori2019` family in `aind-dynamic-foraging-models` | The matched-half subject fits do not reproduce the paper's L2 penalty selected by tenfold cross-validation | Implemented; mature-session fit completed | High for equations; moderate for paper-level fitting parity |
 

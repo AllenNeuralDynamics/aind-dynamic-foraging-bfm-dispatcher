@@ -1,14 +1,15 @@
 {
   "_meta": {
     "produced_by": "studies/09-gru-cross-species-transfer/analysis/freeze_author_baselines.py",
-    "produced_at_pt": "2026-09-15T06:29:31-07:00",
-    "dispatcher_git_sha": null,
+    "produced_at_pt": "2026-09-15T10:14:02-07:00",
+    "dispatcher_git_sha": "b7edadbda8542cac672b30b95ce96e4b6e094b88",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "alsio-dual-rate-sticky@slurm-26383281",
       "beron-rflr@slurm-25582233",
       "chen-rlck@20260905-123624",
-      "costa-feedback-dependent@slurm-26384790",
+      "costa-feedback-dependent-bias-ck1@slurm-26386211",
+      "costa-feedback-dependent-bias@slurm-26386087",
       "eckstein-bi@slurm-25582240",
       "eckstein-rl@slurm-25582239",
       "findling-weber@slurm-25582235",
@@ -30,9 +31,11 @@
     "foraging_models_commits": [
       "25f5f1ce64705edbf266feb8d57ff83a018b12c5",
       "553d1a9eae919bcec5121dc747d09d5559c31bb6",
+      "75bcfebacfd99fd28c1656bb7c7c035a5415f548",
       "a75ae23e0d5bce7985d3c4f5f7f30c7a971e0070",
       "d855a1a2b4075ee02c8d6597e97f768174eb031c",
       "eaeadec2a56c4a8099f3e8cfa315a9467c2f6a24",
+      "f6e5d9aafaed45b60274546fd2b5e9635d80ce1a",
       "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf"
     ]
   },
@@ -21622,762 +21625,1527 @@
       }
     },
     "costa-feedback-dependent": {
-      "group": "costa-feedback-dependent@slurm-26384790",
+      "group": "costa-feedback-dependent-bias@slurm-26386087",
+      "display_name": "costa-feedback-dependent-bias",
       "dataset": "costa",
-      "agent_class": "ForagerFeedbackDependentRL",
+      "agent_class": "ForagerFeedbackDependentRLBias",
       "author_selected": true,
-      "slurm_job_id": "26384790",
-      "foraging_models_commit": "d855a1a2b4075ee02c8d6597e97f768174eb031c",
-      "wandb_run_id": "vdvzxuwl",
-      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_cross_species_transfer/runs/vdvzxuwl",
+      "comparison_role": "published feedback-dependent RL augmented with fitted shape-choice bias",
+      "slurm_job_id": "26386087",
+      "foraging_models_commit": "75bcfebacfd99fd28c1656bb7c7c035a5415f548",
+      "wandb_run_id": "1qyvsk6u",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_cross_species_transfer/runs/1qyvsk6u",
       "output_artifact": {
-        "id": "QXJ0aWZhY3Q6MzYxMzcyNDQwNQ==",
-        "name": "baseline-rl-output-vdvzxuwl",
-        "digest": "8e43b4d2f9e8a13114469b269ec7e28a",
+        "id": "QXJ0aWZhY3Q6MzYxNjk2NzIyMw==",
+        "name": "baseline-rl-output-1qyvsk6u",
+        "digest": "4b923bfd13af5dbde9937197dbe24619",
         "file_count": 22,
-        "size_bytes": 37379076
+        "size_bytes": 37465361
       },
-      "metrics_sha256": "5190b6f9f612f38752da97af809e93fb7069abd45ed762b0a2c1e8f5882dba8e",
-      "predictions_sha256": "abb159d5dd4a2c2ec6caa583d5611f11638623d27b054a401081153b62b24f69",
+      "metrics_sha256": "31b8abdb1b39ff313c30844ade71b7dacdbbcb13fbcdb87e26c5e89e361bd32a",
+      "predictions_sha256": "48bdaacbc00d5dc24dedcd9ca08a11910d31c6561681b7951756ce4f99d901cd",
       "ordered_trial_key_sha256": "cfb2fda156b6b3ff4e8e6b555c8b8267ac971964f0957795c9f3db968d09d4a7",
       "n_prediction_rows": 162960,
       "metrics": {
         "n_trials": 162960,
-        "mean_log_likelihood_nats": -0.5389555159534849,
-        "normalized_likelihood": 0.5833572416111357,
+        "mean_log_likelihood_nats": -0.5358839054268415,
+        "normalized_likelihood": 0.5851518426019356,
         "per_subject_mean_log_likelihood_nats": {
-          "macaque-01": -0.6783919592096829,
-          "macaque-02": -0.6585212367005624,
-          "macaque-03": -0.6474398358249515,
-          "macaque-04": -0.6461437250657641,
-          "macaque-06": -0.4471246072033639,
-          "macaque-07": -0.3486313696394706,
-          "macaque-08": -0.3892079433432749,
-          "macaque-10": -0.4049338542752652,
-          "macaque-11": -0.598442533366596,
-          "macaque-12": -0.618967468320216,
-          "macaque-13": -0.6064433334785144
+          "macaque-01": -0.666139622323511,
+          "macaque-02": -0.6512557725652502,
+          "macaque-03": -0.6453073635442088,
+          "macaque-04": -0.6496590612831354,
+          "macaque-06": -0.44711848185746905,
+          "macaque-07": -0.3470540557697076,
+          "macaque-08": -0.3893550793892667,
+          "macaque-10": -0.40501928851398467,
+          "macaque-11": -0.5935840784486843,
+          "macaque-12": -0.6121327279738991,
+          "macaque-13": -0.6067440563833509
         },
         "per_session": [
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-04-30",
             "n_trials": 1520,
-            "mean_log_likelihood_nats": -0.6588299938844265
+            "mean_log_likelihood_nats": -0.637703079921077
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-05-02",
             "n_trials": 1440,
-            "mean_log_likelihood_nats": -0.6766711514532007
+            "mean_log_likelihood_nats": -0.6630940171183266
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-05-06",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.6966815288463384
+            "mean_log_likelihood_nats": -0.6923618426477145
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-05-08",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.6759718671960172
+            "mean_log_likelihood_nats": -0.6911515027543826
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-05-10",
             "n_trials": 1520,
-            "mean_log_likelihood_nats": -0.6823951967037731
+            "mean_log_likelihood_nats": -0.7126001998231477
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-05-16",
             "n_trials": 1520,
-            "mean_log_likelihood_nats": -0.670734362622168
+            "mean_log_likelihood_nats": -0.6714557076979049
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-05-20",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.6706166831948898
+            "mean_log_likelihood_nats": -0.6450528153581361
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-05-24",
             "n_trials": 1680,
-            "mean_log_likelihood_nats": -0.6820414744115846
+            "mean_log_likelihood_nats": -0.6691937209736678
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-05-31",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.6717198270506192
+            "mean_log_likelihood_nats": -0.629801235767286
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-06-04",
             "n_trials": 1280,
-            "mean_log_likelihood_nats": -0.7048614737394779
+            "mean_log_likelihood_nats": -0.6615519790282367
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-06-06",
             "n_trials": 1920,
-            "mean_log_likelihood_nats": -0.6663788140656401
+            "mean_log_likelihood_nats": -0.6153748748882303
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-06-10",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.6827941447072182
+            "mean_log_likelihood_nats": -0.651978517219752
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-06-12",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.6783175353664461
+            "mean_log_likelihood_nats": -0.6986189006350703
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-06-14",
             "n_trials": 880,
-            "mean_log_likelihood_nats": -0.6809761356980563
+            "mean_log_likelihood_nats": -0.6820876206759351
           },
           {
             "subject_id": "macaque-01",
             "ses_idx": "macaque-01__2013-06-19",
             "n_trials": 1200,
-            "mean_log_likelihood_nats": -0.68614559954092
+            "mean_log_likelihood_nats": -0.7093638971054823
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-05-01",
             "n_trials": 1120,
-            "mean_log_likelihood_nats": -0.6525099180829174
+            "mean_log_likelihood_nats": -0.646966125084014
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-05-03",
             "n_trials": 560,
-            "mean_log_likelihood_nats": -0.6631813797993367
+            "mean_log_likelihood_nats": -0.6540521828537057
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-05-07",
             "n_trials": 1280,
-            "mean_log_likelihood_nats": -0.6308464024456559
+            "mean_log_likelihood_nats": -0.6193821091592814
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-05-09",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.6380465489970885
+            "mean_log_likelihood_nats": -0.6386932224118288
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-05-15",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.6121484983046079
+            "mean_log_likelihood_nats": -0.617792203480873
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-05-17",
             "n_trials": 1200,
-            "mean_log_likelihood_nats": -0.6870470910868253
+            "mean_log_likelihood_nats": -0.6406736795474456
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-05-21",
             "n_trials": 640,
-            "mean_log_likelihood_nats": -0.6498381924229688
+            "mean_log_likelihood_nats": -0.65319451385443
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-05-24",
             "n_trials": 1200,
-            "mean_log_likelihood_nats": -0.6537939338960431
+            "mean_log_likelihood_nats": -0.6452718927271669
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-06-03",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.6462233122222029
+            "mean_log_likelihood_nats": -0.6310194819194045
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-06-05",
             "n_trials": 800,
-            "mean_log_likelihood_nats": -0.6976709012590173
+            "mean_log_likelihood_nats": -0.7073283226309727
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-06-07",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.7021010228473068
+            "mean_log_likelihood_nats": -0.6939685162871918
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-06-11",
             "n_trials": 240,
-            "mean_log_likelihood_nats": -0.659767618126703
+            "mean_log_likelihood_nats": -0.655860007389067
           },
           {
             "subject_id": "macaque-02",
             "ses_idx": "macaque-02__2013-06-14",
             "n_trials": 720,
-            "mean_log_likelihood_nats": -0.6933712553918819
+            "mean_log_likelihood_nats": -0.7205042603595351
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2013-12-23",
             "n_trials": 800,
-            "mean_log_likelihood_nats": -0.6674247641681249
+            "mean_log_likelihood_nats": -0.6736478505154939
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2013-12-26",
             "n_trials": 800,
-            "mean_log_likelihood_nats": -0.6728916614050076
+            "mean_log_likelihood_nats": -0.6723554234468975
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2014-01-02",
             "n_trials": 800,
-            "mean_log_likelihood_nats": -0.6669440374926512
+            "mean_log_likelihood_nats": -0.6661388609956628
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2014-01-06",
             "n_trials": 880,
-            "mean_log_likelihood_nats": -0.6814668548658698
+            "mean_log_likelihood_nats": -0.6824293587352721
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2014-01-08",
             "n_trials": 1280,
-            "mean_log_likelihood_nats": -0.6557645201262274
+            "mean_log_likelihood_nats": -0.6560048296053023
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2014-01-10",
             "n_trials": 1360,
-            "mean_log_likelihood_nats": -0.67664003485792
+            "mean_log_likelihood_nats": -0.6683038114632269
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2014-01-14",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.6452339028371902
+            "mean_log_likelihood_nats": -0.6458599229031101
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2014-01-16",
             "n_trials": 1360,
-            "mean_log_likelihood_nats": -0.6377983258001044
+            "mean_log_likelihood_nats": -0.6376830877645433
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2014-01-18",
             "n_trials": 1360,
-            "mean_log_likelihood_nats": -0.5967552713609506
+            "mean_log_likelihood_nats": -0.5922149426722433
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2014-01-23",
             "n_trials": 720,
-            "mean_log_likelihood_nats": -0.6453421926570736
+            "mean_log_likelihood_nats": -0.6319156110644796
           },
           {
             "subject_id": "macaque-03",
             "ses_idx": "macaque-03__2014-01-25",
             "n_trials": 1360,
-            "mean_log_likelihood_nats": -0.6133100761733027
+            "mean_log_likelihood_nats": -0.6107711801190795
           },
           {
             "subject_id": "macaque-04",
             "ses_idx": "macaque-04__2014-02-07",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.590085732989903
+            "mean_log_likelihood_nats": -0.5894844304773016
           },
           {
             "subject_id": "macaque-04",
             "ses_idx": "macaque-04__2014-02-11",
             "n_trials": 1440,
-            "mean_log_likelihood_nats": -0.5663113067149159
+            "mean_log_likelihood_nats": -0.5729471517812824
           },
           {
             "subject_id": "macaque-04",
             "ses_idx": "macaque-04__2014-02-18",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.6539590136758503
+            "mean_log_likelihood_nats": -0.6433962224207641
           },
           {
             "subject_id": "macaque-04",
             "ses_idx": "macaque-04__2014-02-24",
             "n_trials": 2320,
-            "mean_log_likelihood_nats": -0.6414257049364197
+            "mean_log_likelihood_nats": -0.6292573176193631
           },
           {
             "subject_id": "macaque-04",
             "ses_idx": "macaque-04__2014-02-26",
             "n_trials": 2400,
-            "mean_log_likelihood_nats": -0.7860417316811698
+            "mean_log_likelihood_nats": -0.8335459827654107
           },
           {
             "subject_id": "macaque-04",
             "ses_idx": "macaque-04__2014-02-28",
             "n_trials": 2800,
-            "mean_log_likelihood_nats": -0.6317206195831963
+            "mean_log_likelihood_nats": -0.6248837022043489
           },
           {
             "subject_id": "macaque-04",
             "ses_idx": "macaque-04__2014-03-05",
             "n_trials": 1920,
-            "mean_log_likelihood_nats": -0.5980824199328284
+            "mean_log_likelihood_nats": -0.5934817385304727
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-04-09",
             "n_trials": 1840,
-            "mean_log_likelihood_nats": -0.42584498800995396
+            "mean_log_likelihood_nats": -0.4256811872713726
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-04-12",
             "n_trials": 1920,
-            "mean_log_likelihood_nats": -0.47021270657832387
+            "mean_log_likelihood_nats": -0.46988788374613283
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-04-16",
             "n_trials": 1520,
-            "mean_log_likelihood_nats": -0.38305832829223924
+            "mean_log_likelihood_nats": -0.38290516899382687
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-04-19",
             "n_trials": 2080,
-            "mean_log_likelihood_nats": -0.4784930120849192
+            "mean_log_likelihood_nats": -0.47873130717454515
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-04-29",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.428751366055572
+            "mean_log_likelihood_nats": -0.42889348833285157
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-05-07",
             "n_trials": 2160,
-            "mean_log_likelihood_nats": -0.5059631792074379
+            "mean_log_likelihood_nats": -0.5057559550533517
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-05-14",
             "n_trials": 480,
-            "mean_log_likelihood_nats": -0.4731162183831162
+            "mean_log_likelihood_nats": -0.473054462271029
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-05-20",
             "n_trials": 1760,
-            "mean_log_likelihood_nats": -0.4934376015196387
+            "mean_log_likelihood_nats": -0.49340242827450614
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-05-28",
             "n_trials": 2240,
-            "mean_log_likelihood_nats": -0.3890212474559116
+            "mean_log_likelihood_nats": -0.38930579495270745
           },
           {
             "subject_id": "macaque-06",
             "ses_idx": "macaque-06__2013-06-02",
             "n_trials": 1280,
-            "mean_log_likelihood_nats": -0.420117078364506
+            "mean_log_likelihood_nats": -0.42029924686985254
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-04-09",
             "n_trials": 1760,
-            "mean_log_likelihood_nats": -0.4702615164838845
+            "mean_log_likelihood_nats": -0.4603474433353479
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-04-12",
             "n_trials": 2000,
-            "mean_log_likelihood_nats": -0.39018471724550047
+            "mean_log_likelihood_nats": -0.38329461823343525
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-04-16",
             "n_trials": 1840,
-            "mean_log_likelihood_nats": -0.34491856799308956
+            "mean_log_likelihood_nats": -0.35156090648964555
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-04-24",
             "n_trials": 1280,
-            "mean_log_likelihood_nats": -0.3266905356705708
+            "mean_log_likelihood_nats": -0.315817164643564
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-05-02",
             "n_trials": 560,
-            "mean_log_likelihood_nats": -0.3019516829999507
+            "mean_log_likelihood_nats": -0.31519361660721057
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-05-08",
             "n_trials": 2160,
-            "mean_log_likelihood_nats": -0.3301246864821303
+            "mean_log_likelihood_nats": -0.3221894215020628
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-05-13",
             "n_trials": 1360,
-            "mean_log_likelihood_nats": -0.33583853902059035
+            "mean_log_likelihood_nats": -0.33550725998092146
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-05-16",
             "n_trials": 2160,
-            "mean_log_likelihood_nats": -0.24122840717593558
+            "mean_log_likelihood_nats": -0.2310832415438054
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-05-26",
             "n_trials": 1840,
-            "mean_log_likelihood_nats": -0.241991137571611
+            "mean_log_likelihood_nats": -0.24212609948924843
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-06-01",
             "n_trials": 2400,
-            "mean_log_likelihood_nats": -0.25109542086646813
+            "mean_log_likelihood_nats": -0.2549622948820951
           },
           {
             "subject_id": "macaque-07",
             "ses_idx": "macaque-07__2013-06-10",
             "n_trials": 1120,
-            "mean_log_likelihood_nats": -0.7803707282218536
+            "mean_log_likelihood_nats": -0.8038851726535649
           },
           {
             "subject_id": "macaque-08",
             "ses_idx": "macaque-08__2013-05-02",
             "n_trials": 1760,
-            "mean_log_likelihood_nats": -0.5386666751362079
+            "mean_log_likelihood_nats": -0.5340286918462577
           },
           {
             "subject_id": "macaque-08",
             "ses_idx": "macaque-08__2013-05-09",
             "n_trials": 720,
-            "mean_log_likelihood_nats": -0.5759235564931245
+            "mean_log_likelihood_nats": -0.5724095138879992
           },
           {
             "subject_id": "macaque-08",
             "ses_idx": "macaque-08__2013-05-13",
             "n_trials": 3120,
-            "mean_log_likelihood_nats": -0.383584586000472
+            "mean_log_likelihood_nats": -0.3901152726266176
           },
           {
             "subject_id": "macaque-08",
             "ses_idx": "macaque-08__2013-05-17",
             "n_trials": 2560,
-            "mean_log_likelihood_nats": -0.40326531457588066
+            "mean_log_likelihood_nats": -0.4029449007140605
           },
           {
             "subject_id": "macaque-08",
             "ses_idx": "macaque-08__2013-05-28",
             "n_trials": 2400,
-            "mean_log_likelihood_nats": -0.3439743486069433
+            "mean_log_likelihood_nats": -0.339524328223203
           },
           {
             "subject_id": "macaque-08",
             "ses_idx": "macaque-08__2013-06-02",
             "n_trials": 2960,
-            "mean_log_likelihood_nats": -0.3128531944627678
+            "mean_log_likelihood_nats": -0.3117784537081845
           },
           {
             "subject_id": "macaque-08",
             "ses_idx": "macaque-08__2013-06-06",
             "n_trials": 1680,
-            "mean_log_likelihood_nats": -0.33047900685070886
+            "mean_log_likelihood_nats": -0.32687826809584447
           },
           {
             "subject_id": "macaque-08",
             "ses_idx": "macaque-08__2013-06-12",
             "n_trials": 1280,
-            "mean_log_likelihood_nats": -0.4027319218523611
+            "mean_log_likelihood_nats": -0.41325754933622283
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-09-16",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.42313232095410536
+            "mean_log_likelihood_nats": -0.4226290608359042
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-09-18",
             "n_trials": 1680,
-            "mean_log_likelihood_nats": -0.4083528927291799
+            "mean_log_likelihood_nats": -0.4083249324968501
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-09-22",
             "n_trials": 1520,
-            "mean_log_likelihood_nats": -0.3969102762480975
+            "mean_log_likelihood_nats": -0.39754043847361853
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-09-24",
             "n_trials": 1840,
-            "mean_log_likelihood_nats": -0.4565927910283778
+            "mean_log_likelihood_nats": -0.45689679820432016
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-09-26",
             "n_trials": 1440,
-            "mean_log_likelihood_nats": -0.3805324152680033
+            "mean_log_likelihood_nats": -0.38035118972488485
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-09-30",
             "n_trials": 1840,
-            "mean_log_likelihood_nats": -0.3628096085024245
+            "mean_log_likelihood_nats": -0.3627096210469563
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-10-02",
             "n_trials": 1360,
-            "mean_log_likelihood_nats": -0.42238691448637455
+            "mean_log_likelihood_nats": -0.4226152925296616
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-10-06",
             "n_trials": 1680,
-            "mean_log_likelihood_nats": -0.3883341316948722
+            "mean_log_likelihood_nats": -0.3886967530076924
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-10-08",
             "n_trials": 1600,
-            "mean_log_likelihood_nats": -0.416234531571215
+            "mean_log_likelihood_nats": -0.4162464363659362
           },
           {
             "subject_id": "macaque-10",
             "ses_idx": "macaque-10__2014-10-10",
             "n_trials": 1680,
-            "mean_log_likelihood_nats": -0.39362363787869675
+            "mean_log_likelihood_nats": -0.3937596603274477
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-07-14",
             "n_trials": 800,
-            "mean_log_likelihood_nats": -0.6539394662163178
+            "mean_log_likelihood_nats": -0.6558957210739509
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-07-22",
             "n_trials": 1200,
-            "mean_log_likelihood_nats": -0.6666822489875641
+            "mean_log_likelihood_nats": -0.6680350707670238
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-07-28",
             "n_trials": 1280,
-            "mean_log_likelihood_nats": -0.6585787722922716
+            "mean_log_likelihood_nats": -0.6625675196858463
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-08-05",
             "n_trials": 1520,
-            "mean_log_likelihood_nats": -0.660059164328055
+            "mean_log_likelihood_nats": -0.6555404855203669
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-09-09",
             "n_trials": 1520,
-            "mean_log_likelihood_nats": -0.48027007579499176
+            "mean_log_likelihood_nats": -0.4797015878281153
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-09-11",
             "n_trials": 1120,
-            "mean_log_likelihood_nats": -0.550326397969787
+            "mean_log_likelihood_nats": -0.5454564663212756
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-09-15",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.540138223640413
+            "mean_log_likelihood_nats": -0.5336123240710535
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-09-17",
             "n_trials": 1120,
-            "mean_log_likelihood_nats": -0.597370027906979
+            "mean_log_likelihood_nats": -0.5783547198794692
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-09-25",
             "n_trials": 640,
-            "mean_log_likelihood_nats": -0.5798769802935807
+            "mean_log_likelihood_nats": -0.5644881221624437
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-10-02",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.5482447807057362
+            "mean_log_likelihood_nats": -0.5297649188338421
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-10-06",
             "n_trials": 1120,
-            "mean_log_likelihood_nats": -0.6281307064440794
+            "mean_log_likelihood_nats": -0.6196235044024144
           },
           {
             "subject_id": "macaque-11",
             "ses_idx": "macaque-11__2015-10-08",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.6198901618752674
+            "mean_log_likelihood_nats": -0.6255577002158998
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-07-24",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.6871407771352143
+            "mean_log_likelihood_nats": -0.6557671716197859
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-07-29",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.669360610253433
+            "mean_log_likelihood_nats": -0.6856455425797578
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-08-06",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.6340966895583796
+            "mean_log_likelihood_nats": -0.6448458923353598
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-08-11",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.6814706387944537
+            "mean_log_likelihood_nats": -0.6744261958779876
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-08-13",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.7537366260388464
+            "mean_log_likelihood_nats": -0.7550445938038937
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-08-17",
             "n_trials": 880,
-            "mean_log_likelihood_nats": -0.5763977152364815
+            "mean_log_likelihood_nats": -0.5864665946304852
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-08-19",
             "n_trials": 880,
-            "mean_log_likelihood_nats": -0.6092899653212256
+            "mean_log_likelihood_nats": -0.588527883476314
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-08-21",
             "n_trials": 880,
-            "mean_log_likelihood_nats": -0.5546856921456087
+            "mean_log_likelihood_nats": -0.5590438066257974
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-08-25",
             "n_trials": 800,
-            "mean_log_likelihood_nats": -0.5584976740625838
+            "mean_log_likelihood_nats": -0.5347873979211238
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-09-03",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.5409071329537724
+            "mean_log_likelihood_nats": -0.5434267512784554
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-09-08",
             "n_trials": 1360,
-            "mean_log_likelihood_nats": -0.5726110505788949
+            "mean_log_likelihood_nats": -0.5563156142115935
           },
           {
             "subject_id": "macaque-12",
             "ses_idx": "macaque-12__2015-09-10",
             "n_trials": 720,
-            "mean_log_likelihood_nats": -0.5789799533101958
+            "mean_log_likelihood_nats": -0.5438755184377665
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-08-21",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.6022262915952028
+            "mean_log_likelihood_nats": -0.6057259022910133
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-08-25",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.5897233777773575
+            "mean_log_likelihood_nats": -0.5895711019036102
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-08-27",
             "n_trials": 640,
-            "mean_log_likelihood_nats": -0.6751909029883519
+            "mean_log_likelihood_nats": -0.6744443258818128
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-08-31",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.6344281261472631
+            "mean_log_likelihood_nats": -0.6389683648740989
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-09-02",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.6170370559272774
+            "mean_log_likelihood_nats": -0.6160863499733258
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-09-04",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.5937967579252919
+            "mean_log_likelihood_nats": -0.5923363000822518
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-09-09",
             "n_trials": 1200,
-            "mean_log_likelihood_nats": -0.6095185320582219
+            "mean_log_likelihood_nats": -0.6086241654945171
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-09-11",
             "n_trials": 320,
-            "mean_log_likelihood_nats": -0.641191746192763
+            "mean_log_likelihood_nats": -0.6459602058973982
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-09-15",
             "n_trials": 1040,
-            "mean_log_likelihood_nats": -0.5771477504359485
+            "mean_log_likelihood_nats": -0.5746806105195104
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-09-17",
             "n_trials": 960,
-            "mean_log_likelihood_nats": -0.5612118203499964
+            "mean_log_likelihood_nats": -0.5605940127343015
           },
           {
             "subject_id": "macaque-13",
             "ses_idx": "macaque-13__2015-09-25",
             "n_trials": 720,
-            "mean_log_likelihood_nats": -0.6208834430665202
+            "mean_log_likelihood_nats": -0.621821888061868
+          }
+        ]
+      }
+    },
+    "costa-feedback-dependent-ck1": {
+      "group": "costa-feedback-dependent-bias-ck1@slurm-26386211",
+      "display_name": "costa-feedback-dependent-bias-ck1",
+      "dataset": "costa",
+      "agent_class": "ForagerFeedbackDependentRLBiasCK1",
+      "author_selected": false,
+      "comparison_role": "mechanism sensitivity: dual-rate + bias + Bari CK1",
+      "slurm_job_id": "26386211",
+      "foraging_models_commit": "f6e5d9aafaed45b60274546fd2b5e9635d80ce1a",
+      "wandb_run_id": "7xjez5i7",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_cross_species_transfer/runs/7xjez5i7",
+      "output_artifact": {
+        "id": "QXJ0aWZhY3Q6MzYxNzI0Mzc2MA==",
+        "name": "baseline-rl-output-7xjez5i7",
+        "digest": "94291e2be6a9ae30f517e15ad75ddbb5",
+        "file_count": 22,
+        "size_bytes": 37625382
+      },
+      "metrics_sha256": "751058abc3efff7471971c8e47a4254ea38a28047be61fc25f5bb75e916ad571",
+      "predictions_sha256": "71d298d3dfa8ff2780bb09aa0073eeead4c26ec557c77700fde9cb0caf429746",
+      "ordered_trial_key_sha256": "cfb2fda156b6b3ff4e8e6b555c8b8267ac971964f0957795c9f3db968d09d4a7",
+      "n_prediction_rows": 162960,
+      "metrics": {
+        "n_trials": 162960,
+        "mean_log_likelihood_nats": -0.4906481108821037,
+        "normalized_likelihood": 0.6122294729900477,
+        "per_subject_mean_log_likelihood_nats": {
+          "macaque-01": -0.6637535222127526,
+          "macaque-02": -0.5760491621726704,
+          "macaque-03": -0.6217863180708997,
+          "macaque-04": -0.5986571248272419,
+          "macaque-06": -0.366403203140111,
+          "macaque-07": -0.29554392013699643,
+          "macaque-08": -0.32754954109734735,
+          "macaque-10": -0.3458861792840376,
+          "macaque-11": -0.5522026115120839,
+          "macaque-12": -0.5839768005354259,
+          "macaque-13": -0.5837597495487082
+        },
+        "per_session": [
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-04-30",
+            "n_trials": 1520,
+            "mean_log_likelihood_nats": -0.6352069769040676
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-05-02",
+            "n_trials": 1440,
+            "mean_log_likelihood_nats": -0.659153844668326
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-05-06",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.690969202575404
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-05-08",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.6909502185829125
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-05-10",
+            "n_trials": 1520,
+            "mean_log_likelihood_nats": -0.7073768362428292
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-05-16",
+            "n_trials": 1520,
+            "mean_log_likelihood_nats": -0.6755936697230474
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-05-20",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.6495377909466711
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-05-24",
+            "n_trials": 1680,
+            "mean_log_likelihood_nats": -0.6682194125303841
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-05-31",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.6266523568468648
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-06-04",
+            "n_trials": 1280,
+            "mean_log_likelihood_nats": -0.6542856321564613
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-06-06",
+            "n_trials": 1920,
+            "mean_log_likelihood_nats": -0.6107730138657972
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-06-10",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.6526937945764095
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-06-12",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.6875076174549686
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-06-14",
+            "n_trials": 880,
+            "mean_log_likelihood_nats": -0.6806064324159654
+          },
+          {
+            "subject_id": "macaque-01",
+            "ses_idx": "macaque-01__2013-06-19",
+            "n_trials": 1200,
+            "mean_log_likelihood_nats": -0.7014673376981436
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-05-01",
+            "n_trials": 1120,
+            "mean_log_likelihood_nats": -0.5267200521918359
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-05-03",
+            "n_trials": 560,
+            "mean_log_likelihood_nats": -0.5891242959976486
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-05-07",
+            "n_trials": 1280,
+            "mean_log_likelihood_nats": -0.5871232009086328
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-05-09",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.5273757047344382
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-05-15",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.5351798763889956
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-05-17",
+            "n_trials": 1200,
+            "mean_log_likelihood_nats": -0.6161159294080363
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-05-21",
+            "n_trials": 640,
+            "mean_log_likelihood_nats": -0.5634039912463468
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-05-24",
+            "n_trials": 1200,
+            "mean_log_likelihood_nats": -0.5540780655861465
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-06-03",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.5768995244509979
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-06-05",
+            "n_trials": 800,
+            "mean_log_likelihood_nats": -0.6075184673170753
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-06-07",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.6427001910929518
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-06-11",
+            "n_trials": 240,
+            "mean_log_likelihood_nats": -0.6156120741834339
+          },
+          {
+            "subject_id": "macaque-02",
+            "ses_idx": "macaque-02__2013-06-14",
+            "n_trials": 720,
+            "mean_log_likelihood_nats": -0.5824888575008931
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2013-12-23",
+            "n_trials": 800,
+            "mean_log_likelihood_nats": -0.6580520921821764
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2013-12-26",
+            "n_trials": 800,
+            "mean_log_likelihood_nats": -0.6577271215828826
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2014-01-02",
+            "n_trials": 800,
+            "mean_log_likelihood_nats": -0.6713299996805051
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2014-01-06",
+            "n_trials": 880,
+            "mean_log_likelihood_nats": -0.6916336265366814
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2014-01-08",
+            "n_trials": 1280,
+            "mean_log_likelihood_nats": -0.6392712730254637
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2014-01-10",
+            "n_trials": 1360,
+            "mean_log_likelihood_nats": -0.644588111129245
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2014-01-14",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.6366968171177987
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2014-01-16",
+            "n_trials": 1360,
+            "mean_log_likelihood_nats": -0.615369686251886
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2014-01-18",
+            "n_trials": 1360,
+            "mean_log_likelihood_nats": -0.5377276814252243
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2014-01-23",
+            "n_trials": 720,
+            "mean_log_likelihood_nats": -0.5881634417776931
+          },
+          {
+            "subject_id": "macaque-03",
+            "ses_idx": "macaque-03__2014-01-25",
+            "n_trials": 1360,
+            "mean_log_likelihood_nats": -0.5625884484362977
+          },
+          {
+            "subject_id": "macaque-04",
+            "ses_idx": "macaque-04__2014-02-07",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.5107497601309038
+          },
+          {
+            "subject_id": "macaque-04",
+            "ses_idx": "macaque-04__2014-02-11",
+            "n_trials": 1440,
+            "mean_log_likelihood_nats": -0.5432338019126304
+          },
+          {
+            "subject_id": "macaque-04",
+            "ses_idx": "macaque-04__2014-02-18",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.5865500680276732
+          },
+          {
+            "subject_id": "macaque-04",
+            "ses_idx": "macaque-04__2014-02-24",
+            "n_trials": 2320,
+            "mean_log_likelihood_nats": -0.5781861036544899
+          },
+          {
+            "subject_id": "macaque-04",
+            "ses_idx": "macaque-04__2014-02-26",
+            "n_trials": 2400,
+            "mean_log_likelihood_nats": -0.784504308858664
+          },
+          {
+            "subject_id": "macaque-04",
+            "ses_idx": "macaque-04__2014-02-28",
+            "n_trials": 2800,
+            "mean_log_likelihood_nats": -0.5786070394346023
+          },
+          {
+            "subject_id": "macaque-04",
+            "ses_idx": "macaque-04__2014-03-05",
+            "n_trials": 1920,
+            "mean_log_likelihood_nats": -0.5452365133351881
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-04-09",
+            "n_trials": 1840,
+            "mean_log_likelihood_nats": -0.30088059628084607
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-04-12",
+            "n_trials": 1920,
+            "mean_log_likelihood_nats": -0.3734810123935981
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-04-16",
+            "n_trials": 1520,
+            "mean_log_likelihood_nats": -0.305373908127043
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-04-19",
+            "n_trials": 2080,
+            "mean_log_likelihood_nats": -0.4259969050428717
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-04-29",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.342552680778591
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-05-07",
+            "n_trials": 2160,
+            "mean_log_likelihood_nats": -0.43381894404896865
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-05-14",
+            "n_trials": 480,
+            "mean_log_likelihood_nats": -0.3791043532060297
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-05-20",
+            "n_trials": 1760,
+            "mean_log_likelihood_nats": -0.3897133283170724
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-05-28",
+            "n_trials": 2240,
+            "mean_log_likelihood_nats": -0.3147995532811057
+          },
+          {
+            "subject_id": "macaque-06",
+            "ses_idx": "macaque-06__2013-06-02",
+            "n_trials": 1280,
+            "mean_log_likelihood_nats": -0.3951488828845253
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-04-09",
+            "n_trials": 1760,
+            "mean_log_likelihood_nats": -0.3532966508092325
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-04-12",
+            "n_trials": 2000,
+            "mean_log_likelihood_nats": -0.3329211890096501
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-04-16",
+            "n_trials": 1840,
+            "mean_log_likelihood_nats": -0.29194353936700435
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-04-24",
+            "n_trials": 1280,
+            "mean_log_likelihood_nats": -0.2608367187591644
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-05-02",
+            "n_trials": 560,
+            "mean_log_likelihood_nats": -0.2374002692005788
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-05-08",
+            "n_trials": 2160,
+            "mean_log_likelihood_nats": -0.25787823141318805
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-05-13",
+            "n_trials": 1360,
+            "mean_log_likelihood_nats": -0.2921803079964274
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-05-16",
+            "n_trials": 2160,
+            "mean_log_likelihood_nats": -0.22408439867891777
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-05-26",
+            "n_trials": 1840,
+            "mean_log_likelihood_nats": -0.21511587988296935
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-06-01",
+            "n_trials": 2400,
+            "mean_log_likelihood_nats": -0.22147994096066384
+          },
+          {
+            "subject_id": "macaque-07",
+            "ses_idx": "macaque-07__2013-06-10",
+            "n_trials": 1120,
+            "mean_log_likelihood_nats": -0.7180770717182614
+          },
+          {
+            "subject_id": "macaque-08",
+            "ses_idx": "macaque-08__2013-05-02",
+            "n_trials": 1760,
+            "mean_log_likelihood_nats": -0.4773487995036728
+          },
+          {
+            "subject_id": "macaque-08",
+            "ses_idx": "macaque-08__2013-05-09",
+            "n_trials": 720,
+            "mean_log_likelihood_nats": -0.49604583398075675
+          },
+          {
+            "subject_id": "macaque-08",
+            "ses_idx": "macaque-08__2013-05-13",
+            "n_trials": 3120,
+            "mean_log_likelihood_nats": -0.3287752493519924
+          },
+          {
+            "subject_id": "macaque-08",
+            "ses_idx": "macaque-08__2013-05-17",
+            "n_trials": 2560,
+            "mean_log_likelihood_nats": -0.3247308940888519
+          },
+          {
+            "subject_id": "macaque-08",
+            "ses_idx": "macaque-08__2013-05-28",
+            "n_trials": 2400,
+            "mean_log_likelihood_nats": -0.2837147967249689
+          },
+          {
+            "subject_id": "macaque-08",
+            "ses_idx": "macaque-08__2013-06-02",
+            "n_trials": 2960,
+            "mean_log_likelihood_nats": -0.25250355240779215
+          },
+          {
+            "subject_id": "macaque-08",
+            "ses_idx": "macaque-08__2013-06-06",
+            "n_trials": 1680,
+            "mean_log_likelihood_nats": -0.27378509511612176
+          },
+          {
+            "subject_id": "macaque-08",
+            "ses_idx": "macaque-08__2013-06-12",
+            "n_trials": 1280,
+            "mean_log_likelihood_nats": -0.35574585608118947
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-09-16",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.3679426202819514
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-09-18",
+            "n_trials": 1680,
+            "mean_log_likelihood_nats": -0.36283227070016155
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-09-22",
+            "n_trials": 1520,
+            "mean_log_likelihood_nats": -0.32215108621847066
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-09-24",
+            "n_trials": 1840,
+            "mean_log_likelihood_nats": -0.4007413920515034
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-09-26",
+            "n_trials": 1440,
+            "mean_log_likelihood_nats": -0.32334287920066074
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-09-30",
+            "n_trials": 1840,
+            "mean_log_likelihood_nats": -0.2967727427974115
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-10-02",
+            "n_trials": 1360,
+            "mean_log_likelihood_nats": -0.35771545451897485
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-10-06",
+            "n_trials": 1680,
+            "mean_log_likelihood_nats": -0.34180353702989674
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-10-08",
+            "n_trials": 1600,
+            "mean_log_likelihood_nats": -0.34359893796486823
+          },
+          {
+            "subject_id": "macaque-10",
+            "ses_idx": "macaque-10__2014-10-10",
+            "n_trials": 1680,
+            "mean_log_likelihood_nats": -0.3391276654895975
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-07-14",
+            "n_trials": 800,
+            "mean_log_likelihood_nats": -0.6505701939581165
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-07-22",
+            "n_trials": 1200,
+            "mean_log_likelihood_nats": -0.6834902216124303
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-07-28",
+            "n_trials": 1280,
+            "mean_log_likelihood_nats": -0.6661983746256552
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-08-05",
+            "n_trials": 1520,
+            "mean_log_likelihood_nats": -0.6486550526073784
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-09-09",
+            "n_trials": 1520,
+            "mean_log_likelihood_nats": -0.38332692181251965
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-09-11",
+            "n_trials": 1120,
+            "mean_log_likelihood_nats": -0.46809051265854973
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-09-15",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.4497369639228872
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-09-17",
+            "n_trials": 1120,
+            "mean_log_likelihood_nats": -0.49821601573032037
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-09-25",
+            "n_trials": 640,
+            "mean_log_likelihood_nats": -0.47148670167470763
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-10-02",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.451645550692198
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-10-06",
+            "n_trials": 1120,
+            "mean_log_likelihood_nats": -0.6182466521692269
+          },
+          {
+            "subject_id": "macaque-11",
+            "ses_idx": "macaque-11__2015-10-08",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.6096929842621392
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-07-24",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.6522911049604526
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-07-29",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.6865376182720707
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-08-06",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.6098794733259406
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-08-11",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.6697315286054678
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-08-13",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.7383739943544361
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-08-17",
+            "n_trials": 880,
+            "mean_log_likelihood_nats": -0.5652665235071871
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-08-19",
+            "n_trials": 880,
+            "mean_log_likelihood_nats": -0.5656580971238968
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-08-21",
+            "n_trials": 880,
+            "mean_log_likelihood_nats": -0.5182188888687345
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-08-25",
+            "n_trials": 800,
+            "mean_log_likelihood_nats": -0.4899456443115149
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-09-03",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.4835274273655041
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-09-08",
+            "n_trials": 1360,
+            "mean_log_likelihood_nats": -0.5143726456364062
+          },
+          {
+            "subject_id": "macaque-12",
+            "ses_idx": "macaque-12__2015-09-10",
+            "n_trials": 720,
+            "mean_log_likelihood_nats": -0.4956730068628717
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-08-21",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.5733913763039049
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-08-25",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.5595616053813507
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-08-27",
+            "n_trials": 640,
+            "mean_log_likelihood_nats": -0.6750499243310399
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-08-31",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.6312303867149659
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-09-02",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.6039343552461637
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-09-04",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.5658768845391853
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-09-09",
+            "n_trials": 1200,
+            "mean_log_likelihood_nats": -0.5912533453347513
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-09-11",
+            "n_trials": 320,
+            "mean_log_likelihood_nats": -0.6381580481792415
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-09-15",
+            "n_trials": 1040,
+            "mean_log_likelihood_nats": -0.5295895107229914
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-09-17",
+            "n_trials": 960,
+            "mean_log_likelihood_nats": -0.541377352743375
+          },
+          {
+            "subject_id": "macaque-13",
+            "ses_idx": "macaque-13__2015-09-25",
+            "n_trials": 720,
+            "mean_log_likelihood_nats": -0.5798423477190586
           }
         ]
       }
