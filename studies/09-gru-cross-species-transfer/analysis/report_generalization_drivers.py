@@ -909,8 +909,8 @@ def _plot_focused_author_embedding_llm(data: dict, llm_data: dict) -> None:
     for name in valid_names:
         cohort = data["cohorts"][name]
         row = llm_rows[name]
-        x = _seed_values(cohort, "embedding_centroid_mahalanobis")
-        y = np.full(len(x), float(row["llm_task_distance_to_aind"]))
+        y = _seed_values(cohort, "embedding_centroid_mahalanobis")
+        x = np.full(len(y), float(row["llm_task_distance_to_aind"]))
         color = SPECIES_COLORS[cohort["species"]]
         _plot_seed_mean_sem(right, x, y, color, TIER_MARKERS[cohort["analysis_tier"]])
         _annotate(
@@ -936,10 +936,10 @@ def _plot_focused_author_embedding_llm(data: dict, llm_data: dict) -> None:
     left.set_title(
         _relation_title("A  GRU−author model versus embedding distance", left_relation, len(author_names))
     )
-    right.set_xlabel("External-centroid distance from source\n(E8 Mahalanobis)")
-    right.set_ylabel("LLM task distance to AIND")
+    right.set_xlabel("LLM task distance to AIND")
+    right.set_ylabel("External-centroid distance from source\n(E8 Mahalanobis)")
     right.set_title(
-        _relation_title("B  Embedding distance versus LLM task distance", right_relation, len(valid_names))
+        _relation_title("B  LLM task distance versus embedding distance", right_relation, len(valid_names))
     )
     for axis in axes:
         axis.set_box_aspect(1)
