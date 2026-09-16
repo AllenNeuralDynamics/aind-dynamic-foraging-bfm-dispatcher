@@ -7,3 +7,8 @@ D={10,30,100,300,614} and source seeds 0–2.
 Run `smoke.yaml` first (D=614, seed 0). Launch the full 15-cell `sweep.yaml`
 only after that GPU smoke passes. This variant is GPU-only on Beaker; no
 CPU-only work belongs in this experiment.
+
+The original run used released column 9 as reward. The official Zenodo coding
+template identifies rewarded/unrewarded feedback as column 11. The corrected
+15-cell rerun uses `sweep_reward_fix.yaml` and immutable Beaker dataset
+`01M2H3GAY254P1VRW26DWY625T`; the original result is invalidated.

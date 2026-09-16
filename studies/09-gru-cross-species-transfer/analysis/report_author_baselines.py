@@ -19,7 +19,7 @@ from scipy.stats import wilcoxon
 
 STUDY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STUDY.parent / "util"))
-from plot_style import apply_presentation_style  # noqa: E402
+from plot_style import SPECIES_COLORS, apply_presentation_style  # noqa: E402
 
 
 AUTHOR_DATA = STUDY / "analysis" / "author_baseline_results.json"
@@ -33,6 +33,9 @@ EMBEDDING_DIMENSION_EXPANSION_DATA = (
 TASK_DESIGN_DATA = STUDY / "analysis" / "task_design_annotations.json"
 SURVEY = STUDY / "DATASET_SURVEY.md"
 FIGURE = STUDY / "analysis" / "fig_author_baseline_likelihood.png"
+FIGURE_SVG = STUDY / "analysis" / "fig_author_baseline_likelihood.svg"
+SLIDE_FIGURE_PNG = STUDY / "analysis" / "fig_slide_r1_transfer_baselines.png"
+SLIDE_FIGURE_SVG = STUDY / "analysis" / "fig_slide_r1_transfer_baselines.svg"
 SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_baseline_likelihood.png"
 GRU_Q_SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_gru_minus_q_likelihood.png"
 REPORT = STUDY / "analysis" / "reports" / "r1-author-aligned-baselines.md"
@@ -48,7 +51,6 @@ ALL_DATASET_ORDER = (
     "kwak",
     "miller",
     "findling",
-    "tang",
     "alsio",
     "eckstein",
     "costa",
@@ -62,12 +64,6 @@ TIER_LABELS = {
     "stress_test": "Stress test",
     "descriptive_only": "Descriptive",
 }
-SPECIES_COLORS = {
-    "mouse": "#4C72B0",
-    "rat": "#DD8452",
-    "macaque": "#C44E52",
-    "human": "#8172B3",
-}
 E4_COLOR = "#6BAED6"
 E8_COLOR = "#17365D"
 LABELS = {
@@ -79,7 +75,6 @@ LABELS = {
     "kwak": "Kwak (mouse)",
     "miller": "Miller (rat)",
     "findling": "Findling (human)",
-    "tang": "Tang (macaque)",
     "alsio": "Alsiö (rat)",
     "eckstein": "Eckstein (human)",
     "costa": "Costa (macaque)",
@@ -95,7 +90,6 @@ TASKS = {
     "kwak": "dynamic bandit under D1/D2 manipulation",
     "miller": "large dynamic bandit",
     "findling": "variable-volatility reversal",
-    "tang": "blockwise action/object values",
     "alsio": "discrimination and reversal",
     "eckstein": "developmental stochastic reversal",
     "costa": "stochastic stimulus reversal",
@@ -115,6 +109,10 @@ AUTHOR_LABELS = {
     "eckstein-rl": "counterfactual RL",
     "eckstein-bi": "Bayesian inference",
     "hattori-q-learning": "Hattori2019",
+    "lopez-double-trace": "double-trace RL",
+    "costa-feedback-dependent": "feedback-dependent RL + bias",
+    "costa-feedback-dependent-ck1": "feedback-dependent RL + bias + CK1",
+    "alsio-dual-rate-sticky": "dual-rate RL + stickiness",
 }
 AUTHOR_REFERENCE_PANELS = (
     ("grossman", "grossman-meta-learning"),
@@ -127,6 +125,8 @@ AUTHOR_REFERENCE_PANELS = (
     ("eckstein", "eckstein-rl"),
     ("eckstein", "eckstein-bi"),
     ("hattori", "hattori-q-learning"),
+    ("lopez_mouse", "lopez-double-trace"),
+    ("costa", "costa-feedback-dependent"),
 )
 EXAMPLE_CATEGORIES = (
     ("lower", "Lower tail"),
@@ -317,6 +317,11 @@ def _plot_summary(
         fontsize=17,
     )
     fig.savefig(FIGURE, bbox_inches="tight", dpi=180)
+    plt.rcParams["svg.hashsalt"] = "study09-r1-author-baseline-likelihood"
+    fig.savefig(FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
+    fig.savefig(SLIDE_FIGURE_PNG, bbox_inches="tight", dpi=220)
+    plt.rcParams["svg.hashsalt"] = "study09-r1-transfer-baselines"
+    fig.savefig(SLIDE_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
     plt.close(fig)
 
 
@@ -820,6 +825,8 @@ def _author_rows(
     correlations = []
     for baseline, record in author_data["records"].items():
         dataset_name = record["dataset"]
+        if dataset_name not in DATASET_ORDER:
+            continue
         dataset = matched["datasets"][dataset_name]
         d614 = _gru_for_d(dataset, 614)
         e8 = embedding_dimension["datasets"][dataset_name]["e8"]
@@ -996,7 +1003,7 @@ def _stage_a_read(matched: dict) -> list[str]:
         "",
         "The remaining cohorts are unresolved at the 0.05 level: "
         + describe(unresolved)
-        + ". Tang (macaque) has only two subjects, so its inferential result is especially limited.",
+        + ".",
         "",
         f"Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614. "
         f"The largest gains are "
@@ -1028,11 +1035,9 @@ def _stage_a_read(matched: dict) -> list[str]:
     lines += [
         "",
         "This screen therefore supports broad transfer, but not universal superiority over "
-        "a fitted subject-level Q model. López-Yépez (mouse), Grossman (mouse), Lebedeva "
-        "(mouse), and Chen (mouse) are the positive-transfer cases; Findling (human), "
-        "Eckstein (human), Miller (rat), and subject-balanced Zid (human) are the main "
-        "valid stress tests that motivated the primary-set author-model reproductions "
-        "reported below.",
+        "a fitted subject-level Q model. The cohort lists and effect sizes above are generated "
+        "directly from the frozen subject-level results; the author-model comparisons below "
+        "test whether those conclusions depend on the shared Bari2019 reference family.",
     ]
     return lines
 
@@ -1069,7 +1074,9 @@ def _result_block(
         "",
         "## Stage-A decision result",
         "",
-        "![GRU, Bari2019 common Q, and available author baselines](../fig_author_baseline_likelihood.png)",
+        "![GRU, Bari2019 common Q, and available author baselines](../fig_slide_r1_transfer_baselines.png)",
+        "",
+        "[SVG for slides](../fig_slide_r1_transfer_baselines.svg)",
         "",
         "Every model uses the same immutable adaptation and held-out observations. "
         "Panels are grouped as primary, stress test, and descriptive, then ordered within "
@@ -1079,15 +1086,19 @@ def _result_block(
         "species using the same palette as the task-design figures. Light-blue GRU points "
         "and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now "
         "appear for every displayed cohort. The five-cohort diagnostic E8 values have a "
-        "paired current-code E4 comparator in Result 4. Of the eight expansion values, "
-        "seven use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. "
+        "paired current-code E4 comparator in Result 4. Of the seven displayed expansion "
+        "values, six use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. "
         "GRU points are the three source-training seeds; summaries are their mean ± SD. "
         "The common Q baseline is the Bari2019 preset and is fitted independently per "
         "target subject on the identical adaptation half. "
         "Author-model lines include the existing Grossman (mouse), Chen (mouse), and "
         "Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), "
         "Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) "
-        "co-winners, and Hattori2019 for Hattori (mouse).",
+        "co-winners, Hattori2019 for Hattori (mouse), double-trace RL for "
+        "López-Yépez (mouse), and feedback-dependent RL plus a fitted shape-choice "
+        "bias for Costa (macaque). "
+        "Alsiö (rat) is shown as a "
+        "dotted cohort-mismatched author-model sensitivity.",
         "",
         "Kwak (mouse) is omitted from every figure, table, direction count, and inference in "
         "this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, "
@@ -1242,6 +1253,14 @@ def _result_block(
         "not evidence that the papers failed to test Q or selected the wrong model for their "
         "own analysis.",
         "",
+        "For Costa (macaque), the paper's feedback-dependent RL equation has separate "
+        "rewarded and unrewarded learning rates but no intercept. The matched benchmark "
+        "reported here adds a fitted shape-choice bias so that a stable preference is not "
+        "reserved for Bari2019 and the GRU. It still intentionally omits Bari2019's "
+        "one-step choice kernel and unchosen-value forgetting. Any remaining held-out gap "
+        "therefore concerns the full model families under the shared split, not the missing "
+        "intercept alone.",
+        "",
         "For Hattori (mouse), the comparison is specifically Bari2019 (`L1F1CK1`) "
         "versus Hattori2019 (`L2F1CK0`). Both are `ForagerQLearning` models with five "
         "fitted parameters. Bari2019 spends its extra flexibility on a one-trial choice "
@@ -1274,13 +1293,6 @@ def _result_block(
                     f"![{category_label} {LABELS[dataset_name]} held-out sessions]({path})",
                     "",
                 ]
-        if dataset_name == "tang":
-            lines += [
-                "Tang (macaque) has only four held-out real sessions in the complete release. All four "
-                "are shown once across the three rank regions; sessions are not duplicated to "
-                "manufacture nine examples.",
-                "",
-            ]
     lines += [
         "Black and gray marks denote rewarded and unrewarded choices; the black trace is "
         "the nine-trial smoothed right-choice fraction. The reward-probability strip is "
@@ -1293,7 +1305,7 @@ def _result_block(
             "## Skipped cohorts", "## Stage-B author-model feasibility gate"
         ),
         "",
-        "### Author-model feasibility — Stage-B stop gate",
+        "### Author-model feasibility and reproduction limits",
         "",
         _survey_section("## Stage-B author-model feasibility gate"),
         "",
@@ -1309,9 +1321,9 @@ def _result_block(
         "- Nominal source D is plotted. Realized source-subject counts were "
         + ", ".join(f"D={d}: {actual_ds[d]}" for d in DS)
         + ".",
-        "- Every primary-set author model uses the same immutable adaptation and held-out "
-        "trials as GRU and Bari2019 common Q; model-specific fitting deviations are disclosed in "
-        "the feasibility table.",
+        "- Every reproduced author model and the Alsiö (rat) cohort-mismatched sensitivity "
+        "uses the same immutable adaptation and held-out trials as GRU and Bari2019 common Q; "
+        "model-specific fitting deviations are disclosed in the feasibility table.",
     ]
     return "\n".join(lines)
 
@@ -1324,16 +1336,22 @@ def main() -> None:
     embedding_dimension = json.loads(EMBEDDING_DIMENSION_DATA.read_text())
     embedding_expansion = json.loads(EMBEDDING_DIMENSION_EXPANSION_DATA.read_text())
     task_design = json.loads(TASK_DESIGN_DATA.read_text())
-    if tuple(matched["datasets"]) != ALL_DATASET_ORDER:
+    if tuple(name for name in matched["datasets"] if name in ALL_DATASET_ORDER) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen matched-result dataset membership drifted")
-    if tuple(examples["datasets"]) != ALL_DATASET_ORDER:
+    if tuple(name for name in examples["datasets"] if name in ALL_DATASET_ORDER) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen example dataset membership drifted")
     overlap = set(embedding_dimension["datasets"]) & set(
         embedding_expansion["datasets"]
     )
     if overlap:
         raise AssertionError(f"Duplicate E8 datasets across frozen inputs: {sorted(overlap)}")
-    embedding_dimension["datasets"].update(embedding_expansion["datasets"])
+    embedding_dimension["datasets"].update(
+        {
+            name: value
+            for name, value in embedding_expansion["datasets"].items()
+            if name in DATASET_ORDER
+        }
+    )
     if set(embedding_dimension["datasets"]) != set(DATASET_ORDER):
         raise AssertionError("E8 frozen inputs do not cover every displayed dataset")
     _plot_summary(
@@ -1360,7 +1378,8 @@ def main() -> None:
     end_start = text.index(END, start_end)
     REPORT.write_text(text[:start_end] + "\n" + block + "\n" + text[end_start:])
     print(
-        f"Wrote {FIGURE}, {SUBJECT_FIGURE}, {GRU_Q_SUBJECT_FIGURE}, "
+        f"Wrote {FIGURE}, {FIGURE_SVG}, {SLIDE_FIGURE_PNG}, {SLIDE_FIGURE_SVG}, "
+        f"{SUBJECT_FIGURE}, {GRU_Q_SUBJECT_FIGURE}, "
         f"{len(example_paths)} example figures, "
         f"and {REPORT}"
     )

@@ -1,0 +1,60 @@
+{
+  "_meta": {
+    "produced_by": "launch_record.write_intervention",
+    "produced_at_pt": "2026-09-14T16:28:24-07:00",
+    "dispatcher_git_sha": "2bd9a945621ead0729cae72c781f6b2bbc3d0b3e",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "q-expanded-matched-half@slurm-26383387"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "hpc",
+  "wandb_group": "q-expanded-matched-half@slurm-26383387",
+  "job_refs": [
+    {
+      "type": "slurm_array_job",
+      "id": "26383387"
+    }
+  ],
+  "supersedes": [
+    "25581304_8"
+  ],
+  "trigger": {
+    "symptom": "The block-reset author model was near chance despite strong published learning effects.",
+    "cause": "The Costa adapter treated released column 9 as reward; the official coding template identifies rewarded/unrewarded feedback as column 11.",
+    "evidence": {
+      "official_coding_template": "Zenodo record 20086410 stochastic_coding_template.docx",
+      "incorrect_adapter_index": 8,
+      "correct_reward_index": 10,
+      "source_md5": "b388fe98ad9197c696ed87882b8fdbc5",
+      "canonical_parquet_sha256": "e6f0a017d13cf4b8653a43ef2debc9d74af307b81ae6f1fed4276bbbdd7c461d",
+      "split_manifest_sha256": "9dc04136ab185bd7ec9e60749a0a15e37ea3179649bb0e2ae6aff7356725dd30",
+      "audit_sha256": "d5fd33fb06da8f1fea2810c1673595543b0b8e8b8b3e86bd0f20de740aad0d58"
+    }
+  },
+  "tasks": [
+    {
+      "array_task_id": "26383387_8",
+      "dataset": "costa",
+      "wandb_run_id": "ekngwz1z",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/gru_cross_species_transfer/runs/ekngwz1z",
+      "status": "success",
+      "normalized_likelihood": 0.6310437182159756,
+      "n_trials": 162960,
+      "ordered_trial_key_sha256": "cfb2fda156b6b3ff4e8e6b555c8b8267ac971964f0957795c9f3db968d09d4a7",
+      "test_metrics_sha256": "58c308cecc781c22147757971bbd904c93570781ce11038d5ba56936522804eb",
+      "test_trial_predictions_sha256": "8ca648e99200351513d02d4c74f6258282ee0aebdcaedbcba08e8225e9c37a34",
+      "artifact_digest": "da0a52beb30e0dab317aade9c34bc16c"
+    }
+  ],
+  "deviations": {
+    "fresh_run_ids": true,
+    "corrected_reward_column": true,
+    "heldout_trial_keys_unchanged": true,
+    "beaker_input_dataset": "01M2H3GAY254P1VRW26DWY625T",
+    "hpc_canonical_root": "/allen/aind/scratch/han.hou/datasets/study09-costa-reward-fix-20260914/canonical"
+  },
+  "cost": {},
+  "status_note": "The committed W&B run and artifact report success; SLURM accounting could not be refreshed while Cisco DNS did not resolve the HPC host."
+}

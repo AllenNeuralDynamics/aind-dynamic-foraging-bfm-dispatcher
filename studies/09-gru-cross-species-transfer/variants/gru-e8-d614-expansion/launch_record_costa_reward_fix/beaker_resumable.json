@@ -1,0 +1,11 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 3,
+  "experiment_id": "01M2H3VQZA4VG8P0FWFWCVCRP2",
+  "experiment_url": "https://beaker.org/ex/01M2H3VQZA4VG8P0FWFWCVCRP2",
+  "dispatcher_commit": "2bd9a945621ead0729cae72c781f6b2bbc3d0b3e",
+  "wandb_group": "gru-e8-d614-expansion@20260914-162554",
+  "input_dataset_id": "01M2H3GAY254P1VRW26DWY625T",
+  "sweep_file": "studies/09-gru-cross-species-transfer/variants/gru-e8-d614-expansion/sweep_costa_reward_fix.yaml",
+  "created_utc": "2026-09-14T23:25:59.753733+00:00"
+}

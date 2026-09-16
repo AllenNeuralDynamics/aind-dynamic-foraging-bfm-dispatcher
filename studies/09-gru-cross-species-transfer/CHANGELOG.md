@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-15
+
+- Added a Costa feedback-dependent RL launch variant with a fitted choice bias
+  for symmetry with Bari2019 and the GRU readout. The literal three-parameter
+  paper model remains available as a separate implementation.
+- Added a controlled Costa diagnostic that combines the dual learning-rate
+  model and fitted bias with Bari2019's fixed one-step choice kernel, plus a
+  fresh Bari2019 reproducibility rerun on the identical corrected split.
+
 ## 2026-09-14
 
 - Added descriptive Result 3 companion figures that show GRU-minus-Bari2019 in
