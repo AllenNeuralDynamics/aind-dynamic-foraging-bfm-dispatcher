@@ -1,0 +1,374 @@
+{
+  "_meta": {
+    "produced_by": "analysis/report_llm_task_similarity.py",
+    "produced_at_pt": "2026-09-15T18:10:54-07:00",
+    "dispatcher_git_sha": "e3741b63dcdcfbdd7d2dedbcba8fc6c6ac93cbb4",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "gru-grossman-matched-half@20260905-022602",
+      "gru-chen-matched-half@20260905-024731",
+      "gru-zid-matched-half@20260905-025752",
+      "gru-lebedeva-matched-half@20260905-232924",
+      "gru-beron-matched-half@20260905-232924",
+      "gru-kwak-matched-half@20260906-071413",
+      "gru-miller-matched-half@20260905-232924",
+      "gru-findling-matched-half@20260905-232924",
+      "gru-alsio-matched-half@20260905-232925",
+      "gru-eckstein-matched-half@20260905-232924",
+      "gru-costa-matched-half@20260905-232924",
+      "gru-lopez-mouse-matched-half@20260905-232924",
+      "q-matched-half@20260905-024031",
+      "q-expanded-matched-half@20260906-001656",
+      "q-expanded-matched-half@20260906-kwak-choicefix",
+      "gru-hattori-matched-half@20260907-200329",
+      "q-hattori-matched-half@slurm-25585753",
+      "gru-costa-matched-half@20260914-162457",
+      "q-expanded-matched-half@slurm-26386210",
+      "e4-e8-d614-source@20260906-195409",
+      "gru-e8-d614-diagnostic@20260907-071400",
+      "gru-e8-d614-expansion@20260907-132415",
+      "gru-e8-d614-expansion@20260907-132625",
+      "gru-hattori-matched-half@20260907-200328",
+      "gru-e8-d614-expansion@20260914-162554",
+      "alsio-dual-rate-sticky@slurm-26383281",
+      "beron-rflr@slurm-25582233",
+      "chen-rlck@20260905-123624",
+      "costa-feedback-dependent-bias-ck1@slurm-26386211",
+      "costa-feedback-dependent-bias@slurm-26386087",
+      "eckstein-bi@slurm-25582240",
+      "eckstein-rl@slurm-25582239",
+      "findling-weber@slurm-25582235",
+      "findling-weber@slurm-25582241",
+      "grossman-meta-learning@20260905-124420",
+      "hattori-q-learning@slurm-25585754",
+      "lebedeva-pr@slurm-25582232",
+      "lopez-double-trace@slurm-26383278",
+      "miller-rhg@slurm-25582234",
+      "zid-history-kernel@20260905-123624",
+      "zid-history-kernel@20260905-151851"
+    ]
+  },
+  "inputs": {
+    "analysis/llm_task_cards.json": "e187f477aaf3afda3510d9a9ea2038889c5111dee8a98927f7af9b8de6e74344",
+    "analysis/llm_task_similarity_judgments.json": "6cea5751bb5162f0f92cb87cecff32cf0b1243875c3640c8cfcc26a809552909",
+    "analysis/generalization_drivers_e8.json": "51d891b8fcea5fb4afffb7fad5c09b8f35c0e0e832dfbebec31af616f41afda6"
+  },
+  "contract": {
+    "score": "Fraction of pairwise comparisons judged closer to AIND; ties contribute one-half win. Each candidate is compared with all 11 alternatives.",
+    "uncertainty": "The LLM score has no error bar because this first pass has one judge. Performance and embedding error bars are SEM across three source seeds.",
+    "performance_metric": "E8 D=614 three-source-seed mean subject-balanced normalized-likelihood difference.",
+    "correlation": "Cohort-level Spearman correlation with deterministic 100,000-draw two-sided permutation p-value.",
+    "rng_seed": 20260915
+  },
+  "judge": {
+    "model": "OpenAI Codex current session (exact deployment ID unavailable)",
+    "prompt_version": "study09-task-similarity-v1",
+    "n_candidates": 12,
+    "n_unordered_pairs": 66,
+    "n_implied_ordered_encodings": 132,
+    "same_session_single_judge": true,
+    "independent_model_replicates": 0,
+    "independent_pairwise_api_calls": 0,
+    "blinding": "Input-level only: cards omit species, study/author identity, outcomes, embeddings, and the hand-coded design distance. Response apparatus remains visible as a secondary task feature."
+  },
+  "audit": {
+    "all_pairs_complete": true,
+    "all_pairs_mirrored_in_reverse_order": true,
+    "mirrored_order_consistency_fraction": 1.0,
+    "limitation": "The single judge produced an ordinal tiering. Its 66 implied pairwise outcomes were encoded in both A/B directions, so the 100% consistency is an invariant check rather than an empirical estimate of position bias."
+  },
+  "ranking": [
+    {
+      "card_id": "T02",
+      "cohort": "grossman",
+      "label": "Grossman (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_closeness_score": 0.9545454545454546,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.013466090022330124,
+        0.013582298038924745,
+        0.014101404283067609
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.01526188579997556,
+        0.015378093816570182,
+        0.015897200060713046
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        1.0097869422190424,
+        0.9997662407654245,
+        0.6679923901456493
+      ]
+    },
+    {
+      "card_id": "T08",
+      "cohort": "hattori",
+      "label": "Hattori (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_closeness_score": 0.9545454545454546,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.009381016024219924,
+        0.00938599058878331,
+        0.009369016302582578
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.010983032464758513,
+        0.0109880070293219,
+        0.010971032743121167
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        4.873081857542993,
+        6.132237142422753,
+        4.755103094466332
+      ]
+    },
+    {
+      "card_id": "T11",
+      "cohort": "lebedeva",
+      "label": "Lebedeva (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_closeness_score": 0.8181818181818182,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.009636551814848793,
+        0.009776548513749317,
+        0.00966309506875751
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.0048903877336290424,
+        0.005030384432529567,
+        0.00491693098753776
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        2.8683257838207736,
+        2.976366451387069,
+        2.6355145530330972
+      ]
+    },
+    {
+      "card_id": "T06",
+      "cohort": "beron",
+      "label": "Beron (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_closeness_score": 0.7272727272727273,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.0022052473493752167,
+        0.0003794569098606315,
+        0.0018609816266096368
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.0041110392428508336,
+        0.0022852488033362484,
+        0.0037667735200852537
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        5.382361322866974,
+        4.294291240177981,
+        4.796599537933474
+      ]
+    },
+    {
+      "card_id": "T01",
+      "cohort": "eckstein",
+      "label": "Eckstein (human)",
+      "species": "human",
+      "analysis_tier": "primary",
+      "llm_closeness_score": 0.6363636363636364,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.001335891449834481,
+        0.0007341819196932109,
+        -0.003977406299885633
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        -0.026892740905746115,
+        -0.027494450435887385,
+        -0.03220603865546623
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        17.460532676952738,
+        18.246012790665272,
+        14.986822590165508
+      ]
+    },
+    {
+      "card_id": "T04",
+      "cohort": "chen",
+      "label": "Chen (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_closeness_score": 0.5,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.008076350923500786,
+        0.005738837779724504,
+        0.008581876857658988
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.004073893268850326,
+        0.001736380125074044,
+        0.004579419203008528
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        11.34941372170915,
+        9.53204727439311,
+        14.431960704365935
+      ]
+    },
+    {
+      "card_id": "T09",
+      "cohort": "miller",
+      "label": "Miller (rat)",
+      "species": "rat",
+      "analysis_tier": "primary",
+      "llm_closeness_score": 0.5,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        -0.003444473697894468,
+        -0.008029507567580918,
+        -0.003906577994684857
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        -0.010454314028400802,
+        -0.015039347898087252,
+        -0.01091641832519119
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        10.157484443901774,
+        8.093827316128705,
+        11.023632124127465
+      ]
+    },
+    {
+      "card_id": "T05",
+      "cohort": "costa",
+      "label": "Costa (macaque)",
+      "species": "macaque",
+      "analysis_tier": "stress_test",
+      "llm_closeness_score": 0.36363636363636365,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.0016465113768873163,
+        0.00017707711269820958,
+        0.001961754538272298
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.04672147042640129,
+        0.045252036162212184,
+        0.04703671358778627
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        5.95470904131549,
+        4.050726467782714,
+        6.199885833183579
+      ]
+    },
+    {
+      "card_id": "T12",
+      "cohort": "findling",
+      "label": "Findling (human)",
+      "species": "human",
+      "analysis_tier": "primary",
+      "llm_closeness_score": 0.2727272727272727,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        -0.02457645868166669,
+        -0.02823622929076719,
+        -0.024602088484877438
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        -0.0076060746480166586,
+        -0.011265845257117157,
+        -0.007631704451227406
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        15.059652944048663,
+        15.944777764556315,
+        12.127030293092536
+      ]
+    },
+    {
+      "card_id": "T10",
+      "cohort": "alsio",
+      "label": "Alsi\u00f6 (rat)",
+      "species": "rat",
+      "analysis_tier": "stress_test",
+      "llm_closeness_score": 0.18181818181818182,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.0022427253347026,
+        0.0012747924506063546,
+        0.0022716666534634555
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [],
+      "embedding_centroid_mahalanobis_by_seed": [
+        11.265054391375257,
+        13.433581227174265,
+        15.041403621798725
+      ]
+    },
+    {
+      "card_id": "T07",
+      "cohort": "zid",
+      "label": "Zid (human)",
+      "species": "human",
+      "analysis_tier": "primary",
+      "llm_closeness_score": 0.09090909090909091,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.00865703276263119,
+        0.003515536707094258,
+        0.004924009137030949
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.029863833713275056,
+        0.024722337657738125,
+        0.026130810087674816
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        13.82694207139438,
+        14.434293359712651,
+        11.481511746432396
+      ]
+    },
+    {
+      "card_id": "T03",
+      "cohort": "lopez_mouse",
+      "label": "L\u00f3pez-Y\u00e9pez (mouse)",
+      "species": "mouse",
+      "analysis_tier": "stress_test",
+      "llm_closeness_score": 0.0,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.06196787975524809,
+        0.06102658449412335,
+        0.062098737123100656
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        -0.024344212460946757,
+        -0.0252855077220715,
+        -0.02421335509309419
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        18.885290336966257,
+        10.442779881225,
+        26.074676622033497
+      ]
+    }
+  ],
+  "relationships": {
+    "gru_minus_bari_vs_llm_closeness": {
+      "n_cohorts": 12,
+      "spearman_rho": 0.175439676455626,
+      "permutation_p_two_sided": 0.5744142558574414,
+      "n_permutations": 100000
+    },
+    "gru_minus_author_vs_llm_closeness": {
+      "n_cohorts": 11,
+      "spearman_rho": 0.18265030599088924,
+      "permutation_p_two_sided": 0.5859241407585924,
+      "n_permutations": 100000
+    },
+    "embedding_distance_vs_llm_closeness": {
+      "n_cohorts": 12,
+      "spearman_rho": -0.7789521634629794,
+      "permutation_p_two_sided": 0.003979960200397996,
+      "n_permutations": 100000
+    }
+  }
+}

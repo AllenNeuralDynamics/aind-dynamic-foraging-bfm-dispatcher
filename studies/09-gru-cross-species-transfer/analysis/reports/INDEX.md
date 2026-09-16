@@ -7,3 +7,4 @@
 | [r3](r3-generalization-drivers.md) | generalization-drivers | live | Primary distance-versus-GRU association is negative in both spaces (E4 ρ=-0.633; E8 ρ=-0.700) |
 | [r4](r4-embedding-dimension-transfer.md) | embedding-dimension-transfer | live | E8 has higher mean held-out likelihood in 10/13 cohorts; six comparisons are strict paired reruns and seven use historical E4 |
 | [r5](r5-maturity-audit.md) | maturity-audit | live | 11 cohorts are reusable, Kwak (mouse) needs a DMSO-only rerun, and Miller (rat) plus Alsiö (rat) leave mature-primary inference |
+| [r6](r6-llm-task-similarity.md) | llm-task-similarity | live | A species-hidden single-Codex judge ranks task similarity to AIND and relates the frozen rank to E8 transfer and embedding distance |
