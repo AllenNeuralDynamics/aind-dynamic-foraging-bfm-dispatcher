@@ -29,6 +29,8 @@ FIGURE_PNG = STUDY / "analysis" / "fig_llm_task_similarity.png"
 FIGURE_SVG = STUDY / "analysis" / "fig_llm_task_similarity.svg"
 CROSSCHECK_PNG = STUDY / "analysis" / "fig_task_distance_crosscheck.png"
 CROSSCHECK_SVG = STUDY / "analysis" / "fig_task_distance_crosscheck.svg"
+FULL_DESIGN_PNG = STUDY / "analysis" / "fig_full_design_vs_llm_task_distance.png"
+FULL_DESIGN_SVG = STUDY / "analysis" / "fig_full_design_vs_llm_task_distance.svg"
 REPORT = STUDY / "analysis" / "reports" / "r6-llm-task-similarity.md"
 START = "<!-- BEGIN result-6 -->"
 END = "<!-- END result-6 -->"
@@ -345,6 +347,7 @@ def _plot_xy_point(
     y: float,
     *,
     y_values: np.ndarray | None = None,
+    label_offset: tuple[float, float] = (4, 4),
 ) -> None:
     color = SPECIES_COLORS[row["species"]]
     marker = TIER_MARKERS[row["analysis_tier"]]
@@ -365,7 +368,7 @@ def _plot_xy_point(
     axis.annotate(
         row["label"].split(" (")[0],
         (x, y),
-        xytext=(4, 4),
+        xytext=label_offset,
         textcoords="offset points",
         fontsize=8.5,
         color=color,
@@ -411,6 +414,11 @@ def main() -> None:
                 "species": cohort["species"],
                 "analysis_tier": cohort["analysis_tier"],
                 "llm_task_distance_to_aind": float(distances[index]),
+                "full_design_distance_to_aind": float(
+                    task_features["cohorts"][name]["categorical_distance"][
+                        "full_design"
+                    ]
+                ),
                 "gru_minus_bari_normalized_likelihood_by_seed": [
                     float(seed["gru_d614_minus_q_subject_balanced_normalized_likelihood"])
                     for seed in seeds
@@ -440,6 +448,11 @@ def main() -> None:
         "gru_minus_author_vs_llm_task_distance": _spearman_permutation(author_x, author_y, rng),
         "embedding_distance_vs_llm_task_distance": _spearman_permutation(
             x_all, embedding_all, rng
+        ),
+        "full_design_distance_vs_llm_task_distance": _spearman_permutation(
+            np.asarray([row["full_design_distance_to_aind"] for row in rows]),
+            x_all,
+            rng,
         ),
     }
 
@@ -547,6 +560,10 @@ def main() -> None:
                 "One minus the fraction of pairwise comparisons judged closer to AIND; "
                 "ties contribute one-half win. Each candidate is compared with all 11 "
                 "alternatives, so zero means closest and one means farthest."
+            ),
+            "full_design_distance_to_aind": (
+                "The previous seven-axis categorical Hamming distance to the nearest "
+                "of the three AIND task prototypes."
             ),
             "uncertainty": (
                 "The LLM task distance has no error bar because this first pass has one judge. "
@@ -684,6 +701,66 @@ def main() -> None:
     )
     fig.savefig(FIGURE_PNG, bbox_inches="tight")
     plt.close(fig)
+
+    full_design_relation = relationships[
+        "full_design_distance_vs_llm_task_distance"
+    ]
+    full_design_fig, full_design_axis = plt.subplots(
+        1, 1, figsize=(8.5, 8.5), constrained_layout=True
+    )
+    duplicate_offsets = {
+        "grossman": -0.008,
+        "hattori": 0.008,
+        "chen": -0.008,
+        "miller": 0.008,
+    }
+    label_offsets = {
+        "grossman": (-4, -18),
+        "hattori": (4, 6),
+        "chen": (-34, -18),
+        "miller": (4, 6),
+    }
+    for row in rows:
+        _plot_xy_point(
+            full_design_axis,
+            row,
+            row["full_design_distance_to_aind"]
+            + duplicate_offsets.get(row["cohort"], 0.0),
+            row["llm_task_distance_to_aind"],
+            label_offset=label_offsets.get(row["cohort"], (4, 4)),
+        )
+    full_design_axis.set_xlabel("Previous full-design distance to AIND family")
+    full_design_axis.set_ylabel("LLM task distance to AIND")
+    full_design_axis.set_xlim(-0.04, 0.76)
+    full_design_axis.set_ylim(-0.04, 1.06)
+    full_design_axis.set_title(
+        "Categorical full-design versus LLM task distance\n"
+        f"n={full_design_relation['n_cohorts']}; Spearman "
+        f"ρ={full_design_relation['spearman_rho']:+.2f}, permutation p<0.001"
+    )
+    full_design_axis.set_box_aspect(1)
+    full_design_axis.text(
+        0.02,
+        0.98,
+        "Tiny horizontal offsets separate exact overlaps; statistics use exact values.",
+        transform=full_design_axis.transAxes,
+        va="top",
+        fontsize=8.5,
+        color="#666666",
+    )
+    full_design_axis.legend(
+        handles=species_handles + tier_handles,
+        loc="lower right",
+        fontsize=9,
+    )
+    with plt.rc_context({"svg.fonttype": "none"}):
+        full_design_fig.savefig(FULL_DESIGN_SVG, bbox_inches="tight")
+    FULL_DESIGN_SVG.write_text(
+        "\n".join(line.rstrip() for line in FULL_DESIGN_SVG.read_text().splitlines())
+        + "\n"
+    )
+    full_design_fig.savefig(FULL_DESIGN_PNG, bbox_inches="tight")
+    plt.close(full_design_fig)
 
     cross_fig, cross_axes = plt.subplots(
         5, 2, figsize=(15, 34), constrained_layout=True
@@ -907,6 +984,9 @@ def main() -> None:
     q_relation = relationships["gru_minus_bari_vs_llm_task_distance"]
     author_relation = relationships["gru_minus_author_vs_llm_task_distance"]
     embedding_relation = relationships["embedding_distance_vs_llm_task_distance"]
+    full_design_llm_relation = relationships[
+        "full_design_distance_vs_llm_task_distance"
+    ]
     feature_llm_relation = complete_case_relationships[
         "feature_distance_vs_llm_task_distance"
     ]
@@ -1019,6 +1099,21 @@ def main() -> None:
             f"(permutation p={embedding_relation['permutation_p_two_sided']:.4f}). Species "
             "colors are added only after unblinding and are descriptive; species was not "
             "available to the judge.",
+            "",
+            "## Consistency with the previous full-design distance",
+            "",
+            "![Previous full-design distance versus LLM task distance](../fig_full_design_vs_llm_task_distance.png)",
+            "",
+            "[Editable SVG](../fig_full_design_vs_llm_task_distance.svg)",
+            "",
+            "This comparison includes all 12 valid cohorts. The previous full-design score "
+            "is the seven-axis categorical distance to the nearest AIND task prototype; the "
+            "LLM distance is the frozen outcome-blind pairwise rank. They agree at Spearman "
+            f"ρ={full_design_llm_relation['spearman_rho']:+.3f} "
+            f"(permutation p={full_design_llm_relation['permutation_p_two_sided']:.4f}; "
+            f"leave-one-cohort-out range "
+            f"[{full_design_llm_relation['leave_one_cohort_out_range'][0]:+.2f}, "
+            f"{full_design_llm_relation['leave_one_cohort_out_range'][1]:+.2f}]).",
             "",
             "## Complete-case mixed-feature cross-check",
             "",

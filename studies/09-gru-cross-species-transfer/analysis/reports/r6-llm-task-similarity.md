@@ -62,6 +62,8 @@ inputs:
     - analysis/fig_llm_task_similarity.svg
     - analysis/fig_task_distance_crosscheck.png
     - analysis/fig_task_distance_crosscheck.svg
+    - analysis/fig_full_design_vs_llm_task_distance.png
+    - analysis/fig_full_design_vs_llm_task_distance.svg
 reproduce: make -C studies/09-gru-cross-species-transfer r6
 ---
 
@@ -107,6 +109,14 @@ The three closest judged tasks are Grossman (mouse), Hattori (mouse), López-Yé
 Across all 12 valid cohorts, LLM task distance to AIND versus GRU−Bari2019 normalized-likelihood advantage has Spearman ρ=-0.611 (permutation p=0.0391). Among the 11 cohorts with an author-model reference, the GRU−author association is ρ=+0.100 (p=0.7699).
 
 LLM task distance to AIND versus E8 embedding-centroid distance has Spearman ρ=+0.449 (permutation p=0.1454). Species colors are added only after unblinding and are descriptive; species was not available to the judge.
+
+## Consistency with the previous full-design distance
+
+![Previous full-design distance versus LLM task distance](../fig_full_design_vs_llm_task_distance.png)
+
+[Editable SVG](../fig_full_design_vs_llm_task_distance.svg)
+
+This comparison includes all 12 valid cohorts. The previous full-design score is the seven-axis categorical distance to the nearest AIND task prototype; the LLM distance is the frozen outcome-blind pairwise rank. They agree at Spearman ρ=+0.975 (permutation p=0.0000; leave-one-cohort-out range [+0.97, +0.98]).
 
 ## Complete-case mixed-feature cross-check
 
