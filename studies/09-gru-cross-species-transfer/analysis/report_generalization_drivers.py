@@ -836,7 +836,8 @@ def _plot_slide_synthesis(data: dict, task_data: dict) -> None:
         panel_index=4,
         zero_line=False,
     )
-    axes[4].set_box_aspect(1)
+    for axis in axes:
+        axis.set_box_aspect(1)
     fig.legend(
         handles=[
             *_species_legend([data["cohorts"][name] for name in names]),
