@@ -1,7 +1,7 @@
 {
   "_meta": {
     "produced_by": "analysis/report_llm_task_similarity.py",
-    "produced_at_pt": "2026-09-15T18:48:24-07:00",
+    "produced_at_pt": "2026-09-15T21:02:12-07:00",
     "dispatcher_git_sha": null,
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
@@ -54,8 +54,8 @@
     "analysis/generalization_drivers_e8.json": "51d891b8fcea5fb4afffb7fad5c09b8f35c0e0e832dfbebec31af616f41afda6"
   },
   "contract": {
-    "score": "Fraction of pairwise comparisons judged closer to AIND; ties contribute one-half win. Each candidate is compared with all 11 alternatives.",
-    "uncertainty": "The LLM score has no error bar because this first pass has one judge. Performance and embedding error bars are SEM across three source seeds.",
+    "llm_task_distance_to_aind": "One minus the fraction of pairwise comparisons judged closer to AIND; ties contribute one-half win. Each candidate is compared with all 11 alternatives, so zero means closest and one means farthest.",
+    "uncertainty": "The LLM task distance has no error bar because this first pass has one judge. Performance and embedding error bars are SEM across three source seeds.",
     "performance_metric": "E8 D=614 three-source-seed mean subject-balanced normalized-likelihood difference.",
     "correlation": "Cohort-level Spearman correlation with deterministic 100,000-draw two-sided permutation p-value.",
     "rng_seed": 20260915
@@ -84,7 +84,7 @@
       "label": "Grossman (mouse)",
       "species": "mouse",
       "analysis_tier": "primary",
-      "llm_closeness_score": 0.9545454545454546,
+      "llm_task_distance_to_aind": 0.045454545454545414,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.013466090022330124,
         0.013582298038924745,
@@ -107,7 +107,7 @@
       "label": "Hattori (mouse)",
       "species": "mouse",
       "analysis_tier": "primary",
-      "llm_closeness_score": 0.9545454545454546,
+      "llm_task_distance_to_aind": 0.045454545454545414,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.009381016024219924,
         0.00938599058878331,
@@ -130,7 +130,7 @@
       "label": "L\u00f3pez-Y\u00e9pez (mouse)",
       "species": "mouse",
       "analysis_tier": "stress_test",
-      "llm_closeness_score": 0.8181818181818182,
+      "llm_task_distance_to_aind": 0.18181818181818177,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.06196787975524809,
         0.06102658449412335,
@@ -153,7 +153,7 @@
       "label": "Lebedeva (mouse)",
       "species": "mouse",
       "analysis_tier": "primary",
-      "llm_closeness_score": 0.7272727272727273,
+      "llm_task_distance_to_aind": 0.2727272727272727,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.009636551814848793,
         0.009776548513749317,
@@ -176,7 +176,7 @@
       "label": "Beron (mouse)",
       "species": "mouse",
       "analysis_tier": "primary",
-      "llm_closeness_score": 0.6363636363636364,
+      "llm_task_distance_to_aind": 0.36363636363636365,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.0022052473493752167,
         0.0003794569098606315,
@@ -199,7 +199,7 @@
       "label": "Eckstein (human)",
       "species": "human",
       "analysis_tier": "primary",
-      "llm_closeness_score": 0.5454545454545454,
+      "llm_task_distance_to_aind": 0.4545454545454546,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.001335891449834481,
         0.0007341819196932109,
@@ -222,7 +222,7 @@
       "label": "Chen (mouse)",
       "species": "mouse",
       "analysis_tier": "primary",
-      "llm_closeness_score": 0.4090909090909091,
+      "llm_task_distance_to_aind": 0.5909090909090908,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.008076350923500786,
         0.005738837779724504,
@@ -245,7 +245,7 @@
       "label": "Miller (rat)",
       "species": "rat",
       "analysis_tier": "primary",
-      "llm_closeness_score": 0.4090909090909091,
+      "llm_task_distance_to_aind": 0.5909090909090908,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         -0.003444473697894468,
         -0.008029507567580918,
@@ -268,7 +268,7 @@
       "label": "Costa (macaque)",
       "species": "macaque",
       "analysis_tier": "stress_test",
-      "llm_closeness_score": 0.2727272727272727,
+      "llm_task_distance_to_aind": 0.7272727272727273,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.0016465113768873163,
         0.00017707711269820958,
@@ -291,7 +291,7 @@
       "label": "Findling (human)",
       "species": "human",
       "analysis_tier": "primary",
-      "llm_closeness_score": 0.18181818181818182,
+      "llm_task_distance_to_aind": 0.8181818181818181,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         -0.02457645868166669,
         -0.02823622929076719,
@@ -314,7 +314,7 @@
       "label": "Alsi\u00f6 (rat)",
       "species": "rat",
       "analysis_tier": "stress_test",
-      "llm_closeness_score": 0.09090909090909091,
+      "llm_task_distance_to_aind": 0.9090909090909091,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.0022427253347026,
         0.0012747924506063546,
@@ -333,7 +333,7 @@
       "label": "Zid (human)",
       "species": "human",
       "analysis_tier": "primary",
-      "llm_closeness_score": 0.0,
+      "llm_task_distance_to_aind": 1.0,
       "gru_minus_bari_normalized_likelihood_by_seed": [
         0.00865703276263119,
         0.003515536707094258,
@@ -352,21 +352,21 @@
     }
   ],
   "relationships": {
-    "gru_minus_bari_vs_llm_closeness": {
+    "gru_minus_bari_vs_llm_task_distance": {
       "n_cohorts": 12,
-      "spearman_rho": 0.6105300740655785,
+      "spearman_rho": -0.6105300740655785,
       "permutation_p_two_sided": 0.039109608903910964,
       "n_permutations": 100000
     },
-    "gru_minus_author_vs_llm_closeness": {
+    "gru_minus_author_vs_llm_task_distance": {
       "n_cohorts": 11,
-      "spearman_rho": -0.1004576682949891,
+      "spearman_rho": 0.1004576682949891,
       "permutation_p_two_sided": 0.7593724062759373,
       "n_permutations": 100000
     },
-    "embedding_distance_vs_llm_closeness": {
+    "embedding_distance_vs_llm_task_distance": {
       "n_cohorts": 12,
-      "spearman_rho": -0.44912557172640244,
+      "spearman_rho": 0.44912557172640244,
       "permutation_p_two_sided": 0.14537854621453786,
       "n_permutations": 100000
     }

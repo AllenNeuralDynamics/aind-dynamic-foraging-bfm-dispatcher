@@ -153,7 +153,7 @@ def main() -> None:
     comparisons = [_pair_outcome(row) for row in judgments["comparisons"]]
 
     rng = np.random.default_rng(RNG_SEED)
-    scores = _pairwise_win_rates(card_ids, comparisons)
+    distances = 1.0 - _pairwise_win_rates(card_ids, comparisons)
 
     rows = []
     for index, card_id in enumerate(card_ids):
@@ -173,7 +173,7 @@ def main() -> None:
                 "label": cohort["label"],
                 "species": cohort["species"],
                 "analysis_tier": cohort["analysis_tier"],
-                "llm_closeness_score": float(scores[index]),
+                "llm_task_distance_to_aind": float(distances[index]),
                 "gru_minus_bari_normalized_likelihood_by_seed": [
                     float(seed["gru_d614_minus_q_subject_balanced_normalized_likelihood"])
                     for seed in seeds
@@ -184,9 +184,9 @@ def main() -> None:
                 ],
             }
         )
-    rows.sort(key=lambda row: (-row["llm_closeness_score"], row["label"]))
+    rows.sort(key=lambda row: (row["llm_task_distance_to_aind"], row["label"]))
 
-    x_all = np.asarray([row["llm_closeness_score"] for row in rows])
+    x_all = np.asarray([row["llm_task_distance_to_aind"] for row in rows])
     q_all = np.asarray(
         [np.mean(row["gru_minus_bari_normalized_likelihood_by_seed"]) for row in rows]
     )
@@ -194,14 +194,14 @@ def main() -> None:
         [np.mean(row["embedding_centroid_mahalanobis_by_seed"]) for row in rows]
     )
     author_rows = [row for row in rows if row["gru_minus_author_normalized_likelihood_by_seed"]]
-    author_x = np.asarray([row["llm_closeness_score"] for row in author_rows])
+    author_x = np.asarray([row["llm_task_distance_to_aind"] for row in author_rows])
     author_y = np.asarray(
         [np.mean(row["gru_minus_author_normalized_likelihood_by_seed"]) for row in author_rows]
     )
     relationships = {
-        "gru_minus_bari_vs_llm_closeness": _spearman_permutation(x_all, q_all, rng),
-        "gru_minus_author_vs_llm_closeness": _spearman_permutation(author_x, author_y, rng),
-        "embedding_distance_vs_llm_closeness": _spearman_permutation(
+        "gru_minus_bari_vs_llm_task_distance": _spearman_permutation(x_all, q_all, rng),
+        "gru_minus_author_vs_llm_task_distance": _spearman_permutation(author_x, author_y, rng),
+        "embedding_distance_vs_llm_task_distance": _spearman_permutation(
             x_all, embedding_all, rng
         ),
     }
@@ -222,12 +222,13 @@ def main() -> None:
             ),
         },
         "contract": {
-            "score": (
-                "Fraction of pairwise comparisons judged closer to AIND; ties contribute "
-                "one-half win. Each candidate is compared with all 11 alternatives."
+            "llm_task_distance_to_aind": (
+                "One minus the fraction of pairwise comparisons judged closer to AIND; "
+                "ties contribute one-half win. Each candidate is compared with all 11 "
+                "alternatives, so zero means closest and one means farthest."
             ),
             "uncertainty": (
-                "The LLM score has no error bar because this first pass has one judge. "
+                "The LLM task distance has no error bar because this first pass has one judge. "
                 "Performance and embedding error bars are SEM across three source seeds."
             ),
             "performance_metric": (
@@ -252,10 +253,10 @@ def main() -> None:
     ordered = list(reversed(rows))
     y_positions = np.arange(len(ordered))
     for y_position, row in zip(y_positions, ordered, strict=True):
-        score = row["llm_closeness_score"]
+        distance = row["llm_task_distance_to_aind"]
         rank_axis.barh(
             y_position,
-            score,
+            distance,
             color=SPECIES_COLORS[row["species"]],
             alpha=0.88,
             edgecolor="white",
@@ -267,31 +268,31 @@ def main() -> None:
         tick.set_color(SPECIES_COLORS[row["species"]])
         tick.set_fontsize(11)
     rank_axis.set_xlim(0, 1)
-    rank_axis.set_xlabel("LLM task closeness to AIND")
+    rank_axis.set_xlabel("LLM task distance to AIND")
     rank_axis.set_title(
         "Prompt-blinded task-design rank\n66 implied pairs from one frozen ordinal judge"
     )
     rank_axis.set_box_aspect(1)
 
     for row in rows:
-        score = row["llm_closeness_score"]
+        distance = row["llm_task_distance_to_aind"]
         _plot_point(
             q_axis,
             row,
-            score,
+            distance,
             np.asarray(row["gru_minus_bari_normalized_likelihood_by_seed"]),
         )
         if row["gru_minus_author_normalized_likelihood_by_seed"]:
             _plot_point(
                 author_axis,
                 row,
-                score,
+                distance,
                 np.asarray(row["gru_minus_author_normalized_likelihood_by_seed"]),
             )
         _plot_point(
             embedding_axis,
             row,
-            score,
+            distance,
             np.asarray(row["embedding_centroid_mahalanobis_by_seed"]),
         )
 
@@ -299,23 +300,23 @@ def main() -> None:
         (
             q_axis,
             "GRU E8 D=614 − Bari2019\n(normalized likelihood)",
-            relationships["gru_minus_bari_vs_llm_closeness"],
+            relationships["gru_minus_bari_vs_llm_task_distance"],
         ),
         (
             author_axis,
             "GRU E8 D=614 − author model\n(normalized likelihood)",
-            relationships["gru_minus_author_vs_llm_closeness"],
+            relationships["gru_minus_author_vs_llm_task_distance"],
         ),
         (
             embedding_axis,
             "E8 external-centroid distance\n(Mahalanobis)",
-            relationships["embedding_distance_vs_llm_closeness"],
+            relationships["embedding_distance_vs_llm_task_distance"],
         ),
     )
     for axis, ylabel, relationship in panels:
         axis.axhline(0, color="#777777", linestyle="--", linewidth=1, zorder=1)
         axis.set_xlim(0, 1)
-        axis.set_xlabel("LLM task closeness to AIND")
+        axis.set_xlabel("LLM task distance to AIND")
         axis.set_ylabel(ylabel)
         axis.set_title(_relation_title(ylabel.split("\n")[0], relationship))
         axis.set_box_aspect(1)
@@ -348,7 +349,7 @@ def main() -> None:
     ]
     q_axis.legend(handles=species_handles + tier_handles, loc="best", fontsize=10)
     fig.suptitle(
-        "Prompt-blinded LLM task similarity versus external transfer",
+        "Prompt-blinded LLM task distance versus external transfer",
         fontsize=22,
         fontweight="bold",
     )
@@ -363,17 +364,17 @@ def main() -> None:
 
     top = ", ".join(row["label"] for row in rows[:3])
     bottom = ", ".join(row["label"] for row in rows[-3:])
-    q_relation = relationships["gru_minus_bari_vs_llm_closeness"]
-    author_relation = relationships["gru_minus_author_vs_llm_closeness"]
-    embedding_relation = relationships["embedding_distance_vs_llm_closeness"]
+    q_relation = relationships["gru_minus_bari_vs_llm_task_distance"]
+    author_relation = relationships["gru_minus_author_vs_llm_task_distance"]
+    embedding_relation = relationships["embedding_distance_vs_llm_task_distance"]
     table = [
-        "| rank | study | tier | LLM closeness |",
+        "| rank | study | tier | LLM task distance to AIND |",
         "|---:|---|---|---:|",
     ]
     for rank, row in enumerate(rows, 1):
         table.append(
             f"| {rank} | {row['label']} | {row['analysis_tier'].replace('_', ' ')} | "
-            f"{row['llm_closeness_score']:.3f} |"
+            f"{row['llm_task_distance_to_aind']:.3f} |"
         )
     block = "\n".join(
         [
@@ -407,14 +408,14 @@ def main() -> None:
             "",
             "## Association with E8 transfer",
             "",
-            f"Across all 12 valid cohorts, LLM closeness versus GRU−Bari2019 normalized-"
+            f"Across all 12 valid cohorts, LLM task distance to AIND versus GRU−Bari2019 normalized-"
             f"likelihood advantage has Spearman ρ={q_relation['spearman_rho']:+.3f} "
             f"(permutation p={q_relation['permutation_p_two_sided']:.4f}). Among the "
             f"{author_relation['n_cohorts']} cohorts with an author-model reference, the "
             f"GRU−author association is ρ={author_relation['spearman_rho']:+.3f} "
             f"(p={author_relation['permutation_p_two_sided']:.4f}).",
             "",
-            f"LLM closeness versus E8 embedding-centroid distance has Spearman "
+            f"LLM task distance to AIND versus E8 embedding-centroid distance has Spearman "
             f"ρ={embedding_relation['spearman_rho']:+.3f} "
             f"(permutation p={embedding_relation['permutation_p_two_sided']:.4f}). Species "
             "colors are added only after unblinding and are descriptive; species was not "
