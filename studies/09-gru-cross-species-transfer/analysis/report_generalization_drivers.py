@@ -9,6 +9,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
+from scipy.stats import rankdata
 
 
 STUDY = Path(__file__).resolve().parents[1]
@@ -92,6 +93,10 @@ E8_TASK_FIGURES = {
     "primary": STUDY / "analysis" / "fig_task_design_drivers_e8.png",
     "all_valid": STUDY / "analysis" / "fig_task_design_drivers_all_valid_e8.png",
 }
+SLIDE_FIGURE_PNG = STUDY / "analysis" / "fig_slide_r3_e8_generalization.png"
+SLIDE_FIGURE_SVG = STUDY / "analysis" / "fig_slide_r3_e8_generalization.svg"
+SLIDE_PERMUTATIONS = 100_000
+SLIDE_RNG_SEED = 20260915
 FIGURE_SETS = {
     4: (MAIN_FIGURES, ROBUSTNESS_FIGURES, TASK_FIGURES),
     8: (E8_MAIN_FIGURES, E8_ROBUSTNESS_FIGURES, E8_TASK_FIGURES),
@@ -138,6 +143,21 @@ MAIN_LABEL_OFFSETS = {
     "López-Yépez (mouse)": ((4, 9), (4, -12), (4, 9)),
     "Miller (rat)": ((4, 8), (4, 4), (4, -13)),
     "Zid (human)": ((4, -18), (4, -12), (4, -11)),
+}
+
+SLIDE_LABEL_OFFSETS = {
+    "Grossman (mouse)": ((4, 7), (5, 13), (4, 7), (5, 13), (5, 7)),
+    "Hattori (mouse)": ((4, 18), (5, -16), (4, 17), (5, -16), (5, 10)),
+    "Lebedeva (mouse)": ((4, -16), (5, -16), (4, -16), (5, -16), (5, -16)),
+    "Beron (mouse)": ((4, -18), (5, -17), (4, -18), (5, -17), (5, -17)),
+    "Chen (mouse)": ((4, 17), (5, 11), (4, 17), (5, 11), (5, 11)),
+    "Costa (macaque)": ((4, 6), (5, 15), (4, 11), (5, 14), (5, 7)),
+    "Miller (rat)": ((4, -17), (5, -16), (4, -16), (5, -16), (5, -16)),
+    "Eckstein (human)": ((4, -17), (5, -19), (4, -17), (5, -19), (5, -19)),
+    "Zid (human)": ((4, 10), (5, -16), (4, 11), (5, -17), (5, -18)),
+    "Findling (human)": ((4, -17), (5, -16), (4, -17), (5, -17), (-105, 13)),
+    "Alsiö (rat)": ((4, 11), (5, 17), (4, 11), (5, 17), (5, 22)),
+    "López-Yépez (mouse)": ((4, 9), (5, 11), (4, 9), (5, 11), (5, 11)),
 }
 
 
@@ -626,6 +646,216 @@ def _plot_task_design(
     plt.close(fig)
 
 
+def _slide_relation(x: list[float], y: list[float], seed: int) -> dict:
+    """Spearman statistic and two-sided permutation p for slide-only relations."""
+    x_rank = rankdata(np.asarray(x, dtype=float))
+    y_rank = rankdata(np.asarray(y, dtype=float))
+    x_centered = x_rank - x_rank.mean()
+    y_centered = y_rank - y_rank.mean()
+    denominator = np.linalg.norm(x_centered) * np.linalg.norm(y_centered)
+    if len(x_rank) < 3 or denominator == 0:
+        raise AssertionError("Slide correlation requires paired nonconstant values")
+    observed = float((x_centered @ y_centered) / denominator)
+    rng = np.random.default_rng(seed)
+    extreme = 0
+    remaining = SLIDE_PERMUTATIONS
+    while remaining:
+        batch_size = min(10_000, remaining)
+        indices = np.argsort(rng.random((batch_size, len(y_rank))), axis=1)
+        correlations = ((y_rank[indices] - y_rank.mean()) @ x_centered) / denominator
+        extreme += int(np.sum(np.abs(correlations) >= abs(observed)))
+        remaining -= batch_size
+    return {
+        "n_cohorts": len(x_rank),
+        "spearman_rho": observed,
+        "permutation_p_two_sided": (extreme + 1) / (SLIDE_PERMUTATIONS + 1),
+    }
+
+
+def _plot_slide_synthesis(data: dict, task_data: dict) -> None:
+    """Render the requested three-row E8 synthesis for presentation use."""
+    apply_presentation_style()
+    if int(data["contract"]["subject_embedding_size"]) != 8:
+        raise AssertionError("Slide synthesis requires E8 generalization results")
+    names = tuple(data["contract"]["all_valid_sensitivity_cohorts"])
+    if len(names) != 12:
+        raise AssertionError("Slide synthesis expects the 12 valid cohorts")
+    author_names = tuple(
+        name for name in names if data["cohorts"][name]["author_reference"] is not None
+    )
+    if len(author_names) != 11:
+        raise AssertionError("Slide author comparison expects 11 aligned references")
+
+    full_design = {
+        name: float(task_data["cohorts"][name]["categorical_distance"]["full_design"])
+        for name in names
+    }
+    q_full_relation = _slide_relation(
+        [full_design[name] for name in names],
+        [
+            _summary(
+                data["cohorts"][name],
+                "gru_d614_minus_q_subject_balanced_normalized_likelihood",
+            )
+            for name in names
+        ],
+        SLIDE_RNG_SEED,
+    )
+    author_full_relation = _slide_relation(
+        [full_design[name] for name in author_names],
+        [
+            _summary(
+                data["cohorts"][name],
+                "gru_d614_minus_author_subject_balanced_normalized_likelihood",
+            )
+            for name in author_names
+        ],
+        SLIDE_RNG_SEED + 1,
+    )
+
+    fig = plt.figure(figsize=(16.5, 18), constrained_layout=True)
+    grid = fig.add_gridspec(3, 2, height_ratios=(1, 1, 0.95))
+    axes = (
+        fig.add_subplot(grid[0, 0]),
+        fig.add_subplot(grid[0, 1]),
+        fig.add_subplot(grid[1, 0]),
+        fig.add_subplot(grid[1, 1]),
+        fig.add_subplot(grid[2, :]),
+    )
+
+    def draw(
+        axis: plt.Axes,
+        cohort_names: tuple[str, ...],
+        x_key: str,
+        y_key: str,
+        relation: dict,
+        title: str,
+        x_label: str,
+        y_label: str,
+        *,
+        panel_index: int,
+        zero_line: bool,
+    ) -> None:
+        for name in cohort_names:
+            cohort = data["cohorts"][name]
+            y = _seed_values(cohort, y_key)
+            x = (
+                _seed_values(cohort, "embedding_centroid_mahalanobis")
+                if x_key == "embedding"
+                else np.full(len(y), full_design[name])
+            )
+            color = SPECIES_COLORS[cohort["species"]]
+            marker = TIER_MARKERS[cohort["analysis_tier"]]
+            _plot_seed_mean_sem(axis, x, y, color, marker)
+            offset = SLIDE_LABEL_OFFSETS.get(cohort["label"], ((4, 4),) * 5)[
+                panel_index
+            ]
+            _annotate(
+                axis,
+                float(x.mean()),
+                float(y.mean()),
+                cohort["label"],
+                color=color,
+                rotation=24 if x_key == "embedding" else 0,
+                offset=offset,
+            )
+        if zero_line:
+            axis.axhline(0, color="#777777", linestyle="--", linewidth=1)
+        axis.set_xlabel(x_label)
+        axis.set_ylabel(y_label)
+        axis.set_title(_relation_title(title, relation, len(cohort_names)))
+        axis.margins(x=0.08, y=0.16)
+
+    q_delta = "gru_d614_minus_q_subject_balanced_normalized_likelihood"
+    author_delta = "gru_d614_minus_author_subject_balanced_normalized_likelihood"
+    embedding_label = "External-centroid distance from source\n(8D Mahalanobis)"
+    design_label = "Full-design distance from AIND\n(equal-weight categorical mismatch)"
+    draw(
+        axes[0],
+        names,
+        "embedding",
+        q_delta,
+        data["sensitivity_relationships"][
+            "gru_d614_minus_q_normalized_likelihood_vs_embedding_centroid"
+        ],
+        "A  GRU−Bari2019 vs embedding distance",
+        embedding_label,
+        "GRU E=8, D=614 − Bari2019\n(normalized likelihood)",
+        panel_index=0,
+        zero_line=True,
+    )
+    draw(
+        axes[1],
+        names,
+        "full_design",
+        q_delta,
+        q_full_relation,
+        "B  GRU−Bari2019 vs full-design distance",
+        design_label,
+        "GRU E=8, D=614 − Bari2019\n(normalized likelihood)",
+        panel_index=1,
+        zero_line=True,
+    )
+    draw(
+        axes[2],
+        author_names,
+        "embedding",
+        author_delta,
+        data["sensitivity_relationships"][
+            "gru_d614_minus_author_normalized_likelihood_vs_embedding_centroid"
+        ],
+        "C  GRU−author model vs embedding distance",
+        embedding_label,
+        "GRU E=8, D=614 − author model\n(normalized likelihood)",
+        panel_index=2,
+        zero_line=True,
+    )
+    draw(
+        axes[3],
+        author_names,
+        "full_design",
+        author_delta,
+        author_full_relation,
+        "D  GRU−author model vs full-design distance",
+        design_label,
+        "GRU E=8, D=614 − author model\n(normalized likelihood)",
+        panel_index=3,
+        zero_line=True,
+    )
+    draw(
+        axes[4],
+        names,
+        "full_design",
+        "embedding_centroid_mahalanobis",
+        task_data["sensitivity_relationships"][
+            "embedding_centroid_vs_full_design_distance"
+        ],
+        "E  Embedding distance vs full-design distance",
+        design_label,
+        embedding_label,
+        panel_index=4,
+        zero_line=False,
+    )
+    fig.legend(
+        handles=[
+            *_species_legend([data["cohorts"][name] for name in names]),
+            *_tier_legend([data["cohorts"][name] for name in names]),
+        ],
+        loc="outside lower center",
+        ncol=6,
+        frameon=False,
+    )
+    fig.suptitle(
+        "Study 09: what predicts frozen-core GRU transfer?\n"
+        "E8, D=614; all 12 valid cohorts; mean ± SEM across three source seeds",
+        fontsize=19,
+    )
+    fig.savefig(SLIDE_FIGURE_PNG, bbox_inches="tight", dpi=220)
+    plt.rcParams["svg.hashsalt"] = "study09-r3-e8-generalization"
+    fig.savefig(SLIDE_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
+    plt.close(fig)
+
+
 def _fmt_interval(values: list[float]) -> str:
     return f"[{values[0]:+.2f}, {values[1]:+.2f}]"
 
@@ -929,7 +1159,20 @@ def _result_block(
         "",
         "## First-pass result",
         "",
-        "Result 3 contains 24 figures: 16 main comparison panels (Bari2019 or author "
+        "### Slide-ready E8 synthesis",
+        "",
+        "![E8 normalized-likelihood transfer synthesis](../fig_slide_r3_e8_generalization.png)",
+        "",
+        "[SVG for slides](../fig_slide_r3_e8_generalization.svg)",
+        "",
+        "The Bari2019 and embedding-versus-design panels include all 12 valid cohorts. "
+        "The author-model panels include 11 because Alsiö (rat) has no cohort-aligned "
+        "author reference. Every title reports the cohort-level Spearman ρ and two-sided "
+        "permutation p for the exact quantities plotted.",
+        "",
+        "### Detailed analysis figures",
+        "",
+        "Result 3 contains 24 detailed figures: 16 main comparison panels (Bari2019 or author "
         "reference × bits/trial or normalized-likelihood scale × E=4 or E=8 × primary "
         "or all-valid inclusion), four robustness panels, and four task-design panels. "
         "All cohort markers are means across three source seeds with SEM error bars. "
@@ -1371,6 +1614,7 @@ def main() -> None:
                 view,
                 output,
             )
+    _plot_slide_synthesis(data_by_dimension[8], task_data_by_dimension[8])
     body = _result_block(data_by_dimension, task_data_by_dimension)
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
@@ -1394,6 +1638,8 @@ def main() -> None:
             for figures in figure_map.values()
             for output in figures.values()
         ),
+        SLIDE_FIGURE_PNG,
+        SLIDE_FIGURE_SVG,
         REPORT,
     ]
     print("Wrote " + ", ".join(str(output) for output in outputs))

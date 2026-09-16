@@ -61,6 +61,8 @@ inputs:
     - analysis/embedding_dimension_expansion_results.json
     - analysis/task_design_features_e8.json
   figures:
+    - analysis/fig_slide_r3_e8_generalization.png
+    - analysis/fig_slide_r3_e8_generalization.svg
     - analysis/fig_generalization_drivers.png
     - analysis/fig_generalization_drivers_all_valid.png
     - analysis/fig_generalization_drivers_e8.png
@@ -103,7 +105,17 @@ result remains quarantined.
 
 ## First-pass result
 
-Result 3 contains 24 figures: 16 main comparison panels (Bari2019 or author reference × bits/trial or normalized-likelihood scale × E=4 or E=8 × primary or all-valid inclusion), four robustness panels, and four task-design panels. All cohort markers are means across three source seeds with SEM error bars. A fixed baseline or task-design coordinate has zero horizontal SEM by design.
+### Slide-ready E8 synthesis
+
+![E8 normalized-likelihood transfer synthesis](../fig_slide_r3_e8_generalization.png)
+
+[SVG for slides](../fig_slide_r3_e8_generalization.svg)
+
+The Bari2019 and embedding-versus-design panels include all 12 valid cohorts. The author-model panels include 11 because Alsiö (rat) has no cohort-aligned author reference. Every title reports the cohort-level Spearman ρ and two-sided permutation p for the exact quantities plotted.
+
+### Detailed analysis figures
+
+Result 3 contains 24 detailed figures: 16 main comparison panels (Bari2019 or author reference × bits/trial or normalized-likelihood scale × E=4 or E=8 × primary or all-valid inclusion), four robustness panels, and four task-design panels. All cohort markers are means across three source seeds with SEM error bars. A fixed baseline or task-design coordinate has zero horizontal SEM by design.
 
 ### Primary-inference cohorts
 

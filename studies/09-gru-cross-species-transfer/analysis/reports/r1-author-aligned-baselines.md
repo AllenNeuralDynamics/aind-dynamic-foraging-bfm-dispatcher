@@ -57,6 +57,8 @@ inputs:
     - DATASET_SURVEY.md
   figures:
     - analysis/fig_author_baseline_likelihood.png
+    - analysis/fig_slide_r1_transfer_baselines.png
+    - analysis/fig_slide_r1_transfer_baselines.svg
     - analysis/fig_subject_baseline_likelihood.png
     - analysis/fig_subject_gru_minus_q_likelihood.png
     - analysis/fig_example_sessions_grossman_lower.png
@@ -110,9 +112,11 @@ particle-count sensitivity and the paper comparators retained from round one.
 
 ## Stage-A decision result
 
-![GRU, Bari2019 common Q, and available author baselines](../fig_author_baseline_likelihood.png)
+![GRU, Bari2019 common Q, and available author baselines](../fig_slide_r1_transfer_baselines.png)
 
-Every model uses the same immutable adaptation and held-out observations. Panels are grouped as primary, stress test, and descriptive, then ordered within each tier by descending E4 D=614 GRU advantage over the strongest available author-selected model. Stress-test and descriptive cohorts without a reproduced author model use Bari2019 common Q as the ordering reference. Panel-title color encodes species using the same palette as the task-design figures. Light-blue GRU points and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now appear for every displayed cohort. The five-cohort diagnostic E8 values have a paired current-code E4 comparator in Result 4. Of the eight expansion values, seven use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. GRU points are the three source-training seeds; summaries are their mean ± SD. The common Q baseline is the Bari2019 preset and is fitted independently per target subject on the identical adaptation half. Author-model lines include the existing Grossman (mouse), Chen (mouse), and Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) co-winners, Hattori2019 for Hattori (mouse), double-trace RL for López-Yépez (mouse), and feedback-dependent RL plus a fitted shape-choice bias for Costa (macaque). Alsiö (rat) is shown as a dotted cohort-mismatched author-model sensitivity.
+[SVG for slides](../fig_slide_r1_transfer_baselines.svg)
+
+Every model uses the same immutable adaptation and held-out observations. Panels are grouped as primary, stress test, and descriptive, then ordered within each tier by descending E4 D=614 GRU advantage over the strongest available author-selected model. Stress-test and descriptive cohorts without a reproduced author model use Bari2019 common Q as the ordering reference. Panel-title color encodes species using the same palette as the task-design figures. Light-blue GRU points and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now appear for every displayed cohort. The five-cohort diagnostic E8 values have a paired current-code E4 comparator in Result 4. Of the seven displayed expansion values, six use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. GRU points are the three source-training seeds; summaries are their mean ± SD. The common Q baseline is the Bari2019 preset and is fitted independently per target subject on the identical adaptation half. Author-model lines include the existing Grossman (mouse), Chen (mouse), and Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), Beron (mouse), Miller (rat), Findling (human), both Eckstein (human) co-winners, Hattori2019 for Hattori (mouse), double-trace RL for López-Yépez (mouse), and feedback-dependent RL plus a fitted shape-choice bias for Costa (macaque). Alsiö (rat) is shown as a dotted cohort-mismatched author-model sensitivity.
 
 Kwak (mouse) is omitted from every figure, table, direction count, and inference in this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, which confounds subject adaptation with treatment transfer. Readmission requires a new DMSO/control-only run using chronological odd DMSO sessions for adaptation and chronological even DMSO sessions for testing.
 

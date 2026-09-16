@@ -33,6 +33,8 @@ EMBEDDING_DIMENSION_EXPANSION_DATA = (
 TASK_DESIGN_DATA = STUDY / "analysis" / "task_design_annotations.json"
 SURVEY = STUDY / "DATASET_SURVEY.md"
 FIGURE = STUDY / "analysis" / "fig_author_baseline_likelihood.png"
+SLIDE_FIGURE_PNG = STUDY / "analysis" / "fig_slide_r1_transfer_baselines.png"
+SLIDE_FIGURE_SVG = STUDY / "analysis" / "fig_slide_r1_transfer_baselines.svg"
 SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_baseline_likelihood.png"
 GRU_Q_SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_gru_minus_q_likelihood.png"
 REPORT = STUDY / "analysis" / "reports" / "r1-author-aligned-baselines.md"
@@ -320,6 +322,9 @@ def _plot_summary(
         fontsize=17,
     )
     fig.savefig(FIGURE, bbox_inches="tight", dpi=180)
+    fig.savefig(SLIDE_FIGURE_PNG, bbox_inches="tight", dpi=220)
+    plt.rcParams["svg.hashsalt"] = "study09-r1-transfer-baselines"
+    fig.savefig(SLIDE_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
     plt.close(fig)
 
 
@@ -1072,7 +1077,9 @@ def _result_block(
         "",
         "## Stage-A decision result",
         "",
-        "![GRU, Bari2019 common Q, and available author baselines](../fig_author_baseline_likelihood.png)",
+        "![GRU, Bari2019 common Q, and available author baselines](../fig_slide_r1_transfer_baselines.png)",
+        "",
+        "[SVG for slides](../fig_slide_r1_transfer_baselines.svg)",
         "",
         "Every model uses the same immutable adaptation and held-out observations. "
         "Panels are grouped as primary, stress test, and descriptive, then ordered within "
@@ -1082,8 +1089,8 @@ def _result_block(
         "species using the same palette as the task-design figures. Light-blue GRU points "
         "and curves are the historical E4 screen; dark-blue D=614 overlays are E8 and now "
         "appear for every displayed cohort. The five-cohort diagnostic E8 values have a "
-        "paired current-code E4 comparator in Result 4. Of the eight expansion values, "
-        "seven use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. "
+        "paired current-code E4 comparator in Result 4. Of the seven displayed expansion "
+        "values, six use historical E4; Hattori (mouse) has paired current-code E4/E8 runs. "
         "GRU points are the three source-training seeds; summaries are their mean ± SD. "
         "The common Q baseline is the Bari2019 preset and is fitted independently per "
         "target subject on the identical adaptation half. "
@@ -1374,7 +1381,8 @@ def main() -> None:
     end_start = text.index(END, start_end)
     REPORT.write_text(text[:start_end] + "\n" + block + "\n" + text[end_start:])
     print(
-        f"Wrote {FIGURE}, {SUBJECT_FIGURE}, {GRU_Q_SUBJECT_FIGURE}, "
+        f"Wrote {FIGURE}, {SLIDE_FIGURE_PNG}, {SLIDE_FIGURE_SVG}, "
+        f"{SUBJECT_FIGURE}, {GRU_Q_SUBJECT_FIGURE}, "
         f"{len(example_paths)} example figures, "
         f"and {REPORT}"
     )

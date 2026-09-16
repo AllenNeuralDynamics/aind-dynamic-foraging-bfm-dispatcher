@@ -15,6 +15,8 @@ inputs:
   figures:
     - analysis/fig_embedding_space_pca.png
     - analysis/fig_embedding_space_distance.png
+    - analysis/fig_slide_r2_e8_embedding_seed01.png
+    - analysis/fig_slide_r2_e8_embedding_seed01.svg
 wandb_groups:
   - v2-sc-active@20260622-144622
   - gru-grossman-matched-half@20260905-022602
@@ -46,6 +48,12 @@ two-arm-bandit cohort land in the subject-embedding manifold learned from the
 
 <!-- BEGIN result-2 -->
 ## Result
+
+![E8 embedding space for source seeds 0 and 1](../fig_slide_r2_e8_embedding_seed01.png)
+
+[SVG for slides](../fig_slide_r2_e8_embedding_seed01.svg)
+
+### Complete E4/E8 seed view
 
 ![All transferred subjects in source-fitted PCA space](../fig_embedding_space_pca.png)
 
