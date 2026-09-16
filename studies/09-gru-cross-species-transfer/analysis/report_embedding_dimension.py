@@ -15,7 +15,7 @@ from scipy.stats import wilcoxon
 
 STUDY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STUDY.parent / "util"))
-from plot_style import apply_presentation_style  # noqa: E402
+from plot_style import SPECIES_COLORS, apply_presentation_style  # noqa: E402
 
 
 DATA = STUDY / "analysis" / "embedding_dimension_results.json"
@@ -55,12 +55,6 @@ LABELS = {
     "costa": "Costa (macaque)",
     "lopez_mouse": "López-Yépez (mouse)",
     "hattori": "Hattori (mouse)",
-}
-SPECIES_COLORS = {
-    "mouse": "#4C72B0",
-    "rat": "#DD8452",
-    "macaque": "#C44E52",
-    "human": "#8172B3",
 }
 E4_COLOR = "#6BAED6"
 E8_COLOR = "#17365D"

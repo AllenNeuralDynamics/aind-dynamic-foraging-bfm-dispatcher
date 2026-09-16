@@ -19,7 +19,7 @@ from scipy.stats import wilcoxon
 
 STUDY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STUDY.parent / "util"))
-from plot_style import apply_presentation_style  # noqa: E402
+from plot_style import SPECIES_COLORS, apply_presentation_style  # noqa: E402
 
 
 AUTHOR_DATA = STUDY / "analysis" / "author_baseline_results.json"
@@ -62,12 +62,6 @@ TIER_LABELS = {
     "primary": "Primary",
     "stress_test": "Stress test",
     "descriptive_only": "Descriptive",
-}
-SPECIES_COLORS = {
-    "mouse": "#4C72B0",
-    "rat": "#DD8452",
-    "macaque": "#C44E52",
-    "human": "#8172B3",
 }
 E4_COLOR = "#6BAED6"
 E8_COLOR = "#17365D"

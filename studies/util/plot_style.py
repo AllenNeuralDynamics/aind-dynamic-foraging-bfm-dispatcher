@@ -21,6 +21,15 @@ import matplotlib as mpl
 # drawn in the same hue, faded, so a reader never re-checks the legend.
 HCOLOR = {16: "#4C72B0", 64: "#55A868", 128: "#C44E52", 256: "#8172B3"}
 
+# Shared species palette: rodents are neutral/cool and primates are warm.
+# These Okabe-Ito-inspired colors retain contrast on white backgrounds.
+SPECIES_COLORS = {
+    "mouse": "#333333",
+    "rat": "#0072B2",
+    "macaque": "#E69F00",
+    "human": "#D55E00",
+}
+
 # t_{0.975, n-1} for small-n 95% CI half-width (= t * sem).
 _T975 = {2: 12.706, 3: 4.303, 4: 3.182, 5: 2.776, 6: 2.571,
          7: 2.447, 8: 2.365, 9: 2.306, 10: 2.262}

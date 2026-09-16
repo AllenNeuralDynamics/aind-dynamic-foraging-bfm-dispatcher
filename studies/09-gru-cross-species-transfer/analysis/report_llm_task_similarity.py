@@ -17,7 +17,7 @@ from scipy.stats import rankdata, spearmanr
 STUDY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STUDY.parent / "util"))
 from _meta import build_meta  # noqa: E402
-from plot_style import apply_presentation_style  # noqa: E402
+from plot_style import SPECIES_COLORS, apply_presentation_style  # noqa: E402
 
 
 JUDGMENTS = STUDY / "analysis" / "llm_task_similarity_judgments.json"
@@ -37,12 +37,6 @@ END = "<!-- END result-6 -->"
 
 RNG_SEED = 20260915
 N_PERMUTATIONS = 100_000
-SPECIES_COLORS = {
-    "mouse": "#4C72B0",
-    "rat": "#DD8452",
-    "macaque": "#C44E52",
-    "human": "#8172B3",
-}
 TIER_MARKERS = {"primary": "o", "stress_test": "s", "descriptive_only": "^"}
 
 
@@ -798,9 +792,9 @@ def main() -> None:
             pc_scores[1],
             marker="*",
             s=180,
-            color="#222222",
-            edgecolor="white",
-            linewidth=0.8,
+            facecolors="none",
+            edgecolor="#222222",
+            linewidth=1.4,
             zorder=5,
         )
         pca_axis.annotate(
@@ -958,8 +952,8 @@ def main() -> None:
             [0],
             marker="*",
             color="none",
-            markerfacecolor="#222222",
-            markeredgecolor="white",
+            markerfacecolor="none",
+            markeredgecolor="#222222",
             markersize=13,
             label="AIND proxy",
         )

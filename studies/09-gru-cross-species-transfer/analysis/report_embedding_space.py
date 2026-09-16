@@ -13,7 +13,7 @@ from matplotlib.patches import Ellipse
 
 STUDY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STUDY.parent / "util"))
-from plot_style import apply_presentation_style  # noqa: E402
+from plot_style import SPECIES_COLORS, apply_presentation_style  # noqa: E402
 
 
 DATA = {
@@ -29,23 +29,6 @@ START = "<!-- BEGIN result-2 -->"
 END = "<!-- END result-2 -->"
 PAIR_INDICES = ((0, 1), (0, 2), (1, 2))
 CHI2_95_DF2 = 5.991464547107979
-COLORS = {
-    "aind_source": "#B7B7B7",
-    "aind_heldout": "#111111",
-    "grossman": "#4C72B0",
-    "chen": "#55A868",
-    "zid": "#8172B3",
-    "lebedeva": "#C44E52",
-    "beron": "#64B5CD",
-    "kwak": "#937860",
-    "miller": "#CCB974",
-    "findling": "#DA8BC3",
-    "alsio": "#1F77B4",
-    "eckstein": "#2CA02C",
-    "costa": "#9467BD",
-    "lopez_mouse": "#D62728",
-    "hattori": "#17BECF",
-}
 MARKERS = (".", "o", "^", "s", "D", "v", "P", "X", "<", ">", "h", "p", "*", "8", "d")
 PAPER_LABELS = {
     "grossman": "Grossman (mouse)",
@@ -68,7 +51,13 @@ def _group_order(data: dict) -> tuple[str, ...]:
     order = tuple(data["groups"])
     if order[:2] != ("aind_source", "aind_heldout"):
         raise AssertionError("Embedding reference group order drifted")
-    return tuple(name for name in order if name != "kwak" and name in COLORS)
+    return tuple(name for name in order if name not in {"kwak", "tang"})
+
+
+def _group_color(data: dict, name: str) -> str:
+    if name == "aind_source":
+        return "#B7B7B7"
+    return SPECIES_COLORS[data["groups"][name]["species"]]
 
 
 def _display_label(data: dict, name: str) -> str:
@@ -180,7 +169,7 @@ def _plot_pca(data_by_dimension: dict[int, dict], order: tuple[str, ...]) -> Non
                         values[:, y_index],
                         s=8 if name == "aind_source" else 17,
                         alpha=0.16 if name == "aind_source" else 0.48,
-                        color=COLORS[name],
+                        color=_group_color(data, name),
                         marker=MARKERS[group_index],
                         edgecolors="none",
                         label=_display_label(data, name),
@@ -191,9 +180,9 @@ def _plot_pca(data_by_dimension: dict[int, dict], order: tuple[str, ...]) -> Non
                     0,
                     marker="*",
                     s=115,
-                    color="#FFD54F",
+                    facecolors="none",
                     edgecolor="#333333",
-                    linewidth=0.5,
+                    linewidth=1.2,
                     zorder=5,
                 )
                 axis.axhline(0, color="#DDDDDD", linewidth=0.7, zorder=0)
@@ -269,7 +258,7 @@ def _plot_e8_seed01(data: dict, order: tuple[str, ...]) -> None:
                     values[:, y_index],
                     s=10 if name == "aind_source" else 22,
                     alpha=0.14 if name == "aind_source" else 0.52,
-                    color=COLORS[name],
+                    color=_group_color(data, name),
                     marker=MARKERS[group_index],
                     edgecolors="none",
                     label=_display_label(data, name),
@@ -280,9 +269,9 @@ def _plot_e8_seed01(data: dict, order: tuple[str, ...]) -> None:
                 0,
                 marker="*",
                 s=135,
-                color="#FFD54F",
+                facecolors="none",
                 edgecolor="#333333",
-                linewidth=0.6,
+                linewidth=1.4,
                 zorder=5,
             )
             axis.axhline(0, color="#DDDDDD", linewidth=0.7, zorder=0)
@@ -344,7 +333,7 @@ def _plot_distances(
                 values, positions=positions, showextrema=False, widths=0.76
             )
             for body, name in zip(violins["bodies"], order):
-                body.set_facecolor(COLORS[name])
+                body.set_facecolor(_group_color(data, name))
                 body.set_edgecolor("none")
                 body.set_alpha(0.36)
             for position, (name, distances) in enumerate(zip(order, values)):
@@ -354,7 +343,7 @@ def _plot_distances(
                     distances,
                     s=5,
                     alpha=min(0.3, 15 / len(distances)),
-                    color=COLORS[name],
+                    color=_group_color(data, name),
                     edgecolors="none",
                 )
                 axis.scatter(
@@ -558,8 +547,8 @@ def main() -> None:
     order = _group_order(data_by_dimension[4])
     if _group_order(data_by_dimension[8]) != order:
         raise AssertionError("E4/E8 embedding group order differs")
-    if set(order) != set(COLORS) - {"kwak"}:
-        raise AssertionError("Embedding plot color map does not match frozen groups")
+    if set(order) != set(data_by_dimension[4]["groups"]) - {"kwak", "tang"}:
+        raise AssertionError("Embedding plot group order does not match frozen groups")
     statistics_by_dimension = {
         dimension: [_statistics(seed, order) for seed in data["seeds"]]
         for dimension, data in data_by_dimension.items()

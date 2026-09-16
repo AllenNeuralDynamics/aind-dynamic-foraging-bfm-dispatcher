@@ -14,7 +14,7 @@ from scipy.stats import rankdata
 
 STUDY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STUDY.parent / "util"))
-from plot_style import apply_presentation_style  # noqa: E402
+from plot_style import SPECIES_COLORS, apply_presentation_style  # noqa: E402
 
 
 DATA = {
@@ -104,12 +104,6 @@ FIGURE_SETS = {
 REPORT = STUDY / "analysis" / "reports" / "r3-generalization-drivers.md"
 START = "<!-- BEGIN result-3 -->"
 END = "<!-- END result-3 -->"
-SPECIES_COLORS = {
-    "mouse": "#4C72B0",
-    "rat": "#DD8452",
-    "macaque": "#C44E52",
-    "human": "#8172B3",
-}
 VIEW_TIERS = {
     "primary": ("primary",),
     "all_valid": ("primary", "stress_test", "descriptive_only"),
