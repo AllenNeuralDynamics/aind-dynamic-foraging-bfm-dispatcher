@@ -854,6 +854,7 @@ def _plot_slide_synthesis(data: dict, task_data: dict) -> None:
     )
     fig.savefig(SLIDE_FIGURE_PNG, bbox_inches="tight", dpi=220)
     plt.rcParams["svg.hashsalt"] = "study09-r3-e8-generalization"
+    plt.rcParams["svg.fonttype"] = "none"
     fig.savefig(SLIDE_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
     SLIDE_FIGURE_SVG.write_text(
         "\n".join(line.rstrip() for line in SLIDE_FIGURE_SVG.read_text().splitlines())
