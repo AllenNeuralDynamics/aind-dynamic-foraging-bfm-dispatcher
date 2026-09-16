@@ -836,6 +836,7 @@ def _plot_slide_synthesis(data: dict, task_data: dict) -> None:
         panel_index=4,
         zero_line=False,
     )
+    axes[4].set_box_aspect(1)
     fig.legend(
         handles=[
             *_species_legend([data["cohorts"][name] for name in names]),
@@ -853,6 +854,10 @@ def _plot_slide_synthesis(data: dict, task_data: dict) -> None:
     fig.savefig(SLIDE_FIGURE_PNG, bbox_inches="tight", dpi=220)
     plt.rcParams["svg.hashsalt"] = "study09-r3-e8-generalization"
     fig.savefig(SLIDE_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
+    SLIDE_FIGURE_SVG.write_text(
+        "\n".join(line.rstrip() for line in SLIDE_FIGURE_SVG.read_text().splitlines())
+        + "\n"
+    )
     plt.close(fig)
 
 
