@@ -25,6 +25,7 @@ TASK_DATA = {
     4: STUDY / "analysis" / "task_design_features.json",
     8: STUDY / "analysis" / "task_design_features_e8.json",
 }
+LLM_DATA = STUDY / "analysis" / "llm_task_similarity_results.json"
 MAIN_FIGURE = STUDY / "analysis" / "fig_generalization_drivers.png"
 ROBUSTNESS_FIGURE = STUDY / "analysis" / "fig_generalization_robustness.png"
 TASK_FIGURE = STUDY / "analysis" / "fig_task_design_drivers.png"
@@ -95,6 +96,8 @@ E8_TASK_FIGURES = {
 }
 SLIDE_FIGURE_PNG = STUDY / "analysis" / "fig_slide_r3_e8_generalization.png"
 SLIDE_FIGURE_SVG = STUDY / "analysis" / "fig_slide_r3_e8_generalization.svg"
+FOCUSED_FIGURE_PNG = STUDY / "analysis" / "fig_slide_e8_author_embedding_llm.png"
+FOCUSED_FIGURE_SVG = STUDY / "analysis" / "fig_slide_e8_author_embedding_llm.svg"
 SLIDE_PERMUTATIONS = 100_000
 SLIDE_RNG_SEED = 20260915
 FIGURE_SETS = {
@@ -857,6 +860,114 @@ def _plot_slide_synthesis(data: dict, task_data: dict) -> None:
     plt.close(fig)
 
 
+def _plot_focused_author_embedding_llm(data: dict, llm_data: dict) -> None:
+    """Render the focused E8 author-model and LLM-distance slide figure."""
+    apply_presentation_style()
+    if int(data["contract"]["subject_embedding_size"]) != 8:
+        raise AssertionError("Focused synthesis requires E8 generalization results")
+
+    valid_names = tuple(data["contract"]["all_valid_sensitivity_cohorts"])
+    author_names = tuple(
+        name for name in valid_names if data["cohorts"][name]["author_reference"] is not None
+    )
+    if len(author_names) != 11:
+        raise AssertionError("Focused author panel expects 11 aligned references")
+    llm_rows = {
+        row["cohort"]: row
+        for row in llm_data["ranking"]
+        if row["cohort"] in valid_names
+    }
+    if set(llm_rows) != set(valid_names):
+        raise AssertionError("LLM ranking must cover every valid E8 cohort")
+
+    fig, axes = plt.subplots(1, 2, figsize=(15.5, 8.2), constrained_layout=True)
+    left, right = axes
+    author_delta = "gru_d614_minus_author_subject_balanced_normalized_likelihood"
+    llm_label_offsets = {
+        # The top-right human/rat pair is close in both coordinates; separate
+        # their rotated labels while preserving the point locations.
+        "Alsiö (rat)": (-74, 15),
+        "Zid (human)": (5, -26),
+    }
+
+    for name in author_names:
+        cohort = data["cohorts"][name]
+        x = _seed_values(cohort, "embedding_centroid_mahalanobis")
+        y = _seed_values(cohort, author_delta)
+        color = SPECIES_COLORS[cohort["species"]]
+        _plot_seed_mean_sem(left, x, y, color, TIER_MARKERS[cohort["analysis_tier"]])
+        _annotate(
+            left,
+            float(x.mean()),
+            float(y.mean()),
+            cohort["label"],
+            color=color,
+            rotation=30,
+            offset=SLIDE_LABEL_OFFSETS.get(cohort["label"], ((4, 4),) * 5)[2],
+        )
+
+    for name in valid_names:
+        cohort = data["cohorts"][name]
+        row = llm_rows[name]
+        x = _seed_values(cohort, "embedding_centroid_mahalanobis")
+        y = np.full(len(x), float(row["llm_task_distance_to_aind"]))
+        color = SPECIES_COLORS[cohort["species"]]
+        _plot_seed_mean_sem(right, x, y, color, TIER_MARKERS[cohort["analysis_tier"]])
+        _annotate(
+            right,
+            float(x.mean()),
+            float(y.mean()),
+            cohort["label"],
+            color=color,
+            rotation=30,
+            offset=llm_label_offsets.get(
+                cohort["label"],
+                SLIDE_LABEL_OFFSETS.get(cohort["label"], ((4, 4),) * 5)[4],
+            ),
+        )
+
+    left_relation = data["sensitivity_relationships"][
+        "gru_d614_minus_author_normalized_likelihood_vs_embedding_centroid"
+    ]
+    right_relation = llm_data["relationships"]["embedding_distance_vs_llm_task_distance"]
+    left.axhline(0, color="#777777", linestyle="--", linewidth=1, zorder=1)
+    left.set_xlabel("External-centroid distance from source\n(E8 Mahalanobis)")
+    left.set_ylabel("GRU E8, D=614 − author model\n(normalized likelihood)")
+    left.set_title(
+        _relation_title("A  GRU−author model versus embedding distance", left_relation, len(author_names))
+    )
+    right.set_xlabel("External-centroid distance from source\n(E8 Mahalanobis)")
+    right.set_ylabel("LLM task distance to AIND")
+    right.set_title(
+        _relation_title("B  Embedding distance versus LLM task distance", right_relation, len(valid_names))
+    )
+    for axis in axes:
+        axis.set_box_aspect(1)
+        axis.margins(x=0.10, y=0.17)
+    fig.legend(
+        handles=[
+            *_species_legend([data["cohorts"][name] for name in valid_names]),
+            *_tier_legend([data["cohorts"][name] for name in valid_names]),
+        ],
+        loc="outside lower center",
+        ncol=6,
+        frameon=False,
+    )
+    fig.suptitle(
+        "Study 09: embedding displacement, author-model advantage, and task distance\n"
+        "E8, D=614; markers are means ± SEM across three source seeds; LLM distance has one judge",
+        fontsize=18,
+    )
+    fig.savefig(FOCUSED_FIGURE_PNG, bbox_inches="tight", dpi=220)
+    plt.rcParams["svg.hashsalt"] = "study09-e8-author-embedding-llm"
+    fig.savefig(FOCUSED_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
+    FOCUSED_FIGURE_SVG.write_text(
+        "\n".join(line.rstrip() for line in FOCUSED_FIGURE_SVG.read_text().splitlines())
+        + "\n"
+    )
+    plt.close(fig)
+
+
 def _fmt_interval(values: list[float]) -> str:
     return f"[{values[0]:+.2f}, {values[1]:+.2f}]"
 
@@ -1165,6 +1276,16 @@ def _result_block(
         "![E8 normalized-likelihood transfer synthesis](../fig_slide_r3_e8_generalization.png)",
         "",
         "[SVG for slides](../fig_slide_r3_e8_generalization.svg)",
+        "",
+        "### Focused author-model and LLM-distance view",
+        "",
+        "![E8 author-model advantage and LLM task distance](../fig_slide_e8_author_embedding_llm.png)",
+        "",
+        "[SVG for slides](../fig_slide_e8_author_embedding_llm.svg)",
+        "",
+        "The left panel includes the 11 cohorts with cohort-aligned author-model references; "
+        "the right panel includes all 12 valid cohorts. Performance and embedding bars are "
+        "SEM across three source seeds; the LLM rank has one judge and therefore no sampling bar.",
         "",
         "The Bari2019 and embedding-versus-design panels include all 12 valid cohorts. "
         "The author-model panels include 11 because Alsiö (rat) has no cohort-aligned "
@@ -1569,6 +1690,7 @@ def main() -> None:
         dimension: json.loads(path.read_text())
         for dimension, path in TASK_DATA.items()
     }
+    llm_data = json.loads(LLM_DATA.read_text())
     expected = tuple(data_by_dimension[4]["contract"]["cohort_order"])
     for dimension, data in data_by_dimension.items():
         task_data = task_data_by_dimension[dimension]
@@ -1616,6 +1738,7 @@ def main() -> None:
                 output,
             )
     _plot_slide_synthesis(data_by_dimension[8], task_data_by_dimension[8])
+    _plot_focused_author_embedding_llm(data_by_dimension[8], llm_data)
     body = _result_block(data_by_dimension, task_data_by_dimension)
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
@@ -1641,6 +1764,8 @@ def main() -> None:
         ),
         SLIDE_FIGURE_PNG,
         SLIDE_FIGURE_SVG,
+        FOCUSED_FIGURE_PNG,
+        FOCUSED_FIGURE_SVG,
         REPORT,
     ]
     print("Wrote " + ", ".join(str(output) for output in outputs))

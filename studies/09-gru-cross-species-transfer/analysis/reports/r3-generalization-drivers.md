@@ -60,9 +60,12 @@ inputs:
     - analysis/embedding_dimension_results.json
     - analysis/embedding_dimension_expansion_results.json
     - analysis/task_design_features_e8.json
+    - analysis/llm_task_similarity_results.json
   figures:
     - analysis/fig_slide_r3_e8_generalization.png
     - analysis/fig_slide_r3_e8_generalization.svg
+    - analysis/fig_slide_e8_author_embedding_llm.png
+    - analysis/fig_slide_e8_author_embedding_llm.svg
     - analysis/fig_generalization_drivers.png
     - analysis/fig_generalization_drivers_all_valid.png
     - analysis/fig_generalization_drivers_e8.png
@@ -110,6 +113,14 @@ result remains quarantined.
 ![E8 normalized-likelihood transfer synthesis](../fig_slide_r3_e8_generalization.png)
 
 [SVG for slides](../fig_slide_r3_e8_generalization.svg)
+
+### Focused author-model and LLM-distance view
+
+![E8 author-model advantage and LLM task distance](../fig_slide_e8_author_embedding_llm.png)
+
+[SVG for slides](../fig_slide_e8_author_embedding_llm.svg)
+
+The left panel includes the 11 cohorts with cohort-aligned author-model references; the right panel includes all 12 valid cohorts. Performance and embedding bars are SEM across three source seeds; the LLM rank has one judge and therefore no sampling bar.
 
 The Bari2019 and embedding-versus-design panels include all 12 valid cohorts. The author-model panels include 11 because Alsiö (rat) has no cohort-aligned author reference. Every title reports the cohort-level Spearman ρ and two-sided permutation p for the exact quantities plotted.
 
