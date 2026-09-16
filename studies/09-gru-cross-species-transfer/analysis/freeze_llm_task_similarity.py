@@ -24,7 +24,7 @@ CARDS_OUTPUT = STUDY / "analysis" / "llm_task_cards.json"
 JUDGMENTS_OUTPUT = STUDY / "analysis" / "llm_task_similarity_judgments.json"
 
 JUDGE_MODEL = "OpenAI Codex current session (exact deployment ID unavailable)"
-PROMPT_VERSION = "study09-task-similarity-v1"
+PROMPT_VERSION = "study09-task-similarity-v2"
 
 # Opaque IDs were assigned before judging.  Study names and species are absent
 # from the card artifact supplied to the judge.
@@ -63,9 +63,10 @@ CARDS = {
         "blocks, and non-baited."
     ),
     "T03": (
-        "A freely moving subject chooses a left or right port for binary water. Each "
-        "port follows a baited variable-interval schedule with blockwise set rates, so "
-        "reward availability depends on elapsed trials and previous choices."
+        "A freely moving subject chooses a left or right port for binary water. The two "
+        "set reward probabilities are independent and piecewise constant within blocks. "
+        "Each arm is baited, so its current reward availability accumulates while unchosen "
+        "and resets when collected."
     ),
     "T04": (
         "A freely moving subject nose-pokes one of two touchscreen targets for binary "
@@ -134,16 +135,16 @@ or embeddings. Judge only the task descriptions. Return A, B, or tie.
 JUDGE_TIERS = {
     "T02": 0,
     "T08": 0,
-    "T11": 1,
-    "T06": 2,
-    "T01": 3,
-    "T04": 4,
-    "T09": 4,
-    "T05": 5,
-    "T12": 6,
-    "T10": 7,
-    "T07": 8,
-    "T03": 9,
+    "T03": 1,
+    "T11": 2,
+    "T06": 3,
+    "T01": 4,
+    "T04": 5,
+    "T09": 5,
+    "T05": 6,
+    "T12": 7,
+    "T10": 8,
+    "T07": 9,
 }
 
 FORBIDDEN_CARD_TERMS = (

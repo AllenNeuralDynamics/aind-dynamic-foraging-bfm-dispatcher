@@ -86,24 +86,24 @@ This is an exploratory **single-Codex-judge sensitivity analysis**. The pair ran
 |---:|---|---|---:|
 | 1 | Grossman (mouse) | primary | 0.955 |
 | 2 | Hattori (mouse) | primary | 0.955 |
-| 3 | Lebedeva (mouse) | primary | 0.818 |
-| 4 | Beron (mouse) | primary | 0.727 |
-| 5 | Eckstein (human) | primary | 0.636 |
-| 6 | Chen (mouse) | primary | 0.500 |
-| 7 | Miller (rat) | primary | 0.500 |
-| 8 | Costa (macaque) | stress test | 0.364 |
-| 9 | Findling (human) | primary | 0.273 |
-| 10 | Alsiö (rat) | stress test | 0.182 |
-| 11 | Zid (human) | primary | 0.091 |
-| 12 | López-Yépez (mouse) | stress test | 0.000 |
+| 3 | López-Yépez (mouse) | stress test | 0.818 |
+| 4 | Lebedeva (mouse) | primary | 0.727 |
+| 5 | Beron (mouse) | primary | 0.636 |
+| 6 | Eckstein (human) | primary | 0.545 |
+| 7 | Chen (mouse) | primary | 0.409 |
+| 8 | Miller (rat) | primary | 0.409 |
+| 9 | Costa (macaque) | stress test | 0.273 |
+| 10 | Findling (human) | primary | 0.182 |
+| 11 | Alsiö (rat) | stress test | 0.091 |
+| 12 | Zid (human) | primary | 0.000 |
 
-The three closest judged tasks are Grossman (mouse), Hattori (mouse), Lebedeva (mouse); the three most distant are Alsiö (rat), Zid (human), López-Yépez (mouse).
+The three closest judged tasks are Grossman (mouse), Hattori (mouse), López-Yépez (mouse); the three most distant are Findling (human), Alsiö (rat), Zid (human).
 
 ## Association with E8 transfer
 
-Across all 12 valid cohorts, LLM closeness versus GRU−Bari2019 normalized-likelihood advantage has Spearman ρ=+0.175 (permutation p=0.5744). Among the 11 cohorts with an author-model reference, the GRU−author association is ρ=+0.183 (p=0.5859).
+Across all 12 valid cohorts, LLM closeness versus GRU−Bari2019 normalized-likelihood advantage has Spearman ρ=+0.611 (permutation p=0.0391). Among the 11 cohorts with an author-model reference, the GRU−author association is ρ=-0.100 (p=0.7594).
 
-LLM closeness versus E8 embedding-centroid distance has Spearman ρ=-0.779 (permutation p=0.0040). Species colors are added only after unblinding and are descriptive; species was not available to the judge.
+LLM closeness versus E8 embedding-centroid distance has Spearman ρ=-0.449 (permutation p=0.1454). Species colors are added only after unblinding and are descriptive; species was not available to the judge.
 <!-- END result-6 -->
 
 ## Interpretation boundary

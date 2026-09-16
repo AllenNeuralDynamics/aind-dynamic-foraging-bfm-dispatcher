@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_llm_task_similarity.py",
-    "produced_at_pt": "2026-09-15T18:08:41-07:00",
-    "dispatcher_git_sha": "e3741b63dcdcfbdd7d2dedbcba8fc6c6ac93cbb4",
+    "produced_at_pt": "2026-09-15T18:47:32-07:00",
+    "dispatcher_git_sha": null,
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
@@ -49,12 +49,12 @@
     ]
   },
   "input_sha256": {
-    "analysis/llm_task_cards.json": "e187f477aaf3afda3510d9a9ea2038889c5111dee8a98927f7af9b8de6e74344",
-    "analysis/task_design_annotations.json": "11406c729bb4bd81cce5450548f641e43e4701339d8f140203de17aa89ba5004"
+    "analysis/llm_task_cards.json": "25af9bf7d192941a776d92c640ce18118964077af070b3fefb13c7c194e5ebf3",
+    "analysis/task_design_annotations.json": "f9766fdf9a2283daeb457084c5362b1aa157fb9e3d8cd5362d5f7c031c5b6535"
   },
   "judge": {
     "model": "OpenAI Codex current session (exact deployment ID unavailable)",
-    "prompt_version": "study09-task-similarity-v1",
+    "prompt_version": "study09-task-similarity-v2",
     "n_candidates": 12,
     "n_unordered_pairs": 66,
     "n_implied_ordered_encodings": 132,
@@ -80,16 +80,16 @@
   "frozen_ordinal_tiers": {
     "T02": 0,
     "T08": 0,
-    "T11": 1,
-    "T06": 2,
-    "T01": 3,
-    "T04": 4,
-    "T09": 4,
-    "T05": 5,
-    "T12": 6,
-    "T10": 7,
-    "T07": 8,
-    "T03": 9
+    "T03": 1,
+    "T11": 2,
+    "T06": 3,
+    "T01": 4,
+    "T04": 5,
+    "T09": 5,
+    "T05": 6,
+    "T12": 7,
+    "T10": 8,
+    "T07": 9
   },
   "comparisons": [
     {
@@ -117,14 +117,14 @@
           "T01",
           "T03"
         ],
-        "choice": "A"
+        "choice": "B"
       },
       "reverse": {
         "order": [
           "T03",
           "T01"
         ],
-        "choice": "B"
+        "choice": "A"
       },
       "order_consistent": true
     },
@@ -477,14 +477,14 @@
           "T03",
           "T04"
         ],
-        "choice": "B"
+        "choice": "A"
       },
       "reverse": {
         "order": [
           "T04",
           "T03"
         ],
-        "choice": "A"
+        "choice": "B"
       },
       "order_consistent": true
     },
@@ -495,14 +495,14 @@
           "T03",
           "T05"
         ],
-        "choice": "B"
+        "choice": "A"
       },
       "reverse": {
         "order": [
           "T05",
           "T03"
         ],
-        "choice": "A"
+        "choice": "B"
       },
       "order_consistent": true
     },
@@ -513,14 +513,14 @@
           "T03",
           "T06"
         ],
-        "choice": "B"
+        "choice": "A"
       },
       "reverse": {
         "order": [
           "T06",
           "T03"
         ],
-        "choice": "A"
+        "choice": "B"
       },
       "order_consistent": true
     },
@@ -531,14 +531,14 @@
           "T03",
           "T07"
         ],
-        "choice": "B"
+        "choice": "A"
       },
       "reverse": {
         "order": [
           "T07",
           "T03"
         ],
-        "choice": "A"
+        "choice": "B"
       },
       "order_consistent": true
     },
@@ -567,14 +567,14 @@
           "T03",
           "T09"
         ],
-        "choice": "B"
+        "choice": "A"
       },
       "reverse": {
         "order": [
           "T09",
           "T03"
         ],
-        "choice": "A"
+        "choice": "B"
       },
       "order_consistent": true
     },
@@ -585,14 +585,14 @@
           "T03",
           "T10"
         ],
-        "choice": "B"
+        "choice": "A"
       },
       "reverse": {
         "order": [
           "T10",
           "T03"
         ],
-        "choice": "A"
+        "choice": "B"
       },
       "order_consistent": true
     },
@@ -603,14 +603,14 @@
           "T03",
           "T11"
         ],
-        "choice": "B"
+        "choice": "A"
       },
       "reverse": {
         "order": [
           "T11",
           "T03"
         ],
-        "choice": "A"
+        "choice": "B"
       },
       "order_consistent": true
     },
@@ -621,14 +621,14 @@
           "T03",
           "T12"
         ],
-        "choice": "B"
+        "choice": "A"
       },
       "reverse": {
         "order": [
           "T12",
           "T03"
         ],
-        "choice": "A"
+        "choice": "B"
       },
       "order_consistent": true
     },

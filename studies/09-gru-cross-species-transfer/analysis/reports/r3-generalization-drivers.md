@@ -364,11 +364,11 @@ For E=8, task-structure distance has ρ=+0.645 with embedding displacement and �
 
 | space | species | cohorts | mean GRU614−Q bits/trial | median | range | mean embedding distance | mean task distance |
 |---|---|---:|---:|---:|---:|---:|---:|
-| E=4 | Mouse | 6 | +0.0342 | +0.0213 | [-0.0023, +0.1243] | 4.67 | 0.21 |
+| E=4 | Mouse | 6 | +0.0342 | +0.0213 | [-0.0023, +0.1243] | 4.67 | 0.12 |
 | E=4 | Rat | 2 | -0.0103 | -0.0103 | [-0.0222, +0.0015] | 6.99 | 0.38 |
 | E=4 | Macaque | 1 | -0.0049 | -0.0049 | [-0.0049, -0.0049] | 2.50 | 0.50 |
 | E=4 | Human | 3 | -0.0238 | -0.0128 | [-0.0776, +0.0190] | 8.39 | 0.42 |
-| E=8 | Mouse | 6 | +0.0416 | +0.0212 | [+0.0026, +0.1597] | 7.34 | 0.21 |
+| E=8 | Mouse | 6 | +0.0416 | +0.0212 | [+0.0026, +0.1597] | 7.34 | 0.12 |
 | E=8 | Rat | 2 | -0.0035 | -0.0035 | [-0.0122, +0.0052] | 11.50 | 0.38 |
 | E=8 | Macaque | 1 | +0.0029 | +0.0029 | [+0.0029, +0.0029] | 5.40 | 0.50 |
 | E=8 | Human | 3 | -0.0149 | -0.0015 | [-0.0549, +0.0116] | 14.84 | 0.42 |
@@ -392,7 +392,7 @@ For E=8, schedule distance versus GRU advantage is ρ=-0.393 (p=0.3956), while s
 | [Alsiö (rat)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6695374/) | stress test | criterion reversal | coupled | no | spatial action, visual stimulus | freely moving | touchscreen | food pellet | 0.50 | 0.71 |
 | [Eckstein (human)](https://pmc.ncbi.nlm.nih.gov/articles/PMC9108470/) | primary | blockwise | coupled | no | spatial action | laboratory | keyboard | monetary points | 0.25 | 0.57 |
 | [Costa (macaque)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5074688/) | stress test | blockwise | coupled | no | visual stimulus | head fixed | saccade | juice | 0.50 | 0.57 |
-| [López-Yépez (mouse)](https://doi.org/10.1371/journal.pcbi.1009452) | stress test | variable interval | choice dependent | yes | spatial action | freely moving | nose poke | water | 0.50 | 0.57 |
+| [López-Yépez (mouse)](https://doi.org/10.1371/journal.pcbi.1009452) | stress test | blockwise | independent | yes | spatial action | freely moving | nose poke | water | 0.00 | 0.29 |
 | [Hattori (mouse)](https://www.nature.com/articles/s41593-023-01485-3) | primary | blockwise | coupled | yes | spatial action | head fixed | lick | water | 0.00 | 0.00 |
 
 Cohort names link to the primary Methods source used for annotation. The complete evidence note for every row, the three AIND prototypes, and the scoring contract are frozen in `analysis/task_design_features.json`.
@@ -437,19 +437,19 @@ Every metric is computed using only within-session transitions. Subjects are sum
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs task-structure distance | 12 | -0.230 | [-0.83, +0.47] | 0.4664 (monte_carlo) | [-0.49, -0.07] |
-| embedding vs task-structure distance | 12 | +0.544 | [+0.00, +0.88] | 0.0710 (monte_carlo) | [+0.41, +0.68] |
-| GRU614−Q vs full-design distance | 12 | -0.436 | [-0.89, +0.15] | 0.1589 (monte_carlo) | [-0.58, -0.32] |
-| embedding vs full-design distance | 12 | +0.681 | [+0.18, +0.93] | 0.0169 (monte_carlo) | [+0.60, +0.75] |
+| GRU614−Q vs task-structure distance | 12 | -0.603 | [-0.91, +0.04] | 0.0419 (monte_carlo) | [-0.74, -0.49] |
+| embedding vs task-structure distance | 12 | +0.179 | [-0.49, +0.79] | 0.5750 (monte_carlo) | [-0.01, +0.47] |
+| GRU614−Q vs full-design distance | 12 | -0.608 | [-0.93, +0.00] | 0.0401 (monte_carlo) | [-0.77, -0.51] |
+| embedding vs full-design distance | 12 | +0.500 | [-0.17, +0.92] | 0.1000 (monte_carlo) | [+0.36, +0.75] |
 
 ### All-valid categorical sensitivity — E=8
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs task-structure distance | 12 | -0.268 | [-0.84, +0.42] | 0.3954 (monte_carlo) | [-0.53, -0.12] |
-| embedding vs task-structure distance | 12 | +0.646 | [+0.15, +0.91] | 0.0272 (monte_carlo) | [+0.54, +0.78] |
-| GRU614−Q vs full-design distance | 12 | -0.501 | [-0.90, +0.09] | 0.0997 (monte_carlo) | [-0.61, -0.39] |
-| embedding vs full-design distance | 12 | +0.750 | [+0.26, +0.95] | 0.0063 (monte_carlo) | [+0.68, +0.83] |
+| GRU614−Q vs task-structure distance | 12 | -0.637 | [-0.93, +0.00] | 0.0300 (monte_carlo) | [-0.71, -0.53] |
+| embedding vs task-structure distance | 12 | +0.276 | [-0.42, +0.84] | 0.3803 (monte_carlo) | [+0.11, +0.59] |
+| GRU614−Q vs full-design distance | 12 | -0.669 | [-0.92, -0.08] | 0.0208 (monte_carlo) | [-0.75, -0.58] |
+| embedding vs full-design distance | 12 | +0.569 | [-0.11, +0.95] | 0.0564 (monte_carlo) | [+0.45, +0.83] |
 
 ### Individual schedule-feature screen
 

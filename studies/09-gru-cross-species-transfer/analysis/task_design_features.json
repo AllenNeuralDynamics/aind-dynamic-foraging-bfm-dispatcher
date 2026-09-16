@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_task_design_features.py",
-    "produced_at_pt": "2026-09-15T10:26:42-07:00",
-    "dispatcher_git_sha": "b7edadbda8542cac672b30b95ce96e4b6e094b88",
+    "produced_at_pt": "2026-09-15T18:55:59-07:00",
+    "dispatcher_git_sha": null,
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
@@ -44,8 +44,8 @@
     ]
   },
   "inputs": {
-    "analysis/generalization_drivers.json": "e3869a589ae2a61456166e6a7e3266e05fe010599eb59d341df976fd2bddaa2e",
-    "analysis/task_design_annotations.json": "11406c729bb4bd81cce5450548f641e43e4701339d8f140203de17aa89ba5004",
+    "analysis/generalization_drivers.json": "be7bec679d302a45ff31b89b997f4a894c3b3f75721b28aa41b60dded303d8b2",
+    "analysis/task_design_annotations.json": "f9766fdf9a2283daeb457084c5362b1aa157fb9e3d8cd5362d5f7c031c5b6535",
     "code/config/data/mice_snapshot.yaml": "9c2b4855c1a7e2686e3059f736b279142ccabfea0447da54bc50ef4e0008632b",
     "code/config/data/task/uncoupled_block.yaml": "80a3f2153909eee9578d6649eae7d5b961c5143d0a169f0b5e7f0a5308ec18df",
     "code/config/data/task/coupled_block.yaml": "db644a0248676961c9e70211e4bd3191061779175d5aa4404df0b9ba439fbfcc"
@@ -203,7 +203,7 @@
   "schedule_standardization": {
     "mean_arm_lag1_autocorrelation": {
       "mean": 0.9629130311728105,
-      "population_sd": 0.021700459933782945
+      "population_sd": 0.02170045993378294
     },
     "cross_arm_correlation": {
       "mean": -0.549735227298298,
@@ -219,11 +219,11 @@
     },
     "mean_absolute_reward_gap": {
       "mean": 0.437396531730761,
-      "population_sd": 0.1142601057257917
+      "population_sd": 0.11426010572579168
     },
     "mean_reward_probability": {
-      "mean": 0.48867498631587375,
-      "population_sd": 0.06074151023105195
+      "mean": 0.4886749863158738,
+      "population_sd": 0.06074151023105191
     },
     "equal_probability_fraction": {
       "mean": 0.056839151948466296,
@@ -293,7 +293,7 @@
         },
         "mean_reward_probability": {
           "subject_balanced_mean": 0.507579213618801,
-          "subject_sd": 0.012813477775104814,
+          "subject_sd": 0.012813477775104817,
           "n_subjects_contributing": 48
         },
         "equal_probability_fraction": {
@@ -410,7 +410,7 @@
           "probability_change_rate": 0.05246738513896767,
           "mean_absolute_arm_step_on_change": 0.5405660377358492,
           "mean_absolute_reward_gap": 0.45754663651780664,
-          "mean_reward_probability": 0.4979649519502544,
+          "mean_reward_probability": 0.49796495195025436,
           "equal_probability_fraction": 0.1606840022611645
         },
         {
@@ -498,7 +498,7 @@
           "probability_change_rate": 0.053914928203738825,
           "mean_absolute_arm_step_on_change": 0.529004329004329,
           "mean_absolute_reward_gap": 0.42907322345312077,
-          "mean_reward_probability": 0.4927587138611187,
+          "mean_reward_probability": 0.49275871386111864,
           "equal_probability_fraction": 0.18332883004593353
         },
         {
@@ -530,7 +530,7 @@
           "cross_arm_correlation": -0.3390303751716909,
           "probability_change_rate": 0.0501484445591842,
           "mean_absolute_arm_step_on_change": 0.5483146067415731,
-          "mean_absolute_reward_gap": 0.45487522510933887,
+          "mean_absolute_reward_gap": 0.4548752251093388,
           "mean_reward_probability": 0.5127218934911243,
           "equal_probability_fraction": 0.18478260869565216
         },
@@ -630,7 +630,7 @@
           "probability_change_rate": 0.052810650887573966,
           "mean_absolute_arm_step_on_change": 0.548768472906404,
           "mean_absolute_reward_gap": 0.4551357733175915,
-          "mean_reward_probability": 0.5152302243211334,
+          "mean_reward_probability": 0.5152302243211335,
           "equal_probability_fraction": 0.19391971664698937
         },
         {
@@ -707,7 +707,7 @@
           "probability_change_rate": 0.046093569946992395,
           "mean_absolute_arm_step_on_change": 0.5726141078838175,
           "mean_absolute_reward_gap": 0.5398620689655171,
-          "mean_reward_probability": 0.5170574712643679,
+          "mean_reward_probability": 0.5170574712643677,
           "equal_probability_fraction": 0.14551724137931035
         },
         {
@@ -1349,7 +1349,7 @@
         "embedding_centroid_mahalanobis": 7.125622528331783,
         "gru_d614_minus_d10_bits_per_trial": 0.0224656099829638
       },
-      "empirical_schedule_distance_to_grossman": 1.2034120979118854
+      "empirical_schedule_distance_to_grossman": 1.2034120979118856
     },
     "zid": {
       "label": "Zid (human)",
@@ -4307,7 +4307,7 @@
         "embedding_centroid_mahalanobis": 7.09263237802159,
         "gru_d614_minus_d10_bits_per_trial": 0.010264052084763517
       },
-      "empirical_schedule_distance_to_grossman": 1.1591475371315751
+      "empirical_schedule_distance_to_grossman": 1.1591475371315754
     },
     "lebedeva": {
       "label": "Lebedeva (mouse)",
@@ -4343,7 +4343,7 @@
       "schedule_features": {
         "mean_arm_lag1_autocorrelation": {
           "subject_balanced_mean": 0.9872266472592448,
-          "subject_sd": 0.0004117235205181409,
+          "subject_sd": 0.00041172352051812493,
           "n_subjects_contributing": 10
         },
         "reward_gap_lag1_autocorrelation": {
@@ -4353,7 +4353,7 @@
         },
         "cross_arm_correlation": {
           "subject_balanced_mean": -1.0,
-          "subject_sd": 7.401486830834377e-17,
+          "subject_sd": 0.0,
           "n_subjects_contributing": 10
         },
         "probability_change_rate": {
@@ -4368,12 +4368,12 @@
         },
         "mean_absolute_reward_gap": {
           "subject_balanced_mean": 0.5999999999999999,
-          "subject_sd": 1.5700924586837752e-16,
+          "subject_sd": 5.233641528945917e-17,
           "n_subjects_contributing": 10
         },
         "mean_reward_probability": {
           "subject_balanced_mean": 0.5,
-          "subject_sd": 3.700743415417188e-17,
+          "subject_sd": 0.0,
           "n_subjects_contributing": 10
         },
         "equal_probability_fraction": {
@@ -4401,18 +4401,18 @@
           "cross_arm_correlation": -1.0,
           "probability_change_rate": 0.006433943398687128,
           "mean_absolute_arm_step_on_change": 0.6000000000000001,
-          "mean_absolute_reward_gap": 0.6,
+          "mean_absolute_reward_gap": 0.5999999999999999,
           "mean_reward_probability": 0.5,
           "equal_probability_fraction": 0.0
         },
         {
           "subject_id": "AL040",
-          "mean_arm_lag1_autocorrelation": 0.9874941740528413,
+          "mean_arm_lag1_autocorrelation": 0.9874941740528411,
           "reward_gap_lag1_autocorrelation": 0.9874941740528416,
           "cross_arm_correlation": -1.0,
           "probability_change_rate": 0.006252254418660575,
           "mean_absolute_arm_step_on_change": 0.5999999999999999,
-          "mean_absolute_reward_gap": 0.6,
+          "mean_absolute_reward_gap": 0.5999999999999999,
           "mean_reward_probability": 0.5,
           "equal_probability_fraction": 0.0
         },
@@ -4423,8 +4423,8 @@
           "cross_arm_correlation": -1.0,
           "probability_change_rate": 0.006474729695750566,
           "mean_absolute_arm_step_on_change": 0.5999999999999999,
-          "mean_absolute_reward_gap": 0.5999999999999998,
-          "mean_reward_probability": 0.5000000000000001,
+          "mean_absolute_reward_gap": 0.6,
+          "mean_reward_probability": 0.5,
           "equal_probability_fraction": 0.0
         },
         {
@@ -4442,10 +4442,10 @@
           "subject_id": "AL056",
           "mean_arm_lag1_autocorrelation": 0.987367235377529,
           "reward_gap_lag1_autocorrelation": 0.987367235377529,
-          "cross_arm_correlation": -0.9999999999999998,
+          "cross_arm_correlation": -1.0,
           "probability_change_rate": 0.006315997236751209,
           "mean_absolute_arm_step_on_change": 0.5999999999999999,
-          "mean_absolute_reward_gap": 0.6,
+          "mean_absolute_reward_gap": 0.5999999999999999,
           "mean_reward_probability": 0.5,
           "equal_probability_fraction": 0.0
         },
@@ -4456,7 +4456,7 @@
           "cross_arm_correlation": -1.0,
           "probability_change_rate": 0.006259959025722741,
           "mean_absolute_arm_step_on_change": 0.5999999999999998,
-          "mean_absolute_reward_gap": 0.6000000000000002,
+          "mean_absolute_reward_gap": 0.5999999999999999,
           "mean_reward_probability": 0.5,
           "equal_probability_fraction": 0.0
         },
@@ -4467,7 +4467,7 @@
           "cross_arm_correlation": -1.0,
           "probability_change_rate": 0.006474681097796676,
           "mean_absolute_arm_step_on_change": 0.6000000000000002,
-          "mean_absolute_reward_gap": 0.6000000000000001,
+          "mean_absolute_reward_gap": 0.5999999999999999,
           "mean_reward_probability": 0.5,
           "equal_probability_fraction": 0.0
         },
@@ -4539,7 +4539,7 @@
         "embedding_centroid_mahalanobis": 2.154035834986089,
         "gru_d614_minus_d10_bits_per_trial": 0.01420835908868443
       },
-      "empirical_schedule_distance_to_grossman": 1.3868319688562303
+      "empirical_schedule_distance_to_grossman": 1.3868319688562305
     },
     "beron": {
       "label": "Beron (mouse)",
@@ -4574,8 +4574,8 @@
       "schedule_feature_status": "included: complete trial-wise arm probabilities",
       "schedule_features": {
         "mean_arm_lag1_autocorrelation": {
-          "subject_balanced_mean": 0.9600146586327128,
-          "subject_sd": 0.0014132996162006578,
+          "subject_balanced_mean": 0.960014658632713,
+          "subject_sd": 0.0014132996162006775,
           "n_subjects_contributing": 6
         },
         "reward_gap_lag1_autocorrelation": {
@@ -4599,13 +4599,13 @@
           "n_subjects_contributing": 6
         },
         "mean_absolute_reward_gap": {
-          "subject_balanced_mean": 0.5800838072744022,
-          "subject_sd": 0.04235791217636125,
+          "subject_balanced_mean": 0.5800838072744021,
+          "subject_sd": 0.042357912176361256,
           "n_subjects_contributing": 6
         },
         "mean_reward_probability": {
           "subject_balanced_mean": 0.5,
-          "subject_sd": 2.482534153247273e-17,
+          "subject_sd": 0.0,
           "n_subjects_contributing": 6
         },
         "equal_probability_fraction": {
@@ -4622,13 +4622,13 @@
           "cross_arm_correlation": -1.0,
           "probability_change_rate": 0.019550568296844723,
           "mean_absolute_arm_step_on_change": 0.5670118343195265,
-          "mean_absolute_reward_gap": 0.5730323773214336,
+          "mean_absolute_reward_gap": 0.5730323773214338,
           "mean_reward_probability": 0.5,
           "equal_probability_fraction": 0.0
         },
         {
           "subject_id": "m2",
-          "mean_arm_lag1_autocorrelation": 0.9604385043088123,
+          "mean_arm_lag1_autocorrelation": 0.9604385043088131,
           "reward_gap_lag1_autocorrelation": 0.9604385043088123,
           "cross_arm_correlation": -0.9999999999999997,
           "probability_change_rate": 0.019869161722196865,
@@ -4652,7 +4652,7 @@
           "subject_id": "m4",
           "mean_arm_lag1_autocorrelation": 0.9590216120544913,
           "reward_gap_lag1_autocorrelation": 0.9590216120544912,
-          "cross_arm_correlation": -1.0,
+          "cross_arm_correlation": -0.9999999999999998,
           "probability_change_rate": 0.020333117023577763,
           "mean_absolute_arm_step_on_change": 0.562917933130699,
           "mean_absolute_reward_gap": 0.5610775948527256,
@@ -4661,13 +4661,13 @@
         },
         {
           "subject_id": "m5",
-          "mean_arm_lag1_autocorrelation": 0.9582995859359056,
+          "mean_arm_lag1_autocorrelation": 0.9582995859359057,
           "reward_gap_lag1_autocorrelation": 0.9582995859359057,
           "cross_arm_correlation": -1.0,
           "probability_change_rate": 0.020608123648741893,
           "mean_absolute_arm_step_on_change": 0.5651785714285713,
-          "mean_absolute_reward_gap": 0.5618350534407254,
-          "mean_reward_probability": 0.49999999999999994,
+          "mean_absolute_reward_gap": 0.5618350534407252,
+          "mean_reward_probability": 0.5,
           "equal_probability_fraction": 0.0
         },
         {
@@ -4761,16 +4761,16 @@
       "schedule_features": {
         "mean_arm_lag1_autocorrelation": {
           "subject_balanced_mean": 0.9173343555759021,
-          "subject_sd": 0.0033874100054235904,
+          "subject_sd": 0.0033874100054235713,
           "n_subjects_contributing": 20
         },
         "reward_gap_lag1_autocorrelation": {
           "subject_balanced_mean": 0.9174328597410742,
-          "subject_sd": 0.0033161386242582845,
+          "subject_sd": 0.0033161386242582798,
           "n_subjects_contributing": 20
         },
         "cross_arm_correlation": {
-          "subject_balanced_mean": 0.0034590988900950344,
+          "subject_balanced_mean": 0.003459098890095038,
           "subject_sd": 0.015308884019302216,
           "n_subjects_contributing": 20
         },
@@ -4781,17 +4781,17 @@
         },
         "mean_absolute_arm_step_on_change": {
           "subject_balanced_mean": 0.11116071525605109,
-          "subject_sd": 0.0008235062606956903,
+          "subject_sd": 0.0008235062606956906,
           "n_subjects_contributing": 20
         },
         "mean_absolute_reward_gap": {
           "subject_balanced_mean": 0.3812997818808393,
-          "subject_sd": 0.0037782134448728086,
+          "subject_sd": 0.0037782134448727995,
           "n_subjects_contributing": 20
         },
         "mean_reward_probability": {
           "subject_balanced_mean": 0.4962274369248047,
-          "subject_sd": 0.009057345188275731,
+          "subject_sd": 0.009057345188275733,
           "n_subjects_contributing": 20
         },
         "equal_probability_fraction": {
@@ -4814,12 +4814,12 @@
         },
         {
           "subject_id": "M015",
-          "mean_arm_lag1_autocorrelation": 0.9189734835268496,
-          "reward_gap_lag1_autocorrelation": 0.9199201501728248,
-          "cross_arm_correlation": -0.015795536621767244,
+          "mean_arm_lag1_autocorrelation": 0.9189734835268495,
+          "reward_gap_lag1_autocorrelation": 0.9199201501728247,
+          "cross_arm_correlation": -0.01579553662176721,
           "probability_change_rate": 0.9911815049942583,
           "mean_absolute_arm_step_on_change": 0.11068088081241328,
-          "mean_absolute_reward_gap": 0.384353768367864,
+          "mean_absolute_reward_gap": 0.38435376836786406,
           "mean_reward_probability": 0.5003222456416839,
           "equal_probability_fraction": 0.016110894857488862
         },
@@ -4827,10 +4827,10 @@
           "subject_id": "M016",
           "mean_arm_lag1_autocorrelation": 0.9190767022465387,
           "reward_gap_lag1_autocorrelation": 0.9190127461055984,
-          "cross_arm_correlation": 0.001960370924576858,
+          "cross_arm_correlation": 0.001960370924576859,
           "probability_change_rate": 0.9916293750998881,
           "mean_absolute_arm_step_on_change": 0.1105118432965409,
-          "mean_absolute_reward_gap": 0.38120059079372826,
+          "mean_absolute_reward_gap": 0.38120059079372814,
           "mean_reward_probability": 0.4977419246831211,
           "equal_probability_fraction": 0.016666777512486783
         },
@@ -4838,9 +4838,9 @@
           "subject_id": "M017",
           "mean_arm_lag1_autocorrelation": 0.9188485255016214,
           "reward_gap_lag1_autocorrelation": 0.9191679732915826,
-          "cross_arm_correlation": 0.001631903907573718,
+          "cross_arm_correlation": 0.0016319039075737075,
           "probability_change_rate": 0.9919397002439875,
-          "mean_absolute_arm_step_on_change": 0.11078382926179119,
+          "mean_absolute_arm_step_on_change": 0.11078382926179121,
           "mean_absolute_reward_gap": 0.3810351854620803,
           "mean_reward_probability": 0.5002734925069724,
           "equal_probability_fraction": 0.017576680443767676
@@ -4849,60 +4849,60 @@
           "subject_id": "M018",
           "mean_arm_lag1_autocorrelation": 0.9192648774190597,
           "reward_gap_lag1_autocorrelation": 0.9185325602415978,
-          "cross_arm_correlation": 0.008758930224282665,
+          "cross_arm_correlation": 0.00875893022428265,
           "probability_change_rate": 0.9917840375586855,
-          "mean_absolute_arm_step_on_change": 0.11044003278096831,
+          "mean_absolute_arm_step_on_change": 0.11044003278096828,
           "mean_absolute_reward_gap": 0.3800156806596841,
-          "mean_reward_probability": 0.5012270980018142,
+          "mean_reward_probability": 0.5012270980018143,
           "equal_probability_fraction": 0.016704814173168603
         },
         {
           "subject_id": "M022",
-          "mean_arm_lag1_autocorrelation": 0.9187723223109855,
+          "mean_arm_lag1_autocorrelation": 0.9187723223109852,
           "reward_gap_lag1_autocorrelation": 0.9172836589471377,
-          "cross_arm_correlation": 0.015248547546662524,
+          "cross_arm_correlation": 0.015248547546662522,
           "probability_change_rate": 0.9916160422221612,
           "mean_absolute_arm_step_on_change": 0.11059475972773929,
           "mean_absolute_reward_gap": 0.378490572288466,
-          "mean_reward_probability": 0.5040185702775247,
+          "mean_reward_probability": 0.5040185702775245,
           "equal_probability_fraction": 0.016488340192043895
         },
         {
           "subject_id": "M023",
           "mean_arm_lag1_autocorrelation": 0.9198212524383554,
           "reward_gap_lag1_autocorrelation": 0.919665895353414,
-          "cross_arm_correlation": 0.0017157062513980758,
+          "cross_arm_correlation": 0.0017157062513980922,
           "probability_change_rate": 0.99133453537501,
           "mean_absolute_arm_step_on_change": 0.11065841384593994,
-          "mean_absolute_reward_gap": 0.3833786331818011,
-          "mean_reward_probability": 0.5051066500602207,
+          "mean_absolute_reward_gap": 0.38337863318180104,
+          "mean_reward_probability": 0.5051066500602206,
           "equal_probability_fraction": 0.017471999140501196
         },
         {
           "subject_id": "M025",
-          "mean_arm_lag1_autocorrelation": 0.9180134359739619,
+          "mean_arm_lag1_autocorrelation": 0.9180134359739618,
           "reward_gap_lag1_autocorrelation": 0.9200384759109898,
           "cross_arm_correlation": -0.019351163606013695,
           "probability_change_rate": 0.9920184144445773,
           "mean_absolute_arm_step_on_change": 0.11115784678783056,
-          "mean_absolute_reward_gap": 0.38669999215249123,
-          "mean_reward_probability": 0.5024605023789559,
+          "mean_absolute_reward_gap": 0.3866999921524913,
+          "mean_reward_probability": 0.5024605023789558,
           "equal_probability_fraction": 0.016269628037494776
         },
         {
           "subject_id": "M027",
           "mean_arm_lag1_autocorrelation": 0.9198908220992161,
           "reward_gap_lag1_autocorrelation": 0.921077171853702,
-          "cross_arm_correlation": -0.013786023531193846,
+          "cross_arm_correlation": -0.01378602353119384,
           "probability_change_rate": 0.9922866228001134,
-          "mean_absolute_arm_step_on_change": 0.11021245514122206,
-          "mean_absolute_reward_gap": 0.38682353912458967,
+          "mean_absolute_arm_step_on_change": 0.11021245514122208,
+          "mean_absolute_reward_gap": 0.38682353912458955,
           "mean_reward_probability": 0.4983292991059689,
           "equal_probability_fraction": 0.01584208210221915
         },
         {
           "subject_id": "M029",
-          "mean_arm_lag1_autocorrelation": 0.9175982771837574,
+          "mean_arm_lag1_autocorrelation": 0.9175982771837576,
           "reward_gap_lag1_autocorrelation": 0.9161028880561024,
           "cross_arm_correlation": 0.018141330503085043,
           "probability_change_rate": 0.9915806851011143,
@@ -4913,11 +4913,11 @@
         },
         {
           "subject_id": "M031",
-          "mean_arm_lag1_autocorrelation": 0.9201726057041115,
+          "mean_arm_lag1_autocorrelation": 0.9201726057041114,
           "reward_gap_lag1_autocorrelation": 0.9199745152075961,
-          "cross_arm_correlation": 0.00743632745185021,
+          "cross_arm_correlation": 0.007436327451850222,
           "probability_change_rate": 0.9937149883863916,
-          "mean_absolute_arm_step_on_change": 0.1106553492568339,
+          "mean_absolute_arm_step_on_change": 0.11065534925683387,
           "mean_absolute_reward_gap": 0.3833082395595233,
           "mean_reward_probability": 0.505309470320421,
           "equal_probability_fraction": 0.01643480632842335
@@ -4937,31 +4937,31 @@
           "subject_id": "M039",
           "mean_arm_lag1_autocorrelation": 0.9204965788157072,
           "reward_gap_lag1_autocorrelation": 0.9187452958765666,
-          "cross_arm_correlation": 0.01584852370895594,
+          "cross_arm_correlation": 0.01584852370895595,
           "probability_change_rate": 0.9925704448672646,
           "mean_absolute_arm_step_on_change": 0.11020281452406656,
           "mean_absolute_reward_gap": 0.38021624455777836,
-          "mean_reward_probability": 0.4967879390586037,
+          "mean_reward_probability": 0.4967879390586036,
           "equal_probability_fraction": 0.01718782981033079
         },
         {
           "subject_id": "M040",
           "mean_arm_lag1_autocorrelation": 0.9176723669278539,
           "reward_gap_lag1_autocorrelation": 0.9194652766483937,
-          "cross_arm_correlation": -0.026708348156048545,
+          "cross_arm_correlation": -0.02670834815604855,
           "probability_change_rate": 0.9921464579464049,
-          "mean_absolute_arm_step_on_change": 0.11162283182145784,
+          "mean_absolute_arm_step_on_change": 0.11162283182145782,
           "mean_absolute_reward_gap": 0.3889694823617554,
           "mean_reward_probability": 0.495305875817836,
           "equal_probability_fraction": 0.014865365285933449
         },
         {
           "subject_id": "M041",
-          "mean_arm_lag1_autocorrelation": 0.9204826525428472,
+          "mean_arm_lag1_autocorrelation": 0.9204826525428471,
           "reward_gap_lag1_autocorrelation": 0.9193594475915657,
           "cross_arm_correlation": 0.01627248167973116,
           "probability_change_rate": 0.9919505897838303,
-          "mean_absolute_arm_step_on_change": 0.1104906164224003,
+          "mean_absolute_arm_step_on_change": 0.11049061642240031,
           "mean_absolute_reward_gap": 0.38109553235250865,
           "mean_reward_probability": 0.5006258186796028,
           "equal_probability_fraction": 0.017163048965169108
@@ -4970,10 +4970,10 @@
           "subject_id": "M042",
           "mean_arm_lag1_autocorrelation": 0.909557527179514,
           "reward_gap_lag1_autocorrelation": 0.9094218723878169,
-          "cross_arm_correlation": 0.019894284763603453,
+          "cross_arm_correlation": 0.019894284763603474,
           "probability_change_rate": 0.9915863620799296,
           "mean_absolute_arm_step_on_change": 0.11287149078997498,
-          "mean_absolute_reward_gap": 0.374935012153199,
+          "mean_absolute_reward_gap": 0.3749350121531991,
           "mean_reward_probability": 0.4762413221309395,
           "equal_probability_fraction": 0.017288532916585272
         },
@@ -4984,17 +4984,17 @@
           "cross_arm_correlation": 0.011530413862997566,
           "probability_change_rate": 0.992106911672583,
           "mean_absolute_arm_step_on_change": 0.11165952995608153,
-          "mean_absolute_reward_gap": 0.378170786978916,
-          "mean_reward_probability": 0.48601433734264315,
+          "mean_absolute_reward_gap": 0.3781707869789159,
+          "mean_reward_probability": 0.4860143373426432,
           "equal_probability_fraction": 0.016825621590104537
         },
         {
           "subject_id": "M044",
-          "mean_arm_lag1_autocorrelation": 0.9183364478802707,
+          "mean_arm_lag1_autocorrelation": 0.9183364478802708,
           "reward_gap_lag1_autocorrelation": 0.9174539791644658,
-          "cross_arm_correlation": 0.007689554626792743,
+          "cross_arm_correlation": 0.007689554626792757,
           "probability_change_rate": 0.9917682422370525,
-          "mean_absolute_arm_step_on_change": 0.11083461234204392,
+          "mean_absolute_arm_step_on_change": 0.11083461234204389,
           "mean_absolute_reward_gap": 0.37963893041324537,
           "mean_reward_probability": 0.49814765353359347,
           "equal_probability_fraction": 0.01637900184435819
@@ -5003,22 +5003,22 @@
           "subject_id": "M046",
           "mean_arm_lag1_autocorrelation": 0.9106458792112437,
           "reward_gap_lag1_autocorrelation": 0.9100152526266584,
-          "cross_arm_correlation": 0.02288161725739455,
+          "cross_arm_correlation": 0.022881617257394547,
           "probability_change_rate": 0.9924842575665245,
           "mean_absolute_arm_step_on_change": 0.11262788767703578,
-          "mean_absolute_reward_gap": 0.37465897324253195,
-          "mean_reward_probability": 0.47313993586178416,
+          "mean_absolute_reward_gap": 0.374658973242532,
+          "mean_reward_probability": 0.47313993586178404,
           "equal_probability_fraction": 0.017888815689454215
         },
         {
           "subject_id": "M047",
           "mean_arm_lag1_autocorrelation": 0.9121467224546521,
           "reward_gap_lag1_autocorrelation": 0.9121175116286699,
-          "cross_arm_correlation": 0.01380029919710694,
+          "cross_arm_correlation": 0.013800299197106944,
           "probability_change_rate": 0.9918006602065808,
           "mean_absolute_arm_step_on_change": 0.11267361950320144,
           "mean_absolute_reward_gap": 0.3773456024932592,
-          "mean_reward_probability": 0.4871142086346041,
+          "mean_reward_probability": 0.487114208634604,
           "equal_probability_fraction": 0.015917420634218027
         }
       ],
@@ -5431,26 +5431,24 @@
       "n_sessions": 218,
       "n_trials": 147726,
       "annotation": {
-        "schedule_family": "variable_interval",
-        "arm_coupling": "choice_dependent",
+        "schedule_family": "blockwise",
+        "arm_coupling": "independent",
         "baiting": true,
         "choice_target": "spatial_action",
         "physical_context": "freely_moving",
         "response_modality": "nose_poke",
         "reward_modality": "water",
         "evidence_url": "https://doi.org/10.1371/journal.pcbi.1009452",
-        "evidence_note": "Freely moving mice nose-poked left/right ports for water under baited variable-interval schedules with blockwise set rates."
+        "evidence_note": "Independent set probabilities (0.10/0.40, 0.40/0.10, or 0.25/0.25) were piecewise constant for 50-150-trial blocks. Each arm used a baited variable-interval availability update, so reward availability accumulated while unchosen and reset when collected."
       },
       "categorical_distance": {
-        "task_structure": 0.5,
+        "task_structure": 0.0,
         "task_structure_nearest_prototypes": [
-          "uncoupled_baiting",
-          "coupled_baiting"
+          "uncoupled_baiting"
         ],
-        "full_design": 0.5714285714285714,
+        "full_design": 0.2857142857142857,
         "full_design_nearest_prototypes": [
-          "uncoupled_baiting",
-          "coupled_baiting"
+          "uncoupled_baiting"
         ]
       },
       "schedule_feature_status": "excluded: canonical adapter does not expose complete trial-wise arm probabilities",
@@ -5534,7 +5532,7 @@
       "schedule_features": {
         "mean_arm_lag1_autocorrelation": {
           "subject_balanced_mean": 0.9748765640274126,
-          "subject_sd": 0.0009084936948234424,
+          "subject_sd": 0.0009084936948233977,
           "n_subjects_contributing": 7
         },
         "reward_gap_lag1_autocorrelation": {
@@ -5544,7 +5542,7 @@
         },
         "cross_arm_correlation": {
           "subject_balanced_mean": -0.9954177547821944,
-          "subject_sd": 0.004541808369272792,
+          "subject_sd": 0.004541808369272838,
           "n_subjects_contributing": 7
         },
         "probability_change_rate": {
@@ -5559,12 +5557,12 @@
         },
         "mean_absolute_reward_gap": {
           "subject_balanced_mean": 0.4375693932185736,
-          "subject_sd": 0.003873025248328726,
+          "subject_sd": 0.0038730252483287174,
           "n_subjects_contributing": 7
         },
         "mean_reward_probability": {
-          "subject_balanced_mean": 0.34850509739494323,
-          "subject_sd": 0.0014816073874003841,
+          "subject_balanced_mean": 0.34850509739494334,
+          "subject_sd": 0.001481607387400382,
           "n_subjects_contributing": 7
         },
         "equal_probability_fraction": {
@@ -5576,7 +5574,7 @@
       "subject_schedule_features": [
         {
           "subject_id": "RH353",
-          "mean_arm_lag1_autocorrelation": 0.9759048005949043,
+          "mean_arm_lag1_autocorrelation": 0.9759048005949044,
           "reward_gap_lag1_autocorrelation": 0.9758918797326109,
           "cross_arm_correlation": -0.9931653876947152,
           "probability_change_rate": 0.013611727026361172,
@@ -5587,23 +5585,23 @@
         },
         {
           "subject_id": "RH365",
-          "mean_arm_lag1_autocorrelation": 0.976012745027016,
+          "mean_arm_lag1_autocorrelation": 0.9760127450270142,
           "reward_gap_lag1_autocorrelation": 0.9759987729212236,
           "cross_arm_correlation": -0.9937505888821421,
           "probability_change_rate": 0.012936732766761095,
           "mean_absolute_arm_step_on_change": 0.42636534839924667,
-          "mean_absolute_reward_gap": 0.435281507656066,
+          "mean_absolute_reward_gap": 0.4352815076560659,
           "mean_reward_probability": 0.34810482921083624,
           "equal_probability_fraction": 0.0
         },
         {
           "subject_id": "RH374",
-          "mean_arm_lag1_autocorrelation": 0.9754919527885337,
+          "mean_arm_lag1_autocorrelation": 0.9754919527885355,
           "reward_gap_lag1_autocorrelation": 0.9754620199708459,
           "cross_arm_correlation": -0.9873180080260273,
           "probability_change_rate": 0.013875152713944966,
           "mean_absolute_arm_step_on_change": 0.4205784204671858,
-          "mean_absolute_reward_gap": 0.4364429052680491,
+          "mean_absolute_reward_gap": 0.43644290526804896,
           "mean_reward_probability": 0.3459121072196085,
           "equal_probability_fraction": 0.0
         },
@@ -5614,29 +5612,29 @@
           "cross_arm_correlation": -0.9952260461572544,
           "probability_change_rate": 0.013765498389143805,
           "mean_absolute_arm_step_on_change": 0.4302919708029197,
-          "mean_absolute_reward_gap": 0.44130879345603274,
-          "mean_reward_probability": 0.3485465965527315,
+          "mean_absolute_reward_gap": 0.44130879345603263,
+          "mean_reward_probability": 0.34854659655273146,
           "equal_probability_fraction": 0.0
         },
         {
           "subject_id": "RH377",
-          "mean_arm_lag1_autocorrelation": 0.9740243836880238,
+          "mean_arm_lag1_autocorrelation": 0.9740243836880231,
           "reward_gap_lag1_autocorrelation": 0.9740226596246019,
-          "cross_arm_correlation": -0.9989345881529934,
+          "cross_arm_correlation": -0.9989345881529936,
           "probability_change_rate": 0.013244368634927006,
           "mean_absolute_arm_step_on_change": 0.429162702188392,
           "mean_absolute_reward_gap": 0.4304711170092896,
-          "mean_reward_probability": 0.34970860355059213,
+          "mean_reward_probability": 0.3497086035505922,
           "equal_probability_fraction": 0.0
         },
         {
           "subject_id": "RH445",
           "mean_arm_lag1_autocorrelation": 0.9742741595897388,
           "reward_gap_lag1_autocorrelation": 0.9742795532153773,
-          "cross_arm_correlation": -0.9995296645622282,
+          "cross_arm_correlation": -0.9995296645622284,
           "probability_change_rate": 0.013677130044843049,
           "mean_absolute_arm_step_on_change": 0.4283333333333333,
-          "mean_absolute_reward_gap": 0.4385487655010613,
+          "mean_absolute_reward_gap": 0.43854876550106126,
           "mean_reward_probability": 0.349765389341973,
           "equal_probability_fraction": 0.0
         },
@@ -5647,8 +5645,8 @@
           "cross_arm_correlation": -1.0,
           "probability_change_rate": 0.013496577653523571,
           "mean_absolute_arm_step_on_change": 0.4351785714285714,
-          "mean_absolute_reward_gap": 0.4396337946943484,
-          "mean_reward_probability": 0.35000000000000003,
+          "mean_absolute_reward_gap": 0.4396337946943483,
+          "mean_reward_probability": 0.35,
           "equal_probability_fraction": 0.0
         }
       ],
@@ -5805,65 +5803,65 @@
   "sensitivity_relationships": {
     "gru_d614_minus_q_vs_task_structure_distance": {
       "n_cohorts": 12,
-      "spearman_rho": -0.23044313575874753,
-      "permutation_p_two_sided": 0.4663753362466375,
+      "spearman_rho": -0.6034367109613602,
+      "permutation_p_two_sided": 0.041939580604193956,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.828078671210825,
-        0.4718418411704629
+        -0.9103028577359495,
+        0.04455961811760738
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.4855041562276122,
-        -0.07035264706814484
+        -0.7395739969534469,
+        -0.4855041562276122
       ]
     },
     "embedding_centroid_vs_task_structure_distance": {
       "n_cohorts": 12,
-      "spearman_rho": 0.5439969106436007,
-      "permutation_p_two_sided": 0.07099929000709992,
+      "spearman_rho": 0.1787960625070697,
+      "permutation_p_two_sided": 0.5749842501574984,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        0.0,
-        0.8835412617927488
+        -0.4893799445325891,
+        0.787053864514483
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.4120655042562769,
-        0.6816674516731122
+        -0.014712247158412493,
+        0.47079190906919977
       ]
     },
     "gru_d614_minus_q_vs_full_design_distance": {
       "n_cohorts": 12,
-      "spearman_rho": -0.4355556895211861,
-      "permutation_p_two_sided": 0.15890841091589084,
+      "spearman_rho": -0.6081655365649388,
+      "permutation_p_two_sided": 0.04006959930400696,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.8917402534089164,
-        0.1506787548845733
+        -0.9252406250504221,
+        0.0
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.5845422341523367,
-        -0.31622776601683794
+        -0.7731921410338584,
+        -0.5132609541893322
       ]
     },
     "embedding_centroid_vs_full_design_distance": {
       "n_cohorts": 12,
-      "spearman_rho": 0.6807845231171481,
-      "permutation_p_two_sided": 0.016939830601693982,
+      "spearman_rho": 0.5002071572930561,
+      "permutation_p_two_sided": 0.0999990000099999,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        0.17759847588871036,
-        0.9284789483061034
+        -0.16646288156236583,
+        0.9154986248184254
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.5971484496103001,
+        0.36257883919796857,
         0.7487017588633377
       ]
     }

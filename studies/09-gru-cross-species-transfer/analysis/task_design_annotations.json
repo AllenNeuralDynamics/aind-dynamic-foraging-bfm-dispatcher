@@ -204,15 +204,15 @@
       "evidence_note": "Head-restrained macaques chose randomized-position visual stimuli by saccade for apple juice under 80/20, 70/30, or 60/40 reversals."
     },
     "lopez_mouse": {
-      "schedule_family": "variable_interval",
-      "arm_coupling": "choice_dependent",
+      "schedule_family": "blockwise",
+      "arm_coupling": "independent",
       "baiting": true,
       "choice_target": "spatial_action",
       "physical_context": "freely_moving",
       "response_modality": "nose_poke",
       "reward_modality": "water",
       "evidence_url": "https://doi.org/10.1371/journal.pcbi.1009452",
-      "evidence_note": "Freely moving mice nose-poked left/right ports for water under baited variable-interval schedules with blockwise set rates."
+      "evidence_note": "Independent set probabilities (0.10/0.40, 0.40/0.10, or 0.25/0.25) were piecewise constant for 50-150-trial blocks. Each arm used a baited variable-interval availability update, so reward availability accumulated while unchosen and reset when collected."
     },
     "hattori": {
       "schedule_family": "blockwise",
