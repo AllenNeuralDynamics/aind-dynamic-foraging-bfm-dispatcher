@@ -74,12 +74,6 @@ EXPECTED_AUDITS: dict[str, dict[str, int]] = {
         "num_trials": 23275,
         "excluded_trials": 485,
     },
-    "tang": {
-        "num_subjects": 2,
-        "num_sessions": 8,
-        "num_trials": 15375,
-        "excluded_trials": 0,
-    },
     "alsio": {
         "num_subjects": 95,
         "num_sessions": 2334,
@@ -733,90 +727,6 @@ def adapt_findling(path: str | Path) -> AdapterResult:
     return result
 
 
-_TANG_FILE = re.compile(
-    r"^Neurophysiology/(?P<subject>[Vw])(?P<date>\d{8})_neurons\.mat$"
-)
-
-
-def _load_tang_behavior(payload: bytes) -> dict[str, np.ndarray]:
-    try:
-        from scipy.io import loadmat
-    except ImportError as exc:
-        raise ImportError("The Tang adapter requires scipy.") from exc
-
-    try:
-        return loadmat(io.BytesIO(payload), simplify_cells=True)["beh"]
-    except NotImplementedError:
-        try:
-            import h5py
-        except ImportError as exc:
-            raise ImportError("The Tang MATLAB 7.3 sessions require h5py.") from exc
-        with h5py.File(io.BytesIO(payload), "r") as source:
-            return {
-                key: np.asarray(source["beh"][key]).reshape(-1) for key in source["beh"]
-            }
-
-
-def adapt_tang(path: str | Path) -> AdapterResult:
-    """Adapt all eight released two-arm sessions from the two macaques."""
-    source = SOURCES["tang"]
-    path = Path(path)
-    verify_source_file(path, source)
-
-    rows: list[dict[str, object]] = []
-    subject_names = {"V": "voltaire", "w": "waldo"}
-    with zipfile.ZipFile(path) as archive:
-        sessions = []
-        for member in archive.infolist():
-            match = _TANG_FILE.match(member.filename)
-            if match is not None:
-                sessions.append((match.group("subject"), match.group("date"), member))
-        for subject_code, session_date, member in sorted(sessions):
-            behavior = _load_tang_behavior(archive.read(member))
-            fields = {
-                name: np.asarray(behavior[name]).reshape(-1)
-                for name in (
-                    "trialDirection",
-                    "reward",
-                    "blockType",
-                    "blockIndex",
-                    "trialObject",
-                    "trialValue",
-                    "optimal",
-                )
-            }
-            lengths = {len(values) for values in fields.values()}
-            if len(lengths) != 1:
-                raise ValueError(f"Tang fields disagree for {member.filename!r}.")
-            for name in ("trialDirection", "reward"):
-                if not set(np.unique(fields[name])).issubset({0, 1}):
-                    raise ValueError(
-                        f"Tang {name} is not binary in {member.filename!r}."
-                    )
-            for trial, values in enumerate(zip(*fields.values(), strict=True)):
-                choice, reward, block_type, block_index, obj, value, optimal = values
-                reward_binary = int(reward)
-                rows.append(
-                    {
-                        "subject_id": subject_names[subject_code],
-                        "ses_idx": session_date,
-                        "trial": trial,
-                        "animal_response": int(choice),
-                        "rewarded": reward_binary,
-                        "earned_reward": reward_binary,
-                        "dataset_id": source.dataset_id,
-                        "species": source.species,
-                        "source_trial": trial,
-                        "block_type": int(block_type),
-                        "block_index": int(block_index),
-                        "trial_object": int(obj),
-                        "trial_value": float(value),
-                        "source_optimal": int(optimal),
-                    }
-                )
-    return _finish(rows, name="tang", excluded_trials=0, split="sessions")
-
-
 _ALSIO_COHORTS = (
     (
         "skf-vpvd",
@@ -1013,7 +923,7 @@ def adapt_costa(path: str | Path) -> AdapterResult:
             source_choice = int(record.iloc[13])
             if source_choice not in {10, 20}:
                 raise ValueError(f"Unexpected Costa chosen shape {source_choice!r}.")
-            reward = int(record.iloc[8])
+            reward = int(record.iloc[10])
             rows.append(
                 {
                     "subject_id": f"macaque-{int(subject):02d}",
@@ -1026,6 +936,8 @@ def adapt_costa(path: str | Path) -> AdapterResult:
                     "species": source.species,
                     "source_trial": int(record.iloc[2]),
                     "source_block": int(record.iloc[3]),
+                    "source_choice_phase_code": int(record.iloc[8]),
+                    "programmed_phase": int(record.iloc[9]),
                     "reward_schedule_code": int(record.iloc[11]),
                     "response_time_ms": int(record.iloc[12]),
                     "source_chosen_shape": source_choice,
@@ -1265,7 +1177,6 @@ ADAPTERS: dict[str, Callable[[str | Path], AdapterResult]] = {
     "kwak": adapt_kwak,
     "miller": adapt_miller,
     "findling": adapt_findling,
-    "tang": adapt_tang,
     "alsio": adapt_alsio,
     "eckstein": adapt_eckstein,
     "costa": adapt_costa,

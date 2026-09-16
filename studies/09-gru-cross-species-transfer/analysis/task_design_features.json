@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_task_design_features.py",
-    "produced_at_pt": "2026-09-07T21:05:18-07:00",
-    "dispatcher_git_sha": "703e750eb44e9103214aca1ced8c82557925849f",
+    "produced_at_pt": "2026-09-15T10:26:42-07:00",
+    "dispatcher_git_sha": "b7edadbda8542cac672b30b95ce96e4b6e094b88",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
@@ -13,7 +13,6 @@
       "gru-kwak-matched-half@20260906-071413",
       "gru-miller-matched-half@20260905-232924",
       "gru-findling-matched-half@20260905-232924",
-      "gru-tang-matched-half@20260905-232924",
       "gru-alsio-matched-half@20260905-232925",
       "gru-eckstein-matched-half@20260905-232924",
       "gru-costa-matched-half@20260905-232924",
@@ -23,12 +22,30 @@
       "q-expanded-matched-half@20260906-kwak-choicefix",
       "gru-hattori-matched-half@20260907-200329",
       "q-hattori-matched-half@slurm-25585753",
-      "v2-sc-active@20260622-144622"
+      "gru-costa-matched-half@20260914-162457",
+      "q-expanded-matched-half@slurm-26386210",
+      "v2-sc-active@20260622-144622",
+      "alsio-dual-rate-sticky@slurm-26383281",
+      "beron-rflr@slurm-25582233",
+      "chen-rlck@20260905-123624",
+      "costa-feedback-dependent-bias-ck1@slurm-26386211",
+      "costa-feedback-dependent-bias@slurm-26386087",
+      "eckstein-bi@slurm-25582240",
+      "eckstein-rl@slurm-25582239",
+      "findling-weber@slurm-25582235",
+      "findling-weber@slurm-25582241",
+      "grossman-meta-learning@20260905-124420",
+      "hattori-q-learning@slurm-25585754",
+      "lebedeva-pr@slurm-25582232",
+      "lopez-double-trace@slurm-26383278",
+      "miller-rhg@slurm-25582234",
+      "zid-history-kernel@20260905-123624",
+      "zid-history-kernel@20260905-151851"
     ]
   },
   "inputs": {
-    "analysis/generalization_drivers.json": "bc11eaf775ccf867789ce0cab012ed15b5684a9ca90db738afe3afd98d1bad58",
-    "analysis/task_design_annotations.json": "8f2806e9dfa8001af5f858f9d136aea762358ea53485511cc0043f25b39f58ab",
+    "analysis/generalization_drivers.json": "e3869a589ae2a61456166e6a7e3266e05fe010599eb59d341df976fd2bddaa2e",
+    "analysis/task_design_annotations.json": "11406c729bb4bd81cce5450548f641e43e4701339d8f140203de17aa89ba5004",
     "code/config/data/mice_snapshot.yaml": "9c2b4855c1a7e2686e3059f736b279142ccabfea0447da54bc50ef4e0008632b",
     "code/config/data/task/uncoupled_block.yaml": "80a3f2153909eee9578d6649eae7d5b961c5143d0a169f0b5e7f0a5308ec18df",
     "code/config/data/task/coupled_block.yaml": "db644a0248676961c9e70211e4bd3191061779175d5aa4404df0b9ba439fbfcc"
@@ -42,7 +59,6 @@
       "beron",
       "miller",
       "findling",
-      "tang",
       "alsio",
       "eckstein",
       "costa",
@@ -67,9 +83,7 @@
         "costa",
         "lopez_mouse"
       ],
-      "descriptive_only": [
-        "tang"
-      ],
+      "descriptive_only": [],
       "quarantined": []
     },
     "tier_reasons": {
@@ -108,8 +122,7 @@
       "hattori",
       "alsio",
       "costa",
-      "lopez_mouse",
-      "tang"
+      "lopez_mouse"
     ],
     "schedule_available_cohorts": [
       "grossman",
@@ -184,7 +197,7 @@
       "mean_reward_probability",
       "equal_probability_fraction"
     ],
-    "inference": "Primary Spearman inference uses 9 primary cohorts for categorical distance and 7 primary complete-probability cohorts for schedule distance. The all-valid categorical sensitivity uses 13 non-quarantined cohorts. Exact two-sided permutation is used for n<=8; otherwise deterministic 100,000-draw permutation; all analyses use 20,000 cohort bootstraps and a leave-one-cohort-out range.",
+    "inference": "Primary Spearman inference uses 9 primary cohorts for categorical distance and 7 primary complete-probability cohorts for schedule distance. The all-valid categorical sensitivity uses 12 non-quarantined cohorts. Exact two-sided permutation is used for n<=8; otherwise deterministic 100,000-draw permutation; all analyses use 20,000 cohort bootstraps and a leave-one-cohort-out range.",
     "rng_seed": 20260906
   },
   "schedule_standardization": {
@@ -5165,88 +5178,6 @@
         "gru_d614_minus_d10_bits_per_trial": 0.0323402370805152
       }
     },
-    "tang": {
-      "label": "Tang (macaque)",
-      "species": "macaque",
-      "analysis_tier": "descriptive_only",
-      "n_subjects": 2,
-      "n_sessions": 8,
-      "n_trials": 15375,
-      "annotation": {
-        "schedule_family": "blockwise",
-        "arm_coupling": "coupled",
-        "baiting": false,
-        "choice_target": [
-          "spatial_action",
-          "visual_stimulus"
-        ],
-        "physical_context": "head_fixed",
-        "response_modality": "saccade",
-        "reward_modality": "juice",
-        "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7873307/",
-        "evidence_note": "Head-restrained macaques made saccades in action- and object-value blocks for juice under 70/30 reversals."
-      },
-      "categorical_distance": {
-        "task_structure": 0.25,
-        "task_structure_nearest_prototypes": [
-          "uncoupled_no_baiting",
-          "coupled_baiting"
-        ],
-        "full_design": 0.42857142857142855,
-        "full_design_nearest_prototypes": [
-          "uncoupled_no_baiting",
-          "coupled_baiting"
-        ]
-      },
-      "schedule_feature_status": "excluded: canonical adapter does not expose complete trial-wise arm probabilities",
-      "schedule_features": null,
-      "subject_schedule_features": null,
-      "source": {
-        "dataset_id": "tang-bartolo-averbeck-2021",
-        "species": "macaque",
-        "title": "Reward-related choices determine information timing and flow across macaque lateral prefrontal cortex",
-        "repository": "Mendeley Data",
-        "doi": "10.17632/m4f38w49fb.1",
-        "version": "1",
-        "license": "CC-BY-4.0",
-        "url": "https://data.mendeley.com/public-api/zip/m4f38w49fb/download/1",
-        "filename": "tang-mendeley-v1.zip",
-        "digest_algorithm": "sha256",
-        "digest": "bd9c9aab489b36518cd1f5c3fa26182f10d20d61bb01bcc5e84fe573eb3b5de5",
-        "archive_member": null,
-        "collection_provider": null,
-        "verified_digest": "bd9c9aab489b36518cd1f5c3fa26182f10d20d61bb01bcc5e84fe573eb3b5de5"
-      },
-      "adapter_audit": {
-        "dataset_id": "tang-bartolo-averbeck-2021",
-        "species": "macaque",
-        "source_doi": "10.17632/m4f38w49fb.1",
-        "source_version": "1",
-        "source_license": "CC-BY-4.0",
-        "num_subjects": 2,
-        "num_sessions": 8,
-        "num_trials": 15375,
-        "excluded_trials": 0,
-        "min_sessions_per_subject": 4,
-        "max_sessions_per_subject": 4,
-        "min_trials_per_session": 1893,
-        "max_trials_per_session": 1956,
-        "choice_counts": {
-          "0": 7622,
-          "1": 7753
-        },
-        "reward_counts": {
-          "0": 6206,
-          "1": 9169
-        },
-        "split_strategy": "interleaved_sessions_odd_adapt_even_test"
-      },
-      "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": -0.001153541477200687,
-        "embedding_centroid_mahalanobis": 2.811376442719863,
-        "gru_d614_minus_d10_bits_per_trial": 0.005181813653721926
-      }
-    },
     "alsio": {
       "label": "Alsiö (rat)",
       "species": "rat",
@@ -5481,15 +5412,15 @@
           "1": 158513
         },
         "reward_counts": {
-          "0": 156855,
-          "1": 172985
+          "0": 140665,
+          "1": 189175
         },
         "split_strategy": "interleaved_sessions_odd_adapt_even_test"
       },
       "outcomes": {
-        "gru_d614_minus_q_bits_per_trial": -0.008285688764200591,
-        "embedding_centroid_mahalanobis": 7.6191201932191,
-        "gru_d614_minus_d10_bits_per_trial": 0.034714978249966326
+        "gru_d614_minus_q_bits_per_trial": -0.004918258830096234,
+        "embedding_centroid_mahalanobis": 2.5000155237394055,
+        "gru_d614_minus_d10_bits_per_trial": 0.007576747375047498
       }
     },
     "lopez_mouse": {
@@ -5873,67 +5804,67 @@
   },
   "sensitivity_relationships": {
     "gru_d614_minus_q_vs_task_structure_distance": {
-      "n_cohorts": 13,
-      "spearman_rho": -0.21503365971610902,
-      "permutation_p_two_sided": 0.48032519674803253,
+      "n_cohorts": 12,
+      "spearman_rho": -0.23044313575874753,
+      "permutation_p_two_sided": 0.4663753362466375,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.8105484061324756,
-        0.4626160453790777
+        -0.828078671210825,
+        0.4718418411704629
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.45802861241434445,
-        -0.05835824897876086
+        -0.4855041562276122,
+        -0.07035264706814484
       ]
     },
     "embedding_centroid_vs_task_structure_distance": {
-      "n_cohorts": 13,
-      "spearman_rho": 0.6839265010415134,
-      "permutation_p_two_sided": 0.012899871001289987,
+      "n_cohorts": 12,
+      "spearman_rho": 0.5439969106436007,
+      "permutation_p_two_sided": 0.07099929000709992,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        0.2619684159977919,
-        0.9084133969253575
+        0.0,
+        0.8835412617927488
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.6030352394471955,
-        0.8084398533175733
+        0.4120655042562769,
+        0.6816674516731122
       ]
     },
     "gru_d614_minus_q_vs_full_design_distance": {
-      "n_cohorts": 13,
-      "spearman_rho": -0.39913424743290066,
-      "permutation_p_two_sided": 0.17639823601763982,
+      "n_cohorts": 12,
+      "spearman_rho": -0.4355556895211861,
+      "permutation_p_two_sided": 0.15890841091589084,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.8692702918270464,
-        0.17085412898160307
+        -0.8917402534089164,
+        0.1506787548845733
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.5469282651933519,
-        -0.2807565094659206
+        -0.5845422341523367,
+        -0.31622776601683794
       ]
     },
     "embedding_centroid_vs_full_design_distance": {
-      "n_cohorts": 13,
-      "spearman_rho": 0.7383983577508663,
-      "permutation_p_two_sided": 0.005179948200517995,
+      "n_cohorts": 12,
+      "spearman_rho": 0.6807845231171481,
+      "permutation_p_two_sided": 0.016939830601693982,
       "permutation_method": "monte_carlo",
       "permutations": 100000,
       "bootstrap_95_ci": [
-        0.28685923908800254,
-        0.9349419682784115
+        0.17759847588871036,
+        0.9284789483061034
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.6771243912724323,
-        0.8021614556169161
+        0.5971484496103001,
+        0.7487017588633377
       ]
     }
   },
@@ -5965,7 +5896,7 @@
       "permutations": 5040,
       "bootstrap_95_ci": [
         -1.0,
-        0.9607843137254903
+        0.9617647058822675
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
@@ -5982,8 +5913,8 @@
       "permutation_method": "exact",
       "permutations": 5040,
       "bootstrap_95_ci": [
-        -0.8867924528301886,
-        0.8823529411764707
+        -0.8823529411764707,
+        0.8695652173913044
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
@@ -6001,7 +5932,7 @@
       "permutations": 5040,
       "bootstrap_95_ci": [
         -0.9607843137254903,
-        0.6226415094339621
+        0.6470588235294119
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
@@ -6054,8 +5985,8 @@
       "permutation_method": "exact",
       "permutations": 5040,
       "bootstrap_95_ci": [
-        -0.8366600265340755,
-        0.9701425001453321
+        -0.8666666666666667,
+        0.9607843137254903
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
@@ -6072,8 +6003,8 @@
       "permutation_method": "exact",
       "permutations": 5040,
       "bootstrap_95_ci": [
-        -0.7770286898858113,
-        0.9565217391304349
+        -0.7985836518841365,
+        0.9444444444444446
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [

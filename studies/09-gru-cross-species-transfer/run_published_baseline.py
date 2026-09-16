@@ -76,6 +76,44 @@ BASELINES = {
         },
         "citation": "Hattori et al., Nature Neuroscience (2023), Eqs. 17-19",
     },
+    "lopez-double-trace": {
+        "dataset": "lopez_mouse",
+        "dataset_id": "lopez-yepez-et-al-2021-mouse",
+        "agent_class": "ForagerLopezDoubleTrace",
+        "citation": "López-Yépez et al., Frontiers in Behavioral Neuroscience (2021), double-trace RL",
+    },
+    "costa-feedback-dependent": {
+        "dataset": "costa",
+        "dataset_id": "costa-averbeck-2016-stochastic",
+        "agent_class": "ForagerFeedbackDependentRL",
+        "citation": "Costa et al., Neuron (2016), feedback-dependent RL",
+    },
+    "costa-feedback-dependent-bias": {
+        "dataset": "costa",
+        "dataset_id": "costa-averbeck-2016-stochastic",
+        "agent_class": "ForagerFeedbackDependentRLBias",
+        "citation": (
+            "Costa et al., Neuron (2016), feedback-dependent RL, "
+            "augmented with a fitted choice bias"
+        ),
+    },
+    "costa-feedback-dependent-bias-ck1": {
+        "dataset": "costa",
+        "dataset_id": "costa-averbeck-2016-stochastic",
+        "agent_class": "ForagerFeedbackDependentRLBiasCK1",
+        "citation": (
+            "Costa et al., Neuron (2016), feedback-dependent RL, augmented "
+            "with fitted choice bias and Bari2019 one-step choice kernel"
+        ),
+        "comparison_role": "mechanism sensitivity: Costa dual-rate + bias + Bari CK1",
+    },
+    "alsio-dual-rate-sticky": {
+        "dataset": "alsio",
+        "dataset_id": "alsio-et-al-2019-vpvd-tsvr",
+        "agent_class": "ForagerAlsioRL",
+        "citation": "Alsiö et al., Neuropsychopharmacology (2019), dual-rate RL plus side stickiness",
+        "comparison_role": "author-model sensitivity on a different released cohort",
+    },
 }
 
 
@@ -108,6 +146,9 @@ def main() -> None:
             "optimizer": "differential_evolution",
             "polish": True,
             "citation": specification["citation"],
+            "comparison_role": specification.get(
+                "comparison_role", "author-selected model"
+            ),
         },
         "target": {
             "dataset": dataset,

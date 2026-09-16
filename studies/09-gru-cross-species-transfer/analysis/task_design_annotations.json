@@ -31,9 +31,7 @@
       "costa",
       "lopez_mouse"
     ],
-    "descriptive_only": [
-      "tang"
-    ],
+    "descriptive_only": [],
     "quarantined": [
       "kwak"
     ]
@@ -168,20 +166,6 @@
       "reward_modality": "monetary_points",
       "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12728203/",
       "evidence_note": "Human participants used handheld buttons to choose visual shapes with randomized screen position, 85/15 reversals, and euro feedback."
-    },
-    "tang": {
-      "schedule_family": "blockwise",
-      "arm_coupling": "coupled",
-      "baiting": false,
-      "choice_target": [
-        "spatial_action",
-        "visual_stimulus"
-      ],
-      "physical_context": "head_fixed",
-      "response_modality": "saccade",
-      "reward_modality": "juice",
-      "evidence_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7873307/",
-      "evidence_note": "Head-restrained macaques made saccades in action- and object-value blocks for juice under 70/30 reversals."
     },
     "alsio": {
       "schedule_family": "criterion_reversal",

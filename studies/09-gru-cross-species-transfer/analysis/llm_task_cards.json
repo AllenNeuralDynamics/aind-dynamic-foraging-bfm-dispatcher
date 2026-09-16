@@ -1,0 +1,58 @@
+{
+  "_meta": {
+    "produced_by": "analysis/freeze_llm_task_similarity.py",
+    "produced_at_pt": "2026-09-15T18:08:41-07:00",
+    "dispatcher_git_sha": "e3741b63dcdcfbdd7d2dedbcba8fc6c6ac93cbb4",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": []
+  },
+  "input_sha256": {
+    "analysis/task_design_annotations.json": "11406c729bb4bd81cce5450548f641e43e4701339d8f140203de17aa89ba5004"
+  },
+  "prompt_version": "study09-task-similarity-v1",
+  "reference": "Reference family: a subject repeatedly makes a binary left/right spatial action and receives binary water feedback. Reward probabilities are piecewise constant within blocks. The source family contains (1) independent, non-baited arms; (2) independent, baited arms; and (3) coupled, baited arms. The response is made while head-fixed by licking left or right.",
+  "judge_prompt": "You are comparing two binary-choice tasks with the AIND reference family.\nChoose which candidate is computationally closer to the reference, or choose tie.\n\nPrioritize, in order:\n1. reward-schedule dynamics and change-point rule;\n2. arm coupling and whether unchosen rewards remain available (baiting);\n3. spatial-action versus abstract/stimulus choice semantics;\n4. feedback and response implementation only as a secondary tiebreaker.\n\nDo not infer or use species. All actors are described only as subjects. Do not use\nstudy identity, author identity, sample size, neural measurements, model performance,\nor embeddings. Judge only the task descriptions. Return A, B, or tie.\n",
+  "cards": {
+    "T01": "A subject selects a left or right box using a keyboard. Reward feedback is points or a coin. The two options have complementary probabilities in a stochastic reversal schedule; contingencies are piecewise constant and not baited.",
+    "T02": "A head-fixed subject chooses a left or right lick spout for binary water. The two reward probabilities are independent, piecewise constant within blocks, and non-baited.",
+    "T03": "A freely moving subject chooses a left or right port for binary water. Each port follows a baited variable-interval schedule with blockwise set rates, so reward availability depends on elapsed trials and previous choices.",
+    "T04": "A freely moving subject nose-pokes one of two touchscreen targets for binary liquid-food feedback. Each arm probability evolves independently as a restless random walk; rewards are not baited.",
+    "T05": "A head-fixed subject selects one of two visual stimuli by saccade for binary juice feedback. Stimulus positions are randomized. Complementary 80/20, 70/30, or 60/40 contingencies reverse between piecewise-constant blocks and are not baited.",
+    "T06": "A freely moving subject chooses a left or right port for binary water. A latent state sets complementary reward probabilities; the state reverses between piecewise-constant blocks and rewards are not baited.",
+    "T07": "A subject chooses between two abstract card decks using computer input and receives binary point feedback. Each deck probability evolves independently as a restless random walk; rewards are not baited.",
+    "T08": "A head-fixed subject chooses a left or right lick port for binary water. Complementary probabilities reverse between 60-80-trial blocks; rewards are baited so an available reward remains until collected.",
+    "T09": "A freely moving subject chooses one of two nose ports for binary liquid-food feedback. Both reward probabilities change continuously and independently; rewards are not baited.",
+    "T10": "A freely moving subject chooses spatial locations or visual stimuli on a touchscreen for binary food-pellet feedback. Complementary contingencies reverse when a behavioral criterion is reached rather than after an exogenous block length; rewards are not baited.",
+    "T11": "A head-fixed subject turns a wheel left or right for binary water. Complementary 80/20 contingencies reverse between piecewise-constant blocks and are not baited.",
+    "T12": "A subject presses handheld buttons to choose between two visual shapes for binary monetary feedback. Shape positions are randomized. Complementary 85/15 contingencies reverse between piecewise-constant blocks and are not baited."
+  },
+  "audit": {
+    "species_and_study_names_removed": true,
+    "actor_noun": "subject",
+    "forbidden_terms_checked": [
+      "mouse",
+      "mice",
+      "rat",
+      "rats",
+      "macaque",
+      "monkey",
+      "human",
+      "participant",
+      "grossman",
+      "chen",
+      "zid",
+      "lebedeva",
+      "beron",
+      "miller",
+      "findling",
+      "alsi\u00f6",
+      "alsio",
+      "eckstein",
+      "costa",
+      "l\u00f3pez",
+      "lopez",
+      "hattori"
+    ],
+    "performance_and_embedding_values_present": false
+  }
+}

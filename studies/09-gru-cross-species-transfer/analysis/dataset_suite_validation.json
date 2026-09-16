@@ -156,24 +156,6 @@
       "source_digest_algorithm": "sha256"
     },
     {
-      "dataset": "tang",
-      "dataset_id": "tang-bartolo-averbeck-2021",
-      "species": "macaque",
-      "schema_version": 1,
-      "split_strategy": "interleaved_sessions_odd_adapt_even_test",
-      "num_subjects": 2,
-      "num_sessions": 8,
-      "num_trials": 15375,
-      "num_adapt_trials": 7647,
-      "num_test_trials": 7728,
-      "excluded_trials": 0,
-      "table_sha256": "94324fb9132461070bfec9fe96f384a261fca7a192d714fbcae0c3b9f79a7f4e",
-      "manifest_sha256": "c2fa26dac41115d333d039bd3cce585ca05ace9958ac4ba4e164aaab598fbf7f",
-      "audit_sha256": "5036eee8efbe0c3fb425986b90dda9ec8657ef779175bd5c330d464999adaf19",
-      "source_digest": "bd9c9aab489b36518cd1f5c3fa26182f10d20d61bb01bcc5e84fe573eb3b5de5",
-      "source_digest_algorithm": "sha256"
-    },
-    {
       "dataset": "alsio",
       "dataset_id": "alsio-et-al-2019-vpvd-tsvr",
       "species": "rat",
@@ -221,9 +203,9 @@
       "num_adapt_trials": 166880,
       "num_test_trials": 162960,
       "excluded_trials": 0,
-      "table_sha256": "e065dded606301b1ca40f072289b2e4faa15a114250919f90be5e345ff9278ae",
+      "table_sha256": "e6f0a017d13cf4b8653a43ef2debc9d74af307b81ae6f1fed4276bbbdd7c461d",
       "manifest_sha256": "9dc04136ab185bd7ec9e60749a0a15e37ea3179649bb0e2ae6aff7356725dd30",
-      "audit_sha256": "d0afd657cc7951c85ef9043a968a488858bf99f81840feccf69b90580c072efe",
+      "audit_sha256": "d5fd33fb06da8f1fea2810c1673595543b0b8e8b8b3e86bd0f20de740aad0d58",
       "source_digest": "b388fe98ad9197c696ed87882b8fdbc5",
       "source_digest_algorithm": "md5"
     },

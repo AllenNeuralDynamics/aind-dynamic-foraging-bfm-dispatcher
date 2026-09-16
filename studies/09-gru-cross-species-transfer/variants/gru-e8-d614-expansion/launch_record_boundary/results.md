@@ -7,6 +7,6 @@
 - **Status:** 12/12 tasks succeeded; 12/12 W&B runs finished with committed output artifacts
 
 **Headline.** E8 D=614 transfer completed for López-Yépez (mouse), Alsiö
-(rat), Costa (macaque), and Tang (macaque), with three source seeds per cohort
+(rat) and Costa (macaque), with three source seeds per cohort
 and exact historical-E4 held-out trial-key parity. The result feeds Report 1
 through `analysis/embedding_dimension_expansion_results.json`.

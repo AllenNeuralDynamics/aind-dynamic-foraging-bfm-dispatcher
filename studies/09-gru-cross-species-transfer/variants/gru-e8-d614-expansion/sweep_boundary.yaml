@@ -9,6 +9,6 @@ command:
   - ${args_no_hyphens}
 parameters:
   --dataset:
-    values: [lopez_mouse, alsio, costa, tang]
+    values: [lopez_mouse, alsio, costa]
   --source-key:
     values: [e8-d614-s0, e8-d614-s1, e8-d614-s2]

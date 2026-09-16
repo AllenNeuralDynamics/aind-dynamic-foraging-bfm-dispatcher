@@ -30,6 +30,9 @@ ORIGINAL_MODELS_COMMIT = "25f5f1ce64705edbf266feb8d57ff83a018b12c5"
 ZID_PARITY_MODELS_COMMIT = "553d1a9eae919bcec5121dc747d09d5559c31bb6"
 PRIMARY_EXPANSION_MODELS_COMMIT = "eaeadec2a56c4a8099f3e8cfa315a9467c2f6a24"
 HATTORI_MODELS_COMMIT = "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf"
+SECONDARY_MODELS_COMMIT = "d855a1a2b4075ee02c8d6597e97f768174eb031c"
+COSTA_BIAS_MODELS_COMMIT = "75bcfebacfd99fd28c1656bb7c7c035a5415f548"
+COSTA_CK1_MODELS_COMMIT = "f6e5d9aafaed45b60274546fd2b5e9635d80ce1a"
 GROUPS = {
     "grossman-meta-learning": {
         "group": "grossman-meta-learning@20260905-124420",
@@ -133,6 +136,43 @@ GROUPS = {
         "slurm_job_id": "25585754",
         "foraging_models_commit": HATTORI_MODELS_COMMIT,
     },
+    "lopez-double-trace": {
+        "group": "lopez-double-trace@slurm-26383278",
+        "dataset": "lopez_mouse",
+        "agent_class": "ForagerLopezDoubleTrace",
+        "author_selected": True,
+        "slurm_job_id": "26383278",
+        "foraging_models_commit": SECONDARY_MODELS_COMMIT,
+    },
+    "costa-feedback-dependent": {
+        "group": "costa-feedback-dependent-bias@slurm-26386087",
+        "display_name": "costa-feedback-dependent-bias",
+        "dataset": "costa",
+        "agent_class": "ForagerFeedbackDependentRLBias",
+        "author_selected": True,
+        "comparison_role": "published feedback-dependent RL augmented with fitted shape-choice bias",
+        "slurm_job_id": "26386087",
+        "foraging_models_commit": COSTA_BIAS_MODELS_COMMIT,
+    },
+    "costa-feedback-dependent-ck1": {
+        "group": "costa-feedback-dependent-bias-ck1@slurm-26386211",
+        "display_name": "costa-feedback-dependent-bias-ck1",
+        "dataset": "costa",
+        "agent_class": "ForagerFeedbackDependentRLBiasCK1",
+        "author_selected": False,
+        "comparison_role": "mechanism sensitivity: dual-rate + bias + Bari CK1",
+        "slurm_job_id": "26386211",
+        "foraging_models_commit": COSTA_CK1_MODELS_COMMIT,
+    },
+    "alsio-dual-rate-sticky": {
+        "group": "alsio-dual-rate-sticky@slurm-26383281",
+        "dataset": "alsio",
+        "agent_class": "ForagerAlsioRL",
+        "author_selected": False,
+        "comparison_role": "author-model sensitivity from a different cohort",
+        "slurm_job_id": "26383281",
+        "foraging_models_commit": SECONDARY_MODELS_COMMIT,
+    },
 }
 CACHE = STUDY / "analysis" / "_cache_author_baselines"
 OUTPUT = STUDY / "analysis" / "author_baseline_results.json"
@@ -185,7 +225,10 @@ def _freeze() -> dict[str, dict]:
             raise AssertionError(f"W&B config mismatch for {baseline}: {mismatches}")
 
         artifact = _artifact(node, "baseline-rl-output-")
-        files = _cached_wandb_report_files(artifact, CACHE / baseline)
+        files = _cached_wandb_report_files(
+            artifact,
+            CACHE / baseline / artifact["digest"],
+        )
         metrics_bytes = files["test_metrics.json"]
         predictions_bytes = files["test_trial_predictions.csv"]
         metrics = json.loads(metrics_bytes)
