@@ -33,6 +33,7 @@ EMBEDDING_DIMENSION_EXPANSION_DATA = (
 TASK_DESIGN_DATA = STUDY / "analysis" / "task_design_annotations.json"
 SURVEY = STUDY / "DATASET_SURVEY.md"
 FIGURE = STUDY / "analysis" / "fig_author_baseline_likelihood.png"
+FIGURE_SVG = STUDY / "analysis" / "fig_author_baseline_likelihood.svg"
 SLIDE_FIGURE_PNG = STUDY / "analysis" / "fig_slide_r1_transfer_baselines.png"
 SLIDE_FIGURE_SVG = STUDY / "analysis" / "fig_slide_r1_transfer_baselines.svg"
 SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_baseline_likelihood.png"
@@ -316,6 +317,8 @@ def _plot_summary(
         fontsize=17,
     )
     fig.savefig(FIGURE, bbox_inches="tight", dpi=180)
+    plt.rcParams["svg.hashsalt"] = "study09-r1-author-baseline-likelihood"
+    fig.savefig(FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
     fig.savefig(SLIDE_FIGURE_PNG, bbox_inches="tight", dpi=220)
     plt.rcParams["svg.hashsalt"] = "study09-r1-transfer-baselines"
     fig.savefig(SLIDE_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
@@ -1375,7 +1378,7 @@ def main() -> None:
     end_start = text.index(END, start_end)
     REPORT.write_text(text[:start_end] + "\n" + block + "\n" + text[end_start:])
     print(
-        f"Wrote {FIGURE}, {SLIDE_FIGURE_PNG}, {SLIDE_FIGURE_SVG}, "
+        f"Wrote {FIGURE}, {FIGURE_SVG}, {SLIDE_FIGURE_PNG}, {SLIDE_FIGURE_SVG}, "
         f"{SUBJECT_FIGURE}, {GRU_Q_SUBJECT_FIGURE}, "
         f"{len(example_paths)} example figures, "
         f"and {REPORT}"
