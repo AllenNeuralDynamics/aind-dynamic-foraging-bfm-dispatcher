@@ -22,8 +22,8 @@ DATA = {
 }
 PCA_FIGURE = STUDY / "analysis" / "fig_embedding_space_pca.png"
 DISTANCE_FIGURE = STUDY / "analysis" / "fig_embedding_space_distance.png"
-SLIDE_FIGURE_PNG = STUDY / "analysis" / "fig_slide_r2_e8_embedding_seed01.png"
-SLIDE_FIGURE_SVG = STUDY / "analysis" / "fig_slide_r2_e8_embedding_seed01.svg"
+SLIDE_FIGURE_PNG = STUDY / "analysis" / "fig_slide_r2_e8_embedding_all_seeds.png"
+SLIDE_FIGURE_SVG = STUDY / "analysis" / "fig_slide_r2_e8_embedding_all_seeds.svg"
 REPORT = STUDY / "analysis" / "reports" / "r2-embedding-space.md"
 START = "<!-- BEGIN result-2 -->"
 END = "<!-- END result-2 -->"
@@ -218,13 +218,13 @@ def _plot_pca(data_by_dimension: dict[int, dict], order: tuple[str, ...]) -> Non
     plt.close(fig)
 
 
-def _plot_e8_seed01(data: dict, order: tuple[str, ...]) -> None:
-    """Render the two-seed E8 PCA view sized for a presentation slide."""
+def _plot_e8_all_seeds(data: dict, order: tuple[str, ...]) -> None:
+    """Render the three-seed E8 PCA view sized for a presentation slide."""
     apply_presentation_style()
-    seeds = [seed for seed in data["seeds"] if int(seed["seed"]) in (0, 1)]
-    if [int(seed["seed"]) for seed in seeds] != [0, 1]:
-        raise AssertionError("Slide figure requires E8 source seeds 0 and 1")
-    fig, axes = plt.subplots(2, 3, figsize=(16.5, 10.5), constrained_layout=True)
+    seeds = [seed for seed in data["seeds"] if int(seed["seed"]) in (0, 1, 2)]
+    if [int(seed["seed"]) for seed in seeds] != [0, 1, 2]:
+        raise AssertionError("Slide figure requires E8 source seeds 0, 1, and 2")
+    fig, axes = plt.subplots(3, 3, figsize=(16.5, 16.0), constrained_layout=True)
     for row, seed in enumerate(seeds):
         arrays = _arrays(seed, order)
         mean, components, explained = _pca(arrays["aind_source"])
@@ -307,7 +307,7 @@ def _plot_e8_seed01(data: dict, order: tuple[str, ...]) -> None:
         fontsize=18,
     )
     fig.savefig(SLIDE_FIGURE_PNG, bbox_inches="tight", dpi=220)
-    plt.rcParams["svg.hashsalt"] = "study09-r2-e8-embedding-seed01"
+    plt.rcParams["svg.hashsalt"] = "study09-r2-e8-embedding-all-seeds"
     fig.savefig(SLIDE_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
     plt.close(fig)
 
@@ -469,9 +469,9 @@ def _report_body(
     )
     return f"""## Result
 
-![E8 embedding space for source seeds 0 and 1](../fig_slide_r2_e8_embedding_seed01.png)
+![E8 embedding space for source seeds 0, 1, and 2](../fig_slide_r2_e8_embedding_all_seeds.png)
 
-[SVG for slides](../fig_slide_r2_e8_embedding_seed01.svg)
+[SVG for slides](../fig_slide_r2_e8_embedding_all_seeds.svg)
 
 ### Complete E4/E8 seed view
 
@@ -554,7 +554,7 @@ def main() -> None:
         for dimension, data in data_by_dimension.items()
     }
     _plot_pca(data_by_dimension, order)
-    _plot_e8_seed01(data_by_dimension[8], order)
+    _plot_e8_all_seeds(data_by_dimension[8], order)
     _plot_distances(data_by_dimension, order, statistics_by_dimension)
     body = _report_body(data_by_dimension, order, statistics_by_dimension)
     text = REPORT.read_text()
