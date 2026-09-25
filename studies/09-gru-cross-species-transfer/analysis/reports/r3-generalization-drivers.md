@@ -50,6 +50,12 @@ inputs:
     - analysis/fig_generalization_drivers_e8.png
     - analysis/fig_generalization_drivers_primary_plus_stress_e8.png
     - analysis/fig_generalization_drivers_all_valid_e8.png
+    - analysis/fig_generalization_drivers_r1_scale.png
+    - analysis/fig_generalization_drivers_primary_plus_stress_r1_scale.png
+    - analysis/fig_generalization_drivers_all_valid_r1_scale.png
+    - analysis/fig_generalization_drivers_e8_r1_scale.png
+    - analysis/fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png
+    - analysis/fig_generalization_drivers_all_valid_e8_r1_scale.png
     - analysis/fig_generalization_robustness.png
     - analysis/fig_generalization_robustness_primary_plus_stress.png
     - analysis/fig_generalization_robustness_all_valid.png
@@ -115,6 +121,40 @@ This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mous
 ![All valid cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid_e8.png)
 
 This cumulative sensitivity view additionally includes Tang (macaque). Its plot annotations report the frozen 13-cohort all-valid sensitivity relationships; Tang (macaque) remains descriptive-only because the release has two subjects.
+
+### R1-scale companion: normalized-likelihood difference
+
+These descriptive companion plots use the same normalized-likelihood units as Result 1. They retain Result 3's equal-subject aggregation: each source seed's GRU value is `exp(mean subject log likelihood)` minus the matched Bari2019 value. Each point is the three-seed mean, with horizontal and vertical SEM bars. The Bari2019 baseline is shared across source seeds, so its horizontal SEM is zero in the two Bari2019-axis panels. The bits-per-trial plots above remain primary for additive cross-task inference.
+
+#### Primary-inference cohorts
+
+**E=4**
+
+![Primary cohorts on the R1 normalized-likelihood scale](../fig_generalization_drivers_r1_scale.png)
+
+**E=8**
+
+![Primary cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_e8_r1_scale.png)
+
+#### Primary + stress-test cohorts
+
+**E=4**
+
+![Primary plus stress-test cohorts on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_r1_scale.png)
+
+**E=8**
+
+![Primary plus stress-test cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png)
+
+#### All valid cohorts
+
+**E=4**
+
+![All valid cohorts on the R1 normalized-likelihood scale](../fig_generalization_drivers_all_valid_r1_scale.png)
+
+**E=8**
+
+![All valid cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_all_valid_e8_r1_scale.png)
 
 For E=4, the D=614 GRU has higher subject-balanced mean log likelihood than Bari2019 common Q in 5 cohorts (Grossman (mouse), Chen (mouse), Zid (human), Lebedeva (mouse), Hattori (mouse)) and lower mean log likelihood in 4 (Beron (mouse), Miller (rat), Findling (human), Eckstein (human)). This direction summary does not replace the paired subject tests in Result 1.
 
