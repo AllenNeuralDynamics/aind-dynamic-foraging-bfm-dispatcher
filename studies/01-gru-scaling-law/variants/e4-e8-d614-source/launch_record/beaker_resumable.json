@@ -1,0 +1,9 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 6,
+  "experiment_id": "01M1WWK9HP269XQS440Y29631F",
+  "experiment_url": "https://beaker.org/ex/01M1WWK9HP269XQS440Y29631F",
+  "dispatcher_commit": "ab399a50a736add59fcc189d0ac14e2dc6687279",
+  "sweep_file": "studies/01-gru-scaling-law/variants/e4-e8-d614-source/sweep.yaml",
+  "created_utc": "2026-09-07T02:54:14.395338+00:00"
+}

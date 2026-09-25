@@ -14,10 +14,16 @@
 # Targets that produce these figures chain rl_baseline.py last so the
 # committed PNGs end up with the overlay.
 
-.PHONY: all r1 r2 r3 r4 r5 r6 r7 r8 r9
+.PHONY: all r1 r2 r3 r4 r5 r6 r7 r8 r9 r11 freeze-embedding-dimension
 
 # r2 is subsumed by r1 (same producer); r6 has no committed producer.
 all: r1 r3 r4 r5 r7 r8 r9
+
+freeze-embedding-dimension:
+	python analysis/freeze_embedding_dimension.py
+
+r11:
+	python analysis/report_embedding_dimension.py
 
 # r1 + r2 share build_report.py (writes report_data.json, fig_scaling_v1_v2.png
 # [bare], fig_per_subject_delta.png). rl_baseline.py restores the RL overlay

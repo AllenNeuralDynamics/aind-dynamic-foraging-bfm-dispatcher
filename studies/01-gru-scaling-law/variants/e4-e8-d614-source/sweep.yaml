@@ -1,0 +1,40 @@
+# Paired source-core ablation for issue #148.
+#
+# The current-code E=4 bridge arm is deliberately rerun beside E=8. Comparing
+# only against the historical E=4 runs would confound embedding dimension with
+# wrapper, dependency, image, and execution drift. Every other scientific knob
+# matches Study 01 v2-sc-active at D=614.
+
+entity: AIND-disRNN
+project: mice_data_scaling
+name: e4-e8-d614-source
+method: grid
+metric:
+  name: heldout/final/eval_likelihood
+  goal: maximize
+
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=gru_scaling
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=1.0
+  - model.architecture.hidden_size=128
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.n_steps=150000
+  - model.training.lr=1e-5
+  - model.training.checkpoint_run_heldout_eval=false
+  - model.training.length_bucketing=true
+  - model.training.early_stopping.enabled=true
+  - model.training.early_stopping.start_after_step=70000
+  - ${args_no_hyphens}
+
+parameters:
+  model.architecture.subject_embedding_size:
+    values: [4, 8]
+  seed:
+    values: [0, 1, 2]
