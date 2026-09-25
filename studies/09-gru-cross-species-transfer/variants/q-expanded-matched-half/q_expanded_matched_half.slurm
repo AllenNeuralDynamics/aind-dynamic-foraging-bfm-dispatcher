@@ -4,7 +4,7 @@
 #SBATCH -t 24:00:00
 #SBATCH -c 24
 #SBATCH --mem=64G
-#SBATCH --array=0-9%4
+#SBATCH --array=0-8%4
 #SBATCH --mail-type=FAIL,END
 
 set -euo pipefail
@@ -17,7 +17,7 @@ WRAPPER_ROOT="${WRAPPER_ROOT:?WRAPPER_ROOT is required}"
 MODELS_ROOT="${MODELS_ROOT:?MODELS_ROOT is required}"
 DATA_ROOT="${EXTERNAL_DATA_ROOT:?EXTERNAL_DATA_ROOT is required}"
 RUN_ROOT="${BFM_OUTPUT_DIR:?BFM_OUTPUT_DIR is required}/study09-q-expanded-${SLURM_ARRAY_JOB_ID}"
-DATASETS=(lebedeva beron kwak miller findling tang alsio eckstein costa lopez_mouse)
+DATASETS=(lebedeva beron kwak miller findling alsio eckstein costa lopez_mouse)
 DATASET="${DATASETS[$SLURM_ARRAY_TASK_ID]}"
 
 export WANDB_RUN_GROUP="${WANDB_RUN_GROUP:-q-expanded-matched-half@slurm-${SLURM_ARRAY_JOB_ID}}"

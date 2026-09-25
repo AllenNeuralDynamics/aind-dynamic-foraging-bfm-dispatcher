@@ -1,0 +1,1290 @@
+{
+  "_meta": {
+    "produced_by": "analysis/freeze_llm_task_similarity.py",
+    "produced_at_pt": "2026-09-15T18:47:32-07:00",
+    "dispatcher_git_sha": null,
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "gru-grossman-matched-half@20260905-022602",
+      "gru-chen-matched-half@20260905-024731",
+      "gru-zid-matched-half@20260905-025752",
+      "gru-lebedeva-matched-half@20260905-232924",
+      "gru-beron-matched-half@20260905-232924",
+      "gru-kwak-matched-half@20260906-071413",
+      "gru-miller-matched-half@20260905-232924",
+      "gru-findling-matched-half@20260905-232924",
+      "gru-alsio-matched-half@20260905-232925",
+      "gru-eckstein-matched-half@20260905-232924",
+      "gru-costa-matched-half@20260905-232924",
+      "gru-lopez-mouse-matched-half@20260905-232924",
+      "q-matched-half@20260905-024031",
+      "q-expanded-matched-half@20260906-001656",
+      "q-expanded-matched-half@20260906-kwak-choicefix",
+      "gru-hattori-matched-half@20260907-200329",
+      "q-hattori-matched-half@slurm-25585753",
+      "gru-costa-matched-half@20260914-162457",
+      "q-expanded-matched-half@slurm-26386210",
+      "e4-e8-d614-source@20260906-195409",
+      "gru-e8-d614-diagnostic@20260907-071400",
+      "gru-e8-d614-expansion@20260907-132415",
+      "gru-e8-d614-expansion@20260907-132625",
+      "gru-hattori-matched-half@20260907-200328",
+      "gru-e8-d614-expansion@20260914-162554",
+      "alsio-dual-rate-sticky@slurm-26383281",
+      "beron-rflr@slurm-25582233",
+      "chen-rlck@20260905-123624",
+      "costa-feedback-dependent-bias-ck1@slurm-26386211",
+      "costa-feedback-dependent-bias@slurm-26386087",
+      "eckstein-bi@slurm-25582240",
+      "eckstein-rl@slurm-25582239",
+      "findling-weber@slurm-25582235",
+      "findling-weber@slurm-25582241",
+      "grossman-meta-learning@20260905-124420",
+      "hattori-q-learning@slurm-25585754",
+      "lebedeva-pr@slurm-25582232",
+      "lopez-double-trace@slurm-26383278",
+      "miller-rhg@slurm-25582234",
+      "zid-history-kernel@20260905-123624",
+      "zid-history-kernel@20260905-151851"
+    ]
+  },
+  "input_sha256": {
+    "analysis/llm_task_cards.json": "25af9bf7d192941a776d92c640ce18118964077af070b3fefb13c7c194e5ebf3",
+    "analysis/task_design_annotations.json": "f9766fdf9a2283daeb457084c5362b1aa157fb9e3d8cd5362d5f7c031c5b6535"
+  },
+  "judge": {
+    "model": "OpenAI Codex current session (exact deployment ID unavailable)",
+    "prompt_version": "study09-task-similarity-v2",
+    "n_candidates": 12,
+    "n_unordered_pairs": 66,
+    "n_implied_ordered_encodings": 132,
+    "same_session_single_judge": true,
+    "independent_model_replicates": 0,
+    "independent_pairwise_api_calls": 0,
+    "blinding": "Input-level only: cards omit species, study/author identity, outcomes, embeddings, and the hand-coded design distance. Response apparatus remains visible as a secondary task feature."
+  },
+  "card_to_cohort_unblinded_after_judgment": {
+    "T01": "eckstein",
+    "T02": "grossman",
+    "T03": "lopez_mouse",
+    "T04": "chen",
+    "T05": "costa",
+    "T06": "beron",
+    "T07": "zid",
+    "T08": "hattori",
+    "T09": "miller",
+    "T10": "alsio",
+    "T11": "lebedeva",
+    "T12": "findling"
+  },
+  "frozen_ordinal_tiers": {
+    "T02": 0,
+    "T08": 0,
+    "T03": 1,
+    "T11": 2,
+    "T06": 3,
+    "T01": 4,
+    "T04": 5,
+    "T09": 5,
+    "T05": 6,
+    "T12": 7,
+    "T10": 8,
+    "T07": 9
+  },
+  "comparisons": [
+    {
+      "pair_id": "T01__T02",
+      "forward": {
+        "order": [
+          "T01",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T02",
+          "T01"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T03",
+      "forward": {
+        "order": [
+          "T01",
+          "T03"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T03",
+          "T01"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T04",
+      "forward": {
+        "order": [
+          "T01",
+          "T04"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T04",
+          "T01"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T05",
+      "forward": {
+        "order": [
+          "T01",
+          "T05"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T05",
+          "T01"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T06",
+      "forward": {
+        "order": [
+          "T01",
+          "T06"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T06",
+          "T01"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T07",
+      "forward": {
+        "order": [
+          "T01",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T07",
+          "T01"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T08",
+      "forward": {
+        "order": [
+          "T01",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T08",
+          "T01"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T09",
+      "forward": {
+        "order": [
+          "T01",
+          "T09"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T09",
+          "T01"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T10",
+      "forward": {
+        "order": [
+          "T01",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T10",
+          "T01"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T11",
+      "forward": {
+        "order": [
+          "T01",
+          "T11"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T01"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T01__T12",
+      "forward": {
+        "order": [
+          "T01",
+          "T12"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T01"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T03",
+      "forward": {
+        "order": [
+          "T02",
+          "T03"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T03",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T04",
+      "forward": {
+        "order": [
+          "T02",
+          "T04"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T04",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T05",
+      "forward": {
+        "order": [
+          "T02",
+          "T05"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T05",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T06",
+      "forward": {
+        "order": [
+          "T02",
+          "T06"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T06",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T07",
+      "forward": {
+        "order": [
+          "T02",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T07",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T08",
+      "forward": {
+        "order": [
+          "T02",
+          "T08"
+        ],
+        "choice": "tie"
+      },
+      "reverse": {
+        "order": [
+          "T08",
+          "T02"
+        ],
+        "choice": "tie"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T09",
+      "forward": {
+        "order": [
+          "T02",
+          "T09"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T09",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T10",
+      "forward": {
+        "order": [
+          "T02",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T10",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T11",
+      "forward": {
+        "order": [
+          "T02",
+          "T11"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T02__T12",
+      "forward": {
+        "order": [
+          "T02",
+          "T12"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T02"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T03__T04",
+      "forward": {
+        "order": [
+          "T03",
+          "T04"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T04",
+          "T03"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T03__T05",
+      "forward": {
+        "order": [
+          "T03",
+          "T05"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T05",
+          "T03"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T03__T06",
+      "forward": {
+        "order": [
+          "T03",
+          "T06"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T06",
+          "T03"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T03__T07",
+      "forward": {
+        "order": [
+          "T03",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T07",
+          "T03"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T03__T08",
+      "forward": {
+        "order": [
+          "T03",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T08",
+          "T03"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T03__T09",
+      "forward": {
+        "order": [
+          "T03",
+          "T09"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T09",
+          "T03"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T03__T10",
+      "forward": {
+        "order": [
+          "T03",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T10",
+          "T03"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T03__T11",
+      "forward": {
+        "order": [
+          "T03",
+          "T11"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T03"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T03__T12",
+      "forward": {
+        "order": [
+          "T03",
+          "T12"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T03"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T04__T05",
+      "forward": {
+        "order": [
+          "T04",
+          "T05"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T05",
+          "T04"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T04__T06",
+      "forward": {
+        "order": [
+          "T04",
+          "T06"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T06",
+          "T04"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T04__T07",
+      "forward": {
+        "order": [
+          "T04",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T07",
+          "T04"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T04__T08",
+      "forward": {
+        "order": [
+          "T04",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T08",
+          "T04"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T04__T09",
+      "forward": {
+        "order": [
+          "T04",
+          "T09"
+        ],
+        "choice": "tie"
+      },
+      "reverse": {
+        "order": [
+          "T09",
+          "T04"
+        ],
+        "choice": "tie"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T04__T10",
+      "forward": {
+        "order": [
+          "T04",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T10",
+          "T04"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T04__T11",
+      "forward": {
+        "order": [
+          "T04",
+          "T11"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T04"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T04__T12",
+      "forward": {
+        "order": [
+          "T04",
+          "T12"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T04"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T05__T06",
+      "forward": {
+        "order": [
+          "T05",
+          "T06"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T06",
+          "T05"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T05__T07",
+      "forward": {
+        "order": [
+          "T05",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T07",
+          "T05"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T05__T08",
+      "forward": {
+        "order": [
+          "T05",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T08",
+          "T05"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T05__T09",
+      "forward": {
+        "order": [
+          "T05",
+          "T09"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T09",
+          "T05"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T05__T10",
+      "forward": {
+        "order": [
+          "T05",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T10",
+          "T05"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T05__T11",
+      "forward": {
+        "order": [
+          "T05",
+          "T11"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T05"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T05__T12",
+      "forward": {
+        "order": [
+          "T05",
+          "T12"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T05"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T06__T07",
+      "forward": {
+        "order": [
+          "T06",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T07",
+          "T06"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T06__T08",
+      "forward": {
+        "order": [
+          "T06",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T08",
+          "T06"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T06__T09",
+      "forward": {
+        "order": [
+          "T06",
+          "T09"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T09",
+          "T06"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T06__T10",
+      "forward": {
+        "order": [
+          "T06",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T10",
+          "T06"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T06__T11",
+      "forward": {
+        "order": [
+          "T06",
+          "T11"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T06"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T06__T12",
+      "forward": {
+        "order": [
+          "T06",
+          "T12"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T06"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T07__T08",
+      "forward": {
+        "order": [
+          "T07",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T08",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T07__T09",
+      "forward": {
+        "order": [
+          "T07",
+          "T09"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T09",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T07__T10",
+      "forward": {
+        "order": [
+          "T07",
+          "T10"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T10",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T07__T11",
+      "forward": {
+        "order": [
+          "T07",
+          "T11"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T07__T12",
+      "forward": {
+        "order": [
+          "T07",
+          "T12"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T07"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T08__T09",
+      "forward": {
+        "order": [
+          "T08",
+          "T09"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T09",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T08__T10",
+      "forward": {
+        "order": [
+          "T08",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T10",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T08__T11",
+      "forward": {
+        "order": [
+          "T08",
+          "T11"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T08__T12",
+      "forward": {
+        "order": [
+          "T08",
+          "T12"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T08"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T09__T10",
+      "forward": {
+        "order": [
+          "T09",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T10",
+          "T09"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T09__T11",
+      "forward": {
+        "order": [
+          "T09",
+          "T11"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T09"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T09__T12",
+      "forward": {
+        "order": [
+          "T09",
+          "T12"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T09"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T10__T11",
+      "forward": {
+        "order": [
+          "T10",
+          "T11"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T11",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T10__T12",
+      "forward": {
+        "order": [
+          "T10",
+          "T12"
+        ],
+        "choice": "B"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T10"
+        ],
+        "choice": "A"
+      },
+      "order_consistent": true
+    },
+    {
+      "pair_id": "T11__T12",
+      "forward": {
+        "order": [
+          "T11",
+          "T12"
+        ],
+        "choice": "A"
+      },
+      "reverse": {
+        "order": [
+          "T12",
+          "T11"
+        ],
+        "choice": "B"
+      },
+      "order_consistent": true
+    }
+  ],
+  "audit": {
+    "all_pairs_complete": true,
+    "all_pairs_mirrored_in_reverse_order": true,
+    "mirrored_order_consistency_fraction": 1.0,
+    "limitation": "The single judge produced an ordinal tiering. Its 66 implied pairwise outcomes were encoded in both A/B directions, so the 100% consistency is an invariant check rather than an empirical estimate of position bias."
+  }
+}

@@ -32,7 +32,6 @@ WANDB_GROUPS = [
     "gru-kwak-matched-half@20260906-071413",
     "gru-miller-matched-half@20260905-232924",
     "gru-findling-matched-half@20260905-232924",
-    "gru-tang-matched-half@20260905-232924",
     "gru-alsio-matched-half@20260905-232925",
     "gru-eckstein-matched-half@20260905-232924",
     "gru-costa-matched-half@20260905-232924",
@@ -42,6 +41,8 @@ WANDB_GROUPS = [
     "q-expanded-matched-half@20260906-kwak-choicefix",
     "gru-hattori-matched-half@20260907-200329",
     "q-hattori-matched-half@slurm-25585753",
+    "gru-costa-matched-half@20260914-162457",
+    "q-expanded-matched-half@slurm-26386210",
 ]
 GRU_LAUNCHES = {
     "grossman": (WANDB_GROUPS[0], "01M1RE7RE42MHTHFDDRYJWTWHV"),
@@ -52,20 +53,20 @@ GRU_LAUNCHES = {
     "kwak": (WANDB_GROUPS[5], "01M1VH47Q8M8N75FKM2F5NX7AT"),
     "miller": (WANDB_GROUPS[6], "01M1TPMHVARYQ17AYFSSTFCACS"),
     "findling": (WANDB_GROUPS[7], "01M1TPMS3BQPDYNEV1K98PY43X"),
-    "tang": (WANDB_GROUPS[8], "01M1TPMY71W6PEGRPTRHMYQQDM"),
-    "alsio": (WANDB_GROUPS[9], "01M1TPNT60G2REHV0BS2JYJH32"),
-    "eckstein": (WANDB_GROUPS[10], "01M1TPN53SDJYVN9TE5YQ6ZEXY"),
-    "costa": (WANDB_GROUPS[11], "01M1TPN1PNEMN6Q1036ZAXDCNV"),
-    "lopez_mouse": (WANDB_GROUPS[12], "01M1TPMW5BXV82QQ0MS3AWWZE3"),
-    "hattori": (WANDB_GROUPS[16], "01M1ZFJ3BPJSZNJ403DPD3FS6C"),
+    "alsio": (WANDB_GROUPS[8], "01M1TPNT60G2REHV0BS2JYJH32"),
+    "eckstein": (WANDB_GROUPS[9], "01M1TPN53SDJYVN9TE5YQ6ZEXY"),
+    "costa": (WANDB_GROUPS[17], "01M2H3T9JD04B74HFZ9W4YHKCV"),
+    "lopez_mouse": (WANDB_GROUPS[11], "01M1TPMW5BXV82QQ0MS3AWWZE3"),
+    "hattori": (WANDB_GROUPS[15], "01M1ZFJ3BPJSZNJ403DPD3FS6C"),
 }
 Q_LAUNCHES = [
-    (WANDB_GROUPS[13], "25580070", set()),
-    (WANDB_GROUPS[14], "25581304", {"kwak"}),
-    (WANDB_GROUPS[17], "25585753", set()),
+    (WANDB_GROUPS[12], "25580070", set()),
+    (WANDB_GROUPS[13], "25581304", {"kwak", "costa", "tang"}),
+    (WANDB_GROUPS[16], "25585753", set()),
 ]
 Q_OVERRIDES = {
-    "kwak": (WANDB_GROUPS[15], "25581496"),
+    "kwak": (WANDB_GROUPS[14], "25581496"),
+    "costa": (WANDB_GROUPS[18], "26386210_7"),
 }
 CACHE = STUDY / "analysis" / "_cache_matched_half"
 OUTPUT = STUDY / "analysis" / "matched_half_results.json"
@@ -337,7 +338,7 @@ def _freeze_q(
         if dataset_name in records:
             raise AssertionError(f"Q group contains duplicate runs for {dataset_name}")
         artifact = _artifact(node, "baseline-rl-output-")
-        root = CACHE / "q" / dataset_name
+        root = CACHE / "q" / dataset_name / artifact["digest"]
         files = _cached_wandb_report_files(artifact, root)
         metrics_bytes = files["test_metrics.json"]
         predictions_bytes = files["test_trial_predictions.csv"]

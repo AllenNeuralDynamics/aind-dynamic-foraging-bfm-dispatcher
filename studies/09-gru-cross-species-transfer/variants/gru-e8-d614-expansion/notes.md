@@ -1,5 +1,10 @@
 # E=8, D=614 valid-cohort expansion
 
+Costa (macaque) was rerun separately with `sweep_costa_reward_fix.yaml` after
+the official release template showed that rewarded/unrewarded feedback is
+column 11, not column 9. The correction uses immutable Beaker dataset
+`01M2H3GAY254P1VRW26DWY625T`; the earlier Costa E8 cells are invalidated.
+
 **Question.** Does the E=8 transfer result generalize from the five-cohort
 diagnostic panel to every valid, non-quarantined Study 09 cohort?
 
@@ -9,7 +14,6 @@ adds the remaining valid cohorts in the Report 1 order:
 
 - primary: Zid (human), Chen (mouse), and Beron (mouse);
 - stress test: López-Yépez (mouse), Alsiö (rat), and Costa (macaque);
-- descriptive: Tang (macaque).
 
 Kwak (mouse) remains quarantined because its frozen manifest adapts on CNO
 sessions and tests on DMSO sessions. E8 is not run on that invalid estimand.

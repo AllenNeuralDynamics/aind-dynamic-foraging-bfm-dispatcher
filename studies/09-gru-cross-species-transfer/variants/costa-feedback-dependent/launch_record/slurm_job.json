@@ -1,0 +1,18 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "26383279",
+  "wandb_group": "costa-feedback-dependent@slurm-26383279",
+  "dispatcher_commit": "533a2dd783c3708e5e442478452a45552cf81829",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "d855a1a2b4075ee02c8d6597e97f768174eb031c",
+  "script": "studies/09-gru-cross-species-transfer/variants/costa-feedback-dependent/costa_feedback_dependent.slurm",
+  "dataset": "costa",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-costa-feedback-dependent-26383279",
+  "submitted_at": "2026-09-14T15:38:27-07:00",
+  "started_at": "2026-09-14T15:38:39-07:00",
+  "completed_at": "2026-09-14T15:39:12-07:00",
+  "elapsed": "00:00:33",
+  "exit_code": "1:0",
+  "status": "failed"
+}

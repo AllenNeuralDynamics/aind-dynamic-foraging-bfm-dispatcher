@@ -13,7 +13,7 @@ from matplotlib.patches import Ellipse
 
 STUDY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STUDY.parent / "util"))
-from plot_style import apply_presentation_style  # noqa: E402
+from plot_style import SPECIES_COLORS, apply_presentation_style  # noqa: E402
 
 
 DATA = {
@@ -22,29 +22,13 @@ DATA = {
 }
 PCA_FIGURE = STUDY / "analysis" / "fig_embedding_space_pca.png"
 DISTANCE_FIGURE = STUDY / "analysis" / "fig_embedding_space_distance.png"
+SLIDE_FIGURE_PNG = STUDY / "analysis" / "fig_slide_r2_e8_embedding_all_seeds.png"
+SLIDE_FIGURE_SVG = STUDY / "analysis" / "fig_slide_r2_e8_embedding_all_seeds.svg"
 REPORT = STUDY / "analysis" / "reports" / "r2-embedding-space.md"
 START = "<!-- BEGIN result-2 -->"
 END = "<!-- END result-2 -->"
 PAIR_INDICES = ((0, 1), (0, 2), (1, 2))
 CHI2_95_DF2 = 5.991464547107979
-COLORS = {
-    "aind_source": "#B7B7B7",
-    "aind_heldout": "#111111",
-    "grossman": "#4C72B0",
-    "chen": "#55A868",
-    "zid": "#8172B3",
-    "lebedeva": "#C44E52",
-    "beron": "#64B5CD",
-    "kwak": "#937860",
-    "miller": "#CCB974",
-    "findling": "#DA8BC3",
-    "tang": "#8C8C8C",
-    "alsio": "#1F77B4",
-    "eckstein": "#2CA02C",
-    "costa": "#9467BD",
-    "lopez_mouse": "#D62728",
-    "hattori": "#17BECF",
-}
 MARKERS = (".", "o", "^", "s", "D", "v", "P", "X", "<", ">", "h", "p", "*", "8", "d")
 PAPER_LABELS = {
     "grossman": "Grossman (mouse)",
@@ -55,7 +39,6 @@ PAPER_LABELS = {
     "kwak": "Kwak (mouse)",
     "miller": "Miller (rat)",
     "findling": "Findling (human)",
-    "tang": "Tang (macaque)",
     "alsio": "Alsiö (rat)",
     "eckstein": "Eckstein (human)",
     "costa": "Costa (macaque)",
@@ -68,7 +51,13 @@ def _group_order(data: dict) -> tuple[str, ...]:
     order = tuple(data["groups"])
     if order[:2] != ("aind_source", "aind_heldout"):
         raise AssertionError("Embedding reference group order drifted")
-    return tuple(name for name in order if name != "kwak")
+    return tuple(name for name in order if name not in {"kwak", "tang"})
+
+
+def _group_color(data: dict, name: str) -> str:
+    if name == "aind_source":
+        return "#B7B7B7"
+    return SPECIES_COLORS[data["groups"][name]["species"]]
 
 
 def _display_label(data: dict, name: str) -> str:
@@ -180,7 +169,7 @@ def _plot_pca(data_by_dimension: dict[int, dict], order: tuple[str, ...]) -> Non
                         values[:, y_index],
                         s=8 if name == "aind_source" else 17,
                         alpha=0.16 if name == "aind_source" else 0.48,
-                        color=COLORS[name],
+                        color=_group_color(data, name),
                         marker=MARKERS[group_index],
                         edgecolors="none",
                         label=_display_label(data, name),
@@ -191,9 +180,9 @@ def _plot_pca(data_by_dimension: dict[int, dict], order: tuple[str, ...]) -> Non
                     0,
                     marker="*",
                     s=115,
-                    color="#FFD54F",
+                    facecolors="none",
                     edgecolor="#333333",
-                    linewidth=0.5,
+                    linewidth=1.2,
                     zorder=5,
                 )
                 axis.axhline(0, color="#DDDDDD", linewidth=0.7, zorder=0)
@@ -229,6 +218,100 @@ def _plot_pca(data_by_dimension: dict[int, dict], order: tuple[str, ...]) -> Non
     plt.close(fig)
 
 
+def _plot_e8_all_seeds(data: dict, order: tuple[str, ...]) -> None:
+    """Render the three-seed E8 PCA view sized for a presentation slide."""
+    apply_presentation_style()
+    seeds = [seed for seed in data["seeds"] if int(seed["seed"]) in (0, 1, 2)]
+    if [int(seed["seed"]) for seed in seeds] != [0, 1, 2]:
+        raise AssertionError("Slide figure requires E8 source seeds 0, 1, and 2")
+    fig, axes = plt.subplots(3, 3, figsize=(16.5, 16.0), constrained_layout=True)
+    for row, seed in enumerate(seeds):
+        arrays = _arrays(seed, order)
+        mean, components, explained = _pca(arrays["aind_source"])
+        projected = {
+            name: _project(values, mean, components)
+            for name, values in arrays.items()
+        }
+        source_scores = projected["aind_source"]
+        for column, (x_index, y_index) in enumerate(PAIR_INDICES):
+            axis = axes[row, column]
+            axis.add_patch(
+                Ellipse(
+                    (0, 0),
+                    width=2
+                    * np.sqrt(CHI2_95_DF2)
+                    * float(np.std(source_scores[:, x_index], ddof=1)),
+                    height=2
+                    * np.sqrt(CHI2_95_DF2)
+                    * float(np.std(source_scores[:, y_index], ddof=1)),
+                    facecolor="none",
+                    edgecolor="#777777",
+                    linestyle="--",
+                    linewidth=1.2,
+                    zorder=1,
+                )
+            )
+            for group_index, name in enumerate(order):
+                values = projected[name]
+                axis.scatter(
+                    values[:, x_index],
+                    values[:, y_index],
+                    s=10 if name == "aind_source" else 22,
+                    alpha=0.14 if name == "aind_source" else 0.52,
+                    color=_group_color(data, name),
+                    marker=MARKERS[group_index],
+                    edgecolors="none",
+                    label=_display_label(data, name),
+                    zorder=2 if name == "aind_source" else 3,
+                )
+            axis.scatter(
+                0,
+                0,
+                marker="*",
+                s=135,
+                facecolors="none",
+                edgecolor="#333333",
+                linewidth=1.4,
+                zorder=5,
+            )
+            axis.axhline(0, color="#DDDDDD", linewidth=0.7, zorder=0)
+            axis.axvline(0, color="#DDDDDD", linewidth=0.7, zorder=0)
+            axis.set_xlabel(f"PC{x_index + 1} ({explained[x_index] * 100:.1f}%)")
+            axis.set_ylabel(f"PC{y_index + 1} ({explained[y_index] * 100:.1f}%)")
+            if row == 0:
+                axis.set_title(f"PC{x_index + 1} vs PC{y_index + 1}")
+            if column == 0:
+                axis.text(
+                    -0.20,
+                    0.5,
+                    f"E=8 · Seed {seed['seed']}",
+                    transform=axis.transAxes,
+                    rotation=90,
+                    va="center",
+                    ha="center",
+                    fontsize=13,
+                    fontweight="bold",
+                )
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(
+        handles,
+        labels,
+        loc="outside lower center",
+        ncol=5,
+        frameon=False,
+        fontsize=9,
+    )
+    fig.suptitle(
+        "E8 transferred subjects in the source-fitted embedding space\n"
+        "614 source mice, held-out AIND mice, and 12 external cohorts",
+        fontsize=18,
+    )
+    fig.savefig(SLIDE_FIGURE_PNG, bbox_inches="tight", dpi=220)
+    plt.rcParams["svg.hashsalt"] = "study09-r2-e8-embedding-all-seeds"
+    fig.savefig(SLIDE_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
+    plt.close(fig)
+
+
 def _plot_distances(
     data_by_dimension: dict[int, dict],
     order: tuple[str, ...],
@@ -250,7 +333,7 @@ def _plot_distances(
                 values, positions=positions, showextrema=False, widths=0.76
             )
             for body, name in zip(violins["bodies"], order):
-                body.set_facecolor(COLORS[name])
+                body.set_facecolor(_group_color(data, name))
                 body.set_edgecolor("none")
                 body.set_alpha(0.36)
             for position, (name, distances) in enumerate(zip(order, values)):
@@ -260,7 +343,7 @@ def _plot_distances(
                     distances,
                     s=5,
                     alpha=min(0.3, 15 / len(distances)),
-                    color=COLORS[name],
+                    color=_group_color(data, name),
                     edgecolors="none",
                 )
                 axis.scatter(
@@ -386,6 +469,12 @@ def _report_body(
     )
     return f"""## Result
 
+![E8 embedding space for source seeds 0, 1, and 2](../fig_slide_r2_e8_embedding_all_seeds.png)
+
+[SVG for slides](../fig_slide_r2_e8_embedding_all_seeds.svg)
+
+### Complete E4/E8 seed view
+
 ![All transferred subjects in source-fitted PCA space](../fig_embedding_space_pca.png)
 
 The primary comparison is **held-out AIND mice versus external subjects**, shown
@@ -458,20 +547,24 @@ def main() -> None:
     order = _group_order(data_by_dimension[4])
     if _group_order(data_by_dimension[8]) != order:
         raise AssertionError("E4/E8 embedding group order differs")
-    if set(order) != set(COLORS) - {"kwak"}:
-        raise AssertionError("Embedding plot color map does not match frozen groups")
+    if set(order) != set(data_by_dimension[4]["groups"]) - {"kwak", "tang"}:
+        raise AssertionError("Embedding plot group order does not match frozen groups")
     statistics_by_dimension = {
         dimension: [_statistics(seed, order) for seed in data["seeds"]]
         for dimension, data in data_by_dimension.items()
     }
     _plot_pca(data_by_dimension, order)
+    _plot_e8_all_seeds(data_by_dimension[8], order)
     _plot_distances(data_by_dimension, order, statistics_by_dimension)
     body = _report_body(data_by_dimension, order, statistics_by_dimension)
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
     end_start = text.index(END, start_end)
     REPORT.write_text(text[:start_end] + "\n" + body + text[end_start:])
-    print(f"Wrote {PCA_FIGURE}, {DISTANCE_FIGURE}, and {REPORT}")
+    print(
+        f"Wrote {PCA_FIGURE}, {DISTANCE_FIGURE}, {SLIDE_FIGURE_PNG}, "
+        f"{SLIDE_FIGURE_SVG}, and {REPORT}"
+    )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "produced_by": "manual SLURM intervention record",
+    "produced_at_pt": "2026-09-14T21:47:42-07:00",
+    "dispatcher_git_sha": "80e3656d163d0df3916757882bb9669b6edbce79",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "foraging_models_git_sha": "d855a1a2b4075ee02c8d6597e97f768174eb031c",
+    "wandb_groups": [
+      "costa-feedback-dependent@slurm-26384790"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "hpc",
+  "wandb_group": "costa-feedback-dependent@slurm-26384790",
+  "job_refs": [
+    {
+      "type": "slurm_job",
+      "id": "26384790"
+    }
+  ],
+  "supersedes": [
+    "26383388"
+  ],
+  "trigger": {
+    "symptom": "The corrected block-reset fit was not comparable to the E4 GRU and Bari2019 common-Q matched-half evaluation.",
+    "cause": "The special Costa runner reset values at every 80-trial stimulus block, whereas the shared matched-half protocol resets values only at real session boundaries.",
+    "evidence": {
+      "previous_runner": "run_costa_author_baseline.py",
+      "replacement_runner": "run_published_baseline.py --baseline costa-feedback-dependent",
+      "canonical_parquet_sha256": "e6f0a017d13cf4b8653a43ef2debc9d74af307b81ae6f1fed4276bbbdd7c461d",
+      "split_manifest_sha256": "9dc04136ab185bd7ec9e60749a0a15e37ea3179649bb0e2ae6aff7356725dd30",
+      "audit_sha256": "d5fd33fb06da8f1fea2810c1673595543b0b8e8b8b3e86bd0f20de740aad0d58"
+    }
+  },
+  "tasks": [
+    {
+      "dataset": "costa",
+      "slurm_job": "26384790",
+      "status": "running",
+      "comparison": "paper equation family under the shared matched-half session protocol"
+    }
+  ],
+  "deviations": {
+    "fresh_run_ids": true,
+    "session_reset_matches_bari_and_gru": true,
+    "paper_block_reset_protocol_not_reproduced": true,
+    "hpc_canonical_root": "/allen/aind/scratch/han.hou/datasets/study09-costa-reward-fix-20260914/canonical"
+  },
+  "cost": {}
+}

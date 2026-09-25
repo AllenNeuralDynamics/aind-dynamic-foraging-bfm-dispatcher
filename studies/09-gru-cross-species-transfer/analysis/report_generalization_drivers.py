@@ -9,11 +9,12 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
+from scipy.stats import rankdata
 
 
 STUDY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STUDY.parent / "util"))
-from plot_style import apply_presentation_style  # noqa: E402
+from plot_style import SPECIES_COLORS, apply_presentation_style  # noqa: E402
 
 
 DATA = {
@@ -24,35 +25,24 @@ TASK_DATA = {
     4: STUDY / "analysis" / "task_design_features.json",
     8: STUDY / "analysis" / "task_design_features_e8.json",
 }
+LLM_DATA = STUDY / "analysis" / "llm_task_similarity_results.json"
 MAIN_FIGURE = STUDY / "analysis" / "fig_generalization_drivers.png"
 ROBUSTNESS_FIGURE = STUDY / "analysis" / "fig_generalization_robustness.png"
 TASK_FIGURE = STUDY / "analysis" / "fig_task_design_drivers.png"
 MAIN_FIGURES = {
     "primary": MAIN_FIGURE,
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_generalization_drivers_primary_plus_stress.png",
     "all_valid": STUDY / "analysis" / "fig_generalization_drivers_all_valid.png",
 }
 ROBUSTNESS_FIGURES = {
     "primary": ROBUSTNESS_FIGURE,
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_generalization_robustness_primary_plus_stress.png",
     "all_valid": STUDY / "analysis" / "fig_generalization_robustness_all_valid.png",
 }
 TASK_FIGURES = {
     "primary": TASK_FIGURE,
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_task_design_drivers_primary_plus_stress.png",
     "all_valid": STUDY / "analysis" / "fig_task_design_drivers_all_valid.png",
 }
 E8_MAIN_FIGURES = {
     "primary": STUDY / "analysis" / "fig_generalization_drivers_e8.png",
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_generalization_drivers_primary_plus_stress_e8.png",
     "all_valid": STUDY / "analysis" / "fig_generalization_drivers_all_valid_e8.png",
 }
 R1_SCALE_MAIN_FIGURES = {
@@ -60,9 +50,6 @@ R1_SCALE_MAIN_FIGURES = {
         "primary": STUDY
         / "analysis"
         / "fig_generalization_drivers_r1_scale.png",
-        "primary_plus_stress": STUDY
-        / "analysis"
-        / "fig_generalization_drivers_primary_plus_stress_r1_scale.png",
         "all_valid": STUDY
         / "analysis"
         / "fig_generalization_drivers_all_valid_r1_scale.png",
@@ -71,30 +58,48 @@ R1_SCALE_MAIN_FIGURES = {
         "primary": STUDY
         / "analysis"
         / "fig_generalization_drivers_e8_r1_scale.png",
-        "primary_plus_stress": STUDY
-        / "analysis"
-        / "fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png",
         "all_valid": STUDY
         / "analysis"
         / "fig_generalization_drivers_all_valid_e8_r1_scale.png",
     },
 }
+AUTHOR_MAIN_FIGURES = {
+    4: {
+        "primary": STUDY / "analysis" / "fig_generalization_drivers_author.png",
+        "all_valid": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_all_valid_author.png",
+    },
+    8: {
+        "primary": STUDY / "analysis" / "fig_generalization_drivers_e8_author.png",
+        "all_valid": STUDY
+        / "analysis"
+        / "fig_generalization_drivers_all_valid_e8_author.png",
+    },
+}
+AUTHOR_R1_SCALE_MAIN_FIGURES = {
+    dimension: {
+        view: path.with_name(path.stem + "_r1_scale.png")
+        for view, path in figures.items()
+    }
+    for dimension, figures in AUTHOR_MAIN_FIGURES.items()
+}
 E8_ROBUSTNESS_FIGURES = {
     "primary": STUDY / "analysis" / "fig_generalization_robustness_e8.png",
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_generalization_robustness_primary_plus_stress_e8.png",
     "all_valid": STUDY
     / "analysis"
     / "fig_generalization_robustness_all_valid_e8.png",
 }
 E8_TASK_FIGURES = {
     "primary": STUDY / "analysis" / "fig_task_design_drivers_e8.png",
-    "primary_plus_stress": STUDY
-    / "analysis"
-    / "fig_task_design_drivers_primary_plus_stress_e8.png",
     "all_valid": STUDY / "analysis" / "fig_task_design_drivers_all_valid_e8.png",
 }
+SLIDE_FIGURE_PNG = STUDY / "analysis" / "fig_slide_r3_e8_generalization.png"
+SLIDE_FIGURE_SVG = STUDY / "analysis" / "fig_slide_r3_e8_generalization.svg"
+FOCUSED_FIGURE_PNG = STUDY / "analysis" / "fig_slide_e8_author_embedding_llm.png"
+FOCUSED_FIGURE_SVG = STUDY / "analysis" / "fig_slide_e8_author_embedding_llm.svg"
+SLIDE_PERMUTATIONS = 100_000
+SLIDE_RNG_SEED = 20260915
 FIGURE_SETS = {
     4: (MAIN_FIGURES, ROBUSTNESS_FIGURES, TASK_FIGURES),
     8: (E8_MAIN_FIGURES, E8_ROBUSTNESS_FIGURES, E8_TASK_FIGURES),
@@ -102,21 +107,13 @@ FIGURE_SETS = {
 REPORT = STUDY / "analysis" / "reports" / "r3-generalization-drivers.md"
 START = "<!-- BEGIN result-3 -->"
 END = "<!-- END result-3 -->"
-SPECIES_COLORS = {
-    "mouse": "#4C72B0",
-    "rat": "#DD8452",
-    "macaque": "#C44E52",
-    "human": "#8172B3",
-}
 VIEW_TIERS = {
     "primary": ("primary",),
-    "primary_plus_stress": ("primary", "stress_test"),
     "all_valid": ("primary", "stress_test", "descriptive_only"),
 }
 VIEW_LABELS = {
     "primary": "Primary-inference",
-    "primary_plus_stress": "Primary + stress-test",
-    "all_valid": "All valid",
+    "all_valid": "All valid (primary + stress-test)",
 }
 TIER_MARKERS = {
     "primary": "o",
@@ -127,6 +124,37 @@ TIER_LEGEND_LABELS = {
     "primary": "Primary",
     "stress_test": "Stress test",
     "descriptive_only": "Descriptive only",
+}
+
+MAIN_LABEL_OFFSETS = {
+    # Cohort-specific offsets keep the compact comparison panels legible.
+    # Each tuple is (left, absolute-predictability, right) in display points.
+    "Beron (mouse)": ((4, -13), (4, 4), (4, -13)),
+    "Chen (mouse)": ((4, 18), (4, -12), (4, 8)),
+    "Costa (macaque)": ((4, 10), (4, -12), (4, 10)),
+    "Eckstein (human)": ((4, -13), (4, -12), (4, 8)),
+    "Findling (human)": ((4, -13), (4, 5), (4, -13)),
+    "Grossman (mouse)": ((4, 7), (4, 4), (4, 7)),
+    "Hattori (mouse)": ((4, 8), (4, -12), (4, 8)),
+    "Lebedeva (mouse)": ((4, -12), (4, 4), (4, -12)),
+    "López-Yépez (mouse)": ((4, 9), (4, -12), (4, 9)),
+    "Miller (rat)": ((4, 8), (4, 4), (4, -13)),
+    "Zid (human)": ((4, -18), (4, -12), (4, -11)),
+}
+
+SLIDE_LABEL_OFFSETS = {
+    "Grossman (mouse)": ((4, 7), (5, 13), (4, 7), (5, 13), (5, 7)),
+    "Hattori (mouse)": ((4, 18), (5, -16), (4, 17), (5, -16), (5, 10)),
+    "Lebedeva (mouse)": ((4, -16), (5, -16), (4, -16), (5, -16), (5, -16)),
+    "Beron (mouse)": ((4, -18), (5, -17), (4, -18), (5, -17), (5, -17)),
+    "Chen (mouse)": ((4, 17), (5, 11), (4, 17), (5, 11), (5, 11)),
+    "Costa (macaque)": ((4, 6), (5, 15), (4, 11), (5, 14), (5, 7)),
+    "Miller (rat)": ((4, -17), (5, -16), (4, -16), (5, -16), (5, -16)),
+    "Eckstein (human)": ((4, -17), (5, -19), (4, -17), (5, -19), (5, -19)),
+    "Zid (human)": ((4, 10), (5, -16), (4, 11), (5, -17), (5, -18)),
+    "Findling (human)": ((4, -17), (5, -16), (4, -17), (5, -17), (-105, 13)),
+    "Alsiö (rat)": ((4, 11), (5, 17), (4, 11), (5, 17), (5, 22)),
+    "López-Yépez (mouse)": ((4, 9), (5, 11), (4, 9), (5, 11), (5, 11)),
 }
 
 
@@ -146,6 +174,7 @@ def _annotate(
     *,
     color: str | None = None,
     rotation: float = 0,
+    offset: tuple[float, float] = (4, 4),
 ) -> None:
     rotation_options = (
         {"rotation_mode": "anchor", "ha": "left", "va": "bottom"}
@@ -155,7 +184,7 @@ def _annotate(
     axis.annotate(
         label,
         (x, y),
-        xytext=(4, 4),
+        xytext=offset,
         textcoords="offset points",
         fontsize=8.5,
         alpha=0.9,
@@ -234,27 +263,6 @@ def _relation_title(label: str, relation: dict | None, n_cohorts: int) -> str:
     )
 
 
-def _plot_seed_points(
-    axis: plt.Axes,
-    x: np.ndarray,
-    y: np.ndarray,
-    color: str,
-    marker: str,
-) -> None:
-    axis.plot(x, y, color=color, alpha=0.20, linewidth=0.9)
-    axis.scatter(x, y, color=color, alpha=0.32, s=24, marker=marker)
-    axis.scatter(
-        x.mean(),
-        y.mean(),
-        color=color,
-        edgecolor="white",
-        linewidth=0.8,
-        s=75,
-        marker=marker,
-        zorder=4,
-    )
-
-
 def _plot_seed_mean_sem(
     axis: plt.Axes,
     x: np.ndarray,
@@ -287,50 +295,71 @@ def _plot_main(
     output: Path,
     *,
     r1_scale: bool = False,
+    reference: str = "q",
 ) -> None:
+    if reference not in {"q", "author"}:
+        raise ValueError("reference must be 'q' or 'author'")
     apply_presentation_style()
     dimension = int(data["contract"]["subject_embedding_size"])
     fig, axes = plt.subplots(1, 3, figsize=(18.5, 6.2), constrained_layout=True)
     cohorts = _view_cohorts(data, view)
-    relation_source = None if r1_scale else _relation_source(data, view)
+    if reference == "author":
+        cohorts = [cohort for cohort in cohorts if cohort["author_reference"] is not None]
+    relation_source = _relation_source(data, view)
+    reference_label = "Bari2019" if reference == "q" else "author model"
+    reference_key = f"{reference}_subject_balanced_normalized_likelihood"
+    reference_bits_key = f"{reference}_bits_above_chance"
+    delta_bits_key = f"gru_d614_minus_{reference}_bits_per_trial"
 
     for cohort in cohorts:
         color = SPECIES_COLORS[cohort["species"]]
         marker = TIER_MARKERS[cohort["analysis_tier"]]
         centroid = _seed_values(cohort, "embedding_centroid_mahalanobis")
-        q_likelihood = _summary(
-            cohort, "q_subject_balanced_normalized_likelihood"
-        )
+        reference_likelihood = _summary(cohort, reference_key)
         gru_likelihood = _seed_values(
             cohort, "gru_d614_subject_balanced_normalized_likelihood"
         )
         if r1_scale:
-            delta = gru_likelihood - q_likelihood
-            q_predictability = q_likelihood
+            delta = gru_likelihood - reference_likelihood
+            reference_predictability = reference_likelihood
         else:
-            delta = _seed_values(cohort, "gru_d614_minus_q_bits_per_trial")
-            q_predictability = _summary(cohort, "q_bits_above_chance")
+            delta = _seed_values(cohort, delta_bits_key)
+            reference_predictability = _summary(cohort, reference_bits_key)
 
-        plotter = _plot_seed_mean_sem if r1_scale else _plot_seed_points
         plot_values = (
             (axes[0], centroid, delta),
-            (axes[1], np.full(3, q_likelihood), gru_likelihood),
-            (axes[2], np.full(3, q_predictability), delta),
+            (
+                axes[1],
+                np.full(len(gru_likelihood), reference_likelihood),
+                gru_likelihood,
+            ),
+            (axes[2], np.full(len(delta), reference_predictability), delta),
         )
-        for axis, x, y in plot_values:
-            plotter(axis, x, y, color, marker)
-            is_r1_left_panel = r1_scale and axis is axes[0]
+        for panel_index, (axis, x, y) in enumerate(plot_values):
+            _plot_seed_mean_sem(axis, x, y, color, marker)
+            is_left_panel = axis is axes[0]
+            offset = MAIN_LABEL_OFFSETS.get(
+                cohort["label"], ((4, 4), (4, 4), (4, 4))
+            )[panel_index]
+            if r1_scale and is_left_panel and cohort["label"] == "Costa (macaque)":
+                offset = (4, -24)
             _annotate(
                 axis,
                 x.mean(),
                 y.mean(),
                 cohort["label"],
-                color=color if is_r1_left_panel else None,
-                rotation=30 if is_r1_left_panel else 0,
+                color=color if is_left_panel else None,
+                rotation=30 if is_left_panel else 0,
+                offset=offset,
             )
 
+    embedding_relationship_key = (
+        f"gru_d614_minus_{reference}_normalized_likelihood_vs_embedding_centroid"
+        if r1_scale
+        else f"gru_d614_minus_{reference}_vs_embedding_centroid"
+    )
     relation = (
-        relation_source["gru_d614_minus_q_vs_embedding_centroid"]
+        relation_source[embedding_relationship_key]
         if relation_source is not None
         else None
     )
@@ -339,7 +368,7 @@ def _plot_main(
         f"External-centroid distance from source\n({dimension}D Mahalanobis)"
     )
     delta_label = (
-        f"GRU E={dimension}, D=614 − Bari2019\n"
+        f"GRU E={dimension}, D=614 − {reference_label}\n"
         + (
             "(subject-balanced normalized likelihood)"
             if r1_scale
@@ -347,6 +376,7 @@ def _plot_main(
         )
     )
     axes[0].set_ylabel(delta_label)
+    axes[0].margins(y=0.16)
     axes[0].set_title(
         _relation_title(
             "Transfer advantage vs embedding displacement", relation, len(cohorts)
@@ -357,7 +387,7 @@ def _plot_main(
         value
         for cohort in cohorts
         for value in [
-            _summary(cohort, "q_subject_balanced_normalized_likelihood"),
+            _summary(cohort, reference_key),
             *_seed_values(
                 cohort, "gru_d614_subject_balanced_normalized_likelihood"
             ),
@@ -369,25 +399,38 @@ def _plot_main(
     axes[1].set_xlim(lower, upper)
     axes[1].set_ylim(lower, upper)
     axes[1].set_aspect("equal", adjustable="box")
-    axes[1].set_xlabel("Bari2019 normalized likelihood")
+    axes[1].set_xlabel(f"{reference_label.capitalize()} normalized likelihood")
     axes[1].set_ylabel(f"GRU E={dimension}, D=614 normalized likelihood")
     axes[1].set_title("Absolute held-out predictability\n(identity line = equal performance)")
 
+    coupled_relationship_key = (
+        (
+            "gru_d614_minus_q_normalized_likelihood_vs_common_q_normalized_likelihood"
+            if reference == "q"
+            else "gru_d614_minus_author_normalized_likelihood_vs_author_normalized_likelihood"
+        )
+        if r1_scale
+        else (
+            "gru_d614_minus_q_vs_common_q_predictability"
+            if reference == "q"
+            else "gru_d614_minus_author_vs_author_predictability"
+        )
+    )
     coupled = (
-        relation_source["gru_d614_minus_q_vs_common_q_predictability"]
+        relation_source[coupled_relationship_key]
         if relation_source is not None
         else None
     )
     axes[2].axhline(0, color="#777777", linestyle="--", linewidth=1)
     axes[2].set_xlabel(
-        "Bari2019 normalized likelihood"
+        f"{reference_label.capitalize()} normalized likelihood"
         if r1_scale
-        else "Bari2019 predictability (bits above chance)"
+        else f"{reference_label.capitalize()} predictability (bits above chance)"
     )
     axes[2].set_ylabel(delta_label)
     axes[2].set_title(
         _relation_title(
-            "Advantage vs Bari2019 predictability†", coupled, len(cohorts)
+            f"Advantage vs {reference_label} predictability†", coupled, len(cohorts)
         )
     )
 
@@ -397,13 +440,14 @@ def _plot_main(
         ncol=4,
         frameon=False,
     )
-    scale_note = (
-        "R1 scale: mean ± SEM across three source seeds"
+    scale_note = "mean ± SEM across three source seeds; " + (
+        "R1 normalized-likelihood scale"
         if r1_scale
-        else "Primary scale: additive log score"
+        else "primary additive-log-score scale"
     )
     fig.suptitle(
-        f"Study 09 external transfer — E={dimension}, {VIEW_LABELS[view]} cohorts\n"
+        f"Study 09 external transfer vs {reference_label} — E={dimension}, "
+        f"{VIEW_LABELS[view]} cohorts\n"
         f"{scale_note}; labeled points are cohort means"
     )
     fig.savefig(output, bbox_inches="tight", pad_inches=0.35)
@@ -442,18 +486,7 @@ def _plot_robustness(data: dict, view: str, output: Path) -> None:
                 )
             )
         for axis, x, y in plot_values:
-            axis.plot(x, y, color=color, alpha=0.20, linewidth=0.9)
-            axis.scatter(x, y, color=color, alpha=0.32, s=24, marker=marker)
-            axis.scatter(
-                x.mean(),
-                y.mean(),
-                color=color,
-                edgecolor="white",
-                linewidth=0.8,
-                s=75,
-                marker=marker,
-                zorder=4,
-            )
+            _plot_seed_mean_sem(axis, x, y, color, marker)
             _annotate(axis, x.mean(), y.mean(), cohort["label"])
 
     median_relation = (
@@ -510,7 +543,12 @@ def _plot_robustness(data: dict, view: str, output: Path) -> None:
     plt.close(fig)
 
 
-def _plot_task_design(task_data: dict, view: str, output: Path) -> None:
+def _plot_task_design(
+    task_data: dict,
+    generalization_data: dict,
+    view: str,
+    output: Path,
+) -> None:
     apply_presentation_style()
     dimension = int(task_data["contract"]["subject_embedding_size"])
     all_columns = (
@@ -538,6 +576,10 @@ def _plot_task_design(task_data: dict, view: str, output: Path) -> None:
         constrained_layout=True,
     )
     cohorts = _view_cohorts(task_data, view)
+    generalization_by_label = {
+        cohort["label"]: cohort
+        for cohort in generalization_data["cohorts"].values()
+    }
     relation_source = _relation_source(task_data, view)
     outcomes = (
         (
@@ -569,18 +611,10 @@ def _plot_task_design(task_data: dict, view: str, output: Path) -> None:
                     continue
                 color = SPECIES_COLORS[cohort["species"]]
                 marker = TIER_MARKERS[cohort["analysis_tier"]]
-                y = float(cohort["outcomes"][outcome])
-                axis.scatter(
-                    x,
-                    y,
-                    color=color,
-                    edgecolor="white",
-                    linewidth=0.8,
-                    s=78,
-                    marker=marker,
-                    zorder=4,
-                )
-                _annotate(axis, x, y, cohort["label"])
+                y = _seed_values(generalization_by_label[cohort["label"]], outcome)
+                x_values = np.full(len(y), x)
+                _plot_seed_mean_sem(axis, x_values, y, color, marker)
+                _annotate(axis, x, y.mean(), cohort["label"])
             relationship = (
                 relation_source[f"{relationship_y}_vs_{relationship_x}"]
                 if relation_source is not None
@@ -602,9 +636,335 @@ def _plot_task_design(task_data: dict, view: str, output: Path) -> None:
     if view == "primary":
         subtitle += "; schedule scores use complete trial-wise probabilities"
     fig.suptitle(
-        f"Task-design distance — E={dimension}, {VIEW_LABELS[view]} cohorts\n{subtitle}"
+        f"Task-design distance — E={dimension}, {VIEW_LABELS[view]} cohorts\n"
+        f"{subtitle}; outcomes are mean ± SEM across three source seeds"
     )
     fig.savefig(output, bbox_inches="tight", pad_inches=0.35)
+    plt.close(fig)
+
+
+def _slide_relation(x: list[float], y: list[float], seed: int) -> dict:
+    """Spearman statistic and two-sided permutation p for slide-only relations."""
+    x_rank = rankdata(np.asarray(x, dtype=float))
+    y_rank = rankdata(np.asarray(y, dtype=float))
+    x_centered = x_rank - x_rank.mean()
+    y_centered = y_rank - y_rank.mean()
+    denominator = np.linalg.norm(x_centered) * np.linalg.norm(y_centered)
+    if len(x_rank) < 3 or denominator == 0:
+        raise AssertionError("Slide correlation requires paired nonconstant values")
+    observed = float((x_centered @ y_centered) / denominator)
+    rng = np.random.default_rng(seed)
+    extreme = 0
+    remaining = SLIDE_PERMUTATIONS
+    while remaining:
+        batch_size = min(10_000, remaining)
+        indices = np.argsort(rng.random((batch_size, len(y_rank))), axis=1)
+        correlations = ((y_rank[indices] - y_rank.mean()) @ x_centered) / denominator
+        extreme += int(np.sum(np.abs(correlations) >= abs(observed)))
+        remaining -= batch_size
+    return {
+        "n_cohorts": len(x_rank),
+        "spearman_rho": observed,
+        "permutation_p_two_sided": (extreme + 1) / (SLIDE_PERMUTATIONS + 1),
+    }
+
+
+def _plot_slide_synthesis(data: dict, task_data: dict) -> None:
+    """Render the requested three-row E8 synthesis for presentation use."""
+    apply_presentation_style()
+    if int(data["contract"]["subject_embedding_size"]) != 8:
+        raise AssertionError("Slide synthesis requires E8 generalization results")
+    names = tuple(data["contract"]["all_valid_sensitivity_cohorts"])
+    if len(names) != 12:
+        raise AssertionError("Slide synthesis expects the 12 valid cohorts")
+    author_names = tuple(
+        name for name in names if data["cohorts"][name]["author_reference"] is not None
+    )
+    if len(author_names) != 11:
+        raise AssertionError("Slide author comparison expects 11 aligned references")
+
+    full_design = {
+        name: float(task_data["cohorts"][name]["categorical_distance"]["full_design"])
+        for name in names
+    }
+    q_full_relation = _slide_relation(
+        [full_design[name] for name in names],
+        [
+            _summary(
+                data["cohorts"][name],
+                "gru_d614_minus_q_subject_balanced_normalized_likelihood",
+            )
+            for name in names
+        ],
+        SLIDE_RNG_SEED,
+    )
+    author_full_relation = _slide_relation(
+        [full_design[name] for name in author_names],
+        [
+            _summary(
+                data["cohorts"][name],
+                "gru_d614_minus_author_subject_balanced_normalized_likelihood",
+            )
+            for name in author_names
+        ],
+        SLIDE_RNG_SEED + 1,
+    )
+
+    fig = plt.figure(figsize=(16.5, 18), constrained_layout=True)
+    grid = fig.add_gridspec(3, 2, height_ratios=(1, 1, 0.95))
+    axes = (
+        fig.add_subplot(grid[0, 0]),
+        fig.add_subplot(grid[0, 1]),
+        fig.add_subplot(grid[1, 0]),
+        fig.add_subplot(grid[1, 1]),
+        fig.add_subplot(grid[2, :]),
+    )
+
+    def draw(
+        axis: plt.Axes,
+        cohort_names: tuple[str, ...],
+        x_key: str,
+        y_key: str,
+        relation: dict,
+        title: str,
+        x_label: str,
+        y_label: str,
+        *,
+        panel_index: int,
+        zero_line: bool,
+    ) -> None:
+        for name in cohort_names:
+            cohort = data["cohorts"][name]
+            y = _seed_values(cohort, y_key)
+            x = (
+                _seed_values(cohort, "embedding_centroid_mahalanobis")
+                if x_key == "embedding"
+                else np.full(len(y), full_design[name])
+            )
+            color = SPECIES_COLORS[cohort["species"]]
+            marker = TIER_MARKERS[cohort["analysis_tier"]]
+            _plot_seed_mean_sem(axis, x, y, color, marker)
+            offset = SLIDE_LABEL_OFFSETS.get(cohort["label"], ((4, 4),) * 5)[
+                panel_index
+            ]
+            _annotate(
+                axis,
+                float(x.mean()),
+                float(y.mean()),
+                cohort["label"],
+                color=color,
+                rotation=24 if x_key == "embedding" else 0,
+                offset=offset,
+            )
+        if zero_line:
+            axis.axhline(0, color="#777777", linestyle="--", linewidth=1)
+        axis.set_xlabel(x_label)
+        axis.set_ylabel(y_label)
+        axis.set_title(_relation_title(title, relation, len(cohort_names)))
+        axis.margins(x=0.08, y=0.16)
+
+    q_delta = "gru_d614_minus_q_subject_balanced_normalized_likelihood"
+    author_delta = "gru_d614_minus_author_subject_balanced_normalized_likelihood"
+    embedding_label = "External-centroid distance from source\n(8D Mahalanobis)"
+    design_label = "Full-design distance from AIND\n(equal-weight categorical mismatch)"
+    draw(
+        axes[0],
+        names,
+        "embedding",
+        q_delta,
+        data["sensitivity_relationships"][
+            "gru_d614_minus_q_normalized_likelihood_vs_embedding_centroid"
+        ],
+        "A  GRU−Bari2019 vs embedding distance",
+        embedding_label,
+        "GRU E=8, D=614 − Bari2019\n(normalized likelihood)",
+        panel_index=0,
+        zero_line=True,
+    )
+    draw(
+        axes[1],
+        names,
+        "full_design",
+        q_delta,
+        q_full_relation,
+        "B  GRU−Bari2019 vs full-design distance",
+        design_label,
+        "GRU E=8, D=614 − Bari2019\n(normalized likelihood)",
+        panel_index=1,
+        zero_line=True,
+    )
+    draw(
+        axes[2],
+        author_names,
+        "embedding",
+        author_delta,
+        data["sensitivity_relationships"][
+            "gru_d614_minus_author_normalized_likelihood_vs_embedding_centroid"
+        ],
+        "C  GRU−author model vs embedding distance",
+        embedding_label,
+        "GRU E=8, D=614 − author model\n(normalized likelihood)",
+        panel_index=2,
+        zero_line=True,
+    )
+    draw(
+        axes[3],
+        author_names,
+        "full_design",
+        author_delta,
+        author_full_relation,
+        "D  GRU−author model vs full-design distance",
+        design_label,
+        "GRU E=8, D=614 − author model\n(normalized likelihood)",
+        panel_index=3,
+        zero_line=True,
+    )
+    draw(
+        axes[4],
+        names,
+        "full_design",
+        "embedding_centroid_mahalanobis",
+        task_data["sensitivity_relationships"][
+            "embedding_centroid_vs_full_design_distance"
+        ],
+        "E  Embedding distance vs full-design distance",
+        design_label,
+        embedding_label,
+        panel_index=4,
+        zero_line=False,
+    )
+    for axis in axes:
+        axis.set_box_aspect(1)
+    fig.legend(
+        handles=[
+            *_species_legend([data["cohorts"][name] for name in names]),
+            *_tier_legend([data["cohorts"][name] for name in names]),
+        ],
+        loc="outside lower center",
+        ncol=6,
+        frameon=False,
+    )
+    fig.suptitle(
+        "Study 09: what predicts frozen-core GRU transfer?\n"
+        "E8, D=614; all 12 valid cohorts; mean ± SEM across three source seeds",
+        fontsize=19,
+    )
+    fig.savefig(SLIDE_FIGURE_PNG, bbox_inches="tight", dpi=220)
+    plt.rcParams["svg.hashsalt"] = "study09-r3-e8-generalization"
+    plt.rcParams["svg.fonttype"] = "none"
+    fig.savefig(SLIDE_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
+    SLIDE_FIGURE_SVG.write_text(
+        "\n".join(line.rstrip() for line in SLIDE_FIGURE_SVG.read_text().splitlines())
+        + "\n"
+    )
+    plt.close(fig)
+
+
+def _plot_focused_author_embedding_llm(data: dict, llm_data: dict) -> None:
+    """Render the focused E8 author-model and LLM-distance slide figure."""
+    apply_presentation_style()
+    if int(data["contract"]["subject_embedding_size"]) != 8:
+        raise AssertionError("Focused synthesis requires E8 generalization results")
+
+    valid_names = tuple(data["contract"]["all_valid_sensitivity_cohorts"])
+    author_names = tuple(
+        name for name in valid_names if data["cohorts"][name]["author_reference"] is not None
+    )
+    if len(author_names) != 11:
+        raise AssertionError("Focused author panel expects 11 aligned references")
+    llm_rows = {
+        row["cohort"]: row
+        for row in llm_data["ranking"]
+        if row["cohort"] in valid_names
+    }
+    if set(llm_rows) != set(valid_names):
+        raise AssertionError("LLM ranking must cover every valid E8 cohort")
+
+    fig, axes = plt.subplots(1, 2, figsize=(15.5, 8.2), constrained_layout=True)
+    left, right = axes
+    author_delta = "gru_d614_minus_author_subject_balanced_normalized_likelihood"
+    llm_label_offsets = {
+        # The top-right human/rat pair is close in both coordinates; separate
+        # their rotated labels while preserving the point locations.
+        "Alsiö (rat)": (-74, 15),
+        "Zid (human)": (5, -26),
+    }
+
+    for name in author_names:
+        cohort = data["cohorts"][name]
+        x = _seed_values(cohort, "embedding_centroid_mahalanobis")
+        y = _seed_values(cohort, author_delta)
+        color = SPECIES_COLORS[cohort["species"]]
+        _plot_seed_mean_sem(left, x, y, color, TIER_MARKERS[cohort["analysis_tier"]])
+        _annotate(
+            left,
+            float(x.mean()),
+            float(y.mean()),
+            cohort["label"],
+            color=color,
+            rotation=30,
+            offset=SLIDE_LABEL_OFFSETS.get(cohort["label"], ((4, 4),) * 5)[2],
+        )
+
+    for name in valid_names:
+        cohort = data["cohorts"][name]
+        row = llm_rows[name]
+        y = _seed_values(cohort, "embedding_centroid_mahalanobis")
+        x = np.full(len(y), float(row["llm_task_distance_to_aind"]))
+        color = SPECIES_COLORS[cohort["species"]]
+        _plot_seed_mean_sem(right, x, y, color, TIER_MARKERS[cohort["analysis_tier"]])
+        _annotate(
+            right,
+            float(x.mean()),
+            float(y.mean()),
+            cohort["label"],
+            color=color,
+            rotation=30,
+            offset=llm_label_offsets.get(
+                cohort["label"],
+                SLIDE_LABEL_OFFSETS.get(cohort["label"], ((4, 4),) * 5)[4],
+            ),
+        )
+
+    left_relation = data["sensitivity_relationships"][
+        "gru_d614_minus_author_normalized_likelihood_vs_embedding_centroid"
+    ]
+    right_relation = llm_data["relationships"]["embedding_distance_vs_llm_task_distance"]
+    left.axhline(0, color="#777777", linestyle="--", linewidth=1, zorder=1)
+    left.set_xlabel("External-centroid distance from source\n(E8 Mahalanobis)")
+    left.set_ylabel("GRU E8, D=614 − author model\n(normalized likelihood)")
+    left.set_title(
+        _relation_title("A  GRU−author model versus embedding distance", left_relation, len(author_names))
+    )
+    right.set_xlabel("LLM task distance to AIND")
+    right.set_ylabel("External-centroid distance from source\n(E8 Mahalanobis)")
+    right.set_title(
+        _relation_title("B  LLM task distance versus embedding distance", right_relation, len(valid_names))
+    )
+    for axis in axes:
+        axis.set_box_aspect(1)
+        axis.margins(x=0.10, y=0.17)
+    fig.legend(
+        handles=[
+            *_species_legend([data["cohorts"][name] for name in valid_names]),
+            *_tier_legend([data["cohorts"][name] for name in valid_names]),
+        ],
+        loc="outside lower center",
+        ncol=6,
+        frameon=False,
+    )
+    fig.suptitle(
+        "Study 09: embedding displacement, author-model advantage, and task distance\n"
+        "E8, D=614; markers are means ± SEM across three source seeds; LLM distance has one judge",
+        fontsize=18,
+    )
+    fig.savefig(FOCUSED_FIGURE_PNG, bbox_inches="tight", dpi=220)
+    plt.rcParams["svg.hashsalt"] = "study09-e8-author-embedding-llm"
+    fig.savefig(FOCUSED_FIGURE_SVG, bbox_inches="tight", metadata={"Date": None})
+    FOCUSED_FIGURE_SVG.write_text(
+        "\n".join(line.rstrip() for line in FOCUSED_FIGURE_SVG.read_text().splitlines())
+        + "\n"
+    )
     plt.close(fig)
 
 
@@ -622,6 +982,24 @@ def _relationship_rows(relationships: dict) -> list[str]:
         ),
         "gru_d614_minus_q_vs_common_q_predictability": (
             "GRU614−Bari2019 vs Bari2019 predictability†"
+        ),
+        "gru_d614_minus_author_vs_embedding_centroid": (
+            "GRU614−author vs embedding centroid distance"
+        ),
+        "gru_d614_minus_author_vs_author_predictability": (
+            "GRU614−author vs author predictability†"
+        ),
+        "gru_d614_minus_q_normalized_likelihood_vs_embedding_centroid": (
+            "Normalized-likelihood GRU614−Bari2019 vs embedding centroid distance"
+        ),
+        "gru_d614_minus_q_normalized_likelihood_vs_common_q_normalized_likelihood": (
+            "Normalized-likelihood GRU614−Bari2019 vs Bari2019 likelihood†"
+        ),
+        "gru_d614_minus_author_normalized_likelihood_vs_embedding_centroid": (
+            "Normalized-likelihood GRU614−author vs embedding centroid distance"
+        ),
+        "gru_d614_minus_author_normalized_likelihood_vs_author_normalized_likelihood": (
+            "Normalized-likelihood GRU614−author vs author likelihood†"
         ),
         "gru_d614_minus_d10_vs_embedding_centroid": (
             "GRU614−GRU10 vs embedding centroid distance"
@@ -644,6 +1022,14 @@ def _relationship_rows(relationships: dict) -> list[str]:
 def _cohort_rows(data: dict, dimension: int) -> list[str]:
     rows = []
     for cohort in _valid_cohorts(data):
+        if cohort["author_reference"] is None:
+            author_values = "— | — | —"
+        else:
+            author_values = (
+                f"{cohort['author_reference']} | "
+                f"{_summary(cohort, 'author_subject_balanced_normalized_likelihood'):.4f} | "
+                f"{_summary(cohort, 'gru_d614_minus_author_bits_per_trial'):+.4f}"
+            )
         rows.append(
             f"| E={dimension} | {cohort['label']} | {cohort['analysis_tier'].replace('_', ' ')} | "
             f"{cohort['n_subjects']} | "
@@ -651,6 +1037,7 @@ def _cohort_rows(data: dict, dimension: int) -> list[str]:
             f"{_summary(cohort, 'gru_d614_subject_balanced_normalized_likelihood'):.4f} | "
             f"{_summary(cohort, 'gru_d614_minus_q_bits_per_trial'):+.4f} | "
             f"{_summary(cohort, 'gru_d614_minus_q_mean_subject_normalized_likelihood'):+.4f} | "
+            f"{author_values} | "
             f"{_summary(cohort, 'embedding_centroid_mahalanobis'):.2f} | "
             f"{_summary(cohort, 'embedding_median_subject_mahalanobis'):.2f} | "
             + (
@@ -672,7 +1059,9 @@ def _value_text(value: object) -> str:
 
 def _task_rows(task_data: dict) -> list[str]:
     rows = []
-    for cohort in task_data["cohorts"].values():
+    for name, cohort in task_data["cohorts"].items():
+        if name == "tang":
+            continue
         annotation = cohort["annotation"]
         rows.append(
             f"| [{cohort['label']}]({annotation['evidence_url']}) | "
@@ -823,6 +1212,18 @@ def _result_block(
     q_relation_e8 = data_e8["relationships"][
         "gru_d614_minus_q_vs_common_q_predictability"
     ]
+    author_centroid = data["relationships"][
+        "gru_d614_minus_author_vs_embedding_centroid"
+    ]
+    author_relation = data["relationships"][
+        "gru_d614_minus_author_vs_author_predictability"
+    ]
+    author_centroid_e8 = data_e8["relationships"][
+        "gru_d614_minus_author_vs_embedding_centroid"
+    ]
+    author_relation_e8 = data_e8["relationships"][
+        "gru_d614_minus_author_vs_author_predictability"
+    ]
     scaling = data["relationships"][
         "gru_d614_minus_d10_vs_embedding_centroid"
     ]
@@ -870,6 +1271,35 @@ def _result_block(
         "",
         "## First-pass result",
         "",
+        "### Slide-ready E8 synthesis",
+        "",
+        "![E8 normalized-likelihood transfer synthesis](../fig_slide_r3_e8_generalization.png)",
+        "",
+        "[SVG for slides](../fig_slide_r3_e8_generalization.svg)",
+        "",
+        "### Focused author-model and LLM-distance view",
+        "",
+        "![E8 author-model advantage and LLM task distance](../fig_slide_e8_author_embedding_llm.png)",
+        "",
+        "[SVG for slides](../fig_slide_e8_author_embedding_llm.svg)",
+        "",
+        "The left panel includes the 11 cohorts with cohort-aligned author-model references; "
+        "the right panel includes all 12 valid cohorts. Performance and embedding bars are "
+        "SEM across three source seeds; the LLM rank has one judge and therefore no sampling bar.",
+        "",
+        "The Bari2019 and embedding-versus-design panels include all 12 valid cohorts. "
+        "The author-model panels include 11 because Alsiö (rat) has no cohort-aligned "
+        "author reference. Every title reports the cohort-level Spearman ρ and two-sided "
+        "permutation p for the exact quantities plotted.",
+        "",
+        "### Detailed analysis figures",
+        "",
+        "Result 3 contains 24 detailed figures: 16 main comparison panels (Bari2019 or author "
+        "reference × bits/trial or normalized-likelihood scale × E=4 or E=8 × primary "
+        "or all-valid inclusion), four robustness panels, and four task-design panels. "
+        "All cohort markers are means across three source seeds with SEM error bars. "
+        "A fixed baseline or task-design coordinate has zero horizontal SEM by design.",
+        "",
         "### Primary-inference cohorts",
         "",
         "**E=4**",
@@ -883,27 +1313,13 @@ def _result_block(
         f"Primary inference uses {primary_n} equal-weight cross-study cohorts. Performance is the arithmetic "
         "mean held-out log likelihood across subjects, converted to bits per trial. "
         "Embedding distance is calculated separately in the full E=4 or E=8 space for each "
-        "source seed. Large labeled points average the three paired seeds; small "
-        "points show the seed-specific values. Inclusion tiers are shown in separate figures, "
+        "source seed. Every marker is the mean across the three paired source seeds, with "
+        "horizontal and vertical SEM bars. Inclusion tiers are shown in separate figures, "
         f"so secondary cohorts no longer obscure the {primary_n}-cohort inference. All {valid_n} valid cohorts "
         "remain included in the numerical sensitivity table. Species is descriptive rather than an inferential "
         "grouping because species, study, and task design are confounded.",
         "",
-        "### Primary + stress-test cohorts",
-        "",
-        "**E=4**",
-        "",
-        "![Primary plus stress-test cohorts: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress.png)",
-        "",
-        "**E=8**",
-        "",
-        "![Primary plus stress-test cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress_e8.png)",
-        "",
-        "This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse) "
-        "to the primary cohorts. It is displayed descriptively because this 11-cohort "
-        "combination was not a predeclared inferential tier.",
-        "",
-        "### All valid cohorts",
+        "### All valid cohorts (primary + stress-test)",
         "",
         "**E=4**",
         "",
@@ -913,19 +1329,21 @@ def _result_block(
         "",
         "![All valid cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid_e8.png)",
         "",
-        "This cumulative sensitivity view additionally includes Tang (macaque). Its plot "
-        f"annotations report the frozen {valid_n}-cohort all-valid sensitivity relationships; "
-        "Tang (macaque) remains descriptive-only because the release has two subjects.",
+        f"This cumulative sensitivity view adds Alsiö (rat), Costa (macaque), and "
+        f"López-Yépez (mouse), for {valid_n} cohorts total. No descriptive-only cohort "
+        "remains after Tang (macaque) was removed, so primary + stress-test and all valid "
+        "are the same set and are shown only once.",
         "",
         "### R1-scale companion: normalized-likelihood difference",
         "",
-        "These descriptive companion plots use the same normalized-likelihood units as "
+        "These companion plots use the same normalized-likelihood units as "
         "Result 1. They retain Result 3's equal-subject aggregation: each source seed's "
         "GRU value is `exp(mean subject log likelihood)` minus the matched Bari2019 value. "
         "Each point is the three-seed mean, with horizontal and vertical SEM bars. The "
         "Bari2019 baseline is shared across source seeds, so its horizontal SEM is zero in "
-        "the two Bari2019-axis panels. The bits-per-trial plots above remain primary for "
-        "additive cross-task inference.",
+        "the two Bari2019-axis panels. Panel titles report cross-cohort Spearman ρ and "
+        "two-sided permutation p for the exact plotted normalized-likelihood quantities. "
+        "The bits-per-trial plots above remain primary for additive cross-task inference.",
         "",
         "#### Primary-inference cohorts",
         "",
@@ -937,17 +1355,7 @@ def _result_block(
         "",
         "![Primary cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_e8_r1_scale.png)",
         "",
-        "#### Primary + stress-test cohorts",
-        "",
-        "**E=4**",
-        "",
-        "![Primary plus stress-test cohorts on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_r1_scale.png)",
-        "",
-        "**E=8**",
-        "",
-        "![Primary plus stress-test cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_primary_plus_stress_e8_r1_scale.png)",
-        "",
-        "#### All valid cohorts",
+        "#### All valid cohorts (primary + stress-test)",
         "",
         "**E=4**",
         "",
@@ -956,6 +1364,60 @@ def _result_block(
         "**E=8**",
         "",
         "![All valid cohorts, E8, on the R1 normalized-likelihood scale](../fig_generalization_drivers_all_valid_e8_r1_scale.png)",
+        "",
+        "### Author-model companion",
+        "",
+        "These panels repeat the same cross-cohort views with GRU minus the strongest "
+        "model marked `author_selected` for each cohort. When a paper has multiple "
+        "author-selected co-winners, the stronger trial-pooled held-out refit is used as "
+        "a conservative comparator. Sensitivity-only models are excluded: Costa (macaque) "
+        "therefore uses dual-rate RL plus fitted shape-choice bias, while the additional "
+        "CK1 model remains a separately labeled mechanism sensitivity in Result 1. "
+        "Alsiö (rat) has no cohort-aligned author model and is omitted from author-reference "
+        "panels.",
+        "",
+        "#### Primary-inference cohorts",
+        "",
+        "**E=4, bits/trial**",
+        "",
+        "![Primary cohorts relative to author models](../fig_generalization_drivers_author.png)",
+        "",
+        "**E=8, bits/trial**",
+        "",
+        "![Primary cohorts, E8, relative to author models](../fig_generalization_drivers_e8_author.png)",
+        "",
+        "**E=4, normalized-likelihood difference**",
+        "",
+        "![Primary cohorts relative to author models on the R1 scale](../fig_generalization_drivers_author_r1_scale.png)",
+        "",
+        "**E=8, normalized-likelihood difference**",
+        "",
+        "![Primary cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_e8_author_r1_scale.png)",
+        "",
+        "#### All valid cohorts (primary + stress-test)",
+        "",
+        "**E=4, bits/trial**",
+        "",
+        "![All valid cohorts relative to author models](../fig_generalization_drivers_all_valid_author.png)",
+        "",
+        "**E=8, bits/trial**",
+        "",
+        "![All valid cohorts, E8, relative to author models](../fig_generalization_drivers_all_valid_e8_author.png)",
+        "",
+        "**E=4, normalized-likelihood difference**",
+        "",
+        "![All valid cohorts relative to author models on the R1 scale](../fig_generalization_drivers_all_valid_author_r1_scale.png)",
+        "",
+        "**E=8, normalized-likelihood difference**",
+        "",
+        "![All valid cohorts, E8, relative to author models on the R1 scale](../fig_generalization_drivers_all_valid_e8_author_r1_scale.png)",
+        "",
+        f"Across the primary cohorts with author references, GRU-minus-author advantage "
+        f"versus embedding-centroid distance has Spearman ρ={author_centroid['spearman_rho']:+.3f} "
+        f"for E=4 and ρ={author_centroid_e8['spearman_rho']:+.3f} for E=8. "
+        f"The mathematically coupled GRU-minus-author versus author-predictability "
+        f"relationships are ρ={author_relation['spearman_rho']:+.3f} and "
+        f"ρ={author_relation_e8['spearman_rho']:+.3f}, respectively.",
         "",
         f"For E=4, the D=614 GRU has higher subject-balanced mean log likelihood than Bari2019 common Q in "
         f"{len(positive)} cohorts ({', '.join(positive)}) and lower mean log likelihood in "
@@ -1001,17 +1463,7 @@ def _result_block(
         f"{scaling['spearman_rho']:+.3f} "
         f"(permutation p={scaling['permutation_p_two_sided']:.4f}).",
         "",
-        "### Primary + stress-test robustness and scaling",
-        "",
-        "**E=4**",
-        "",
-        "![Primary plus stress-test cohorts: robustness and source-population scaling](../fig_generalization_robustness_primary_plus_stress.png)",
-        "",
-        "**E=8**",
-        "",
-        "![Primary plus stress-test cohorts, E8: robustness](../fig_generalization_robustness_primary_plus_stress_e8.png)",
-        "",
-        "### All-valid robustness and scaling",
+        "### All-valid robustness and scaling (primary + stress-test)",
         "",
         "**E=4**",
         "",
@@ -1027,8 +1479,8 @@ def _result_block(
         "",
         "### Valid cohort estimates",
         "",
-        "| space | cohort | tier | subjects | Bari2019 likelihood | GRU614 likelihood | GRU614−Bari2019 bits/trial | mean subject Δ likelihood | centroid distance | median subject distance | GRU614−GRU10 bits/trial |",
-        "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| space | cohort | tier | subjects | Bari2019 likelihood | GRU614 likelihood | GRU614−Bari2019 bits/trial | mean subject Δ likelihood | author reference | author likelihood | GRU614−author bits/trial | centroid distance | median subject distance | GRU614−GRU10 bits/trial |",
+        "|---|---|---|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|",
         *_cohort_rows(data, 4),
         *_cohort_rows(data_e8, 8),
         "",
@@ -1050,8 +1502,8 @@ def _result_block(
         "",
         "### All-valid sensitivity — E=4",
         "",
-        "This sensitivity adds Alsiö (rat), Costa (macaque), López-Yépez (mouse), and "
-        "descriptive-only Tang (macaque). It still excludes quarantined Kwak (mouse).",
+        "This sensitivity adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse). "
+        "It still excludes quarantined Kwak (mouse).",
         "",
         "| relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |",
         "|---|---:|---:|---:|---:|---:|",
@@ -1063,9 +1515,10 @@ def _result_block(
         "|---|---:|---:|---:|---:|---:|",
         *_relationship_rows(data_e8["sensitivity_relationships"]),
         "",
-        "† The Bari2019 relationship shares the same baseline between the horizontal axis and the "
-        "GRU-minus-Bari2019 vertical axis. Its correlation is not an independent test of whether "
-        "intrinsically easier tasks transfer better.",
+        "† In baseline-predictability panels, the same Bari2019 or author-model value appears on "
+        "the horizontal axis and inside the GRU-minus-baseline vertical axis. These correlations "
+        "are mathematically coupled and are not independent tests of whether intrinsically easier "
+        "tasks transfer better.",
         "",
         "## Task-design meta-analysis",
         "",
@@ -1103,17 +1556,7 @@ def _result_block(
         f"with embedding displacement and ρ={full_performance_e8['spearman_rho']:+.3f} "
         "with GRU advantage.",
         "",
-        "### Primary + stress-test task-design view",
-        "",
-        "**E=4**",
-        "",
-        "![Primary plus stress-test cohorts: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_primary_plus_stress.png)",
-        "",
-        "**E=8**",
-        "",
-        "![Primary plus stress-test cohorts, E8: task-design distance versus transfer and embedding displacement](../fig_task_design_drivers_primary_plus_stress_e8.png)",
-        "",
-        "### All-valid task-design view",
+        "### All-valid task-design view (primary + stress-test)",
         "",
         "**E=4**",
         "",
@@ -1247,12 +1690,25 @@ def main() -> None:
         dimension: json.loads(path.read_text())
         for dimension, path in TASK_DATA.items()
     }
+    llm_data = json.loads(LLM_DATA.read_text())
     expected = tuple(data_by_dimension[4]["contract"]["cohort_order"])
     for dimension, data in data_by_dimension.items():
+        task_data = task_data_by_dimension[dimension]
         if tuple(data["cohorts"]) != expected:
             raise AssertionError("Generalization-driver cohort order drifted")
+        if tuple(task_data["cohorts"]) != expected:
+            raise AssertionError("Task-design cohort order drifted")
         if int(data["contract"]["subject_embedding_size"]) != dimension:
             raise AssertionError("Generalization embedding-dimension contract drifted")
+        if int(task_data["contract"]["subject_embedding_size"]) != dimension:
+            raise AssertionError("Task-design embedding-dimension contract drifted")
+        if any(len(cohort["seeds"]) != 3 for cohort in data["cohorts"].values()):
+            raise AssertionError("Each cohort must contain exactly three source seeds")
+        if any(
+            data["cohorts"][name]["label"] != task_data["cohorts"][name]["label"]
+            for name in expected
+        ):
+            raise AssertionError("Generalization and task-design cohort labels drifted")
         if set(cohort["species"] for cohort in data["cohorts"].values()) != set(
             SPECIES_COLORS
         ):
@@ -1262,10 +1718,27 @@ def main() -> None:
             _plot_main(data, view, output)
         for view, output in R1_SCALE_MAIN_FIGURES[dimension].items():
             _plot_main(data, view, output, r1_scale=True)
+        for view, output in AUTHOR_MAIN_FIGURES[dimension].items():
+            _plot_main(data, view, output, reference="author")
+        for view, output in AUTHOR_R1_SCALE_MAIN_FIGURES[dimension].items():
+            _plot_main(
+                data,
+                view,
+                output,
+                r1_scale=True,
+                reference="author",
+            )
         for view, output in robustness_figures.items():
             _plot_robustness(data, view, output)
         for view, output in task_figures.items():
-            _plot_task_design(task_data_by_dimension[dimension], view, output)
+            _plot_task_design(
+                task_data_by_dimension[dimension],
+                data,
+                view,
+                output,
+            )
+    _plot_slide_synthesis(data_by_dimension[8], task_data_by_dimension[8])
+    _plot_focused_author_embedding_llm(data_by_dimension[8], llm_data)
     body = _result_block(data_by_dimension, task_data_by_dimension)
     text = REPORT.read_text()
     start_end = text.index(START) + len(START)
@@ -1283,6 +1756,16 @@ def main() -> None:
             for figures in R1_SCALE_MAIN_FIGURES.values()
             for output in figures.values()
         ),
+        *(
+            output
+            for figure_map in (AUTHOR_MAIN_FIGURES, AUTHOR_R1_SCALE_MAIN_FIGURES)
+            for figures in figure_map.values()
+            for output in figures.values()
+        ),
+        SLIDE_FIGURE_PNG,
+        SLIDE_FIGURE_SVG,
+        FOCUSED_FIGURE_PNG,
+        FOCUSED_FIGURE_SVG,
         REPORT,
     ]
     print("Wrote " + ", ".join(str(output) for output in outputs))
