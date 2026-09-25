@@ -1,0 +1,9 @@
+run_id,wandb_run_name,state,D,seed,beta,mult,heldout_ll,eval_ll,final_step,heldout_backfilled
+wave2-step-budget-and-penalty-extension-20260909-021546-917108c7,mice_snapshot_multisubject_disrnn_beta0.0003_lr0.001_multisubject_n300subj,finished,300,0,0.0003,0.5,0.7173545956611633,0.7245079278945923,107560,False
+wave2-step-budget-and-penalty-extension-20260909-021546-271e731c,mice_snapshot_multisubject_disrnn_beta0.0001_lr0.001_multisubject_n300subj,finished,300,0,0.0001,1.0,0.7232620716094971,0.7302583456039429,107562,False
+wave2-step-budget-and-penalty-extension-20260909-021546-7389639e,mice_snapshot_multisubject_disrnn_beta0.0003_lr0.001_multisubject_n301subj,finished,301,1,0.0003,0.5,0.7162119746208191,0.7289415597915649,107559,False
+wave2-step-budget-and-penalty-extension-20260909-021546-b15021b9,mice_snapshot_multisubject_disrnn_beta0.0001_lr0.001_multisubject_n301subj,finished,301,1,0.0001,1.0,0.7226338386535645,0.732501208782196,107562,False
+wave2-step-budget-and-penalty-extension-20260909-021546-95f4f701,mice_snapshot_multisubject_disrnn_beta0.0003_lr0.001_multisubject_n614subj,finished,614,0,0.0003,0.5,0.7220486998558044,0.72935551404953,107562,False
+wave2-step-budget-and-penalty-extension-20260909-021546-b54f9d3e,mice_snapshot_multisubject_disrnn_beta0.0003_lr0.001_multisubject_n614subj,finished,614,1,0.0003,0.5,0.7193759679794312,0.7272998094558716,107562,False
+wave2-step-budget-and-penalty-extension-20260909-021546-7a026328,mice_snapshot_multisubject_disrnn_beta0.0001_lr0.001_multisubject_n614subj,finished,614,0,0.0001,1.0,0.7241230607032776,0.7312124967575073,107562,False
+wave2-step-budget-and-penalty-extension-20260909-021546-f046f2d8,mice_snapshot_multisubject_disrnn_beta0.0001_lr0.001_multisubject_n614subj,finished,614,1,0.0001,1.0,0.7240433096885681,0.7308166027069092,107561,False

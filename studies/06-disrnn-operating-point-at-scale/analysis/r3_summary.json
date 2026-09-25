@@ -1,0 +1,183 @@
+{
+  "_meta": {
+    "produced_by": "analysis/r3_penalty_edge_extension.py",
+    "produced_at_pt": "2026-09-14T15:18:15-07:00",
+    "dispatcher_git_sha": null,
+    "wrapper_git_sha": null,
+    "wandb_groups": [
+      "mult-d-grid@20260718-151409",
+      "wave2-step-budget-and-penalty-extension@20260909-021546"
+    ]
+  },
+  "note": "wave2 pulled via W&B GraphQL from the sandbox (wandb.Api() is blocked there); see analysis/pull_wave2_grid.py docstring. 8/8 wave2 rows state=='finished', 0 wave2 rows backfilled. The COMBINED analysis (wave2 + wave1) is not backfill-free: 4 wave-1 (mult-d-grid) row(s) used in these cells are heldout_backfilled=True -- see the r3 report's caveats section for which cell and why.",
+  "progress": {
+    "wave2_total": 8,
+    "wave2_finished": 8,
+    "wave2_backfilled": 0,
+    "wave1_backfilled_rows_used": 4
+  },
+  "cells": [
+    {
+      "D": 300,
+      "mult": 1.0,
+      "beta": 0.001,
+      "n": 2,
+      "heldout_mean": 0.7167093753814697,
+      "heldout_sem": 0.0009186863899230956,
+      "gap_mean": 0.00803375244140625,
+      "gap_sem": 0.0016151666641235352,
+      "axis": "beta"
+    },
+    {
+      "D": 300,
+      "mult": 1.0,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.7191898345065204,
+      "heldout_sem": 0.0015206218647870193,
+      "gap_mean": 0.008132803528300203,
+      "gap_sem": 0.0014329434323224197,
+      "axis": "beta"
+    },
+    {
+      "D": 300,
+      "mult": 1.0,
+      "beta": 0.0001,
+      "n": 2,
+      "heldout_mean": 0.7229479551315308,
+      "heldout_sem": 0.00031411647796630854,
+      "gap_mean": 0.008431822061538696,
+      "gap_sem": 0.0014355480670928955,
+      "axis": "beta"
+    },
+    {
+      "D": 300,
+      "mult": 10.0,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.7169696688652039,
+      "heldout_sem": 0.0008581876754760742,
+      "gap_mean": 0.009819000959396362,
+      "gap_sem": 0.0018984973430633543,
+      "axis": "mult"
+    },
+    {
+      "D": 300,
+      "mult": 5.0,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.71844972829806,
+      "heldout_sem": 0.0004330820763872589,
+      "gap_mean": 0.00853787202847811,
+      "gap_sem": 0.00021756222598090513,
+      "axis": "mult"
+    },
+    {
+      "D": 300,
+      "mult": 2.0,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.7182738357009899,
+      "heldout_sem": 0.0001073307571399784,
+      "gap_mean": 0.009514642435072718,
+      "gap_sem": 0.0007451646747600459,
+      "axis": "mult"
+    },
+    {
+      "D": 300,
+      "mult": 0.5,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.7167832851409912,
+      "heldout_sem": 0.0005713105201721191,
+      "gap_mean": 0.009941458702087402,
+      "gap_sem": 0.0027881264686584473,
+      "axis": "mult"
+    },
+    {
+      "D": 614,
+      "mult": 1.0,
+      "beta": 0.001,
+      "n": 2,
+      "heldout_mean": 0.7160319685935974,
+      "heldout_sem": 0.00047409534454345703,
+      "gap_mean": 0.007888436317443848,
+      "gap_sem": 0.0003700852394104004,
+      "axis": "beta"
+    },
+    {
+      "D": 614,
+      "mult": 1.0,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.7220835983753204,
+      "heldout_sem": 0.0003832876682281494,
+      "gap_mean": 0.006889224052429199,
+      "gap_sem": 0.00021672248840332029,
+      "axis": "beta"
+    },
+    {
+      "D": 614,
+      "mult": 1.0,
+      "beta": 0.0001,
+      "n": 2,
+      "heldout_mean": 0.7240831851959229,
+      "heldout_sem": 3.987550735473633e-05,
+      "gap_mean": 0.0069313645362854,
+      "gap_sem": 0.0001580715179443359,
+      "axis": "beta"
+    },
+    {
+      "D": 614,
+      "mult": 10.0,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.7190671265125275,
+      "heldout_sem": 0.0003851950168609619,
+      "gap_mean": 0.007071495056152344,
+      "gap_sem": 0.0004259347915649414,
+      "axis": "mult"
+    },
+    {
+      "D": 614,
+      "mult": 5.0,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.7182694375514984,
+      "heldout_sem": 0.0003167688846588135,
+      "gap_mean": 0.0078810453414917,
+      "gap_sem": 0.0002052783966064453,
+      "axis": "mult"
+    },
+    {
+      "D": 614,
+      "mult": 2.0,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.7164171636104584,
+      "heldout_sem": 0.0007689893245697021,
+      "gap_mean": 0.008387863636016846,
+      "gap_sem": 0.00017851591110229492,
+      "axis": "mult"
+    },
+    {
+      "D": 614,
+      "mult": 0.5,
+      "beta": 0.0003,
+      "n": 2,
+      "heldout_mean": 0.7207123339176178,
+      "heldout_sem": 0.0013363659381866455,
+      "gap_mean": 0.007615327835083008,
+      "gap_sem": 0.0003085136413574219,
+      "axis": "mult"
+    }
+  ],
+  "gru_reference": {
+    "10": 0.7219,
+    "30": 0.725,
+    "100": 0.7262,
+    "300": 0.7267,
+    "614": 0.7268
+  },
+  "rl_baseline": 0.717
+}
