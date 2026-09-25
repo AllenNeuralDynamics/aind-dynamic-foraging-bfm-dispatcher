@@ -8,4 +8,4 @@
 - Brier score: `0.1768038975`
 - Accuracy: `0.7295758052`
 
-This successful run feeds `analysis/author_baseline_results.json` and Result 2.
+This successful run feeds `analysis/author_baseline_results.json` and Result 1.

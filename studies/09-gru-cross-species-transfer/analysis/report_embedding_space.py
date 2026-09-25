@@ -1,4 +1,4 @@
-"""Render the offline D=614 subject-embedding analysis."""
+"""Render source-fitted PCA and Mahalanobis analyses for all Stage-A cohorts."""
 
 from __future__ import annotations
 
@@ -19,36 +19,45 @@ from plot_style import apply_presentation_style  # noqa: E402
 DATA = STUDY / "analysis" / "embedding_space_results.json"
 PCA_FIGURE = STUDY / "analysis" / "fig_embedding_space_pca.png"
 DISTANCE_FIGURE = STUDY / "analysis" / "fig_embedding_space_distance.png"
-REPORT = STUDY / "analysis" / "reports" / "r3-embedding-space.md"
-START = "<!-- BEGIN result-3 -->"
-END = "<!-- END result-3 -->"
-GROUP_ORDER = ("aind_source", "aind_heldout", "grossman", "chen", "zid")
-TARGET_ORDER = GROUP_ORDER[1:]
-COLORS = {
-    "aind_source": "#A7A7A7",
-    "aind_heldout": "#111111",
-    "grossman": "#DD8452",
-    "chen": "#55A868",
-    "zid": "#8172B3",
-}
-MARKERS = {
-    "aind_source": ".",
-    "aind_heldout": "o",
-    "grossman": "^",
-    "chen": "s",
-    "zid": "D",
-}
+REPORT = STUDY / "analysis" / "reports" / "r2-embedding-space.md"
+START = "<!-- BEGIN result-2 -->"
+END = "<!-- END result-2 -->"
 PAIR_INDICES = ((0, 1), (0, 2), (1, 2))
 CHI2_95_DF2 = 5.991464547107979
+COLORS = {
+    "aind_source": "#B7B7B7",
+    "aind_heldout": "#111111",
+    "grossman": "#4C72B0",
+    "chen": "#55A868",
+    "zid": "#8172B3",
+    "lebedeva": "#C44E52",
+    "beron": "#64B5CD",
+    "kwak": "#937860",
+    "miller": "#CCB974",
+    "findling": "#DA8BC3",
+    "tang": "#8C8C8C",
+    "alsio": "#1F77B4",
+    "eckstein": "#2CA02C",
+    "costa": "#9467BD",
+    "lopez_mouse": "#D62728",
+}
+MARKERS = (".", "o", "^", "s", "D", "v", "P", "X", "<", ">", "h", "p", "*", "8", "d")
 
 
-def _arrays(seed: dict) -> dict[str, np.ndarray]:
+def _group_order(data: dict) -> tuple[str, ...]:
+    order = tuple(data["groups"])
+    if order[:2] != ("aind_source", "aind_heldout"):
+        raise AssertionError("Embedding reference group order drifted")
+    return order
+
+
+def _arrays(seed: dict, order: tuple[str, ...]) -> dict[str, np.ndarray]:
     return {
         name: np.asarray(
             [subject["embedding"] for subject in seed["groups"][name]["subjects"]],
             dtype=float,
         )
-        for name in GROUP_ORDER
+        for name in order
     }
 
 
@@ -69,42 +78,48 @@ def _project(values: np.ndarray, mean: np.ndarray, components: np.ndarray) -> np
     return (values - mean) @ components.T
 
 
-def _distances(values: np.ndarray, mean: np.ndarray, inverse_covariance: np.ndarray) -> np.ndarray:
+def _distances(
+    values: np.ndarray, mean: np.ndarray, inverse_covariance: np.ndarray
+) -> np.ndarray:
     centered = values - mean
     return np.sqrt(np.einsum("ij,jk,ik->i", centered, inverse_covariance, centered))
 
 
-def _statistics(seed: dict) -> dict:
-    arrays = _arrays(seed)
+def _statistics(seed: dict, order: tuple[str, ...]) -> dict:
+    arrays = _arrays(seed, order)
     source = arrays["aind_source"]
     mean = source.mean(axis=0)
     inverse_covariance = np.linalg.pinv(np.cov(source, rowvar=False))
-    all_distances = {
+    distances = {
         name: _distances(values, mean, inverse_covariance)
         for name, values in arrays.items()
     }
-    threshold = float(np.quantile(all_distances["aind_source"], 0.95))
+    threshold = float(np.quantile(distances["aind_source"], 0.95))
     return {
         "threshold": threshold,
         "groups": {
             name: {
-                "distances": distances,
-                "median": float(np.median(distances)),
-                "outside": float(np.mean(distances > threshold)),
+                "distances": value,
+                "median": float(np.median(value)),
+                "outside": float(np.mean(value > threshold)),
                 "centroid": float(
-                    _distances(arrays[name].mean(axis=0)[None, :], mean, inverse_covariance)[0]
+                    _distances(
+                        arrays[name].mean(axis=0)[None, :],
+                        mean,
+                        inverse_covariance,
+                    )[0]
                 ),
             }
-            for name, distances in all_distances.items()
+            for name, value in distances.items()
         },
     }
 
 
-def _plot_pca(data: dict) -> None:
+def _plot_pca(data: dict, order: tuple[str, ...]) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(3, 3, figsize=(12.8, 12.2), constrained_layout=True)
+    fig, axes = plt.subplots(3, 3, figsize=(14.8, 13.2), constrained_layout=True)
     for row, seed in enumerate(data["seeds"]):
-        arrays = _arrays(seed)
+        arrays = _arrays(seed, order)
         mean, components, explained = _pca(arrays["aind_source"])
         projected = {
             name: _project(values, mean, components) for name, values in arrays.items()
@@ -112,145 +127,241 @@ def _plot_pca(data: dict) -> None:
         for column, (x_index, y_index) in enumerate(PAIR_INDICES):
             axis = axes[row, column]
             source_scores = projected["aind_source"]
-            std_x = float(np.std(source_scores[:, x_index], ddof=1))
-            std_y = float(np.std(source_scores[:, y_index], ddof=1))
             axis.add_patch(
                 Ellipse(
                     (0, 0),
-                    width=2 * np.sqrt(CHI2_95_DF2) * std_x,
-                    height=2 * np.sqrt(CHI2_95_DF2) * std_y,
+                    width=2
+                    * np.sqrt(CHI2_95_DF2)
+                    * float(np.std(source_scores[:, x_index], ddof=1)),
+                    height=2
+                    * np.sqrt(CHI2_95_DF2)
+                    * float(np.std(source_scores[:, y_index], ddof=1)),
                     facecolor="none",
                     edgecolor="#777777",
                     linestyle="--",
-                    linewidth=1.2,
+                    linewidth=1,
                     zorder=1,
                 )
             )
-            for name in GROUP_ORDER:
+            for group_index, name in enumerate(order):
                 values = projected[name]
                 axis.scatter(
                     values[:, x_index],
                     values[:, y_index],
-                    s=10 if name == "aind_source" else 20,
-                    alpha=0.22 if name == "aind_source" else 0.58,
+                    s=8 if name == "aind_source" else 17,
+                    alpha=0.16 if name == "aind_source" else 0.48,
                     color=COLORS[name],
-                    marker=MARKERS[name],
+                    marker=MARKERS[group_index],
                     edgecolors="none",
                     label=data["groups"][name]["label"],
                     zorder=2 if name == "aind_source" else 3,
                 )
-            axis.scatter(0, 0, marker="*", s=135, color="#CCB974", edgecolor="#333333", linewidth=0.5, zorder=5)
+            axis.scatter(
+                0,
+                0,
+                marker="*",
+                s=115,
+                color="#FFD54F",
+                edgecolor="#333333",
+                linewidth=0.5,
+                zorder=5,
+            )
             axis.axhline(0, color="#DDDDDD", linewidth=0.7, zorder=0)
             axis.axvline(0, color="#DDDDDD", linewidth=0.7, zorder=0)
             axis.set_xlabel(f"PC{x_index + 1} ({explained[x_index] * 100:.1f}%)")
             axis.set_ylabel(f"PC{y_index + 1} ({explained[y_index] * 100:.1f}%)")
-            axis.set_aspect("equal", adjustable="datalim")
             if row == 0:
                 axis.set_title(f"PC{x_index + 1} vs PC{y_index + 1}")
             if column == 0:
-                axis.text(-0.26, 0.5, f"Seed {seed['seed']}", transform=axis.transAxes, rotation=90, va="center", ha="center", fontsize=13, fontweight="bold")
+                axis.text(
+                    -0.23,
+                    0.5,
+                    f"Seed {seed['seed']}",
+                    transform=axis.transAxes,
+                    rotation=90,
+                    va="center",
+                    ha="center",
+                    fontsize=12,
+                    fontweight="bold",
+                )
     handles, labels = axes[0, 0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="outside lower center", ncol=5, frameon=False)
-    fig.suptitle("Unseen subjects in the D=614 source-trained embedding space\nPCA is fit on source-training AIND mice separately for each seed", fontsize=16)
+    fig.legend(handles, labels, loc="outside lower center", ncol=5, frameon=False, fontsize=8)
+    fig.suptitle(
+        "Held-out AIND and external subjects in source-fitted embedding PCA\n"
+        "PCA is fit separately on the 614 source-training mice for each seed",
+        fontsize=16,
+    )
     fig.savefig(PCA_FIGURE, bbox_inches="tight", dpi=180)
     plt.close(fig)
 
 
-def _plot_distances(data: dict, statistics: list[dict]) -> None:
+def _plot_distances(
+    data: dict, order: tuple[str, ...], statistics: list[dict]
+) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(1, 3, figsize=(14.2, 4.9), constrained_layout=True, sharey=True)
+    fig, axes = plt.subplots(3, 1, figsize=(19, 13), constrained_layout=True)
     rng = np.random.default_rng(17)
     for axis, seed, seed_statistics in zip(axes, data["seeds"], statistics):
-        values = [seed_statistics["groups"][name]["distances"] for name in GROUP_ORDER]
-        violins = axis.violinplot(values, positions=range(len(values)), showextrema=False, widths=0.78)
-        for body, name in zip(violins["bodies"], GROUP_ORDER):
+        values = [seed_statistics["groups"][name]["distances"] for name in order]
+        positions = np.arange(len(values))
+        violins = axis.violinplot(
+            values, positions=positions, showextrema=False, widths=0.76
+        )
+        for body, name in zip(violins["bodies"], order):
             body.set_facecolor(COLORS[name])
             body.set_edgecolor("none")
-            body.set_alpha(0.42)
-        for position, (name, distances) in enumerate(zip(GROUP_ORDER, values)):
-            jitter = rng.uniform(-0.16, 0.16, len(distances))
-            axis.scatter(position + jitter, distances, s=7, alpha=0.28, color=COLORS[name], edgecolors="none")
-            axis.scatter(position, np.median(distances), s=34, marker="_", linewidth=2.2, color="#111111", zorder=5)
-        axis.axhline(seed_statistics["threshold"], color="#777777", linestyle="--", linewidth=1.2, label="source empirical 95th percentile")
-        axis.set_xticks(range(len(GROUP_ORDER)), ["Source", "AIND\nheld-out", "Grossman", "Chen", "Zid"])
+            body.set_alpha(0.36)
+        for position, (name, distances) in enumerate(zip(order, values)):
+            jitter = rng.uniform(-0.14, 0.14, len(distances))
+            axis.scatter(
+                position + jitter,
+                distances,
+                s=5,
+                alpha=min(0.3, 15 / len(distances)),
+                color=COLORS[name],
+                edgecolors="none",
+            )
+            axis.scatter(
+                position,
+                np.median(distances),
+                s=30,
+                marker="_",
+                linewidth=2,
+                color="#111111",
+                zorder=5,
+            )
+        axis.axhline(
+            seed_statistics["threshold"],
+            color="#777777",
+            linestyle="--",
+            linewidth=1,
+            label="source empirical 95th percentile",
+        )
+        axis.set_xticks(
+            positions,
+            [
+                data["groups"][name]["label"].replace(" ", "\n", 1)
+                for name in order
+            ],
+            fontsize=7.5,
+        )
         axis.set_title(f"Seed {seed['seed']}")
+        axis.set_ylabel("4D Mahalanobis distance")
         axis.grid(axis="y", alpha=0.2)
         axis.legend(frameon=False, fontsize=8, loc="upper right")
-    axes[0].set_ylabel("Full 4D Mahalanobis distance\nfrom source center")
-    fig.suptitle("Distance from the source-training AIND embedding distribution", fontsize=15)
+    fig.suptitle(
+        "Distance from the source-training AIND embedding distribution",
+        fontsize=16,
+    )
     fig.savefig(DISTANCE_FIGURE, bbox_inches="tight", dpi=180)
     plt.close(fig)
 
 
-def _report_body(data: dict, statistics: list[dict]) -> str:
-    labels = data["groups"]
-    rows = []
-    for seed, seed_statistics in zip(data["seeds"], statistics):
-        for name in TARGET_ORDER:
-            group = seed_statistics["groups"][name]
-            rows.append(
-                f"| {seed['seed']} | {labels[name]['label']} | {labels[name]['n_subjects']} | "
-                f"{group['median']:.2f} | {group['centroid']:.2f} | {group['outside'] * 100:.1f}% |"
-            )
-    direction = []
-    for name in TARGET_ORDER[1:]:
-        count = sum(
-            item["groups"][name]["median"] > item["groups"]["aind_heldout"]["median"]
-            for item in statistics
-        )
-        direction.append(f"{labels[name]['label']} ({count}/3 seeds)")
+def _report_body(
+    data: dict, order: tuple[str, ...], statistics: list[dict]
+) -> str:
+    external = order[2:]
     explained = []
     for seed in data["seeds"]:
-        source = _arrays(seed)["aind_source"]
-        _, _, variance = _pca(source)
+        _, _, variance = _pca(_arrays(seed, order)["aind_source"])
         explained.append(float(variance[:3].sum()))
-    return f"""{START}
-## Result
+    rankings = sorted(
+        (
+            np.mean([item["groups"][name]["median"] for item in statistics]),
+            name,
+        )
+        for name in external
+    )
+    rows = []
+    for seed, seed_statistics in zip(data["seeds"], statistics):
+        for name in order[1:]:
+            group = seed_statistics["groups"][name]
+            rows.append(
+                f"| {seed['seed']} | {data['groups'][name]['label']} | "
+                f"{data['groups'][name]['species']} | {data['groups'][name]['n_subjects']} | "
+                f"{group['median']:.2f} | {group['centroid']:.2f} | "
+                f"{group['outside'] * 100:.1f}% |"
+            )
+    direction = [
+        (
+            name,
+            sum(
+                item["groups"][name]["median"]
+                > item["groups"]["aind_heldout"]["median"]
+                for item in statistics
+            ),
+        )
+        for name in external
+    ]
+    return f"""## Result
 
-![Subject embeddings in source-fitted PCA space](../fig_embedding_space_pca.png)
+![All transferred subjects in source-fitted PCA space](../fig_embedding_space_pca.png)
 
-The comparison is deliberately anchored on **held-out AIND mice**, not on the source-training mice. The 149 held-out AIND mice and all external subjects were unseen while the GRU core was trained; each entered at the source-embedding mean and received the same 500-step, learning-rate-0.001 embedding-only adaptation. The 614 source-training mice define the coordinate system and reference distribution.
+The primary comparison is **held-out AIND mice versus external subjects**. All of
+these subjects were unseen during GRU-core training, initialized at the source
+embedding mean, and adapted for the same 500 steps at learning rate 0.001 while
+the core remained frozen. The 614 source-training mice define the coordinate
+system but are not treated as the transfer control.
 
-Each seed has its own independently learned embedding coordinates, so PCA was fit on that seed's source-training mice and no raw coordinates were pooled across seeds. The first three PCs contain {min(explained) * 100:.1f}%--{max(explained) * 100:.1f}% of source variance across seeds. The star is the source mean and therefore the initialization point for every adapted subject; the dashed ellipse is the Gaussian 95% contour of the source distribution in each displayed 2D projection.
+Kwak uses the corrected canonical choice orientation (`0=left, 1=right`),
+converted from the release's `0=right, 1=left` encoding. Its embedding points
+therefore come from the corrected D=614 reruns rather than the superseded
+2026-09-05 launch.
+
+PCA is fit independently to each seed's source-training mice; raw coordinates
+are never pooled across seeds. The first three PCs explain
+{min(explained) * 100:.1f}%–{max(explained) * 100:.1f}% of source variance. The
+star is the common initialization point and the dashed ellipse is the Gaussian
+95% source contour in each displayed projection.
 
 ![Full-dimensional distance from the source distribution](../fig_embedding_space_distance.png)
 
-The second figure checks the same question in the full four-dimensional space rather than relying on a 2D projection. Distances use each seed's source mean and covariance; the dashed line is that seed's empirical source 95th percentile. External median distance exceeds the held-out-AIND median for {', '.join(direction)}. This is descriptive evidence of how far each transferred cohort must move in the learned subject space, not a test of a pure species effect.
+The Mahalanobis analysis uses all four embedding dimensions and each seed's
+source covariance. External median distance exceeds the held-out-AIND median in
+{'; '.join(f"{data['groups'][name]['label']} ({count}/3 seeds)" for name, count in direction)}.
 
-| seed | population | n | median distance | centroid distance | outside source 95% |
-|---:|---|---:|---:|---:|---:|
+| seed | population | species | n | median distance | centroid distance | outside source 95% |
+|---:|---|---|---:|---:|---:|---:|
 {chr(10).join(rows)}
 
-## Scientific interpretation
+## Cross-cohort read
 
-- **Matched internal control:** held-out AIND mice are the clean reference for transfer because, like external subjects, they were absent from source-core training and only their embeddings were adapted.
-- **Main result:** held-out AIND is calibrated to the source distribution (4.0%--5.4% outside the source 95th percentile), Grossman is moderately shifted (14.6%--22.9%), and Chen (100%) and Zid (97.3%--98.1%) are strongly displaced in every seed.
-- **Task is a better first explanation than species:** Chen mice and Zid humans share the restless random-walk task and both move far from the AIND manifold, while Grossman mice perform a blockwise task closer to AIND dynamic foraging and remain much nearer. This repeated cross-seed geometry argues against reading the Zid separation as simply mouse versus human.
-- **What proximity means:** overlap with held-out AIND says the frozen core can represent the target behavior using subject coordinates similar to those used for new in-distribution mice. Larger distance says adaptation found a more out-of-distribution coordinate; it does not by itself mean worse prediction.
-- **What this cannot identify:** dataset, task schedule, species, recording duration, and adaptation-data volume change together. Consequently, external separation cannot be assigned to species alone. Grossman and Chen are especially useful mouse controls for judging whether task structure, rather than species, drives the displacement.
-- **Seed discipline:** agreement of the qualitative ordering across independently trained spaces is stronger evidence than any absolute PC direction. PC axes and embedding coordinates have no cross-seed identity.
+Average median distance across the three independently trained spaces, nearest
+to farthest, is:
+
+{chr(10).join(f"{index}. **{data['groups'][name]['label']}** — {value:.2f}" for index, (value, name) in enumerate(rankings, start=1))}
+
+This ordering is descriptive. Species, task schedule, reward contingencies,
+recording duration, and adaptation-data volume change together across these
+datasets, so distance cannot be interpreted as a pure species effect. Proximity
+means the frozen core can express a target near the coordinates used by new
+in-distribution mice; distance does not by itself imply poor prediction.
 
 ## Reproduce
 
-The committed JSON contains every 4D embedding plus SHA-256 digests of the downloaded tables, subject maps, and adaptation summaries. Regenerate both figures and this report offline with:
+The committed JSON contains every 4D embedding plus SHA-256 digests of the
+downloaded embedding tables, subject maps, and adaptation summaries. Regenerate
+both figures and this report offline with:
 
 ```bash
-make r3
+make r2
 ```
-{END}"""
+"""
 
 
 def main() -> None:
     data = json.loads(DATA.read_text())
-    if data["contract"]["cross_seed_rule"] != "Never pool raw coordinates; fit and interpret each seed separately":
-        raise AssertionError("Unexpected cross-seed analysis contract")
-    statistics = [_statistics(seed) for seed in data["seeds"]]
-    _plot_pca(data)
-    _plot_distances(data, statistics)
-    report = REPORT.read_text()
-    before, remainder = report.split(START, 1)
-    _, after = remainder.split(END, 1)
-    REPORT.write_text(before + _report_body(data, statistics) + after)
+    order = _group_order(data)
+    if set(order) != set(COLORS):
+        raise AssertionError("Embedding plot color map does not match frozen groups")
+    statistics = [_statistics(seed, order) for seed in data["seeds"]]
+    _plot_pca(data, order)
+    _plot_distances(data, order, statistics)
+    body = _report_body(data, order, statistics)
+    text = REPORT.read_text()
+    start_end = text.index(START) + len(START)
+    end_start = text.index(END, start_end)
+    REPORT.write_text(text[:start_end] + "\n" + body + text[end_start:])
     print(f"Wrote {PCA_FIGURE}, {DISTANCE_FIGURE}, and {REPORT}")
 
 

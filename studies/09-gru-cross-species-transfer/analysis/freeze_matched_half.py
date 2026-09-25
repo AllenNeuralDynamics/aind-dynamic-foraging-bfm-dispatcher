@@ -7,7 +7,9 @@ import hashlib
 import json
 import netrc
 import os
+import subprocess
 import sys
+import time
 from pathlib import Path
 
 import requests
@@ -25,15 +27,42 @@ WANDB_GROUPS = [
     "gru-grossman-matched-half@20260905-022602",
     "gru-chen-matched-half@20260905-024731",
     "gru-zid-matched-half@20260905-025752",
+    "gru-lebedeva-matched-half@20260905-232924",
+    "gru-beron-matched-half@20260905-232924",
+    "gru-kwak-matched-half@20260906-071413",
+    "gru-miller-matched-half@20260905-232924",
+    "gru-findling-matched-half@20260905-232924",
+    "gru-tang-matched-half@20260905-232924",
+    "gru-alsio-matched-half@20260905-232925",
+    "gru-eckstein-matched-half@20260905-232924",
+    "gru-costa-matched-half@20260905-232924",
+    "gru-lopez-mouse-matched-half@20260905-232924",
     "q-matched-half@20260905-024031",
+    "q-expanded-matched-half@20260906-001656",
+    "q-expanded-matched-half@20260906-kwak-choicefix",
 ]
 GRU_LAUNCHES = {
     "grossman": (WANDB_GROUPS[0], "01M1RE7RE42MHTHFDDRYJWTWHV"),
     "chen": (WANDB_GROUPS[1], "01M1RFF0YVREC2924A9Z2Y13XF"),
     "zid": (WANDB_GROUPS[2], "01M1RG1X3W0VK8ZBYQ8ZB4V4BR"),
+    "lebedeva": (WANDB_GROUPS[3], "01M1TPMMP0HY1F03AKFKEJSK4S"),
+    "beron": (WANDB_GROUPS[4], "01M1TPMFZM1GYD60REY6JHTQSR"),
+    "kwak": (WANDB_GROUPS[5], "01M1VH47Q8M8N75FKM2F5NX7AT"),
+    "miller": (WANDB_GROUPS[6], "01M1TPMHVARYQ17AYFSSTFCACS"),
+    "findling": (WANDB_GROUPS[7], "01M1TPMS3BQPDYNEV1K98PY43X"),
+    "tang": (WANDB_GROUPS[8], "01M1TPMY71W6PEGRPTRHMYQQDM"),
+    "alsio": (WANDB_GROUPS[9], "01M1TPNT60G2REHV0BS2JYJH32"),
+    "eckstein": (WANDB_GROUPS[10], "01M1TPN53SDJYVN9TE5YQ6ZEXY"),
+    "costa": (WANDB_GROUPS[11], "01M1TPN1PNEMN6Q1036ZAXDCNV"),
+    "lopez_mouse": (WANDB_GROUPS[12], "01M1TPMW5BXV82QQ0MS3AWWZE3"),
 }
-Q_GROUP = WANDB_GROUPS[3]
-Q_SLURM_ARRAY_JOB_ID = "25580070"
+Q_LAUNCHES = [
+    (WANDB_GROUPS[13], "25580070", set()),
+    (WANDB_GROUPS[14], "25581304", {"kwak"}),
+]
+Q_OVERRIDES = {
+    "kwak": (WANDB_GROUPS[15], "25581496"),
+}
 CACHE = STUDY / "analysis" / "_cache_matched_half"
 OUTPUT = STUDY / "analysis" / "matched_half_results.json"
 
@@ -93,6 +122,40 @@ def _wandb_runs(group: str) -> dict[str, dict]:
     return {node["name"]: node for node in nodes}
 
 
+def _download(url: str, path: Path) -> None:
+    """Download a potentially large artifact file with bounded retries and resume."""
+    partial = path.with_suffix(path.suffix + ".part")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    for attempt in range(5):
+        offset = partial.stat().st_size if partial.exists() else 0
+        headers = {"Range": f"bytes={offset}-"} if offset else {}
+        try:
+            with requests.get(
+                url,
+                headers=headers,
+                stream=True,
+                timeout=(60, 120),
+            ) as response:
+                if offset and response.status_code == 200:
+                    offset = 0
+                elif offset and response.status_code != 206:
+                    response.raise_for_status()
+                    raise RuntimeError(
+                        f"Artifact server did not honor byte range at offset {offset}"
+                    )
+                response.raise_for_status()
+                with partial.open("ab" if offset else "wb") as stream:
+                    for chunk in response.iter_content(chunk_size=8 * 1024 * 1024):
+                        if chunk:
+                            stream.write(chunk)
+            partial.replace(path)
+            return
+        except requests.RequestException:
+            if attempt == 4:
+                raise
+            time.sleep(2**attempt)
+
+
 def _unwrapped(config: dict, key: str) -> dict:
     value = config.get(key, {})
     return value.get("value", value) if isinstance(value, dict) else {}
@@ -129,27 +192,38 @@ def _cached_wandb_report_files(artifact: dict, destination: Path) -> dict[str, b
     for suffix, matches in selected.items():
         path = destination / suffix
         if not path.exists():
-            response = requests.get(matches[0]["directUrl"], timeout=300)
-            response.raise_for_status()
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(response.content)
+            _download(matches[0]["directUrl"], path)
         output[suffix] = path.read_bytes()
     return output
 
 
-def _trial_key_digest(data: bytes) -> tuple[str, int]:
+def _prediction_summary(data: bytes) -> tuple[str, int, list[dict]]:
     digest = hashlib.sha256()
     rows = 0
+    sessions: dict[tuple[str, str], list[float]] = {}
     text = data.decode("utf-8").splitlines()
     for row in csv.DictReader(text):
         digest.update(
             f"{row['subject_id']}\t{row['ses_idx']}\t{row['trial']}\t{row['choice']}\n".encode()
         )
+        key = (row["subject_id"], row["ses_idx"])
+        aggregate = sessions.setdefault(key, [0.0, 0])
+        aggregate[0] += float(row["log_likelihood_nats"])
+        aggregate[1] += 1
         rows += 1
-    return digest.hexdigest(), rows
+    per_session = [
+        {
+            "subject_id": subject_id,
+            "ses_idx": ses_idx,
+            "n_trials": int(count),
+            "mean_log_likelihood_nats": total / count,
+        }
+        for (subject_id, ses_idx), (total, count) in sorted(sessions.items())
+    ]
+    return digest.hexdigest(), rows, per_session
 
 
-def _report_metrics(metrics: dict) -> dict:
+def _report_metrics(metrics: dict, per_session: list[dict]) -> dict:
     """Keep only the likelihood values consumed by the committed report."""
     return {
         "n_trials": metrics["n_trials"],
@@ -159,40 +233,40 @@ def _report_metrics(metrics: dict) -> dict:
             item["subject_id"]: item["mean_log_likelihood_nats"]
             for item in metrics["per_subject"]
         },
+        "per_session": per_session,
     }
 
 
-def _cached_beaker_file(beaker, dataset, file_info, destination: Path) -> bytes:
-    if destination.exists():
-        data = destination.read_bytes()
-    else:
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        data = beaker.dataset.get_file(dataset, file_info, quiet=True)
-        destination.write_bytes(data)
-    digest = hashlib.sha256(data).hexdigest()
-    if digest != file_info.digest.value:
-        raise AssertionError(f"Cached file digest mismatch for {file_info.path}")
-    return data
-
-
-def _job_env(job) -> dict[str, str]:
+def _job_env(job: dict) -> dict[str, str]:
     return {
-        item.name: item.value
-        for item in job.execution.spec.env_vars
-        if item.value is not None
+        item["name"]: item["value"]
+        for item in job["execution"]["spec"]["envVars"]
+        if item.get("value") is not None
     }
+
+
+def _beaker_tasks(experiment_id: str) -> list[dict]:
+    result = subprocess.run(
+        ["beaker", "experiment", "tasks", experiment_id, "--format", "json"],
+        capture_output=True,
+        text=True,
+        timeout=120,
+        check=True,
+    )
+    return json.loads(result.stdout)
 
 
 def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]:
-    from beaker import Beaker
-
-    beaker = Beaker.from_env(check_for_upgrades=False, default_org="ai1")
     runs = _wandb_runs(group)
-    experiment = beaker.experiment.get(experiment_id)
     records = []
-    for job in experiment.jobs:
-        if str(job.status.current) != "finalized" or job.status.exit_code != 0:
-            raise AssertionError(f"Beaker job {job.id} is not a successful final result")
+    tasks = _beaker_tasks(experiment_id)
+    if len(tasks) != 15:
+        raise AssertionError(f"Beaker experiment {experiment_id} has {len(tasks)} tasks")
+    for task in tasks:
+        job = task["jobs"][-1]
+        status = job["status"]
+        if "finalized" not in status or status.get("exitCode") != 0:
+            raise AssertionError(f"Beaker job {job['id']} is not a successful final result")
         env = _job_env(job)
         run_id = env["WANDB_RUN_ID"]
         node = runs.pop(run_id)
@@ -204,30 +278,16 @@ def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]
         if target.get("dataset") != dataset_name:
             raise AssertionError(f"W&B run {run_id} targets {target.get('dataset')!r}")
 
-        result_dataset = beaker.job.results(job)
-        if result_dataset is None:
-            raise AssertionError(f"Beaker job {job.id} has no result dataset")
-        files = beaker.dataset.ls(result_dataset)
-        selected = {
-            suffix: [item for item in files if item.path.endswith(suffix)]
-            for suffix in ("test_metrics.json", "test_trial_predictions.csv")
-        }
-        if any(len(matches) != 1 for matches in selected.values()):
-            raise AssertionError(f"Beaker result {result_dataset.id} has ambiguous report files")
         source_key = source["key"]
-        metrics_bytes = _cached_beaker_file(
-            beaker,
-            result_dataset,
-            selected["test_metrics.json"][0],
-            CACHE / "gru" / dataset_name / source_key / "test_metrics.json",
+        artifact = _artifact(node, "external-gru-output-")
+        files = _cached_wandb_report_files(
+            artifact, CACHE / "gru" / dataset_name / source_key
         )
-        predictions_bytes = _cached_beaker_file(
-            beaker,
-            result_dataset,
-            selected["test_trial_predictions.csv"][0],
-            CACHE / "gru" / dataset_name / source_key / "test_trial_predictions.csv",
+        metrics_bytes = files["test_metrics.json"]
+        predictions_bytes = files["test_trial_predictions.csv"]
+        trial_digest, n_prediction_rows, per_session = _prediction_summary(
+            predictions_bytes
         )
-        trial_digest, n_prediction_rows = _trial_key_digest(predictions_bytes)
         metrics = json.loads(metrics_bytes)
         summary = json.loads(node["summaryMetrics"] or "{}")
         if not abs(
@@ -243,14 +303,14 @@ def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]
                 "seed": source["seed"],
                 "wandb_run_id": run_id,
                 "wandb_url": f"https://wandb.ai/{ENTITY}/{PROJECT}/runs/{run_id}",
-                "evaluation_artifact": _artifact(node, "external-gru-output-"),
-                "beaker_job_id": job.id,
-                "beaker_result_dataset_id": result_dataset.id,
+                "evaluation_artifact": artifact,
+                "beaker_job_id": job["id"],
+                "beaker_result_dataset_id": job["result"]["beaker"],
                 "metrics_sha256": hashlib.sha256(metrics_bytes).hexdigest(),
                 "predictions_sha256": hashlib.sha256(predictions_bytes).hexdigest(),
                 "ordered_trial_key_sha256": trial_digest,
                 "n_prediction_rows": n_prediction_rows,
-                "metrics": _report_metrics(metrics),
+                "metrics": _report_metrics(metrics, per_session),
             }
         )
     if runs:
@@ -258,14 +318,18 @@ def _freeze_gru(dataset_name: str, group: str, experiment_id: str) -> list[dict]
     return sorted(records, key=lambda row: (row["nominal_D"], row["seed"]))
 
 
-def _freeze_q() -> dict[str, dict]:
-    runs = _wandb_runs(Q_GROUP)
+def _freeze_q(
+    group: str, slurm_array_job_id: str, excluded_datasets: set[str] | None = None
+) -> dict[str, dict]:
+    runs = _wandb_runs(group)
     records = {}
     for run_id, node in runs.items():
         if node["state"] != "finished":
             raise AssertionError(f"W&B run {run_id} is {node['state']}, not finished")
         config = json.loads(node["config"] or "{}")
         dataset_name = _unwrapped(config, "target")["dataset"]
+        if dataset_name in (excluded_datasets or set()):
+            continue
         if dataset_name in records:
             raise AssertionError(f"Q group contains duplicate runs for {dataset_name}")
         artifact = _artifact(node, "baseline-rl-output-")
@@ -273,7 +337,9 @@ def _freeze_q() -> dict[str, dict]:
         files = _cached_wandb_report_files(artifact, root)
         metrics_bytes = files["test_metrics.json"]
         predictions_bytes = files["test_trial_predictions.csv"]
-        trial_digest, n_prediction_rows = _trial_key_digest(predictions_bytes)
+        trial_digest, n_prediction_rows, per_session = _prediction_summary(
+            predictions_bytes
+        )
         metrics = json.loads(metrics_bytes)
         summary = json.loads(node["summaryMetrics"] or "{}")
         if not abs(
@@ -285,12 +351,12 @@ def _freeze_q() -> dict[str, dict]:
             "wandb_run_id": run_id,
             "wandb_url": f"https://wandb.ai/{ENTITY}/{PROJECT}/runs/{run_id}",
             "training_artifact": artifact,
-            "slurm_array_job_id": Q_SLURM_ARRAY_JOB_ID,
+            "slurm_array_job_id": slurm_array_job_id,
             "metrics_sha256": hashlib.sha256(metrics_bytes).hexdigest(),
             "predictions_sha256": hashlib.sha256(predictions_bytes).hexdigest(),
             "ordered_trial_key_sha256": trial_digest,
             "n_prediction_rows": n_prediction_rows,
-            "metrics": _report_metrics(metrics),
+            "metrics": _report_metrics(metrics, per_session),
         }
     return records
 
@@ -306,7 +372,21 @@ def main() -> None:
         }
         for name, (group, experiment_id) in GRU_LAUNCHES.items()
     }
-    q_records = _freeze_q()
+    q_records = {}
+    for group, slurm_array_job_id, excluded_datasets in Q_LAUNCHES:
+        for name, record in _freeze_q(
+            group, slurm_array_job_id, excluded_datasets
+        ).items():
+            if name in q_records:
+                raise AssertionError(f"Q launches contain duplicate dataset {name}")
+            q_records[name] = record
+    for name, (group, slurm_array_job_id) in Q_OVERRIDES.items():
+        corrected = _freeze_q(group, slurm_array_job_id)
+        if set(corrected) != {name}:
+            raise AssertionError(
+                f"Q override for {name} contains datasets {sorted(corrected)}"
+            )
+        q_records[name] = corrected[name]
     if set(q_records) != set(datasets):
         raise AssertionError(f"Q datasets differ from GRU datasets: {sorted(q_records)}")
     for name, dataset in datasets.items():
@@ -341,7 +421,10 @@ def main() -> None:
             "q_model": "ForagerQLearning_L1F1_CK1_softmax",
         },
         "wandb_project": f"https://wandb.ai/{ENTITY}/{PROJECT}",
-        "q_group": Q_GROUP,
+        "q_groups": [
+            *[group for group, _, _ in Q_LAUNCHES],
+            *[group for group, _ in Q_OVERRIDES.values()],
+        ],
         "datasets": datasets,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)

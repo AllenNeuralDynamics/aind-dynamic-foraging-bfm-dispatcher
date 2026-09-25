@@ -1,0 +1,12 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 1,
+  "experiment_id": "01M1TNNC2AFPQ3YWP5JBCTED4E",
+  "experiment_url": "https://beaker.org/ex/01M1TNNC2AFPQ3YWP5JBCTED4E",
+  "dispatcher_commit": "68dbfcca8b557cf33a28964d778c4fe9873d6055",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "459c05c38332eb5c954e7cbca328f0a0fe370891",
+  "wandb_group": "gru-kwak-matched-half@20260905-231428",
+  "sweep_file": "studies/09-gru-cross-species-transfer/variants/gru-kwak-matched-half/smoke.yaml",
+  "created_utc": "2026-09-06T06:14:28.322944+00:00"
+}

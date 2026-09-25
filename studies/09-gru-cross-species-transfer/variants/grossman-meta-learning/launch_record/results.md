@@ -9,5 +9,5 @@
 - Accuracy: `0.8698332303`
 
 This successful run supersedes failed job `25580836` / W&B run `1wu5oo73` and
-feeds `analysis/author_baseline_results.json` and Result 2. The resubmission is
+feeds `analysis/author_baseline_results.json` and Result 1. The resubmission is
 documented separately in `hpc_resubmit_after_nan_proposal.json`.

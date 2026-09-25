@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import netrc
+import os
 import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import requests
 
 
 STUDY = Path(__file__).resolve().parents[1]
@@ -19,6 +22,8 @@ from _meta import build_meta  # noqa: E402
 
 CACHE = STUDY / "analysis" / "_cache_embedding_space"
 OUTPUT = STUDY / "analysis" / "embedding_space_results.json"
+MATCHED_DATA = STUDY / "analysis" / "matched_half_results.json"
+VALIDATION_DATA = STUDY / "analysis" / "dataset_suite_validation.json"
 EMBEDDING_COLUMNS = [f"embedding_{index}" for index in range(1, 5)]
 SOURCE_GROUP = "v2-sc-active@20260622-144622"
 SOURCE_RUNS = {
@@ -38,45 +43,76 @@ SOURCE_RUNS = {
         "beaker_result_dataset": "01KVRMSBZBXJ8V0CQZ1V5PJEWM",
     },
 }
-EXTERNAL = {
-    "grossman": {
-        "label": "Grossman mouse",
-        "species": "mouse",
-        "n_subjects": 48,
-        "group": "gru-grossman-matched-half@20260905-022602",
-        "runs": {
-            0: ("gru-grossman-matched-half-20260905-022602-b2549a1d", "b54d6203b28019482291062de3c90946"),
-            1: ("gru-grossman-matched-half-20260905-022602-e8427c97", "8220dd5a4d5cb6897bca47839ea7dc67"),
-            2: ("gru-grossman-matched-half-20260905-022602-dd860bb0", "343fb34fe456d935ec9b94560940817d"),
-        },
-    },
-    "chen": {
-        "label": "Chen mouse",
-        "species": "mouse",
-        "n_subjects": 32,
-        "group": "gru-chen-matched-half@20260905-024731",
-        "runs": {
-            0: ("gru-chen-matched-half-20260905-024731-5ae04883", "e28ec502a5eff48ca378189071f9a6a2"),
-            1: ("gru-chen-matched-half-20260905-024731-1cb7ef49", "eeaf5f83392dc371f95e1813bf73d24f"),
-            2: ("gru-chen-matched-half-20260905-024731-94c97219", "e704179f5a68d4e655f5a0ab451dcd00"),
-        },
-    },
-    "zid": {
-        "label": "Zid human",
-        "species": "human",
-        "n_subjects": 258,
-        "group": "gru-zid-matched-half@20260905-025752",
-        "runs": {
-            0: ("gru-zid-matched-half-20260905-025752-39eea37f", "66409894b5f57307686d90098429f1e8"),
-            1: ("gru-zid-matched-half-20260905-025752-5f3c4f65", "a8ed8496a3cb33b366ce85809d34f530"),
-            2: ("gru-zid-matched-half-20260905-025752-d6cedfeb", "6057d5ab3d41a3fc8f4b04040cd45a69"),
-        },
-    },
+LABELS = {
+    "grossman": "Grossman mouse",
+    "chen": "Chen mouse",
+    "zid": "Zid human",
+    "lebedeva": "Lebedeva mouse",
+    "beron": "Beron mouse",
+    "kwak": "Kwak mouse",
+    "miller": "Miller rat",
+    "findling": "Findling human",
+    "tang": "Tang macaque",
+    "alsio": "Alsiö rat",
+    "eckstein": "Eckstein human",
+    "costa": "Costa macaque",
+    "lopez_mouse": "López-Yépez mouse",
 }
+ARTIFACT_FILES_QUERY = """query ArtifactFiles($id:ID!){
+  artifact(id:$id){files(first:1000){edges{node{name directUrl}}}}
+}"""
 
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _wandb_key() -> str:
+    if key := os.environ.get("WANDB_API_KEY"):
+        return key
+    credentials = netrc.netrc().authenticators("api.wandb.ai")
+    if not credentials or not credentials[2]:
+        raise RuntimeError("W&B credentials are unavailable")
+    return credentials[2]
+
+
+def _wandb_graphql(query: str, variables: dict) -> dict:
+    response = requests.post(
+        "https://api.wandb.ai/graphql",
+        auth=("api", _wandb_key()),
+        json={"query": query, "variables": variables},
+        timeout=60,
+    )
+    response.raise_for_status()
+    payload = response.json()
+    if payload.get("errors"):
+        raise RuntimeError(json.dumps(payload["errors"], indent=2))
+    return payload["data"]
+
+
+def _cache_artifact_files(artifact: dict, destination: Path) -> dict[str, Path]:
+    data = _wandb_graphql(ARTIFACT_FILES_QUERY, {"id": artifact["id"]})
+    files = [edge["node"] for edge in data["artifact"]["files"]["edges"]]
+    wanted = ("subject_embeddings.pkl", "subject_index_map.json", "output_summary.json")
+    paths = {}
+    for filename in wanted:
+        matches = [item for item in files if item["name"].endswith(filename)]
+        if len(matches) != 1:
+            raise AssertionError(
+                f"Artifact {artifact['name']} has ambiguous {filename} files"
+            )
+        path = destination / filename
+        if not path.exists():
+            response = requests.get(matches[0]["directUrl"], timeout=300)
+            response.raise_for_status()
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(response.content)
+        paths[filename] = path
+    return {
+        "embeddings": paths["subject_embeddings.pkl"],
+        "index_map": paths["subject_index_map.json"],
+        "summary": paths["output_summary.json"],
+    }
 
 
 def _paths(directory: Path) -> dict[str, Path]:
@@ -157,6 +193,13 @@ def _adapted_group(
 
 def main() -> None:
     source_runs = json.loads((STUDY / "source_runs.json").read_text())
+    matched = json.loads(MATCHED_DATA.read_text())
+    validation = {
+        row["dataset"]: row for row in json.loads(VALIDATION_DATA.read_text())["datasets"]
+    }
+    external_names = tuple(matched["datasets"])
+    if set(external_names) != set(validation):
+        raise AssertionError("Embedding and validation dataset membership differ")
     frozen_seeds = []
     for seed in range(3):
         declared = source_runs["runs"][f"d614-s{seed}"]
@@ -194,18 +237,28 @@ def main() -> None:
                 },
             },
         }
-        for dataset, specification in EXTERNAL.items():
-            paths = _paths(CACHE / "wandb" / dataset / f"s{seed}")
-            adapted, _ = _adapted_group(
-                paths, source, int(specification["n_subjects"]), seed
+        for dataset in external_names:
+            rows = [
+                row
+                for row in matched["datasets"][dataset]["gru"]
+                if int(row["nominal_D"]) == 614 and int(row["seed"]) == seed
+            ]
+            if len(rows) != 1:
+                raise AssertionError(f"Expected one D=614 seed={seed} run for {dataset}")
+            run = rows[0]
+            artifact = run["evaluation_artifact"]
+            paths = _cache_artifact_files(
+                artifact, CACHE / "wandb" / dataset / f"s{seed}"
             )
-            run_id, artifact_digest = specification["runs"][seed]
+            adapted, _ = _adapted_group(
+                paths, source, int(validation[dataset]["num_subjects"]), seed
+            )
             groups[dataset] = {
                 "subjects": _records(adapted),
                 "provenance": {
-                    "wandb_run_id": run_id,
-                    "artifact": f"external-gru-output-{run_id}:v0",
-                    "artifact_digest": artifact_digest,
+                    "wandb_run_id": run["wandb_run_id"],
+                    "artifact": artifact["name"],
+                    "artifact_digest": artifact["digest"],
                     "files": _file_provenance(paths),
                 },
             }
@@ -214,7 +267,10 @@ def main() -> None:
     output = {
         "_meta": build_meta(
             "studies/09-gru-cross-species-transfer/analysis/freeze_embedding_space.py",
-            [SOURCE_GROUP, *[specification["group"] for specification in EXTERNAL.values()]],
+            [
+                SOURCE_GROUP,
+                *[matched["datasets"][name]["gru_group"] for name in external_names],
+            ],
             study_root=STUDY,
         ),
         "contract": {
@@ -231,8 +287,12 @@ def main() -> None:
             "aind_source": {"label": "AIND source-training mice", "species": "mouse", "n_subjects": 614},
             "aind_heldout": {"label": "AIND held-out mice", "species": "mouse", "n_subjects": 149},
             **{
-                name: {key: specification[key] for key in ("label", "species", "n_subjects")}
-                for name, specification in EXTERNAL.items()
+                name: {
+                    "label": LABELS[name],
+                    "species": validation[name]["species"],
+                    "n_subjects": validation[name]["num_subjects"],
+                }
+                for name in external_names
             },
         },
         "seeds": frozen_seeds,

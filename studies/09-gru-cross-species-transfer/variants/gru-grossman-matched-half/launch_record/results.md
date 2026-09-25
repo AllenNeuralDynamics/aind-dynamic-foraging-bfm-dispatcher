@@ -7,5 +7,5 @@
 - Settled: 2026-09-05 02:38 PT
 - Status: success (15/15)
 - Key numbers: normalized likelihood 0.73641–0.74546; D=614 mean 0.74535
-- Feeds reports: r2
+- Feeds reports: r1
 - Notes: all 15 evaluation artifacts committed; no failed or retried task
