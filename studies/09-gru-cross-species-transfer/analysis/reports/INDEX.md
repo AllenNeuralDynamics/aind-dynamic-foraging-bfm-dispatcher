@@ -6,3 +6,4 @@
 | [r2](r2-embedding-space.md) | transferred-subject-embedding-space | live | All 13 external cohorts are farther than held-out AIND mice in both spaces; their E4/E8 distance ranks correlate 0.923 |
 | [r3](r3-generalization-drivers.md) | generalization-drivers | live | Primary distance-versus-GRU association is negative in both spaces (E4 ρ=-0.633; E8 ρ=-0.700) |
 | [r4](r4-embedding-dimension-transfer.md) | embedding-dimension-transfer | live | E8 has higher mean held-out likelihood in 10/13 cohorts; six comparisons are strict paired reruns and seven use historical E4 |
+| [r5](r5-maturity-audit.md) | maturity-audit | live | 11 cohorts are reusable, Kwak (mouse) needs a DMSO-only rerun, and Miller (rat) plus Alsiö (rat) leave mature-primary inference |
