@@ -104,6 +104,12 @@ EXPECTED_AUDITS: dict[str, dict[str, int]] = {
         "num_trials": 147726,
         "excluded_trials": 13125,
     },
+    "hattori": {
+        "num_subjects": 7,
+        "num_sessions": 292,
+        "num_trials": 141488,
+        "excluded_trials": 55333,
+    },
 }
 
 
@@ -1133,6 +1139,123 @@ def adapt_lopez_mouse(path: str | Path) -> AdapterResult:
     )
 
 
+_HATTORI_MATURE_SESSION_POSITION = 15
+
+
+def adapt_hattori(path: str | Path) -> AdapterResult:
+    """Adapt mature sessions from the complete untreated imaging cohort."""
+    source = SOURCES["hattori"]
+    path = Path(path)
+    verify_source_file(path, source)
+
+    rows: list[dict[str, object]] = []
+    excluded_trials = 0
+    excluded_pre_mature_sessions = 0
+    excluded_pre_mature_trials = 0
+    seen_sessions: set[tuple[str, str]] = set()
+    with zipfile.ZipFile(path) as archive:
+        sessions = []
+        for member in archive.infolist():
+            parts = Path(member.filename).parts
+            if (
+                len(parts) != 5
+                or parts[:2] != ("Hattori_NatureNeuroscience_Data", "Imaging")
+                or parts[3] not in {"deeper", "shallower"}
+                or not parts[4].endswith("_ofc_imaging_data.npz")
+            ):
+                continue
+            session_date = parts[4].split("_", 1)[0]
+            sessions.append((parts[2], session_date, parts[3], member))
+
+        subjects = sorted({subject for subject, _, _, _ in sessions})
+        for subject in subjects:
+            subject_sessions = sorted(
+                (session for session in sessions if session[0] == subject),
+                key=lambda session: session[1],
+            )
+            for session_position, (_, session_date, imaging_plane, member) in enumerate(
+                subject_sessions,
+                start=1,
+            ):
+                session_key = (subject, session_date)
+                if session_key in seen_sessions:
+                    raise ValueError(f"Duplicate Hattori imaging session: {session_key!r}")
+                seen_sessions.add(session_key)
+                with np.load(io.BytesIO(archive.read(member)), allow_pickle=False) as data:
+                    actions = np.asarray(data["a"]).reshape(-1)
+                    rewards = np.asarray(data["R"]).reshape(-1)
+                    left_probabilities = np.asarray(data["lprob"]).reshape(-1)
+                    right_probabilities = np.asarray(data["rprob"]).reshape(-1)
+                if not (
+                    len(actions)
+                    == len(rewards)
+                    == len(left_probabilities)
+                    == len(right_probabilities)
+                ):
+                    raise ValueError(f"Mismatched Hattori arrays in {member.filename!r}")
+                if session_position < _HATTORI_MATURE_SESSION_POSITION:
+                    excluded_pre_mature_sessions += 1
+                    excluded_pre_mature_trials += len(actions)
+                    continue
+
+                canonical_trial = 0
+                for source_trial, (
+                    action,
+                    reward,
+                    left_probability,
+                    right_probability,
+                ) in enumerate(
+                    zip(actions, rewards, left_probabilities, right_probabilities)
+                ):
+                    if action not in (1, 2):
+                        excluded_trials += 1
+                        continue
+                    if reward not in (0, 1):
+                        raise ValueError(
+                            f"Non-binary Hattori reward {reward!r} in {member.filename!r}"
+                        )
+                    rows.append(
+                        {
+                            "subject_id": subject,
+                            "ses_idx": session_date,
+                            "trial": canonical_trial,
+                            # The release defines 1=right and 2=left.
+                            "animal_response": int(action == 1),
+                            "rewarded": int(reward),
+                            "earned_reward": int(reward),
+                            "dataset_id": source.dataset_id,
+                            "species": source.species,
+                            "source_trial": source_trial,
+                            "source_action": int(action),
+                            "source_session_position": session_position,
+                            "imaging_plane": imaging_plane,
+                            "reward_probability_arm_0": float(left_probability),
+                            "reward_probability_arm_1": float(right_probability),
+                        }
+                    )
+                    canonical_trial += 1
+
+    result = _finish(
+        rows,
+        name="hattori",
+        excluded_trials=excluded_trials,
+        split="sessions",
+    )
+    result[2].update(
+        {
+            "mature_session_start_position": _HATTORI_MATURE_SESSION_POSITION,
+            "excluded_pre_mature_sessions": excluded_pre_mature_sessions,
+            "excluded_pre_mature_trials": excluded_pre_mature_trials,
+            "inclusion_rule": (
+                "Retain every untreated Imaging-cohort mouse, but only its 15th "
+                "probabilistic-reversal session onward. The paper defines days "
+                "1-14 as early and day 15 onward as late/expert-stage behavior."
+            ),
+        }
+    )
+    return result
+
+
 ADAPTERS: dict[str, Callable[[str | Path], AdapterResult]] = {
     "grossman": adapt_grossman,
     "chen": adapt_chen,
@@ -1147,6 +1270,7 @@ ADAPTERS: dict[str, Callable[[str | Path], AdapterResult]] = {
     "eckstein": adapt_eckstein,
     "costa": adapt_costa,
     "lopez_mouse": adapt_lopez_mouse,
+    "hattori": adapt_hattori,
 }
 
 

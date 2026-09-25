@@ -40,6 +40,8 @@ WANDB_GROUPS = [
     "q-matched-half@20260905-024031",
     "q-expanded-matched-half@20260906-001656",
     "q-expanded-matched-half@20260906-kwak-choicefix",
+    "gru-hattori-matched-half@20260907-200329",
+    "q-hattori-matched-half@slurm-25585753",
 ]
 GRU_LAUNCHES = {
     "grossman": (WANDB_GROUPS[0], "01M1RE7RE42MHTHFDDRYJWTWHV"),
@@ -55,10 +57,12 @@ GRU_LAUNCHES = {
     "eckstein": (WANDB_GROUPS[10], "01M1TPN53SDJYVN9TE5YQ6ZEXY"),
     "costa": (WANDB_GROUPS[11], "01M1TPN1PNEMN6Q1036ZAXDCNV"),
     "lopez_mouse": (WANDB_GROUPS[12], "01M1TPMW5BXV82QQ0MS3AWWZE3"),
+    "hattori": (WANDB_GROUPS[16], "01M1ZFJ3BPJSZNJ403DPD3FS6C"),
 }
 Q_LAUNCHES = [
     (WANDB_GROUPS[13], "25580070", set()),
     (WANDB_GROUPS[14], "25581304", {"kwak"}),
+    (WANDB_GROUPS[17], "25585753", set()),
 ]
 Q_OVERRIDES = {
     "kwak": (WANDB_GROUPS[15], "25581496"),

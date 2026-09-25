@@ -1,0 +1,18 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25585751",
+  "wandb_group": "q-hattori-matched-half@slurm-25585751",
+  "wandb_run_id": "ge84pxd9",
+  "dispatcher_commit": "844a823681f58f3ae6dc0b12e6e5c5ff7ca36219",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "script": "studies/09-gru-cross-species-transfer/variants/q-hattori-matched-half/q_hattori_matched_half.slurm",
+  "dataset": "hattori",
+  "canonical_data_root": "/allen/aind/scratch/han.hou/datasets/study09-hattori-mature-canonical-20260907",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-q-hattori-25585751",
+  "submitted_at": "2026-09-07T19:50:55-07:00",
+  "started_at": "2026-09-07T19:51:03-07:00",
+  "status": "failed_preflight",
+  "failure": "Runner configured the superseded all-session dataset_id; no model fit was performed."
+}

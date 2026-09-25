@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_generalization_drivers.py",
-    "produced_at_pt": "2026-09-07T14:59:21-07:00",
-    "dispatcher_git_sha": "6b04a3ab4d6828638351877a3d8cfe5d46327220",
+    "produced_at_pt": "2026-09-07T21:01:29-07:00",
+    "dispatcher_git_sha": "703e750eb44e9103214aca1ced8c82557925849f",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-grossman-matched-half@20260905-022602",
@@ -21,18 +21,21 @@
       "q-matched-half@20260905-024031",
       "q-expanded-matched-half@20260906-001656",
       "q-expanded-matched-half@20260906-kwak-choicefix",
+      "gru-hattori-matched-half@20260907-200329",
+      "q-hattori-matched-half@slurm-25585753",
       "e4-e8-d614-source@20260906-195409",
       "gru-e8-d614-diagnostic@20260907-071400",
       "gru-e8-d614-expansion@20260907-132415",
-      "gru-e8-d614-expansion@20260907-132625"
+      "gru-e8-d614-expansion@20260907-132625",
+      "gru-hattori-matched-half@20260907-200328"
     ]
   },
   "inputs": {
-    "analysis/matched_half_results.json": "9a9f93ce2c66d7e4e87b43e137eeb92c3c847e59be337fe0c77fb44dac822888",
-    "analysis/embedding_space_results_e8.json": "a60af86ad0cd4322d7cb5cc73f6c7f3aefa5dcc99f29b7d50531827beebd4191",
-    "analysis/task_design_annotations.json": "9b977aeeb22f4c2fd55380b16b71dd33dba650892ac60641667dc8e23427fd89",
+    "analysis/matched_half_results.json": "a306bccb0cf42594452e4ed623465ba66d594e77cbd269fe147ebe82901ac708",
+    "analysis/embedding_space_results_e8.json": "3acd489145e5c6ee6b41047d81d705aeb036f9c3bde10edeb6cf61a14ec54ffc",
+    "analysis/task_design_annotations.json": "8f2806e9dfa8001af5f858f9d136aea762358ea53485511cc0043f25b39f58ab",
     "analysis/embedding_dimension_results.json": "da18554b20e3c76c8b6738939baf42669dd349b394209ad36c9960438e7f0eda",
-    "analysis/embedding_dimension_expansion_results.json": "b6cfafcc400a4f5765d4d7827c0987c688d01f1e491dae20e5a26d4dbced8166"
+    "analysis/embedding_dimension_expansion_results.json": "fd998a568470aec9b60b989a6821c63ee61b4ae05de14d3cea367320615a1b81"
   },
   "contract": {
     "cohort_order": [
@@ -47,7 +50,8 @@
       "alsio",
       "eckstein",
       "costa",
-      "lopez_mouse"
+      "lopez_mouse",
+      "hattori"
     ],
     "subject_embedding_size": 8,
     "analysis_tiers": {
@@ -59,7 +63,8 @@
         "beron",
         "miller",
         "findling",
-        "eckstein"
+        "eckstein",
+        "hattori"
       ],
       "stress_test": [
         "alsio",
@@ -94,7 +99,8 @@
       "beron",
       "miller",
       "findling",
-      "eckstein"
+      "eckstein",
+      "hattori"
     ],
     "all_valid_sensitivity_cohorts": [
       "grossman",
@@ -105,6 +111,7 @@
       "miller",
       "findling",
       "eckstein",
+      "hattori",
       "alsio",
       "costa",
       "lopez_mouse",
@@ -114,7 +121,7 @@
     "performance_unit": "mean held-out log likelihood across subjects, equal subject weight",
     "seed_rule": "pair each source seed's D=614 prediction and adapted embedding; average only after seed-specific estimates",
     "embedding_distance": "full-8D Mahalanobis distance from external cohort centroid to the 614-source-mouse centroid, using source covariance per seed",
-    "inference": "Primary Spearman inference across eight declared primary cohorts; all-valid sensitivity across 12 non-quarantined cohorts; deterministic two-sided permutation p, cohort bootstrap CI, and leave-one-cohort-out range",
+    "inference": "Primary Spearman inference across 9 declared primary cohorts; all-valid sensitivity across 13 non-quarantined cohorts; deterministic two-sided permutation p, cohort bootstrap CI, and leave-one-cohort-out range",
     "rng_seed": 20260906
   },
   "cohorts": {
@@ -1413,99 +1420,207 @@
           "sd_across_source_seeds": 0.0
         }
       }
+    },
+    "hattori": {
+      "label": "Hattori (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "n_subjects": 7,
+      "seeds": [
+        {
+          "seed": 0,
+          "n_subjects": 7,
+          "q_subject_mean_log_likelihood_nats": -0.5753240595665042,
+          "q_subject_balanced_normalized_likelihood": 0.562522548454023,
+          "q_bits_above_chance": 0.16998283235929773,
+          "gru_d614_subject_mean_log_likelihood_nats": -0.5587848953853378,
+          "gru_d614_subject_balanced_normalized_likelihood": 0.571903564478243,
+          "gru_d614_minus_q_bits_per_trial": 0.023860970144617154,
+          "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.009407022990423128,
+          "embedding_centroid_mahalanobis": 4.873081857542993,
+          "embedding_median_subject_mahalanobis": 5.723418915257952,
+          "embedding_fraction_outside_source_95pct": 0.8571428571428571,
+          "gru_d614_wandb_run_id": "gru-hattori-matched-half-20260907-200328-3020b10f",
+          "gru_d614_artifact_digest": "bd3ed2a1c02bc02c63f37628e9d0891f",
+          "q_wandb_run_id": "u72bf23w",
+          "q_artifact_digest": "6b2e0abfdfffc7eb542b7387f199379d",
+          "embedding_wandb_run_id": "gru-hattori-matched-half-20260907-200328-3020b10f",
+          "embedding_artifact_digest": "bd3ed2a1c02bc02c63f37628e9d0891f",
+          "source_embedding_run_id": "e4-e8-d614-source-20260906-195409-4413e385",
+          "source_embedding_artifact_digest": "219c3741d6e0e74de1d4e2d0adbbc651"
+        },
+        {
+          "seed": 1,
+          "n_subjects": 7,
+          "q_subject_mean_log_likelihood_nats": -0.5753240595665042,
+          "q_subject_balanced_normalized_likelihood": 0.562522548454023,
+          "q_bits_above_chance": 0.16998283235929773,
+          "gru_d614_subject_mean_log_likelihood_nats": -0.5587761971655024,
+          "gru_d614_subject_balanced_normalized_likelihood": 0.5719085390428064,
+          "gru_d614_minus_q_bits_per_trial": 0.02387351902323825,
+          "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.009398557257240512,
+          "embedding_centroid_mahalanobis": 6.132237142422753,
+          "embedding_median_subject_mahalanobis": 6.144664713864194,
+          "embedding_fraction_outside_source_95pct": 1.0,
+          "gru_d614_wandb_run_id": "gru-hattori-matched-half-20260907-200328-e0158859",
+          "gru_d614_artifact_digest": "4f24fbc2a0f622f5059e2888f4f6456f",
+          "q_wandb_run_id": "u72bf23w",
+          "q_artifact_digest": "6b2e0abfdfffc7eb542b7387f199379d",
+          "embedding_wandb_run_id": "gru-hattori-matched-half-20260907-200328-e0158859",
+          "embedding_artifact_digest": "4f24fbc2a0f622f5059e2888f4f6456f",
+          "source_embedding_run_id": "e4-e8-d614-source-20260906-195409-849b588d",
+          "source_embedding_artifact_digest": "011c1f731c731ed6ed89f4daf27e589b"
+        },
+        {
+          "seed": 2,
+          "n_subjects": 7,
+          "q_subject_mean_log_likelihood_nats": -0.5753240595665042,
+          "q_subject_balanced_normalized_likelihood": 0.562522548454023,
+          "q_bits_above_chance": 0.16998283235929773,
+          "gru_d614_subject_mean_log_likelihood_nats": -0.558805877677238,
+          "gru_d614_subject_balanced_normalized_likelihood": 0.5718915647566056,
+          "gru_d614_minus_q_bits_per_trial": 0.02383069909614629,
+          "gru_d614_minus_q_mean_subject_normalized_likelihood": 0.00938656656096096,
+          "embedding_centroid_mahalanobis": 4.755103094466332,
+          "embedding_median_subject_mahalanobis": 5.2346235884879375,
+          "embedding_fraction_outside_source_95pct": 0.8571428571428571,
+          "gru_d614_wandb_run_id": "gru-hattori-matched-half-20260907-200328-9c458ee1",
+          "gru_d614_artifact_digest": "316e14a8d44ae8565243fdc0b63f5565",
+          "q_wandb_run_id": "u72bf23w",
+          "q_artifact_digest": "6b2e0abfdfffc7eb542b7387f199379d",
+          "embedding_wandb_run_id": "gru-hattori-matched-half-20260907-200328-9c458ee1",
+          "embedding_artifact_digest": "316e14a8d44ae8565243fdc0b63f5565",
+          "source_embedding_run_id": "e4-e8-d614-source-20260906-195409-5c1c0d2c",
+          "source_embedding_artifact_digest": "3d771b5b33bc2ac4cdb1f165230624c8"
+        }
+      ],
+      "summary": {
+        "q_subject_balanced_normalized_likelihood": {
+          "mean": 0.562522548454023,
+          "sd_across_source_seeds": 0.0
+        },
+        "q_bits_above_chance": {
+          "mean": 0.1699828323592977,
+          "sd_across_source_seeds": 3.3993498887762956e-17
+        },
+        "gru_d614_subject_balanced_normalized_likelihood": {
+          "mean": 0.5719012227592183,
+          "sd_across_source_seeds": 8.726072083068781e-06
+        },
+        "gru_d614_minus_q_bits_per_trial": {
+          "mean": 0.023855062754667228,
+          "sd_across_source_seeds": 2.201271180603524e-05
+        },
+        "gru_d614_minus_q_mean_subject_normalized_likelihood": {
+          "mean": 0.009397382269541534,
+          "sd_across_source_seeds": 1.0278707294923888e-05
+        },
+        "embedding_centroid_mahalanobis": {
+          "mean": 5.253474031477359,
+          "sd_across_source_seeds": 0.763313959654279
+        },
+        "embedding_median_subject_mahalanobis": {
+          "mean": 5.700902405870028,
+          "sd_across_source_seeds": 0.4554382036734328
+        },
+        "embedding_fraction_outside_source_95pct": {
+          "mean": 0.9047619047619048,
+          "sd_across_source_seeds": 0.08247860988423228
+        }
+      }
     }
   },
   "relationships": {
     "gru_d614_minus_q_vs_embedding_centroid": {
-      "n_cohorts": 8,
-      "spearman_rho": -0.6904761904761906,
-      "permutation_p_two_sided": 0.05814941850581494,
+      "n_cohorts": 9,
+      "spearman_rho": -0.7,
+      "permutation_p_two_sided": 0.04316956830431696,
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -1.0,
-        0.06329113924050635
+        -0.9829059829059827,
+        -0.08108108108108109
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.8571428571428573,
-        -0.5357142857142858
+        -0.7857142857142858,
+        -0.5714285714285715
       ]
     },
     "gru_d614_minus_q_vs_embedding_median_subject_distance": {
-      "n_cohorts": 8,
-      "spearman_rho": -0.4047619047619048,
-      "permutation_p_two_sided": 0.2966470335296647,
+      "n_cohorts": 9,
+      "spearman_rho": -0.48333333333333334,
+      "permutation_p_two_sided": 0.17741822581774183,
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.9178082191780822,
-        0.5555555555555556
+        -0.8596491228070176,
+        0.24324324324324326
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.5714285714285715,
-        -0.14285714285714288
+        -0.5952380952380953,
+        -0.30952380952380953
       ]
     },
     "gru_d614_minus_q_vs_common_q_predictability": {
-      "n_cohorts": 8,
-      "spearman_rho": 0.3571428571428572,
-      "permutation_p_two_sided": 0.35887641123588765,
+      "n_cohorts": 9,
+      "spearman_rho": 0.049999999999999996,
+      "permutation_p_two_sided": 0.9123708762912371,
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.5443037974683544,
-        0.9047619047619049
+        -0.7391304347826088,
+        0.7217391304347827
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        0.21428571428571433,
-        0.642857142857143
+        -0.19047619047619052,
+        0.3571428571428572
       ]
     }
   },
   "sensitivity_relationships": {
     "gru_d614_minus_q_vs_embedding_centroid": {
-      "n_cohorts": 12,
-      "spearman_rho": -0.11188811188811189,
-      "permutation_p_two_sided": 0.7332826671733282,
+      "n_cohorts": 13,
+      "spearman_rho": -0.1868131868131868,
+      "permutation_p_two_sided": 0.5408045919540805,
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.8064516129032259,
-        0.614559176672383
+        -0.8116343490304709,
+        0.49864206128133404
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.44545454545454555,
-        0.05454545454545456
+        -0.5104895104895105,
+        -0.04895104895104895
       ]
     },
     "gru_d614_minus_q_vs_embedding_median_subject_distance": {
-      "n_cohorts": 12,
-      "spearman_rho": 0.08391608391608392,
-      "permutation_p_two_sided": 0.7993220067799321,
+      "n_cohorts": 13,
+      "spearman_rho": -0.027472527472527472,
+      "permutation_p_two_sided": 0.9352606473935261,
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.6129032258064516,
-        0.7142857142857143
+        -0.6504366600750635,
+        0.5920707582255842
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.19090909090909092,
-        0.29090909090909095
+        -0.3076923076923077,
+        0.1328671328671329
       ]
     },
     "gru_d614_minus_q_vs_common_q_predictability": {
-      "n_cohorts": 12,
-      "spearman_rho": -0.16783216783216784,
-      "permutation_p_two_sided": 0.6002139978600214,
+      "n_cohorts": 13,
+      "spearman_rho": -0.23626373626373626,
+      "permutation_p_two_sided": 0.4360556394436056,
       "permutations": 100000,
       "bootstrap_95_ci": [
-        -0.7214285714285714,
-        0.5268817204301075
+        -0.742296918767507,
+        0.41809720411415174
       ],
       "bootstraps": 20000,
       "leave_one_out_range": [
-        -0.33636363636363636,
-        0.08181818181818183
+        -0.4125874125874127,
+        -0.027972027972027972
       ]
     }
   }

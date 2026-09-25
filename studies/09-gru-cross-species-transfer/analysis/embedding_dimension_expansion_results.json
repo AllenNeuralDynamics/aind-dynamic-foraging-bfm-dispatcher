@@ -1,12 +1,13 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_embedding_dimension_expansion.py",
-    "produced_at_pt": "2026-09-07T13:38:26-07:00",
-    "dispatcher_git_sha": "49119b3b077ad773d78f6591b52ef473b8e285c8",
+    "produced_at_pt": "2026-09-07T20:54:28-07:00",
+    "dispatcher_git_sha": "703e750eb44e9103214aca1ced8c82557925849f",
     "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
     "wandb_groups": [
       "gru-e8-d614-expansion@20260907-132415",
-      "gru-e8-d614-expansion@20260907-132625"
+      "gru-e8-d614-expansion@20260907-132625",
+      "gru-hattori-matched-half@20260907-200328"
     ]
   },
   "status": "complete",
@@ -27,7 +28,8 @@
   "wandb_project": "https://wandb.ai/AIND-disRNN/gru_cross_species_transfer",
   "beaker_experiments": [
     "01M1YRP7ASQRQN4Y7MZ2HEQAXG",
-    "01M1YRT8B20NMJ3JAHNVC0RMF4"
+    "01M1YRT8B20NMJ3JAHNVC0RMF4",
+    "01M1ZFJ1Z9BP5GFCM8RPTG119Z"
   ],
   "datasets": {
     "zid": {
@@ -38447,6 +38449,2714 @@
                 "ses_idx": "waldo__20160122",
                 "n_trials": 1923,
                 "mean_log_likelihood_nats": -0.5777302529994801
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "hattori": {
+      "species": "mouse",
+      "schema_version": 1,
+      "split_strategy": "interleaved_sessions_odd_adapt_even_test",
+      "n_subjects": 7,
+      "n_sessions": 292,
+      "n_heldout_trials": 68972,
+      "ordered_trial_key_sha256": "0709d4447c7edab3b5398e5b0247e81b032544aa8e278fd2f316443f17fab41c",
+      "e8": [
+        {
+          "source_key": "e8-d614-s0",
+          "seed": 0,
+          "wandb_run_id": "gru-hattori-matched-half-20260907-200328-3020b10f",
+          "wandb_url": "https://wandb.ai/AIND-disRNN/gru_cross_species_transfer/runs/gru-hattori-matched-half-20260907-200328-3020b10f",
+          "evaluation_artifact": {
+            "id": "QXJ0aWZhY3Q6MzU2MDkxNzQxNw==",
+            "name": "external-gru-output-gru-hattori-matched-half-20260907-200328-3020b10f",
+            "digest": "bd3ed2a1c02bc02c63f37628e9d0891f",
+            "file_count": 33,
+            "size_bytes": 28872250
+          },
+          "beaker_job_id": "01M1ZFJ236GYWHK3N2DFEZVVKP",
+          "beaker_result_dataset_id": "01M1ZFJ1ZHVQKBY9BSMH18Y7H6",
+          "metrics_sha256": "e7f3f4fdda356ef30f3e1d5f302736f54f08b330e3d73884f73b592502d2a908",
+          "predictions_sha256": "00ae4d8b827a480bdb33f6afbf9f64c73fa9aa7c02d9653a3112ce09eb6a47df",
+          "ordered_trial_key_sha256": "0709d4447c7edab3b5398e5b0247e81b032544aa8e278fd2f316443f17fab41c",
+          "n_prediction_rows": 68972,
+          "metrics": {
+            "n_trials": 68972,
+            "mean_log_likelihood_nats": -0.5696143558083452,
+            "normalized_likelihood": 0.5657435723584905,
+            "per_subject_mean_log_likelihood_nats": {
+              "RH353": -0.5775231021986116,
+              "RH365": -0.5543601739640885,
+              "RH374": -0.5820153388118116,
+              "RH375": -0.495697536320479,
+              "RH377": -0.5877542520575108,
+              "RH445": -0.5540673005850246,
+              "RH456": -0.5600765637598389
+            },
+            "per_session": [
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190101",
+                "n_trials": 534,
+                "mean_log_likelihood_nats": -0.5897825180347951
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190103",
+                "n_trials": 513,
+                "mean_log_likelihood_nats": -0.6498880613263563
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190105",
+                "n_trials": 503,
+                "mean_log_likelihood_nats": -0.6266980561308046
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190107",
+                "n_trials": 538,
+                "mean_log_likelihood_nats": -0.5466236264074177
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190109",
+                "n_trials": 377,
+                "mean_log_likelihood_nats": -0.4749463575209587
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190111",
+                "n_trials": 453,
+                "mean_log_likelihood_nats": -0.5178898163693876
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190113",
+                "n_trials": 599,
+                "mean_log_likelihood_nats": -0.5789302861699304
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190115",
+                "n_trials": 512,
+                "mean_log_likelihood_nats": -0.5250366859800328
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190117",
+                "n_trials": 634,
+                "mean_log_likelihood_nats": -0.5302135044700304
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190211",
+                "n_trials": 292,
+                "mean_log_likelihood_nats": -0.5904436252068391
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190213",
+                "n_trials": 733,
+                "mean_log_likelihood_nats": -0.5954248074100651
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190215",
+                "n_trials": 405,
+                "mean_log_likelihood_nats": -0.5705608190588148
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190217",
+                "n_trials": 386,
+                "mean_log_likelihood_nats": -0.6427663532357629
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190219",
+                "n_trials": 387,
+                "mean_log_likelihood_nats": -0.5989100313252484
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190221",
+                "n_trials": 401,
+                "mean_log_likelihood_nats": -0.6309667378848749
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190223",
+                "n_trials": 437,
+                "mean_log_likelihood_nats": -0.5797252756506028
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181218",
+                "n_trials": 576,
+                "mean_log_likelihood_nats": -0.5706279248025734
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181220",
+                "n_trials": 344,
+                "mean_log_likelihood_nats": -0.5280810694440394
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181222",
+                "n_trials": 539,
+                "mean_log_likelihood_nats": -0.6541971082419854
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181224",
+                "n_trials": 322,
+                "mean_log_likelihood_nats": -0.6480166274358746
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181226",
+                "n_trials": 377,
+                "mean_log_likelihood_nats": -0.56479556184496
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181228",
+                "n_trials": 572,
+                "mean_log_likelihood_nats": -0.5045509931345695
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181230",
+                "n_trials": 404,
+                "mean_log_likelihood_nats": -0.6057854545393812
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190101",
+                "n_trials": 477,
+                "mean_log_likelihood_nats": -0.5690553606896492
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190103",
+                "n_trials": 457,
+                "mean_log_likelihood_nats": -0.5379496409731669
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190105",
+                "n_trials": 925,
+                "mean_log_likelihood_nats": -0.47585145596141876
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190107",
+                "n_trials": 463,
+                "mean_log_likelihood_nats": -0.5934329334690472
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190109",
+                "n_trials": 322,
+                "mean_log_likelihood_nats": -0.4947473569062473
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190111",
+                "n_trials": 273,
+                "mean_log_likelihood_nats": -0.3870665954049735
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190113",
+                "n_trials": 374,
+                "mean_log_likelihood_nats": -0.5375870647340415
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190115",
+                "n_trials": 341,
+                "mean_log_likelihood_nats": -0.5410644126816545
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190117",
+                "n_trials": 462,
+                "mean_log_likelihood_nats": -0.5227715735323961
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190119",
+                "n_trials": 263,
+                "mean_log_likelihood_nats": -0.5933999960746065
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190121",
+                "n_trials": 432,
+                "mean_log_likelihood_nats": -0.616380968613491
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190123",
+                "n_trials": 362,
+                "mean_log_likelihood_nats": -0.6058159907176021
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190125",
+                "n_trials": 301,
+                "mean_log_likelihood_nats": -0.532476127494529
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190127",
+                "n_trials": 683,
+                "mean_log_likelihood_nats": -0.5681570391203435
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190129",
+                "n_trials": 360,
+                "mean_log_likelihood_nats": -0.5717070254777749
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190112",
+                "n_trials": 553,
+                "mean_log_likelihood_nats": -0.6350855191733863
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190114",
+                "n_trials": 426,
+                "mean_log_likelihood_nats": -0.5995536316813879
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190116",
+                "n_trials": 473,
+                "mean_log_likelihood_nats": -0.613072046054079
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190118",
+                "n_trials": 495,
+                "mean_log_likelihood_nats": -0.6003824258223524
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190120",
+                "n_trials": 508,
+                "mean_log_likelihood_nats": -0.5947112620039484
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190211",
+                "n_trials": 536,
+                "mean_log_likelihood_nats": -0.5207692023669505
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190213",
+                "n_trials": 737,
+                "mean_log_likelihood_nats": -0.5844298760901875
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190215",
+                "n_trials": 434,
+                "mean_log_likelihood_nats": -0.5783433189212481
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190217",
+                "n_trials": 637,
+                "mean_log_likelihood_nats": -0.5869816688403229
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190219",
+                "n_trials": 865,
+                "mean_log_likelihood_nats": -0.5553238063052603
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190221",
+                "n_trials": 634,
+                "mean_log_likelihood_nats": -0.4808630991214096
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190223",
+                "n_trials": 893,
+                "mean_log_likelihood_nats": -0.6080050961016539
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190225",
+                "n_trials": 667,
+                "mean_log_likelihood_nats": -0.5826382885863018
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190227",
+                "n_trials": 659,
+                "mean_log_likelihood_nats": -0.609356346663268
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190301",
+                "n_trials": 505,
+                "mean_log_likelihood_nats": -0.5467548958930543
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190303",
+                "n_trials": 941,
+                "mean_log_likelihood_nats": -0.5736593483702295
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190305",
+                "n_trials": 601,
+                "mean_log_likelihood_nats": -0.6019464806401318
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190307",
+                "n_trials": 848,
+                "mean_log_likelihood_nats": -0.5788244690516159
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190309",
+                "n_trials": 282,
+                "mean_log_likelihood_nats": -0.5947204382624617
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190311",
+                "n_trials": 746,
+                "mean_log_likelihood_nats": -0.5026146057369009
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190313",
+                "n_trials": 1093,
+                "mean_log_likelihood_nats": -0.5391918067187355
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190316",
+                "n_trials": 621,
+                "mean_log_likelihood_nats": -0.586799871337826
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190319",
+                "n_trials": 515,
+                "mean_log_likelihood_nats": -0.5926302189389748
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190321",
+                "n_trials": 681,
+                "mean_log_likelihood_nats": -0.5915911278277406
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190323",
+                "n_trials": 315,
+                "mean_log_likelihood_nats": -0.6467711166328903
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190325",
+                "n_trials": 543,
+                "mean_log_likelihood_nats": -0.6441852937644442
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190327",
+                "n_trials": 674,
+                "mean_log_likelihood_nats": -0.6193265621157849
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190329",
+                "n_trials": 675,
+                "mean_log_likelihood_nats": -0.6303039894684783
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190121",
+                "n_trials": 706,
+                "mean_log_likelihood_nats": -0.5940066454529928
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190123",
+                "n_trials": 140,
+                "mean_log_likelihood_nats": -0.6305000644811386
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190125",
+                "n_trials": 432,
+                "mean_log_likelihood_nats": -0.45641925311600673
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190128",
+                "n_trials": 357,
+                "mean_log_likelihood_nats": -0.552263681057795
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190131",
+                "n_trials": 230,
+                "mean_log_likelihood_nats": -0.42705979160613283
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190202",
+                "n_trials": 307,
+                "mean_log_likelihood_nats": -0.47412288862083923
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190204",
+                "n_trials": 559,
+                "mean_log_likelihood_nats": -0.5528258043007062
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190206",
+                "n_trials": 168,
+                "mean_log_likelihood_nats": -0.549147371059732
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190208",
+                "n_trials": 322,
+                "mean_log_likelihood_nats": -0.48333582987888535
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190213",
+                "n_trials": 515,
+                "mean_log_likelihood_nats": -0.44822662044374995
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190215",
+                "n_trials": 539,
+                "mean_log_likelihood_nats": -0.3830114994139259
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190218",
+                "n_trials": 368,
+                "mean_log_likelihood_nats": -0.4235801649268181
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190220",
+                "n_trials": 382,
+                "mean_log_likelihood_nats": -0.5106093203262889
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190603",
+                "n_trials": 692,
+                "mean_log_likelihood_nats": -0.6056026539356597
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190605",
+                "n_trials": 578,
+                "mean_log_likelihood_nats": -0.6228095646052696
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190607",
+                "n_trials": 874,
+                "mean_log_likelihood_nats": -0.6103702698268882
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190609",
+                "n_trials": 811,
+                "mean_log_likelihood_nats": -0.6194900143659866
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190611",
+                "n_trials": 658,
+                "mean_log_likelihood_nats": -0.5824438717487791
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190613",
+                "n_trials": 543,
+                "mean_log_likelihood_nats": -0.5921449034877568
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190615",
+                "n_trials": 554,
+                "mean_log_likelihood_nats": -0.6049708964456191
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190617",
+                "n_trials": 565,
+                "mean_log_likelihood_nats": -0.6239874973579789
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190619",
+                "n_trials": 526,
+                "mean_log_likelihood_nats": -0.6544170780442758
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190621",
+                "n_trials": 562,
+                "mean_log_likelihood_nats": -0.5883741789870708
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190623",
+                "n_trials": 741,
+                "mean_log_likelihood_nats": -0.6312770206108476
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190625",
+                "n_trials": 404,
+                "mean_log_likelihood_nats": -0.5864953842122012
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190627",
+                "n_trials": 688,
+                "mean_log_likelihood_nats": -0.5652205049826964
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190629",
+                "n_trials": 432,
+                "mean_log_likelihood_nats": -0.5779685568710398
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190701",
+                "n_trials": 347,
+                "mean_log_likelihood_nats": -0.5867419099593193
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190703",
+                "n_trials": 514,
+                "mean_log_likelihood_nats": -0.5841436967363586
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190705",
+                "n_trials": 580,
+                "mean_log_likelihood_nats": -0.560366862741459
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190707",
+                "n_trials": 453,
+                "mean_log_likelihood_nats": -0.5606771169590213
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190709",
+                "n_trials": 550,
+                "mean_log_likelihood_nats": -0.5767742115111365
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190711",
+                "n_trials": 543,
+                "mean_log_likelihood_nats": -0.5500476956953803
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190713",
+                "n_trials": 365,
+                "mean_log_likelihood_nats": -0.5892819242331775
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190715",
+                "n_trials": 748,
+                "mean_log_likelihood_nats": -0.5695731056250315
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190717",
+                "n_trials": 579,
+                "mean_log_likelihood_nats": -0.5684918172785736
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190719",
+                "n_trials": 656,
+                "mean_log_likelihood_nats": -0.5456608125967437
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190721",
+                "n_trials": 534,
+                "mean_log_likelihood_nats": -0.5957415169179663
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190723",
+                "n_trials": 561,
+                "mean_log_likelihood_nats": -0.5374031659813838
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190725",
+                "n_trials": 623,
+                "mean_log_likelihood_nats": -0.6482165018620195
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190727",
+                "n_trials": 656,
+                "mean_log_likelihood_nats": -0.5325557504097452
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190729",
+                "n_trials": 476,
+                "mean_log_likelihood_nats": -0.5532420286218004
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190731",
+                "n_trials": 565,
+                "mean_log_likelihood_nats": -0.565226399473247
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190802",
+                "n_trials": 542,
+                "mean_log_likelihood_nats": -0.5732184460135539
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190804",
+                "n_trials": 402,
+                "mean_log_likelihood_nats": -0.5171531493483564
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190806",
+                "n_trials": 548,
+                "mean_log_likelihood_nats": -0.614530285465606
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190808",
+                "n_trials": 302,
+                "mean_log_likelihood_nats": -0.6771152971608916
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190811",
+                "n_trials": 417,
+                "mean_log_likelihood_nats": -0.5889971748423287
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190514",
+                "n_trials": 271,
+                "mean_log_likelihood_nats": -0.5585752787402887
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190516",
+                "n_trials": 171,
+                "mean_log_likelihood_nats": -0.5585085610468485
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190518",
+                "n_trials": 356,
+                "mean_log_likelihood_nats": -0.5890049146369576
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190520",
+                "n_trials": 260,
+                "mean_log_likelihood_nats": -0.4093753711780135
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190522",
+                "n_trials": 410,
+                "mean_log_likelihood_nats": -0.513646107956324
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190524",
+                "n_trials": 351,
+                "mean_log_likelihood_nats": -0.5081823867734435
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190526",
+                "n_trials": 342,
+                "mean_log_likelihood_nats": -0.5459558555223449
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190528",
+                "n_trials": 267,
+                "mean_log_likelihood_nats": -0.4331787861917099
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190530",
+                "n_trials": 334,
+                "mean_log_likelihood_nats": -0.5916638989387458
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190601",
+                "n_trials": 259,
+                "mean_log_likelihood_nats": -0.6524610884747195
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190603",
+                "n_trials": 243,
+                "mean_log_likelihood_nats": -0.524176210037968
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190605",
+                "n_trials": 258,
+                "mean_log_likelihood_nats": -0.6395103487236535
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190607",
+                "n_trials": 353,
+                "mean_log_likelihood_nats": -0.6308122899208273
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190609",
+                "n_trials": 146,
+                "mean_log_likelihood_nats": -0.5185674782326886
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190611",
+                "n_trials": 202,
+                "mean_log_likelihood_nats": -0.634268296633874
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190427",
+                "n_trials": 204,
+                "mean_log_likelihood_nats": -0.6116766931898653
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190429",
+                "n_trials": 127,
+                "mean_log_likelihood_nats": -0.6047277008806479
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190501",
+                "n_trials": 437,
+                "mean_log_likelihood_nats": -0.5998438367579934
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190503",
+                "n_trials": 311,
+                "mean_log_likelihood_nats": -0.6291460552429665
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190505",
+                "n_trials": 534,
+                "mean_log_likelihood_nats": -0.6123791924319519
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190507",
+                "n_trials": 241,
+                "mean_log_likelihood_nats": -0.6202123309615325
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190509",
+                "n_trials": 586,
+                "mean_log_likelihood_nats": -0.5832877889085413
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190511",
+                "n_trials": 463,
+                "mean_log_likelihood_nats": -0.5821797295305536
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190513",
+                "n_trials": 273,
+                "mean_log_likelihood_nats": -0.4836498298653042
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190515",
+                "n_trials": 398,
+                "mean_log_likelihood_nats": -0.5201508025620546
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190517",
+                "n_trials": 321,
+                "mean_log_likelihood_nats": -0.5678176823109365
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190519",
+                "n_trials": 409,
+                "mean_log_likelihood_nats": -0.55953818648878
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190521",
+                "n_trials": 345,
+                "mean_log_likelihood_nats": -0.5732508157616996
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190523",
+                "n_trials": 196,
+                "mean_log_likelihood_nats": -0.37105417756010833
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190525",
+                "n_trials": 400,
+                "mean_log_likelihood_nats": -0.42427561638079025
+              }
+            ]
+          }
+        },
+        {
+          "source_key": "e8-d614-s1",
+          "seed": 1,
+          "wandb_run_id": "gru-hattori-matched-half-20260907-200328-e0158859",
+          "wandb_url": "https://wandb.ai/AIND-disRNN/gru_cross_species_transfer/runs/gru-hattori-matched-half-20260907-200328-e0158859",
+          "evaluation_artifact": {
+            "id": "QXJ0aWZhY3Q6MzU2MDkxNzg1NA==",
+            "name": "external-gru-output-gru-hattori-matched-half-20260907-200328-e0158859",
+            "digest": "4f24fbc2a0f622f5059e2888f4f6456f",
+            "file_count": 33,
+            "size_bytes": 28975704
+          },
+          "beaker_job_id": "01M1ZFJ26YMZ9CV5MN42RKC67X",
+          "beaker_result_dataset_id": "01M1ZFJ23CE55EKAGCZ4VE7P2Z",
+          "metrics_sha256": "e1319a5efa1d03f55eec3974e308d2dd05cce947f3af2584371b1c47e3aea1b1",
+          "predictions_sha256": "28c3cc310a3b653062e126ace58643607013caef394481f9f5839e00d4e3364f",
+          "ordered_trial_key_sha256": "0709d4447c7edab3b5398e5b0247e81b032544aa8e278fd2f316443f17fab41c",
+          "n_prediction_rows": 68972,
+          "metrics": {
+            "n_trials": 68972,
+            "mean_log_likelihood_nats": -0.5695341403514367,
+            "normalized_likelihood": 0.5657889555578329,
+            "per_subject_mean_log_likelihood_nats": {
+              "RH353": -0.5764514319607448,
+              "RH365": -0.5534438118460044,
+              "RH374": -0.5830516000278897,
+              "RH375": -0.49816456368600975,
+              "RH377": -0.5869188575215167,
+              "RH445": -0.5528867717784481,
+              "RH456": -0.5605163433379026
+            },
+            "per_session": [
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190101",
+                "n_trials": 534,
+                "mean_log_likelihood_nats": -0.5938320148888452
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190103",
+                "n_trials": 513,
+                "mean_log_likelihood_nats": -0.6490155777344486
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190105",
+                "n_trials": 503,
+                "mean_log_likelihood_nats": -0.6230402557444988
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190107",
+                "n_trials": 538,
+                "mean_log_likelihood_nats": -0.542001223259753
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190109",
+                "n_trials": 377,
+                "mean_log_likelihood_nats": -0.47924762230166174
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190111",
+                "n_trials": 453,
+                "mean_log_likelihood_nats": -0.5131500579746564
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190113",
+                "n_trials": 599,
+                "mean_log_likelihood_nats": -0.5783297768659278
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190115",
+                "n_trials": 512,
+                "mean_log_likelihood_nats": -0.5178951556796072
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190117",
+                "n_trials": 634,
+                "mean_log_likelihood_nats": -0.5283721206625152
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190211",
+                "n_trials": 292,
+                "mean_log_likelihood_nats": -0.5895567004305131
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190213",
+                "n_trials": 733,
+                "mean_log_likelihood_nats": -0.5993214266016808
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190215",
+                "n_trials": 405,
+                "mean_log_likelihood_nats": -0.5704483836074776
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190217",
+                "n_trials": 386,
+                "mean_log_likelihood_nats": -0.641895203443552
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190219",
+                "n_trials": 387,
+                "mean_log_likelihood_nats": -0.6015671245366857
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190221",
+                "n_trials": 401,
+                "mean_log_likelihood_nats": -0.6312504847409154
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190223",
+                "n_trials": 437,
+                "mean_log_likelihood_nats": -0.5721906170050699
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181218",
+                "n_trials": 576,
+                "mean_log_likelihood_nats": -0.5722146351740345
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181220",
+                "n_trials": 344,
+                "mean_log_likelihood_nats": -0.5173656047669283
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181222",
+                "n_trials": 539,
+                "mean_log_likelihood_nats": -0.6502208894907805
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181224",
+                "n_trials": 322,
+                "mean_log_likelihood_nats": -0.64395846173889
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181226",
+                "n_trials": 377,
+                "mean_log_likelihood_nats": -0.5600666323324062
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181228",
+                "n_trials": 572,
+                "mean_log_likelihood_nats": -0.5039457497794965
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181230",
+                "n_trials": 404,
+                "mean_log_likelihood_nats": -0.6052294954259198
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190101",
+                "n_trials": 477,
+                "mean_log_likelihood_nats": -0.563386642547433
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190103",
+                "n_trials": 457,
+                "mean_log_likelihood_nats": -0.5375514702410603
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190105",
+                "n_trials": 925,
+                "mean_log_likelihood_nats": -0.4722867768687266
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190107",
+                "n_trials": 463,
+                "mean_log_likelihood_nats": -0.5908476859866448
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190109",
+                "n_trials": 322,
+                "mean_log_likelihood_nats": -0.5041855344825137
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190111",
+                "n_trials": 273,
+                "mean_log_likelihood_nats": -0.391196535820051
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190113",
+                "n_trials": 374,
+                "mean_log_likelihood_nats": -0.5371646747981095
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190115",
+                "n_trials": 341,
+                "mean_log_likelihood_nats": -0.5508409871127496
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190117",
+                "n_trials": 462,
+                "mean_log_likelihood_nats": -0.5198551586257586
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190119",
+                "n_trials": 263,
+                "mean_log_likelihood_nats": -0.5948901849076287
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190121",
+                "n_trials": 432,
+                "mean_log_likelihood_nats": -0.6165317660089547
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190123",
+                "n_trials": 362,
+                "mean_log_likelihood_nats": -0.5973771914425091
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190125",
+                "n_trials": 301,
+                "mean_log_likelihood_nats": -0.5356947553977391
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190127",
+                "n_trials": 683,
+                "mean_log_likelihood_nats": -0.5745992445333253
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190129",
+                "n_trials": 360,
+                "mean_log_likelihood_nats": -0.5671687342685818
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190112",
+                "n_trials": 553,
+                "mean_log_likelihood_nats": -0.6421303246288675
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190114",
+                "n_trials": 426,
+                "mean_log_likelihood_nats": -0.6036066472776399
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190116",
+                "n_trials": 473,
+                "mean_log_likelihood_nats": -0.6221673007174282
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190118",
+                "n_trials": 495,
+                "mean_log_likelihood_nats": -0.6007711688253298
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190120",
+                "n_trials": 508,
+                "mean_log_likelihood_nats": -0.590510852272445
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190211",
+                "n_trials": 536,
+                "mean_log_likelihood_nats": -0.5191409225123512
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190213",
+                "n_trials": 737,
+                "mean_log_likelihood_nats": -0.594741200377005
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190215",
+                "n_trials": 434,
+                "mean_log_likelihood_nats": -0.5846256944040767
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190217",
+                "n_trials": 637,
+                "mean_log_likelihood_nats": -0.5877845008420111
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190219",
+                "n_trials": 865,
+                "mean_log_likelihood_nats": -0.553454764753981
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190221",
+                "n_trials": 634,
+                "mean_log_likelihood_nats": -0.4767833740956582
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190223",
+                "n_trials": 893,
+                "mean_log_likelihood_nats": -0.6134449548746382
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190225",
+                "n_trials": 667,
+                "mean_log_likelihood_nats": -0.582459999627935
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190227",
+                "n_trials": 659,
+                "mean_log_likelihood_nats": -0.6105448097430406
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190301",
+                "n_trials": 505,
+                "mean_log_likelihood_nats": -0.5458349558194621
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190303",
+                "n_trials": 941,
+                "mean_log_likelihood_nats": -0.5725167587518215
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190305",
+                "n_trials": 601,
+                "mean_log_likelihood_nats": -0.6083789664161391
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190307",
+                "n_trials": 848,
+                "mean_log_likelihood_nats": -0.5778139038970255
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190309",
+                "n_trials": 282,
+                "mean_log_likelihood_nats": -0.5917310485771674
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190311",
+                "n_trials": 746,
+                "mean_log_likelihood_nats": -0.4978134379114847
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190313",
+                "n_trials": 1093,
+                "mean_log_likelihood_nats": -0.5361174607032452
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190316",
+                "n_trials": 621,
+                "mean_log_likelihood_nats": -0.5848826687701849
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190319",
+                "n_trials": 515,
+                "mean_log_likelihood_nats": -0.5919745890047798
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190321",
+                "n_trials": 681,
+                "mean_log_likelihood_nats": -0.5969305959660798
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190323",
+                "n_trials": 315,
+                "mean_log_likelihood_nats": -0.6449498645321572
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190325",
+                "n_trials": 543,
+                "mean_log_likelihood_nats": -0.6525130546531125
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190327",
+                "n_trials": 674,
+                "mean_log_likelihood_nats": -0.6189953665399516
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190329",
+                "n_trials": 675,
+                "mean_log_likelihood_nats": -0.6294297287073396
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190121",
+                "n_trials": 706,
+                "mean_log_likelihood_nats": -0.5935251655270714
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190123",
+                "n_trials": 140,
+                "mean_log_likelihood_nats": -0.6104645153269587
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190125",
+                "n_trials": 432,
+                "mean_log_likelihood_nats": -0.4571841522630309
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190128",
+                "n_trials": 357,
+                "mean_log_likelihood_nats": -0.5626397738892979
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190131",
+                "n_trials": 230,
+                "mean_log_likelihood_nats": -0.424915481964579
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190202",
+                "n_trials": 307,
+                "mean_log_likelihood_nats": -0.47117119433780685
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190204",
+                "n_trials": 559,
+                "mean_log_likelihood_nats": -0.5613646408354921
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190206",
+                "n_trials": 168,
+                "mean_log_likelihood_nats": -0.54546588166005
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190208",
+                "n_trials": 322,
+                "mean_log_likelihood_nats": -0.48348645180189603
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190213",
+                "n_trials": 515,
+                "mean_log_likelihood_nats": -0.45403177524955474
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190215",
+                "n_trials": 539,
+                "mean_log_likelihood_nats": -0.3876117193932783
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190218",
+                "n_trials": 368,
+                "mean_log_likelihood_nats": -0.42408412789450894
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190220",
+                "n_trials": 382,
+                "mean_log_likelihood_nats": -0.5185897461958847
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190603",
+                "n_trials": 692,
+                "mean_log_likelihood_nats": -0.6035641517864502
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190605",
+                "n_trials": 578,
+                "mean_log_likelihood_nats": -0.6189373583443492
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190607",
+                "n_trials": 874,
+                "mean_log_likelihood_nats": -0.612811355380765
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190609",
+                "n_trials": 811,
+                "mean_log_likelihood_nats": -0.6169341485875791
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190611",
+                "n_trials": 658,
+                "mean_log_likelihood_nats": -0.57644826284142
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190613",
+                "n_trials": 543,
+                "mean_log_likelihood_nats": -0.5898645752404198
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190615",
+                "n_trials": 554,
+                "mean_log_likelihood_nats": -0.6081555644299985
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190617",
+                "n_trials": 565,
+                "mean_log_likelihood_nats": -0.6241125355816054
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190619",
+                "n_trials": 526,
+                "mean_log_likelihood_nats": -0.6584404676758011
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190621",
+                "n_trials": 562,
+                "mean_log_likelihood_nats": -0.5823176179831332
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190623",
+                "n_trials": 741,
+                "mean_log_likelihood_nats": -0.6298438674236526
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190625",
+                "n_trials": 404,
+                "mean_log_likelihood_nats": -0.5851735921312212
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190627",
+                "n_trials": 688,
+                "mean_log_likelihood_nats": -0.5602026018124885
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190629",
+                "n_trials": 432,
+                "mean_log_likelihood_nats": -0.580272631033702
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190701",
+                "n_trials": 347,
+                "mean_log_likelihood_nats": -0.5872039873496026
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190703",
+                "n_trials": 514,
+                "mean_log_likelihood_nats": -0.5833810857192218
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190705",
+                "n_trials": 580,
+                "mean_log_likelihood_nats": -0.5615266058424291
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190707",
+                "n_trials": 453,
+                "mean_log_likelihood_nats": -0.561271762647247
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190709",
+                "n_trials": 550,
+                "mean_log_likelihood_nats": -0.5728088497887202
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190711",
+                "n_trials": 543,
+                "mean_log_likelihood_nats": -0.5517616982641704
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190713",
+                "n_trials": 365,
+                "mean_log_likelihood_nats": -0.5850254300738642
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190715",
+                "n_trials": 748,
+                "mean_log_likelihood_nats": -0.5721373293502926
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190717",
+                "n_trials": 579,
+                "mean_log_likelihood_nats": -0.5721618594480175
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190719",
+                "n_trials": 656,
+                "mean_log_likelihood_nats": -0.5418258573039163
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190721",
+                "n_trials": 534,
+                "mean_log_likelihood_nats": -0.5918020721371372
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190723",
+                "n_trials": 561,
+                "mean_log_likelihood_nats": -0.5301860961720731
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190725",
+                "n_trials": 623,
+                "mean_log_likelihood_nats": -0.6444671737781326
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190727",
+                "n_trials": 656,
+                "mean_log_likelihood_nats": -0.5345936925086061
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190729",
+                "n_trials": 476,
+                "mean_log_likelihood_nats": -0.5506157132908253
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190731",
+                "n_trials": 565,
+                "mean_log_likelihood_nats": -0.5673766166613723
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190802",
+                "n_trials": 542,
+                "mean_log_likelihood_nats": -0.5732946968620622
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190804",
+                "n_trials": 402,
+                "mean_log_likelihood_nats": -0.518364320372469
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190806",
+                "n_trials": 548,
+                "mean_log_likelihood_nats": -0.6179592724651404
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190808",
+                "n_trials": 302,
+                "mean_log_likelihood_nats": -0.6762444802882325
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190811",
+                "n_trials": 417,
+                "mean_log_likelihood_nats": -0.5926443164218285
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190514",
+                "n_trials": 271,
+                "mean_log_likelihood_nats": -0.55837250654169
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190516",
+                "n_trials": 171,
+                "mean_log_likelihood_nats": -0.5595307454696641
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190518",
+                "n_trials": 356,
+                "mean_log_likelihood_nats": -0.5834141937780555
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190520",
+                "n_trials": 260,
+                "mean_log_likelihood_nats": -0.40267013562276693
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190522",
+                "n_trials": 410,
+                "mean_log_likelihood_nats": -0.5130001453595611
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190524",
+                "n_trials": 351,
+                "mean_log_likelihood_nats": -0.5039425639742495
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190526",
+                "n_trials": 342,
+                "mean_log_likelihood_nats": -0.5450731238557961
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190528",
+                "n_trials": 267,
+                "mean_log_likelihood_nats": -0.43345731191734516
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190530",
+                "n_trials": 334,
+                "mean_log_likelihood_nats": -0.5972587273946347
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190601",
+                "n_trials": 259,
+                "mean_log_likelihood_nats": -0.6549839634375207
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190603",
+                "n_trials": 243,
+                "mean_log_likelihood_nats": -0.5194769775579389
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190605",
+                "n_trials": 258,
+                "mean_log_likelihood_nats": -0.6330998383289617
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190607",
+                "n_trials": 353,
+                "mean_log_likelihood_nats": -0.6338395622798292
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190609",
+                "n_trials": 146,
+                "mean_log_likelihood_nats": -0.5192222300111738
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190611",
+                "n_trials": 202,
+                "mean_log_likelihood_nats": -0.6328747309425041
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190427",
+                "n_trials": 204,
+                "mean_log_likelihood_nats": -0.624268986537413
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190429",
+                "n_trials": 127,
+                "mean_log_likelihood_nats": -0.6104155365007574
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190501",
+                "n_trials": 437,
+                "mean_log_likelihood_nats": -0.5954733882644453
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190503",
+                "n_trials": 311,
+                "mean_log_likelihood_nats": -0.6171305327733818
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190505",
+                "n_trials": 534,
+                "mean_log_likelihood_nats": -0.6081960208830897
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190507",
+                "n_trials": 241,
+                "mean_log_likelihood_nats": -0.6147797029117706
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190509",
+                "n_trials": 586,
+                "mean_log_likelihood_nats": -0.5783706741740596
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190511",
+                "n_trials": 463,
+                "mean_log_likelihood_nats": -0.591346705100495
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190513",
+                "n_trials": 273,
+                "mean_log_likelihood_nats": -0.48498036542171263
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190515",
+                "n_trials": 398,
+                "mean_log_likelihood_nats": -0.5249744506393123
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190517",
+                "n_trials": 321,
+                "mean_log_likelihood_nats": -0.5679096279268788
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190519",
+                "n_trials": 409,
+                "mean_log_likelihood_nats": -0.5580969072804117
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190521",
+                "n_trials": 345,
+                "mean_log_likelihood_nats": -0.5697326364585017
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190523",
+                "n_trials": 196,
+                "mean_log_likelihood_nats": -0.3706856422971261
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190525",
+                "n_trials": 400,
+                "mean_log_likelihood_nats": -0.4402888568698519
+              }
+            ]
+          }
+        },
+        {
+          "source_key": "e8-d614-s2",
+          "seed": 2,
+          "wandb_run_id": "gru-hattori-matched-half-20260907-200328-9c458ee1",
+          "wandb_url": "https://wandb.ai/AIND-disRNN/gru_cross_species_transfer/runs/gru-hattori-matched-half-20260907-200328-9c458ee1",
+          "evaluation_artifact": {
+            "id": "QXJ0aWZhY3Q6MzU2MDkxNzQ2MA==",
+            "name": "external-gru-output-gru-hattori-matched-half-20260907-200328-9c458ee1",
+            "digest": "316e14a8d44ae8565243fdc0b63f5565",
+            "file_count": 33,
+            "size_bytes": 28974849
+          },
+          "beaker_job_id": "01M1ZFJ2AG28MBCYDBAAG1ERT4",
+          "beaker_result_dataset_id": "01M1ZFJ274KCVAWSMBCQ8ENGVD",
+          "metrics_sha256": "011f6968c2b699562205165871f71bbd06275e66344d07475e81519bc39e282e",
+          "predictions_sha256": "62fb492a08dd368ed352963a2f411af5cb05eb994963f8894f4aa32b9b48a4f2",
+          "ordered_trial_key_sha256": "0709d4447c7edab3b5398e5b0247e81b032544aa8e278fd2f316443f17fab41c",
+          "n_prediction_rows": 68972,
+          "metrics": {
+            "n_trials": 68972,
+            "mean_log_likelihood_nats": -0.5695499434760698,
+            "normalized_likelihood": 0.5657800143951016,
+            "per_subject_mean_log_likelihood_nats": {
+              "RH353": -0.5781912630031165,
+              "RH365": -0.5537946384260212,
+              "RH374": -0.5849354213129389,
+              "RH375": -0.49753803045014633,
+              "RH377": -0.5848827905544258,
+              "RH445": -0.5528301333573457,
+              "RH456": -0.5594688666366714
+            },
+            "per_session": [
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190101",
+                "n_trials": 534,
+                "mean_log_likelihood_nats": -0.5894626133658137
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190103",
+                "n_trials": 513,
+                "mean_log_likelihood_nats": -0.6485214313697218
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190105",
+                "n_trials": 503,
+                "mean_log_likelihood_nats": -0.6247154183999554
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190107",
+                "n_trials": 538,
+                "mean_log_likelihood_nats": -0.5454734681615993
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190109",
+                "n_trials": 377,
+                "mean_log_likelihood_nats": -0.4854464109693264
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190111",
+                "n_trials": 453,
+                "mean_log_likelihood_nats": -0.5184629108196076
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190113",
+                "n_trials": 599,
+                "mean_log_likelihood_nats": -0.5868494948187822
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190115",
+                "n_trials": 512,
+                "mean_log_likelihood_nats": -0.5201464297020555
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190117",
+                "n_trials": 634,
+                "mean_log_likelihood_nats": -0.5288724135006185
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190211",
+                "n_trials": 292,
+                "mean_log_likelihood_nats": -0.5899969351826548
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190213",
+                "n_trials": 733,
+                "mean_log_likelihood_nats": -0.5969997967284263
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190215",
+                "n_trials": 405,
+                "mean_log_likelihood_nats": -0.571106951865126
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190217",
+                "n_trials": 386,
+                "mean_log_likelihood_nats": -0.6408154527350473
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190219",
+                "n_trials": 387,
+                "mean_log_likelihood_nats": -0.6034848087227473
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190221",
+                "n_trials": 401,
+                "mean_log_likelihood_nats": -0.639610853682454
+              },
+              {
+                "subject_id": "RH353",
+                "ses_idx": "RH353__190223",
+                "n_trials": 437,
+                "mean_log_likelihood_nats": -0.5712559365700749
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181218",
+                "n_trials": 576,
+                "mean_log_likelihood_nats": -0.5722230377574888
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181220",
+                "n_trials": 344,
+                "mean_log_likelihood_nats": -0.5182063732319453
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181222",
+                "n_trials": 539,
+                "mean_log_likelihood_nats": -0.6429847707902432
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181224",
+                "n_trials": 322,
+                "mean_log_likelihood_nats": -0.6474427294635836
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181226",
+                "n_trials": 377,
+                "mean_log_likelihood_nats": -0.5633466421946485
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181228",
+                "n_trials": 572,
+                "mean_log_likelihood_nats": -0.5086911173898673
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__181230",
+                "n_trials": 404,
+                "mean_log_likelihood_nats": -0.6058059140938409
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190101",
+                "n_trials": 477,
+                "mean_log_likelihood_nats": -0.574108684747134
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190103",
+                "n_trials": 457,
+                "mean_log_likelihood_nats": -0.5395538466571039
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190105",
+                "n_trials": 925,
+                "mean_log_likelihood_nats": -0.47601902530414114
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190107",
+                "n_trials": 463,
+                "mean_log_likelihood_nats": -0.5901246298250697
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190109",
+                "n_trials": 322,
+                "mean_log_likelihood_nats": -0.49824666525671607
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190111",
+                "n_trials": 273,
+                "mean_log_likelihood_nats": -0.36380678900887076
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190113",
+                "n_trials": 374,
+                "mean_log_likelihood_nats": -0.5395004337712719
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190115",
+                "n_trials": 341,
+                "mean_log_likelihood_nats": -0.5460492367197533
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190117",
+                "n_trials": 462,
+                "mean_log_likelihood_nats": -0.510604786469121
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190119",
+                "n_trials": 263,
+                "mean_log_likelihood_nats": -0.591742900647797
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190121",
+                "n_trials": 432,
+                "mean_log_likelihood_nats": -0.6160439578269954
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190123",
+                "n_trials": 362,
+                "mean_log_likelihood_nats": -0.6048699866834361
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190125",
+                "n_trials": 301,
+                "mean_log_likelihood_nats": -0.5354052570810434
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190127",
+                "n_trials": 683,
+                "mean_log_likelihood_nats": -0.5748662817006298
+              },
+              {
+                "subject_id": "RH365",
+                "ses_idx": "RH365__190129",
+                "n_trials": 360,
+                "mean_log_likelihood_nats": -0.5815747563440377
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190112",
+                "n_trials": 553,
+                "mean_log_likelihood_nats": -0.6428049119388023
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190114",
+                "n_trials": 426,
+                "mean_log_likelihood_nats": -0.606715406481783
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190116",
+                "n_trials": 473,
+                "mean_log_likelihood_nats": -0.626593836013114
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190118",
+                "n_trials": 495,
+                "mean_log_likelihood_nats": -0.604512481513913
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190120",
+                "n_trials": 508,
+                "mean_log_likelihood_nats": -0.5902422106591785
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190211",
+                "n_trials": 536,
+                "mean_log_likelihood_nats": -0.520390332076909
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190213",
+                "n_trials": 737,
+                "mean_log_likelihood_nats": -0.5903566951412501
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190215",
+                "n_trials": 434,
+                "mean_log_likelihood_nats": -0.5824645355262994
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190217",
+                "n_trials": 637,
+                "mean_log_likelihood_nats": -0.5952665540515203
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190219",
+                "n_trials": 865,
+                "mean_log_likelihood_nats": -0.5600187343501678
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190221",
+                "n_trials": 634,
+                "mean_log_likelihood_nats": -0.48181846051292404
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190223",
+                "n_trials": 893,
+                "mean_log_likelihood_nats": -0.6098755986973449
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190225",
+                "n_trials": 667,
+                "mean_log_likelihood_nats": -0.5845047521603454
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190227",
+                "n_trials": 659,
+                "mean_log_likelihood_nats": -0.613326773235419
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190301",
+                "n_trials": 505,
+                "mean_log_likelihood_nats": -0.5479465838746898
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190303",
+                "n_trials": 941,
+                "mean_log_likelihood_nats": -0.5710823742858966
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190305",
+                "n_trials": 601,
+                "mean_log_likelihood_nats": -0.6117911292445934
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190307",
+                "n_trials": 848,
+                "mean_log_likelihood_nats": -0.5804666597096662
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190309",
+                "n_trials": 282,
+                "mean_log_likelihood_nats": -0.5919094603904821
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190311",
+                "n_trials": 746,
+                "mean_log_likelihood_nats": -0.5006884656274452
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190313",
+                "n_trials": 1093,
+                "mean_log_likelihood_nats": -0.5416662483738465
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190316",
+                "n_trials": 621,
+                "mean_log_likelihood_nats": -0.5854397333401826
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190319",
+                "n_trials": 515,
+                "mean_log_likelihood_nats": -0.5918080631861162
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190321",
+                "n_trials": 681,
+                "mean_log_likelihood_nats": -0.5962145100210257
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190323",
+                "n_trials": 315,
+                "mean_log_likelihood_nats": -0.6510934356825273
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190325",
+                "n_trials": 543,
+                "mean_log_likelihood_nats": -0.651842926683913
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190327",
+                "n_trials": 674,
+                "mean_log_likelihood_nats": -0.6239775901471483
+              },
+              {
+                "subject_id": "RH374",
+                "ses_idx": "RH374__190329",
+                "n_trials": 675,
+                "mean_log_likelihood_nats": -0.6300856529061352
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190121",
+                "n_trials": 706,
+                "mean_log_likelihood_nats": -0.5931936765466975
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190123",
+                "n_trials": 140,
+                "mean_log_likelihood_nats": -0.5994008723367416
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190125",
+                "n_trials": 432,
+                "mean_log_likelihood_nats": -0.4626081817768426
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190128",
+                "n_trials": 357,
+                "mean_log_likelihood_nats": -0.5613279066929198
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190131",
+                "n_trials": 230,
+                "mean_log_likelihood_nats": -0.426735479483428
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190202",
+                "n_trials": 307,
+                "mean_log_likelihood_nats": -0.4723941120998946
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190204",
+                "n_trials": 559,
+                "mean_log_likelihood_nats": -0.5604525368471669
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190206",
+                "n_trials": 168,
+                "mean_log_likelihood_nats": -0.5440369745939291
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190208",
+                "n_trials": 322,
+                "mean_log_likelihood_nats": -0.48079678306528617
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190213",
+                "n_trials": 515,
+                "mean_log_likelihood_nats": -0.44925894863725013
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190215",
+                "n_trials": 539,
+                "mean_log_likelihood_nats": -0.3931086649800818
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190218",
+                "n_trials": 368,
+                "mean_log_likelihood_nats": -0.4184785055803763
+              },
+              {
+                "subject_id": "RH375",
+                "ses_idx": "RH375__190220",
+                "n_trials": 382,
+                "mean_log_likelihood_nats": -0.5163377809624446
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190603",
+                "n_trials": 692,
+                "mean_log_likelihood_nats": -0.5988884951978256
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190605",
+                "n_trials": 578,
+                "mean_log_likelihood_nats": -0.6173781369306497
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190607",
+                "n_trials": 874,
+                "mean_log_likelihood_nats": -0.6086205414340856
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190609",
+                "n_trials": 811,
+                "mean_log_likelihood_nats": -0.6187680922846535
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190611",
+                "n_trials": 658,
+                "mean_log_likelihood_nats": -0.5726280022702487
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190613",
+                "n_trials": 543,
+                "mean_log_likelihood_nats": -0.591700921026546
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190615",
+                "n_trials": 554,
+                "mean_log_likelihood_nats": -0.6094906365796802
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190617",
+                "n_trials": 565,
+                "mean_log_likelihood_nats": -0.6217701874252318
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190619",
+                "n_trials": 526,
+                "mean_log_likelihood_nats": -0.6549915563816453
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190621",
+                "n_trials": 562,
+                "mean_log_likelihood_nats": -0.5789180134821222
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190623",
+                "n_trials": 741,
+                "mean_log_likelihood_nats": -0.6333564641942178
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190625",
+                "n_trials": 404,
+                "mean_log_likelihood_nats": -0.5775444772016924
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190627",
+                "n_trials": 688,
+                "mean_log_likelihood_nats": -0.565808774405932
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190629",
+                "n_trials": 432,
+                "mean_log_likelihood_nats": -0.5718232367263139
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190701",
+                "n_trials": 347,
+                "mean_log_likelihood_nats": -0.5849229162021569
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190703",
+                "n_trials": 514,
+                "mean_log_likelihood_nats": -0.5822313865436493
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190705",
+                "n_trials": 580,
+                "mean_log_likelihood_nats": -0.5593065961944486
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190707",
+                "n_trials": 453,
+                "mean_log_likelihood_nats": -0.5603019812524985
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190709",
+                "n_trials": 550,
+                "mean_log_likelihood_nats": -0.5683942016579283
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190711",
+                "n_trials": 543,
+                "mean_log_likelihood_nats": -0.5456547628506199
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190713",
+                "n_trials": 365,
+                "mean_log_likelihood_nats": -0.5836313712404957
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190715",
+                "n_trials": 748,
+                "mean_log_likelihood_nats": -0.5704327896862172
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190717",
+                "n_trials": 579,
+                "mean_log_likelihood_nats": -0.5614369350560705
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190719",
+                "n_trials": 656,
+                "mean_log_likelihood_nats": -0.5368910292797547
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190721",
+                "n_trials": 534,
+                "mean_log_likelihood_nats": -0.590235373595733
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190723",
+                "n_trials": 561,
+                "mean_log_likelihood_nats": -0.5225397012604108
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190725",
+                "n_trials": 623,
+                "mean_log_likelihood_nats": -0.6409416563854784
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190727",
+                "n_trials": 656,
+                "mean_log_likelihood_nats": -0.5258622290574461
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190729",
+                "n_trials": 476,
+                "mean_log_likelihood_nats": -0.5449840344057891
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190731",
+                "n_trials": 565,
+                "mean_log_likelihood_nats": -0.5663562455475412
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190802",
+                "n_trials": 542,
+                "mean_log_likelihood_nats": -0.5784798967110018
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190804",
+                "n_trials": 402,
+                "mean_log_likelihood_nats": -0.5282823777581506
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190806",
+                "n_trials": 548,
+                "mean_log_likelihood_nats": -0.6223706431918394
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190808",
+                "n_trials": 302,
+                "mean_log_likelihood_nats": -0.6824417427328247
+              },
+              {
+                "subject_id": "RH377",
+                "ses_idx": "RH377__190811",
+                "n_trials": 417,
+                "mean_log_likelihood_nats": -0.5874423486189727
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190514",
+                "n_trials": 271,
+                "mean_log_likelihood_nats": -0.550873059937885
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190516",
+                "n_trials": 171,
+                "mean_log_likelihood_nats": -0.5717981087648328
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190518",
+                "n_trials": 356,
+                "mean_log_likelihood_nats": -0.5877027413747158
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190520",
+                "n_trials": 260,
+                "mean_log_likelihood_nats": -0.3925505398880154
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190522",
+                "n_trials": 410,
+                "mean_log_likelihood_nats": -0.5208823502618573
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190524",
+                "n_trials": 351,
+                "mean_log_likelihood_nats": -0.511693318786561
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190526",
+                "n_trials": 342,
+                "mean_log_likelihood_nats": -0.5465391532658198
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190528",
+                "n_trials": 267,
+                "mean_log_likelihood_nats": -0.42865482723250675
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190530",
+                "n_trials": 334,
+                "mean_log_likelihood_nats": -0.6059018834968123
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190601",
+                "n_trials": 259,
+                "mean_log_likelihood_nats": -0.6509623400553297
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190603",
+                "n_trials": 243,
+                "mean_log_likelihood_nats": -0.5159832033210187
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190605",
+                "n_trials": 258,
+                "mean_log_likelihood_nats": -0.6301423889050506
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190607",
+                "n_trials": 353,
+                "mean_log_likelihood_nats": -0.6240105493730361
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190609",
+                "n_trials": 146,
+                "mean_log_likelihood_nats": -0.5139254239649723
+              },
+              {
+                "subject_id": "RH445",
+                "ses_idx": "RH445__190611",
+                "n_trials": 202,
+                "mean_log_likelihood_nats": -0.6310838985250334
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190427",
+                "n_trials": 204,
+                "mean_log_likelihood_nats": -0.6124737971906745
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190429",
+                "n_trials": 127,
+                "mean_log_likelihood_nats": -0.6025687825205871
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190501",
+                "n_trials": 437,
+                "mean_log_likelihood_nats": -0.5922825260979867
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190503",
+                "n_trials": 311,
+                "mean_log_likelihood_nats": -0.6269357172846839
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190505",
+                "n_trials": 534,
+                "mean_log_likelihood_nats": -0.6094614184669029
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190507",
+                "n_trials": 241,
+                "mean_log_likelihood_nats": -0.617588722037986
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190509",
+                "n_trials": 586,
+                "mean_log_likelihood_nats": -0.5817547929955593
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190511",
+                "n_trials": 463,
+                "mean_log_likelihood_nats": -0.5903890202411465
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190513",
+                "n_trials": 273,
+                "mean_log_likelihood_nats": -0.48186550268004624
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190515",
+                "n_trials": 398,
+                "mean_log_likelihood_nats": -0.5178050065258646
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190517",
+                "n_trials": 321,
+                "mean_log_likelihood_nats": -0.5767795410041351
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190519",
+                "n_trials": 409,
+                "mean_log_likelihood_nats": -0.5625762822421473
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190521",
+                "n_trials": 345,
+                "mean_log_likelihood_nats": -0.5762030858665819
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190523",
+                "n_trials": 196,
+                "mean_log_likelihood_nats": -0.3700564182944051
+              },
+              {
+                "subject_id": "RH456",
+                "ses_idx": "RH456__190525",
+                "n_trials": 400,
+                "mean_log_likelihood_nats": -0.41598102361114025
               }
             ]
           }

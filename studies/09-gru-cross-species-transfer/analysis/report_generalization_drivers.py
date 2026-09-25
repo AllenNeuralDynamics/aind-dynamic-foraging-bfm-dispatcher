@@ -300,7 +300,7 @@ def _plot_main(data: dict, view: str, output: Path) -> None:
         f"External-centroid distance from source\n({dimension}D Mahalanobis)"
     )
     axes[0].set_ylabel(
-        f"GRU E={dimension}, D=614 − common Q\n(subject-balanced bits/trial)"
+        f"GRU E={dimension}, D=614 − Bari2019\n(subject-balanced bits/trial)"
     )
     axes[0].set_title(
         _relation_title(
@@ -324,7 +324,7 @@ def _plot_main(data: dict, view: str, output: Path) -> None:
     axes[1].set_xlim(lower, upper)
     axes[1].set_ylim(lower, upper)
     axes[1].set_aspect("equal", adjustable="box")
-    axes[1].set_xlabel("Common-Q normalized likelihood")
+    axes[1].set_xlabel("Bari2019 normalized likelihood")
     axes[1].set_ylabel(f"GRU E={dimension}, D=614 normalized likelihood")
     axes[1].set_title("Absolute held-out predictability\n(identity line = equal performance)")
 
@@ -334,13 +334,13 @@ def _plot_main(data: dict, view: str, output: Path) -> None:
         else None
     )
     axes[2].axhline(0, color="#777777", linestyle="--", linewidth=1)
-    axes[2].set_xlabel("Common-Q predictability (bits above chance)")
+    axes[2].set_xlabel("Bari2019 predictability (bits above chance)")
     axes[2].set_ylabel(
-        f"GRU E={dimension}, D=614 − common Q\n(subject-balanced bits/trial)"
+        f"GRU E={dimension}, D=614 − Bari2019\n(subject-balanced bits/trial)"
     )
     axes[2].set_title(
         _relation_title(
-            "Advantage vs common-Q predictability†", coupled, len(cohorts)
+            "Advantage vs Bari2019 predictability†", coupled, len(cohorts)
         )
     )
 
@@ -414,7 +414,7 @@ def _plot_robustness(data: dict, view: str, output: Path) -> None:
         f"Median subject distance from source\n({dimension}D Mahalanobis)"
     )
     axes[0].set_ylabel(
-        f"GRU E={dimension}, D=614 − common Q\n(subject-balanced bits/trial)"
+        f"GRU E={dimension}, D=614 − Bari2019\n(subject-balanced bits/trial)"
     )
     axes[0].set_title(
         _relation_title(
@@ -490,7 +490,7 @@ def _plot_task_design(task_data: dict, view: str, output: Path) -> None:
     outcomes = (
         (
             "gru_d614_minus_q_bits_per_trial",
-            f"GRU E={dimension}, D=614 − common Q\n(subject-balanced bits/trial)",
+            f"GRU E={dimension}, D=614 − Bari2019\n(subject-balanced bits/trial)",
             "gru_d614_minus_q",
         ),
         (
@@ -569,7 +569,7 @@ def _relationship_rows(relationships: dict) -> list[str]:
             "GRU614−Q vs median subject embedding distance"
         ),
         "gru_d614_minus_q_vs_common_q_predictability": (
-            "GRU614−Q vs common-Q predictability†"
+            "GRU614−Bari2019 vs Bari2019 predictability†"
         ),
         "gru_d614_minus_d10_vs_embedding_centroid": (
             "GRU614−GRU10 vs embedding centroid distance"
@@ -822,11 +822,11 @@ def _result_block(
         "",
         "**E=4**",
         "",
-        "![Primary cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers.png)",
+        "![Primary cohorts: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers.png)",
         "",
         "**E=8**",
         "",
-        "![Primary cohorts, E8: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_e8.png)",
+        "![Primary cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_e8.png)",
         "",
         f"Primary inference uses {primary_n} equal-weight cross-study cohorts. Performance is the arithmetic "
         "mean held-out log likelihood across subjects, converted to bits per trial. "
@@ -841,11 +841,11 @@ def _result_block(
         "",
         "**E=4**",
         "",
-        "![Primary plus stress-test cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_primary_plus_stress.png)",
+        "![Primary plus stress-test cohorts: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress.png)",
         "",
         "**E=8**",
         "",
-        "![Primary plus stress-test cohorts, E8: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_primary_plus_stress_e8.png)",
+        "![Primary plus stress-test cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress_e8.png)",
         "",
         "This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse) "
         "to the primary cohorts. It is displayed descriptively because this 11-cohort "
@@ -855,17 +855,17 @@ def _result_block(
         "",
         "**E=4**",
         "",
-        "![All valid cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_all_valid.png)",
+        "![All valid cohorts: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid.png)",
         "",
         "**E=8**",
         "",
-        "![All valid cohorts, E8: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_all_valid_e8.png)",
+        "![All valid cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid_e8.png)",
         "",
         "This cumulative sensitivity view additionally includes Tang (macaque). Its plot "
-        "annotations report the frozen 12-cohort all-valid sensitivity relationships; "
+        f"annotations report the frozen {valid_n}-cohort all-valid sensitivity relationships; "
         "Tang (macaque) remains descriptive-only because the release has two subjects.",
         "",
-        f"For E=4, the D=614 GRU has higher subject-balanced mean log likelihood than common Q in "
+        f"For E=4, the D=614 GRU has higher subject-balanced mean log likelihood than Bari2019 common Q in "
         f"{len(positive)} cohorts ({', '.join(positive)}) and lower mean log likelihood in "
         f"{len(negative)} ({', '.join(negative)}). This direction summary does not replace "
         "the paired subject tests in Result 1.",
@@ -887,7 +887,7 @@ def _result_block(
         f"leave-one-out {_fmt_interval(centroid_e8['leave_one_out_range'])}).",
         "",
         "The identity plot is the primary view of baseline predictability. The right panel "
-        "shows the requested GRU-minus-Q value against common Q, but its correlation is "
+        "shows the requested GRU-minus-Bari2019 value against Bari2019, but its correlation is "
         "mathematically coupled because Q appears on both axes. It is therefore descriptive, "
         f"The observed ρ is {q_relation['spearman_rho']:+.3f} for E=4 and "
         f"{q_relation_e8['spearman_rho']:+.3f} for E=8.",
@@ -935,7 +935,7 @@ def _result_block(
         "",
         "### Valid cohort estimates",
         "",
-        "| space | cohort | tier | subjects | common Q likelihood | GRU614 likelihood | GRU614−Q bits/trial | mean subject Δ likelihood | centroid distance | median subject distance | GRU614−GRU10 bits/trial |",
+        "| space | cohort | tier | subjects | Bari2019 likelihood | GRU614 likelihood | GRU614−Bari2019 bits/trial | mean subject Δ likelihood | centroid distance | median subject distance | GRU614−GRU10 bits/trial |",
         "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
         *_cohort_rows(data, 4),
         *_cohort_rows(data_e8, 8),
@@ -971,8 +971,8 @@ def _result_block(
         "|---|---:|---:|---:|---:|---:|",
         *_relationship_rows(data_e8["sensitivity_relationships"]),
         "",
-        "† The common-Q relationship shares Q between the horizontal axis and the "
-        "GRU-minus-Q vertical axis. Its correlation is not an independent test of whether "
+        "† The Bari2019 relationship shares the same baseline between the horizontal axis and the "
+        "GRU-minus-Bari2019 vertical axis. Its correlation is not an independent test of whether "
         "intrinsically easier tasks transfer better.",
         "",
         "## Task-design meta-analysis",
@@ -1004,7 +1004,7 @@ def _result_block(
         f"ρ={full_performance['spearman_rho']:+.3f} "
         f"(p={full_performance['permutation_p_two_sided']:.4f}). Thus the transferred embedding "
         "geometry carries an auditable task/apparatus-distance signal, but categorical closeness "
-        "alone does not explain whether GRU beats common Q.",
+        "alone does not explain whether GRU beats Bari2019 common Q.",
         f"For E=8, task-structure distance has ρ={task_embedding_e8['spearman_rho']:+.3f} "
         f"with embedding displacement and ρ={task_performance_e8['spearman_rho']:+.3f} "
         f"with GRU advantage. Full-design distance has ρ={full_embedding_e8['spearman_rho']:+.3f} "

@@ -33,6 +33,8 @@ wandb_groups:
   - gru-e8-d614-diagnostic@20260907-071400
   - gru-e8-d614-expansion@20260907-132415
   - gru-e8-d614-expansion@20260907-132625
+  - gru-hattori-matched-half@20260907-200329
+  - gru-hattori-matched-half@20260907-200328
 reproduce: make r2
 ---
 
@@ -71,8 +73,8 @@ The Mahalanobis analysis uses all available dimensions—4D for E=4 and 8D for
 E=8—and each seed's source covariance. External median distance exceeds the
 held-out-AIND median in:
 
-- **E=4:** Grossman (mouse) (3/3 seeds); Chen (mouse) (3/3 seeds); Zid (human) (3/3 seeds); Lebedeva (mouse) (3/3 seeds); Beron (mouse) (3/3 seeds); Miller (rat) (3/3 seeds); Findling (human) (3/3 seeds); Tang (macaque) (3/3 seeds); Alsiö (rat) (3/3 seeds); Eckstein (human) (3/3 seeds); Costa (macaque) (3/3 seeds); López-Yépez (mouse) (3/3 seeds)
-- **E=8:** Grossman (mouse) (3/3 seeds); Chen (mouse) (3/3 seeds); Zid (human) (3/3 seeds); Lebedeva (mouse) (3/3 seeds); Beron (mouse) (3/3 seeds); Miller (rat) (3/3 seeds); Findling (human) (3/3 seeds); Tang (macaque) (3/3 seeds); Alsiö (rat) (3/3 seeds); Eckstein (human) (3/3 seeds); Costa (macaque) (3/3 seeds); López-Yépez (mouse) (3/3 seeds)
+- **E=4:** Grossman (mouse) (3/3 seeds); Chen (mouse) (3/3 seeds); Zid (human) (3/3 seeds); Lebedeva (mouse) (3/3 seeds); Beron (mouse) (3/3 seeds); Miller (rat) (3/3 seeds); Findling (human) (3/3 seeds); Tang (macaque) (3/3 seeds); Alsiö (rat) (3/3 seeds); Eckstein (human) (3/3 seeds); Costa (macaque) (3/3 seeds); López-Yépez (mouse) (3/3 seeds); Hattori (mouse) (3/3 seeds)
+- **E=8:** Grossman (mouse) (3/3 seeds); Chen (mouse) (3/3 seeds); Zid (human) (3/3 seeds); Lebedeva (mouse) (3/3 seeds); Beron (mouse) (3/3 seeds); Miller (rat) (3/3 seeds); Findling (human) (3/3 seeds); Tang (macaque) (3/3 seeds); Alsiö (rat) (3/3 seeds); Eckstein (human) (3/3 seeds); Costa (macaque) (3/3 seeds); López-Yépez (mouse) (3/3 seeds); Hattori (mouse) (3/3 seeds)
 
 | space | seed | population | species | n | median distance | centroid distance | outside source 95% |
 |---|---:|---|---|---:|---:|---:|---:|
@@ -89,6 +91,7 @@ held-out-AIND median in:
 | E=4 | 0 | Eckstein (human) | human | 306 | 12.64 | 12.16 | 100.0% |
 | E=4 | 0 | Costa (macaque) | macaque | 11 | 5.58 | 6.08 | 100.0% |
 | E=4 | 0 | López-Yépez (mouse) | mouse | 8 | 17.24 | 15.34 | 87.5% |
+| E=4 | 0 | Hattori (mouse) | mouse | 7 | 5.00 | 4.56 | 85.7% |
 | E=4 | 1 | AIND held-out mice | mouse | 149 | 1.67 | 0.14 | 5.4% |
 | E=4 | 1 | Grossman (mouse) | mouse | 48 | 2.45 | 0.60 | 22.9% |
 | E=4 | 1 | Chen (mouse) | mouse | 32 | 6.56 | 5.54 | 100.0% |
@@ -102,6 +105,7 @@ held-out-AIND median in:
 | E=4 | 1 | Eckstein (human) | human | 306 | 9.23 | 8.22 | 100.0% |
 | E=4 | 1 | Costa (macaque) | macaque | 11 | 6.51 | 6.59 | 100.0% |
 | E=4 | 1 | López-Yépez (mouse) | mouse | 8 | 10.33 | 9.30 | 87.5% |
+| E=4 | 1 | Hattori (mouse) | mouse | 7 | 4.24 | 4.27 | 100.0% |
 | E=4 | 2 | AIND held-out mice | mouse | 149 | 1.62 | 0.09 | 4.0% |
 | E=4 | 2 | Grossman (mouse) | mouse | 48 | 2.31 | 0.53 | 20.8% |
 | E=4 | 2 | Chen (mouse) | mouse | 32 | 8.45 | 7.07 | 100.0% |
@@ -115,6 +119,7 @@ held-out-AIND median in:
 | E=4 | 2 | Eckstein (human) | human | 306 | 10.72 | 10.27 | 100.0% |
 | E=4 | 2 | Costa (macaque) | macaque | 11 | 10.44 | 10.19 | 100.0% |
 | E=4 | 2 | López-Yépez (mouse) | mouse | 8 | 10.06 | 8.97 | 87.5% |
+| E=4 | 2 | Hattori (mouse) | mouse | 7 | 4.56 | 4.52 | 100.0% |
 | E=8 | 0 | AIND held-out mice | mouse | 149 | 2.70 | 0.41 | 7.4% |
 | E=8 | 0 | Grossman (mouse) | mouse | 48 | 4.06 | 1.01 | 31.2% |
 | E=8 | 0 | Chen (mouse) | mouse | 32 | 14.85 | 11.35 | 100.0% |
@@ -128,6 +133,7 @@ held-out-AIND median in:
 | E=8 | 0 | Eckstein (human) | human | 306 | 19.78 | 17.46 | 100.0% |
 | E=8 | 0 | Costa (macaque) | macaque | 11 | 12.09 | 10.48 | 100.0% |
 | E=8 | 0 | López-Yépez (mouse) | mouse | 8 | 22.87 | 18.89 | 87.5% |
+| E=8 | 0 | Hattori (mouse) | mouse | 7 | 5.72 | 4.87 | 85.7% |
 | E=8 | 1 | AIND held-out mice | mouse | 149 | 2.66 | 0.33 | 6.7% |
 | E=8 | 1 | Grossman (mouse) | mouse | 48 | 3.95 | 1.00 | 33.3% |
 | E=8 | 1 | Chen (mouse) | mouse | 32 | 12.27 | 9.53 | 100.0% |
@@ -141,6 +147,7 @@ held-out-AIND median in:
 | E=8 | 1 | Eckstein (human) | human | 306 | 20.70 | 18.25 | 100.0% |
 | E=8 | 1 | Costa (macaque) | macaque | 11 | 16.84 | 14.81 | 100.0% |
 | E=8 | 1 | López-Yépez (mouse) | mouse | 8 | 16.48 | 10.44 | 87.5% |
+| E=8 | 1 | Hattori (mouse) | mouse | 7 | 6.14 | 6.13 | 100.0% |
 | E=8 | 2 | AIND held-out mice | mouse | 149 | 2.65 | 0.27 | 6.0% |
 | E=8 | 2 | Grossman (mouse) | mouse | 48 | 3.65 | 0.67 | 29.2% |
 | E=8 | 2 | Chen (mouse) | mouse | 32 | 17.46 | 14.43 | 100.0% |
@@ -154,6 +161,7 @@ held-out-AIND median in:
 | E=8 | 2 | Eckstein (human) | human | 306 | 19.06 | 14.99 | 100.0% |
 | E=8 | 2 | Costa (macaque) | macaque | 11 | 16.63 | 15.88 | 100.0% |
 | E=8 | 2 | López-Yépez (mouse) | mouse | 8 | 27.23 | 26.07 | 87.5% |
+| E=8 | 2 | Hattori (mouse) | mouse | 7 | 5.23 | 4.76 | 85.7% |
 
 ## Cross-dimension read
 
@@ -161,22 +169,23 @@ Raw coordinates and distance magnitudes are not directly comparable between E=4
 and E=8 because the spaces have different dimensionality and independently
 learned axes. The meaningful comparison is whether the **within-space cohort
 ordering** and downstream performance relationships are stable. The E4/E8 rank
-correlation across the 12 cohorts is **+0.909**.
+correlation across the 13 cohorts is **+0.923**.
 
 | cohort | E4 mean median distance | E4 rank | E8 mean median distance | E8 rank |
 |---|---:|---:|---:|---:|
 | Grossman (mouse) | 2.44 | 1 | 3.89 | 2 |
 | Beron (mouse) | 2.64 | 2 | 5.31 | 3 |
 | Lebedeva (mouse) | 2.78 | 3 | 3.58 | 1 |
-| Tang (macaque) | 2.85 | 4 | 8.77 | 4 |
-| Miller (rat) | 5.67 | 5 | 8.99 | 5 |
-| Costa (macaque) | 7.51 | 6 | 15.19 | 9 |
-| Findling (human) | 8.06 | 7 | 14.83 | 7 |
-| Chen (mouse) | 8.51 | 8 | 14.86 | 8 |
-| Alsiö (rat) | 8.88 | 9 | 14.48 | 6 |
-| Zid (human) | 10.46 | 10 | 20.21 | 11 |
-| Eckstein (human) | 10.87 | 11 | 19.85 | 10 |
-| López-Yépez (mouse) | 12.54 | 12 | 22.19 | 12 |
+| Tang (macaque) | 2.85 | 4 | 8.77 | 5 |
+| Hattori (mouse) | 4.60 | 5 | 5.70 | 4 |
+| Miller (rat) | 5.67 | 6 | 8.99 | 6 |
+| Costa (macaque) | 7.51 | 7 | 15.19 | 10 |
+| Findling (human) | 8.06 | 8 | 14.83 | 8 |
+| Chen (mouse) | 8.51 | 9 | 14.86 | 9 |
+| Alsiö (rat) | 8.88 | 10 | 14.48 | 7 |
+| Zid (human) | 10.46 | 11 | 20.21 | 12 |
+| Eckstein (human) | 10.87 | 12 | 19.85 | 11 |
+| López-Yépez (mouse) | 12.54 | 13 | 22.19 | 13 |
 
 This ordering is descriptive. Species, task schedule, reward contingencies,
 recording duration, and adaptation-data volume change together across these

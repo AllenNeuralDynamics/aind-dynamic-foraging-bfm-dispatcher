@@ -1,0 +1,14 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 3,
+  "experiment_id": "01M1ZDQZR74YQF0ETPKEHMPT1E",
+  "experiment_url": "https://beaker.org/ex/01M1ZDQZR74YQF0ETPKEHMPT1E",
+  "dispatcher_commit": "82924dc75bc4164a88c7d0f700ebb6020ce1e5f1",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "wandb_group": "gru-hattori-matched-half@20260907-193141",
+  "status": "stopped_superseded",
+  "superseded_reason": "Included Hattori training days 1-14; all three tasks stopped.",
+  "sweep_file": "studies/09-gru-cross-species-transfer/variants/gru-hattori-matched-half/sweep_e8.yaml",
+  "created_utc": "2026-09-08T02:31:41.976691+00:00"
+}

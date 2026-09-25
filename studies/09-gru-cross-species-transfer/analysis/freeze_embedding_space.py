@@ -35,6 +35,7 @@ E8_TARGET_GROUPS = (
     "gru-e8-d614-diagnostic@20260907-071400",
     "gru-e8-d614-expansion@20260907-132415",
     "gru-e8-d614-expansion@20260907-132625",
+    "gru-hattori-matched-half@20260907-200328",
 )
 VALIDATION_DATA = STUDY / "analysis" / "dataset_suite_validation.json"
 SOURCE_MANIFESTS = {
@@ -59,21 +60,23 @@ VALID_DATASETS = (
     "eckstein",
     "costa",
     "lopez_mouse",
+    "hattori",
 )
 LABELS = {
-    "grossman": "Grossman mouse",
-    "chen": "Chen mouse",
-    "zid": "Zid human",
-    "lebedeva": "Lebedeva mouse",
-    "beron": "Beron mouse",
-    "kwak": "Kwak mouse",
-    "miller": "Miller rat",
-    "findling": "Findling human",
-    "tang": "Tang macaque",
-    "alsio": "Alsiö rat",
-    "eckstein": "Eckstein human",
-    "costa": "Costa macaque",
-    "lopez_mouse": "López-Yépez mouse",
+    "grossman": "Grossman (mouse)",
+    "chen": "Chen (mouse)",
+    "zid": "Zid (human)",
+    "lebedeva": "Lebedeva (mouse)",
+    "beron": "Beron (mouse)",
+    "kwak": "Kwak (mouse)",
+    "miller": "Miller (rat)",
+    "findling": "Findling (human)",
+    "tang": "Tang (macaque)",
+    "alsio": "Alsiö (rat)",
+    "eckstein": "Eckstein (human)",
+    "costa": "Costa (macaque)",
+    "lopez_mouse": "López-Yépez (mouse)",
+    "hattori": "Hattori (mouse)",
 }
 ARTIFACT_FILES_QUERY = """query ArtifactFiles($id:ID!){
   artifact(id:$id){files(first:1000){edges{node{name directUrl}}}}

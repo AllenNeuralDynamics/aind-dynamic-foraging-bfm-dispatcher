@@ -24,6 +24,9 @@ wandb_groups:
   - gru-e8-d614-diagnostic@20260907-071400
   - gru-e8-d614-expansion@20260907-132415
   - gru-e8-d614-expansion@20260907-132625
+  - gru-hattori-matched-half@20260907-200329
+  - gru-hattori-matched-half@20260907-200328
+  - q-hattori-matched-half@slurm-25585753
 inputs:
   scripts:
     - analysis/freeze_generalization_drivers.py
@@ -64,11 +67,11 @@ reproduce: make -C studies/09-gru-cross-species-transfer r3
 
 # Result 3 — what predicts external GRU transfer?
 
-This result compares E=4 and E=8 D=614 GRU improvement over the matched common-Q
+This result compares E=4 and E=8 D=614 GRU improvement over the matched Bari2019 common-Q
 baseline against dimension-specific external-cohort embedding displacement,
 baseline predictability, an auditable categorical task-design matrix, and
-empirical reward-schedule distance. It uses all 12 valid Stage-A cohorts for
-categorical analyses and the six primary cohorts with complete trial-wise arm
+empirical reward-schedule distance. It uses all 13 valid Stage-A cohorts for
+categorical analyses and the seven primary cohorts with complete trial-wise arm
 probabilities for schedule analyses. The invalid cross-treatment Kwak (mouse)
 result remains quarantined.
 
@@ -81,23 +84,23 @@ result remains quarantined.
 
 **E=4**
 
-![Primary cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers.png)
+![Primary cohorts: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers.png)
 
 **E=8**
 
-![Primary cohorts, E8: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_e8.png)
+![Primary cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_e8.png)
 
-Primary inference uses 8 equal-weight cross-study cohorts. Performance is the arithmetic mean held-out log likelihood across subjects, converted to bits per trial. Embedding distance is calculated separately in the full E=4 or E=8 space for each source seed. Large labeled points average the three paired seeds; small points show the seed-specific values. Inclusion tiers are shown in separate figures, so secondary cohorts no longer obscure the 8-cohort inference. All 12 valid cohorts remain included in the numerical sensitivity table. Species is descriptive rather than an inferential grouping because species, study, and task design are confounded.
+Primary inference uses 9 equal-weight cross-study cohorts. Performance is the arithmetic mean held-out log likelihood across subjects, converted to bits per trial. Embedding distance is calculated separately in the full E=4 or E=8 space for each source seed. Large labeled points average the three paired seeds; small points show the seed-specific values. Inclusion tiers are shown in separate figures, so secondary cohorts no longer obscure the 9-cohort inference. All 13 valid cohorts remain included in the numerical sensitivity table. Species is descriptive rather than an inferential grouping because species, study, and task design are confounded.
 
 ### Primary + stress-test cohorts
 
 **E=4**
 
-![Primary plus stress-test cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_primary_plus_stress.png)
+![Primary plus stress-test cohorts: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress.png)
 
 **E=8**
 
-![Primary plus stress-test cohorts, E8: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_primary_plus_stress_e8.png)
+![Primary plus stress-test cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_primary_plus_stress_e8.png)
 
 This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mouse) to the primary cohorts. It is displayed descriptively because this 11-cohort combination was not a predeclared inferential tier.
 
@@ -105,22 +108,22 @@ This cumulative view adds Alsiö (rat), Costa (macaque), and López-Yépez (mous
 
 **E=4**
 
-![All valid cohorts: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_all_valid.png)
+![All valid cohorts: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid.png)
 
 **E=8**
 
-![All valid cohorts, E8: generalization versus embedding distance and common-Q predictability](../fig_generalization_drivers_all_valid_e8.png)
+![All valid cohorts, E8: generalization versus embedding distance and Bari2019 predictability](../fig_generalization_drivers_all_valid_e8.png)
 
-This cumulative sensitivity view additionally includes Tang (macaque). Its plot annotations report the frozen 12-cohort all-valid sensitivity relationships; Tang (macaque) remains descriptive-only because the release has two subjects.
+This cumulative sensitivity view additionally includes Tang (macaque). Its plot annotations report the frozen 13-cohort all-valid sensitivity relationships; Tang (macaque) remains descriptive-only because the release has two subjects.
 
-For E=4, the D=614 GRU has higher subject-balanced mean log likelihood than common Q in 4 cohorts (Grossman (mouse), Chen (mouse), Zid (human), Lebedeva (mouse)) and lower mean log likelihood in 4 (Beron (mouse), Miller (rat), Findling (human), Eckstein (human)). This direction summary does not replace the paired subject tests in Result 1.
+For E=4, the D=614 GRU has higher subject-balanced mean log likelihood than Bari2019 common Q in 5 cohorts (Grossman (mouse), Chen (mouse), Zid (human), Lebedeva (mouse), Hattori (mouse)) and lower mean log likelihood in 4 (Beron (mouse), Miller (rat), Findling (human), Eckstein (human)). This direction summary does not replace the paired subject tests in Result 1.
 
 The additive log-score estimand is primary for cross-task comparison. Zid (human) is the only direction reversal under the mean subject normalized-likelihood difference: its log-score difference is positive, whereas its mean normalized-likelihood difference is negative, consistent with Result 1. Both values are retained below.
 
-Across the 8 primary cohort means, GRU advantage and embedding-centroid distance have Spearman ρ=-0.619 (bootstrap 95% CI [-1.00, +0.15]; two-sided permutation p=0.1157). The leave-one-cohort-out range is [-0.79, -0.43].
-For E=8, the corresponding association is ρ=-0.690 (bootstrap 95% CI [-1.00, +0.06]; two-sided permutation p=0.0581; leave-one-out [-0.86, -0.54]).
+Across the 9 primary cohort means, GRU advantage and embedding-centroid distance have Spearman ρ=-0.633 (bootstrap 95% CI [-0.98, +0.05]; two-sided permutation p=0.0776). The leave-one-cohort-out range is [-0.74, -0.48].
+For E=8, the corresponding association is ρ=-0.700 (bootstrap 95% CI [-0.98, -0.08]; two-sided permutation p=0.0432; leave-one-out [-0.79, -0.57]).
 
-The identity plot is the primary view of baseline predictability. The right panel shows the requested GRU-minus-Q value against common Q, but its correlation is mathematically coupled because Q appears on both axes. It is therefore descriptive, The observed ρ is +0.405 for E=4 and +0.357 for E=8.
+The identity plot is the primary view of baseline predictability. The right panel shows the requested GRU-minus-Bari2019 value against Bari2019, but its correlation is mathematically coupled because Q appears on both axes. It is therefore descriptive, The observed ρ is +0.083 for E=4 and +0.050 for E=8.
 
 ### Primary robustness and source-population scaling
 
@@ -132,7 +135,7 @@ The identity plot is the primary view of baseline predictability. The right pane
 
 ![Primary cohorts, E8: robustness](../fig_generalization_robustness_e8.png)
 
-Median individual-subject embedding distance tests whether the centroid result is hiding a dispersed or bimodal cohort. The scaling panel asks whether increasing the source population from D=10 to D=614 helps cohorts that land farther from the source embedding distribution. Its cross-cohort Spearman ρ is +0.214 (permutation p=0.5835).
+Median individual-subject embedding distance tests whether the centroid result is hiding a dispersed or bimodal cohort. The scaling panel asks whether increasing the source population from D=10 to D=614 helps cohorts that land farther from the source embedding distribution. Its cross-cohort Spearman ρ is +0.217 (permutation p=0.5563).
 
 ### Primary + stress-test robustness and scaling
 
@@ -158,7 +161,7 @@ E8 was run only at D=614, so the source-population scaling panel is available on
 
 ### Valid cohort estimates
 
-| space | cohort | tier | subjects | common Q likelihood | GRU614 likelihood | GRU614−Q bits/trial | mean subject Δ likelihood | centroid distance | median subject distance | GRU614−GRU10 bits/trial |
+| space | cohort | tier | subjects | Bari2019 likelihood | GRU614 likelihood | GRU614−Bari2019 bits/trial | mean subject Δ likelihood | centroid distance | median subject distance | GRU614−GRU10 bits/trial |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | E=4 | Grossman (mouse) | primary | 48 | 0.7341 | 0.7483 | +0.0276 | +0.0139 | 0.58 | 2.44 | +0.0148 |
 | E=4 | Chen (mouse) | primary | 32 | 0.5861 | 0.5914 | +0.0131 | +0.0053 | 7.13 | 8.51 | +0.0225 |
@@ -172,6 +175,7 @@ E8 was run only at D=614, so the source-population scaling panel is available on
 | E=4 | Eckstein (human) | primary | 306 | 0.6315 | 0.6259 | -0.0128 | -0.0180 | 10.21 | 10.87 | +0.0134 |
 | E=4 | Costa (macaque) | stress test | 11 | 0.5865 | 0.5832 | -0.0083 | -0.0036 | 7.62 | 7.51 | +0.0347 |
 | E=4 | López-Yépez (mouse) | stress test | 8 | 0.5272 | 0.5747 | +0.1243 | +0.0472 | 11.21 | 12.54 | +0.0976 |
+| E=4 | Hattori (mouse) | primary | 7 | 0.5625 | 0.5722 | +0.0247 | +0.0097 | 4.45 | 4.60 | +0.0165 |
 | E=8 | Grossman (mouse) | primary | 48 | 0.7341 | 0.7478 | +0.0267 | +0.0134 | 0.89 | 3.89 | — |
 | E=8 | Chen (mouse) | primary | 32 | 0.5861 | 0.5935 | +0.0183 | +0.0074 | 11.77 | 14.86 | — |
 | E=8 | Zid (human) | primary | 258 | 0.7043 | 0.7100 | +0.0116 | -0.0046 | 13.25 | 20.21 | — |
@@ -184,6 +188,7 @@ E8 was run only at D=614, so the source-population scaling panel is available on
 | E=8 | Eckstein (human) | primary | 306 | 0.6315 | 0.6308 | -0.0015 | -0.0138 | 16.90 | 19.85 | — |
 | E=8 | Costa (macaque) | stress test | 11 | 0.5865 | 0.5948 | +0.0201 | +0.0087 | 13.72 | 15.19 | — |
 | E=8 | López-Yépez (mouse) | stress test | 8 | 0.5272 | 0.5889 | +0.1597 | +0.0616 | 18.47 | 22.19 | — |
+| E=8 | Hattori (mouse) | primary | 7 | 0.5625 | 0.5719 | +0.0239 | +0.0094 | 5.25 | 5.70 | — |
 
 Normalized likelihoods in this table are `exp(mean subject log likelihood)`, not trial-pooled values. This prevents large cohorts or long sessions from dominating a cross-study comparison.
 
@@ -191,18 +196,18 @@ Normalized likelihoods in this table are `exp(mean subject log likelihood)`, not
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs embedding centroid distance | 8 | -0.619 | [-1.00, +0.15] | 0.1157 | [-0.79, -0.43] |
-| GRU614−Q vs median subject embedding distance | 8 | -0.286 | [-0.92, +0.65] | 0.4619 | [-0.54, +0.07] |
-| GRU614−Q vs common-Q predictability† | 8 | +0.405 | [-0.33, +0.85] | 0.2999 | [+0.32, +0.57] |
-| GRU614−GRU10 vs embedding centroid distance | 8 | +0.214 | [-0.77, +0.92] | 0.5835 | [-0.04, +0.43] |
+| GRU614−Q vs embedding centroid distance | 9 | -0.633 | [-0.98, +0.05] | 0.0776 | [-0.74, -0.48] |
+| GRU614−Q vs median subject embedding distance | 9 | -0.400 | [-0.89, +0.42] | 0.2903 | [-0.60, -0.14] |
+| GRU614−Bari2019 vs Bari2019 predictability† | 9 | +0.083 | [-0.72, +0.70] | 0.8088 | [-0.12, +0.40] |
+| GRU614−GRU10 vs embedding centroid distance | 9 | +0.217 | [-0.58, +0.86] | 0.5563 | [+0.00, +0.43] |
 
 ### Primary cross-cohort inference — E=8
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs embedding centroid distance | 8 | -0.690 | [-1.00, +0.06] | 0.0581 | [-0.86, -0.54] |
-| GRU614−Q vs median subject embedding distance | 8 | -0.405 | [-0.92, +0.56] | 0.2966 | [-0.57, -0.14] |
-| GRU614−Q vs common-Q predictability† | 8 | +0.357 | [-0.54, +0.90] | 0.3589 | [+0.21, +0.64] |
+| GRU614−Q vs embedding centroid distance | 9 | -0.700 | [-0.98, -0.08] | 0.0432 | [-0.79, -0.57] |
+| GRU614−Q vs median subject embedding distance | 9 | -0.483 | [-0.86, +0.24] | 0.1774 | [-0.60, -0.31] |
+| GRU614−Bari2019 vs Bari2019 predictability† | 9 | +0.050 | [-0.74, +0.72] | 0.9124 | [-0.19, +0.36] |
 
 ### All-valid sensitivity — E=4
 
@@ -210,20 +215,20 @@ This sensitivity adds Alsiö (rat), Costa (macaque), López-Yépez (mouse), and 
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs embedding centroid distance | 12 | -0.175 | [-0.84, +0.52] | 0.5735 | [-0.53, -0.03] |
-| GRU614−Q vs median subject embedding distance | 12 | +0.070 | [-0.67, +0.74] | 0.8160 | [-0.21, +0.29] |
-| GRU614−Q vs common-Q predictability† | 12 | -0.077 | [-0.73, +0.57] | 0.8159 | [-0.23, +0.20] |
-| GRU614−GRU10 vs embedding centroid distance | 12 | +0.601 | [-0.03, +0.94] | 0.0389 | [+0.48, +0.75] |
+| GRU614−Q vs embedding centroid distance | 13 | -0.214 | [-0.82, +0.45] | 0.4839 | [-0.55, -0.08] |
+| GRU614−Q vs median subject embedding distance | 13 | -0.022 | [-0.68, +0.63] | 0.9492 | [-0.30, +0.16] |
+| GRU614−Bari2019 vs Bari2019 predictability† | 13 | -0.176 | [-0.74, +0.43] | 0.5649 | [-0.34, +0.05] |
+| GRU614−GRU10 vs embedding centroid distance | 13 | +0.599 | [+0.03, +0.94] | 0.0344 | [+0.49, +0.76] |
 
 ### All-valid sensitivity — E=8
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs embedding centroid distance | 12 | -0.112 | [-0.81, +0.61] | 0.7333 | [-0.45, +0.05] |
-| GRU614−Q vs median subject embedding distance | 12 | +0.084 | [-0.61, +0.71] | 0.7993 | [-0.19, +0.29] |
-| GRU614−Q vs common-Q predictability† | 12 | -0.168 | [-0.72, +0.53] | 0.6002 | [-0.34, +0.08] |
+| GRU614−Q vs embedding centroid distance | 13 | -0.187 | [-0.81, +0.50] | 0.5408 | [-0.51, -0.05] |
+| GRU614−Q vs median subject embedding distance | 13 | -0.027 | [-0.65, +0.59] | 0.9353 | [-0.31, +0.13] |
+| GRU614−Bari2019 vs Bari2019 predictability† | 13 | -0.236 | [-0.74, +0.42] | 0.4361 | [-0.41, -0.03] |
 
-† The common-Q relationship shares Q between the horizontal axis and the GRU-minus-Q vertical axis. Its correlation is not an independent test of whether intrinsically easier tasks transfer better.
+† The Bari2019 relationship shares the same baseline between the horizontal axis and the GRU-minus-Bari2019 vertical axis. Its correlation is not an independent test of whether intrinsically easier tasks transfer better.
 
 ## Task-design meta-analysis
 
@@ -239,8 +244,8 @@ This sensitivity adds Alsiö (rat), Costa (macaque), López-Yépez (mouse), and 
 
 The categorical analysis is outcome-blind. Task-structure distance is the equal-weight mismatch over schedule family, arm coupling, baiting, and what the subject chooses. Full-design distance adds physical context, response modality, and reward modality. Each cohort is scored against the nearest of the three task prototypes actually represented in the AIND source-training snapshot; this preserves source heterogeneity and makes Grossman (mouse) a zero-distance anchor.
 
-Task-structure distance is associated with adapted embedding-centroid displacement (ρ=+0.577, permutation p=0.1548) but not with GRU advantage (ρ=-0.385, p=0.4048). The same separation is stronger for the full-design score: embedding ρ=+0.786 (p=0.0250), versus GRU advantage ρ=-0.491 (p=0.2238). Thus the transferred embedding geometry carries an auditable task/apparatus-distance signal, but categorical closeness alone does not explain whether GRU beats common Q.
-For E=8, task-structure distance has ρ=+0.674 with embedding displacement and ρ=-0.577 with GRU advantage. Full-design distance has ρ=+0.847 with embedding displacement and ρ=-0.687 with GRU advantage.
+Task-structure distance is associated with adapted embedding-centroid displacement (ρ=+0.581, permutation p=0.1314) but not with GRU advantage (ρ=-0.581, p=0.1336). The same separation is stronger for the full-design score: embedding ρ=+0.778 (p=0.0185), versus GRU advantage ρ=-0.641 (p=0.0721). Thus the transferred embedding geometry carries an auditable task/apparatus-distance signal, but categorical closeness alone does not explain whether GRU beats Bari2019 common Q.
+For E=8, task-structure distance has ρ=+0.645 with embedding displacement and ρ=-0.710 with GRU advantage. Full-design distance has ρ=+0.821 with embedding displacement and ρ=-0.778 with GRU advantage.
 
 ### Primary + stress-test task-design view
 
@@ -266,19 +271,19 @@ For E=8, task-structure distance has ρ=+0.674 with embedding displacement and �
 
 | space | species | cohorts | mean GRU614−Q bits/trial | median | range | mean embedding distance | mean task distance |
 |---|---|---:|---:|---:|---:|---:|---:|
-| E=4 | Mouse | 5 | +0.0361 | +0.0179 | [-0.0023, +0.1243] | 4.71 | 0.25 |
+| E=4 | Mouse | 6 | +0.0342 | +0.0213 | [-0.0023, +0.1243] | 4.67 | 0.21 |
 | E=4 | Rat | 2 | -0.0103 | -0.0103 | [-0.0222, +0.0015] | 6.99 | 0.38 |
 | E=4 | Macaque | 2 | -0.0047 | -0.0047 | [-0.0083, -0.0012] | 5.22 | 0.38 |
 | E=4 | Human | 3 | -0.0238 | -0.0128 | [-0.0776, +0.0190] | 8.39 | 0.42 |
-| E=8 | Mouse | 5 | +0.0451 | +0.0185 | [+0.0026, +0.1597] | 7.76 | 0.25 |
+| E=8 | Mouse | 6 | +0.0416 | +0.0212 | [+0.0026, +0.1597] | 7.34 | 0.21 |
 | E=8 | Rat | 2 | -0.0035 | -0.0035 | [-0.0122, +0.0052] | 11.50 | 0.38 |
 | E=8 | Macaque | 2 | +0.0133 | +0.0133 | [+0.0065, +0.0201] | 11.06 | 0.38 |
 | E=8 | Human | 3 | -0.0149 | -0.0015 | [-0.0549, +0.0116] | 14.84 | 0.42 |
 
 These are equal-cohort descriptive summaries, not species effects. Each species is represented by only two to six studies, and task design differs systematically by species. In particular, a species contrast would currently relabel the same design and apparatus contrasts rather than isolate biology.
 
-For the 6 primary cohorts whose canonical adapters expose complete trial-wise probabilities for both arms, empirical schedule distance from Grossman (mouse) is negatively associated with GRU advantage (ρ=-0.829, exact permutation p=0.0583; bootstrap 95% CI [-1.00, +0.00]; leave-one-out range [-1.00, -0.70]). Its association with embedding-centroid distance is weak (ρ=+0.486, p=0.3556). The performance result is promising but small-sample: the bootstrap interval crosses zero, and Grossman (mouse) defines the schedule-distance origin.
-For E=8, schedule distance versus GRU advantage is ρ=-0.543 (p=0.2972), while schedule distance versus embedding-centroid distance is ρ=+0.314 (p=0.5639).
+For the 7 primary cohorts whose canonical adapters expose complete trial-wise probabilities for both arms, empirical schedule distance from Grossman (mouse) is negatively associated with GRU advantage (ρ=-0.536, exact permutation p=0.2357; bootstrap 95% CI [-1.00, +0.62]; leave-one-out range [-0.83, -0.26]). Its association with embedding-centroid distance is weak (ρ=+0.107, p=0.8397). The performance result is promising but small-sample: the bootstrap interval crosses zero, and Grossman (mouse) defines the schedule-distance origin.
+For E=8, schedule distance versus GRU advantage is ρ=-0.393 (p=0.3956), while schedule distance versus embedding-centroid distance is ρ=+0.071 (p=0.9063).
 
 ### Evidence-backed categorical matrix
 
@@ -296,6 +301,7 @@ For E=8, schedule distance versus GRU advantage is ρ=-0.543 (p=0.2972), while s
 | [Eckstein (human)](https://pmc.ncbi.nlm.nih.gov/articles/PMC9108470/) | primary | blockwise | coupled | no | spatial action | laboratory | keyboard | monetary points | 0.25 | 0.57 |
 | [Costa (macaque)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5074688/) | stress test | blockwise | coupled | no | visual stimulus | head fixed | saccade | juice | 0.50 | 0.57 |
 | [López-Yépez (mouse)](https://doi.org/10.1371/journal.pcbi.1009452) | stress test | variable interval | choice dependent | yes | spatial action | freely moving | nose poke | water | 0.50 | 0.57 |
+| [Hattori (mouse)](https://www.nature.com/articles/s41593-023-01485-3) | primary | blockwise | coupled | yes | spatial action | head fixed | lick | water | 0.00 | 0.00 |
 
 Cohort names link to the primary Methods source used for annotation. The complete evidence note for every row, the three AIND prototypes, and the scoring contract are frozen in `analysis/task_design_features.json`.
 
@@ -304,11 +310,12 @@ Cohort names link to the primary Methods source used for annotation. The complet
 | cohort | arm lag-1 | gap lag-1 | cross-arm | change rate | step size | mean abs(gap) | mean p(reward) | equal-p fraction | distance to Grossman (mouse) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Grossman (mouse) | 0.950 | 0.953 | -0.375 | 0.053 | 0.555 | 0.471 | 0.508 | 0.170 | 0.00 |
-| Chen (mouse) | 0.978 | 0.984 | -0.460 | 0.153 | 0.102 | 0.285 | 0.560 | 0.111 | 1.42 |
-| Zid (human) | 0.973 | 0.975 | -0.022 | 0.170 | 0.100 | 0.306 | 0.508 | 0.100 | 1.10 |
-| Lebedeva (mouse) | 0.987 | 0.987 | -1.000 | 0.006 | 0.600 | 0.600 | 0.500 | 0.000 | 1.37 |
+| Chen (mouse) | 0.978 | 0.984 | -0.460 | 0.153 | 0.102 | 0.285 | 0.560 | 0.111 | 1.20 |
+| Zid (human) | 0.973 | 0.975 | -0.022 | 0.170 | 0.100 | 0.306 | 0.508 | 0.100 | 1.16 |
+| Lebedeva (mouse) | 0.987 | 0.987 | -1.000 | 0.006 | 0.600 | 0.600 | 0.500 | 0.000 | 1.39 |
 | Beron (mouse) | 0.960 | 0.960 | -1.000 | 0.020 | 0.580 | 0.580 | 0.500 | 0.000 | 1.22 |
-| Miller (rat) | 0.917 | 0.917 | 0.003 | 0.992 | 0.111 | 0.381 | 0.496 | 0.017 | 1.70 |
+| Miller (rat) | 0.917 | 0.917 | 0.003 | 0.992 | 0.111 | 0.381 | 0.496 | 0.017 | 1.76 |
+| Hattori (mouse) | 0.975 | 0.975 | -0.995 | 0.014 | 0.428 | 0.438 | 0.349 | 0.000 | 1.59 |
 
 Every metric is computed using only within-session transitions. Subjects are summarized first and then averaged equally within a cohort. The composite distance is the root-mean-square standardized Euclidean distance across seven predeclared features; reward-gap autocorrelation is reported but omitted from the distance because it largely duplicates the two arm-autocorrelation terms. No missing schedule is imputed.
 
@@ -316,68 +323,68 @@ Every metric is computed using only within-session transitions. Subjects are sum
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs task-structure distance | 8 | -0.385 | [-0.94, +0.78] | 0.4048 (exact) | [-0.80, +0.00] |
-| embedding vs task-structure distance | 8 | +0.577 | [-0.18, +0.96] | 0.1548 (exact) | [+0.32, +0.78] |
-| GRU614−Q vs full-design distance | 8 | -0.491 | [-1.00, +0.48] | 0.2238 (exact) | [-0.89, -0.22] |
-| embedding vs full-design distance | 8 | +0.786 | [+0.09, +1.00] | 0.0250 (exact) | [+0.67, +0.91] |
-| GRU614−Q vs empirical schedule distance | 6 | -0.829 | [-1.00, +0.00] | 0.0583 (exact) | [-1.00, -0.70] |
-| embedding vs empirical schedule distance | 6 | +0.486 | [-0.80, +1.00] | 0.3556 (exact) | [+0.10, +0.80] |
+| GRU614−Q vs task-structure distance | 9 | -0.581 | [-0.96, +0.44] | 0.1336 (monte_carlo) | [-0.87, -0.38] |
+| embedding vs task-structure distance | 9 | +0.581 | [+0.00, +0.92] | 0.1314 (monte_carlo) | [+0.41, +0.69] |
+| GRU614−Q vs full-design distance | 9 | -0.641 | [-1.00, +0.16] | 0.0721 (monte_carlo) | [-0.92, -0.49] |
+| embedding vs full-design distance | 9 | +0.778 | [+0.25, +0.99] | 0.0185 (monte_carlo) | [+0.71, +0.84] |
+| GRU614−Q vs empirical schedule distance | 7 | -0.536 | [-1.00, +0.62] | 0.2357 (exact) | [-0.83, -0.26] |
+| embedding vs empirical schedule distance | 7 | +0.107 | [-0.75, +1.00] | 0.8397 (exact) | [-0.43, +0.37] |
 
 #### E=8
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs task-structure distance | 8 | -0.577 | [-0.96, +0.26] | 0.1548 (exact) | [-0.80, -0.32] |
-| embedding vs task-structure distance | 8 | +0.674 | [+0.00, +0.97] | 0.0833 (exact) | [+0.47, +0.90] |
-| GRU614−Q vs full-design distance | 8 | -0.687 | [-1.00, +0.11] | 0.0667 (exact) | [-0.89, -0.52] |
-| embedding vs full-design distance | 8 | +0.847 | [+0.28, +1.00] | 0.0107 (exact) | [+0.77, +0.98] |
-| GRU614−Q vs empirical schedule distance | 6 | -0.543 | [-1.00, +0.64] | 0.2972 (exact) | [-0.70, -0.20] |
-| embedding vs empirical schedule distance | 6 | +0.314 | [-1.00, +1.00] | 0.5639 (exact) | [-0.20, +0.80] |
+| GRU614−Q vs task-structure distance | 9 | -0.710 | [-0.96, +0.00] | 0.0433 (monte_carlo) | [-0.87, -0.58] |
+| embedding vs task-structure distance | 9 | +0.645 | [+0.09, +0.96] | 0.0781 (monte_carlo) | [+0.51, +0.77] |
+| GRU614−Q vs full-design distance | 9 | -0.778 | [-1.00, -0.18] | 0.0180 (monte_carlo) | [-0.92, -0.68] |
+| embedding vs full-design distance | 9 | +0.821 | [+0.38, +1.00] | 0.0104 (monte_carlo) | [+0.77, +0.88] |
+| GRU614−Q vs empirical schedule distance | 7 | -0.393 | [-1.00, +0.96] | 0.3956 (exact) | [-0.60, -0.03] |
+| embedding vs empirical schedule distance | 7 | +0.071 | [-0.96, +1.00] | 0.9063 (exact) | [-0.49, +0.37] |
 
 ### All-valid categorical sensitivity — E=4
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs task-structure distance | 12 | -0.058 | [-0.72, +0.63] | 0.8588 (monte_carlo) | [-0.28, +0.17] |
-| embedding vs task-structure distance | 12 | +0.685 | [+0.17, +0.93] | 0.0196 (monte_carlo) | [+0.58, +0.85] |
-| GRU614−Q vs full-design distance | 12 | -0.282 | [-0.83, +0.34] | 0.3695 (monte_carlo) | [-0.47, -0.11] |
-| embedding vs full-design distance | 12 | +0.721 | [+0.13, +0.97] | 0.0099 (monte_carlo) | [+0.63, +0.81] |
+| GRU614−Q vs task-structure distance | 13 | -0.215 | [-0.81, +0.46] | 0.4803 (monte_carlo) | [-0.46, -0.06] |
+| embedding vs task-structure distance | 13 | +0.684 | [+0.26, +0.91] | 0.0129 (monte_carlo) | [+0.60, +0.81] |
+| GRU614−Q vs full-design distance | 13 | -0.399 | [-0.87, +0.17] | 0.1764 (monte_carlo) | [-0.55, -0.28] |
+| embedding vs full-design distance | 13 | +0.738 | [+0.29, +0.93] | 0.0052 (monte_carlo) | [+0.68, +0.80] |
 
 ### All-valid categorical sensitivity — E=8
 
 | relationship | n | Spearman ρ | cohort-bootstrap 95% CI | permutation p | leave-one-cohort-out ρ |
 |---|---:|---:|---:|---:|---:|
-| GRU614−Q vs task-structure distance | 12 | -0.016 | [-0.68, +0.68] | 0.9643 (monte_carlo) | [-0.23, +0.23] |
-| embedding vs task-structure distance | 12 | +0.728 | [+0.25, +0.94] | 0.0111 (monte_carlo) | [+0.64, +0.90] |
-| GRU614−Q vs full-design distance | 12 | -0.403 | [-0.83, +0.17] | 0.1932 (monte_carlo) | [-0.51, -0.26] |
-| embedding vs full-design distance | 12 | +0.721 | [+0.13, +0.97] | 0.0095 (monte_carlo) | [+0.63, +0.80] |
+| GRU614−Q vs task-structure distance | 13 | -0.182 | [-0.78, +0.50] | 0.5512 (monte_carlo) | [-0.42, -0.02] |
+| embedding vs task-structure distance | 13 | +0.741 | [+0.34, +0.93] | 0.0055 (monte_carlo) | [+0.67, +0.87] |
+| GRU614−Q vs full-design distance | 13 | -0.493 | [-0.87, +0.02] | 0.0903 (monte_carlo) | [-0.61, -0.38] |
+| embedding vs full-design distance | 13 | +0.756 | [+0.28, +0.94] | 0.0036 (monte_carlo) | [+0.69, +0.81] |
 
 ### Individual schedule-feature screen
 
 | space | schedule feature vs GRU614−Q | Spearman ρ | exact p | BH-FDR q |
 |---|---|---:|---:|---:|
-| E=4 | mean arm lag-1 autocorrelation | +0.257 | 0.6583 | 1.0000 |
-| E=4 | reward-gap lag-1 autocorrelation | +0.257 | 0.6583 | 1.0000 |
-| E=4 | contemporaneous cross-arm correlation | -0.086 | 0.9194 | 1.0000 |
-| E=4 | probability-change rate | -0.257 | 0.6583 | 1.0000 |
-| E=4 | mean absolute arm step when changed | -0.086 | 0.9194 | 1.0000 |
-| E=4 | mean absolute reward gap | +0.029 | 1.0000 | 1.0000 |
-| E=4 | mean reward probability | +0.551 | 0.2722 | 1.0000 |
-| E=4 | equal-probability fraction | +0.551 | 0.2722 | 1.0000 |
-| E=8 | mean arm lag-1 autocorrelation | +0.429 | 0.4194 | 0.5593 |
-| E=8 | reward-gap lag-1 autocorrelation | +0.429 | 0.4194 | 0.5593 |
-| E=8 | contemporaneous cross-arm correlation | -0.429 | 0.4194 | 0.5593 |
-| E=8 | probability-change rate | -0.543 | 0.2972 | 0.5593 |
-| E=8 | mean absolute arm step when changed | +0.257 | 0.6583 | 0.7139 |
-| E=8 | mean absolute reward gap | +0.200 | 0.7139 | 0.7139 |
-| E=8 | mean reward probability | +0.464 | 0.3722 | 0.5593 |
-| E=8 | equal-probability fraction | +0.464 | 0.3722 | 0.5593 |
+| E=4 | mean arm lag-1 autocorrelation | +0.179 | 0.7131 | 0.9635 |
+| E=4 | reward-gap lag-1 autocorrelation | +0.143 | 0.7825 | 0.9635 |
+| E=4 | contemporaneous cross-arm correlation | -0.071 | 0.9063 | 0.9635 |
+| E=4 | probability-change rate | -0.357 | 0.4444 | 0.9635 |
+| E=4 | mean absolute arm step when changed | +0.036 | 0.9635 | 0.9635 |
+| E=4 | mean absolute reward gap | +0.107 | 0.8397 | 0.9635 |
+| E=4 | mean reward probability | +0.108 | 0.8206 | 0.9635 |
+| E=4 | equal-probability fraction | +0.296 | 0.5238 | 0.9635 |
+| E=8 | mean arm lag-1 autocorrelation | +0.357 | 0.4444 | 0.7347 |
+| E=8 | reward-gap lag-1 autocorrelation | +0.250 | 0.5948 | 0.7347 |
+| E=8 | contemporaneous cross-arm correlation | -0.321 | 0.4976 | 0.7347 |
+| E=8 | probability-change rate | -0.571 | 0.2000 | 0.7347 |
+| E=8 | mean absolute arm step when changed | +0.286 | 0.5560 | 0.7347 |
+| E=8 | mean absolute reward gap | +0.250 | 0.5948 | 0.7347 |
+| E=8 | mean reward probability | +0.054 | 0.9190 | 0.9190 |
+| E=8 | equal-probability fraction | +0.222 | 0.6429 | 0.7347 |
 
 No individual schedule feature survives the eight-feature FDR correction. The composite distance result should therefore motivate preregistered tests on additional datasets, not a post-hoc claim that one schedule statistic is the mechanism.
 
 ## What this version can and cannot answer
 
-Embedding distance is measured after embedding-only adaptation, so it can reflect both task structure and cohort behavior. Species, study, apparatus, reward schedule, and data volume remain confounded, and even the 12-cohort sensitivity set is too small for a causal species effect or a stable multivariable regression. Species colors are descriptive only.
+Embedding distance is measured after embedding-only adaptation, so it can reflect both task structure and cohort behavior. Species, study, apparatus, reward schedule, and data volume remain confounded, and even the 13-cohort sensitivity set is too small for a causal species effect or a stable multivariable regression. Species colors are descriptive only.
 
 ### Quarantined result
 

@@ -1,4 +1,4 @@
-"""Freeze E=8 transfer results for the seven expansion cohorts."""
+"""Freeze E=8 transfer results for the eight expansion cohorts."""
 
 from __future__ import annotations
 
@@ -38,6 +38,7 @@ DATASET_ORDER = (
     "alsio",
     "costa",
     "tang",
+    "hattori",
 )
 VARIANT = STUDY / "variants" / "gru-e8-d614-expansion"
 LAUNCHES = (
@@ -46,6 +47,11 @@ LAUNCHES = (
         VARIANT / "launch_record_boundary",
         12,
         {"lopez_mouse", "alsio", "costa", "tang"},
+    ),
+    (
+        STUDY / "variants" / "gru-hattori-matched-half" / "launch_record" / "mature-e8-full",
+        3,
+        {"hattori"},
     ),
 )
 VALIDATION = STUDY / "analysis" / "dataset_suite_validation.json"

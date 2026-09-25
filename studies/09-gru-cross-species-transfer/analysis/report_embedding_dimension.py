@@ -41,6 +41,7 @@ DATASET_ORDER = (
     "costa",
     "lopez_mouse",
     "tang",
+    "hattori",
 )
 LABELS = {
     "grossman": "Grossman (mouse)",
@@ -55,6 +56,7 @@ LABELS = {
     "costa": "Costa (macaque)",
     "lopez_mouse": "López-Yépez (mouse)",
     "tang": "Tang (macaque)",
+    "hattori": "Hattori (mouse)",
 }
 SPECIES_COLORS = {
     "mouse": "#4C72B0",
@@ -64,6 +66,7 @@ SPECIES_COLORS = {
 }
 E4_COLOR = "#6BAED6"
 E8_COLOR = "#17365D"
+PAIRED_EXPANSION = {"hattori"}
 
 
 def _metric(row: dict) -> float:
@@ -110,7 +113,10 @@ def _p_text(value: float) -> str:
 
 def _plot_summary(data: dict) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(3, 4, figsize=(16, 10.5), constrained_layout=True)
+    nrows = math.ceil(len(DATASET_ORDER) / 4)
+    fig, axes = plt.subplots(
+        nrows, 4, figsize=(16, 3.5 * nrows), constrained_layout=True
+    )
     for axis, name in zip(axes.flat, DATASET_ORDER):
         dataset = data["datasets"][name]
         e4 = _dimension_rows(dataset, "e4")
@@ -125,6 +131,8 @@ def _plot_summary(data: dict) -> None:
         axis.set_title(LABELS[name], color=SPECIES_COLORS[dataset["species"]])
         axis.set_ylabel("Held-out normalized likelihood")
         axis.grid(axis="y", alpha=0.2)
+    for axis in axes.flat[len(DATASET_ORDER) :]:
+        axis.set_visible(False)
     fig.suptitle("External transfer with four- versus eight-dimensional embeddings")
     fig.savefig(SUMMARY_FIGURE, dpi=180, bbox_inches="tight")
     plt.close(fig)
@@ -133,7 +141,10 @@ def _plot_summary(data: dict) -> None:
 def _plot_subjects(data: dict) -> None:
     apply_presentation_style()
     rng = np.random.default_rng(0)
-    fig, axes = plt.subplots(3, 4, figsize=(16, 11.2), constrained_layout=True)
+    nrows = math.ceil(len(DATASET_ORDER) / 4)
+    fig, axes = plt.subplots(
+        nrows, 4, figsize=(16, 3.7 * nrows), constrained_layout=True
+    )
     for axis, name in zip(axes.flat, DATASET_ORDER):
         values = np.asarray(_subject_deltas(data["datasets"][name]))
         violin = axis.violinplot(values, positions=[0], widths=0.7, showextrema=False)
@@ -157,6 +168,8 @@ def _plot_subjects(data: dict) -> None:
         )
         axis.set_ylabel("E=8 minus E=4 likelihood")
         axis.grid(axis="y", alpha=0.2)
+    for axis in axes.flat[len(DATASET_ORDER) :]:
+        axis.set_visible(False)
     fig.suptitle("Subject-paired benefit of an eight-dimensional embedding")
     fig.savefig(SUBJECT_FIGURE, dpi=180, bbox_inches="tight")
     plt.close(fig)
@@ -214,8 +227,10 @@ def _result_markdown(data: dict) -> str:
     lines.extend(
         [
             "",
-            f"E8 has higher mean held-out likelihood in {len(positive)}/12 cohorts "
-            f"({', '.join(positive)}) and lower mean likelihood in {len(negative)}/12 "
+            f"E8 has higher mean held-out likelihood in "
+            f"{len(positive)}/{len(DATASET_ORDER)} cohorts "
+            f"({', '.join(positive)}) and lower mean likelihood in "
+            f"{len(negative)}/{len(DATASET_ORDER)} "
             f"({', '.join(negative)}). Subject-level effect sizes and Wilcoxon tests "
             "are reported above; direction alone is not treated as evidence.",
             "",
@@ -253,6 +268,11 @@ def _combined_data() -> dict:
             )
             if [int(row["seed"]) for row in e4] != [0, 1, 2]:
                 raise AssertionError(f"Historical E4 seeds drifted for {name}")
+            comparison_basis = (
+                "paired current-code E4/E8"
+                if name in PAIRED_EXPANSION
+                else "historical E4 versus current E8"
+            )
             dataset = {
                 **{
                     key: value
@@ -261,7 +281,7 @@ def _combined_data() -> dict:
                 },
                 "e4": e4,
                 "e8": source["e8"],
-                "comparison_basis": "historical E4 versus current E8",
+                "comparison_basis": comparison_basis,
             }
         signatures = {
             (row["ordered_trial_key_sha256"], int(row["n_prediction_rows"]))

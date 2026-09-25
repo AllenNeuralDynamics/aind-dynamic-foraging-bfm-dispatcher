@@ -23,7 +23,8 @@
       "beron",
       "miller",
       "findling",
-      "eckstein"
+      "eckstein",
+      "hattori"
     ],
     "stress_test": [
       "alsio",
@@ -228,6 +229,17 @@
       "reward_modality": "water",
       "evidence_url": "https://doi.org/10.1371/journal.pcbi.1009452",
       "evidence_note": "Freely moving mice nose-poked left/right ports for water under baited variable-interval schedules with blockwise set rates."
+    },
+    "hattori": {
+      "schedule_family": "blockwise",
+      "arm_coupling": "coupled",
+      "baiting": true,
+      "choice_target": "spatial_action",
+      "physical_context": "head_fixed",
+      "response_modality": "lick",
+      "reward_modality": "water",
+      "evidence_url": "https://www.nature.com/articles/s41593-023-01485-3",
+      "evidence_note": "Head-fixed mice licked left/right ports for water under baited coupled reversals, with probabilities changing every 60-80 trials after a performance criterion."
     }
   }
 }

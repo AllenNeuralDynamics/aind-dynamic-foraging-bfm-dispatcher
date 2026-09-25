@@ -2,10 +2,16 @@
 
 ## 2026-09-07
 
+- Admitted Hattori (mouse) from the checksum-pinned Zenodo v3 release using all
+  seven mice but only the paper-defined late/expert stage (session 15 onward):
+  292 real sessions, 141,488 binary-choice trials, and a schema-v1 odd/even split
+  recalculated within mature sessions. The initial all-session diagnostic and
+  launches were superseded immediately. Added the paper's asymmetric Q-learning
+  family to the matched author-baseline runner.
 - Regenerated every dimension-dependent Result 1--4 figure with both E4 and E8
   wherever the frozen artifacts support it, including subject-level GRU-Q and
   author-relative comparisons, source-fitted embedding geometry, cross-cohort
-  drivers, task-design relationships, and the 12-cohort capacity comparison.
+  drivers, task-design relationships, and the 13-cohort capacity comparison.
 - Extended E=8 D=614 transfer to the seven remaining valid cohorts in 21
   GPU-only Beaker tasks; froze all artifacts with exact historical-E4 trial-key
   parity and updated Report 1 so every displayed cohort has an E8 overlay.
