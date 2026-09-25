@@ -42,13 +42,35 @@ COLORS = {
     "lopez_mouse": "#D62728",
 }
 MARKERS = (".", "o", "^", "s", "D", "v", "P", "X", "<", ">", "h", "p", "*", "8", "d")
+PAPER_LABELS = {
+    "grossman": "Grossman (mouse)",
+    "chen": "Chen (mouse)",
+    "zid": "Zid (human)",
+    "lebedeva": "Lebedeva (mouse)",
+    "beron": "Beron (mouse)",
+    "kwak": "Kwak (mouse)",
+    "miller": "Miller (rat)",
+    "findling": "Findling (human)",
+    "tang": "Tang (macaque)",
+    "alsio": "Alsiö (rat)",
+    "eckstein": "Eckstein (human)",
+    "costa": "Costa (macaque)",
+    "lopez_mouse": "López-Yépez (mouse)",
+}
 
 
 def _group_order(data: dict) -> tuple[str, ...]:
     order = tuple(data["groups"])
     if order[:2] != ("aind_source", "aind_heldout"):
         raise AssertionError("Embedding reference group order drifted")
-    return order
+    return tuple(name for name in order if name != "kwak")
+
+
+def _display_label(data: dict, name: str) -> str:
+    group = data["groups"][name]
+    if name.startswith("aind_"):
+        return group["label"]
+    return PAPER_LABELS[name]
 
 
 def _arrays(seed: dict, order: tuple[str, ...]) -> dict[str, np.ndarray]:
@@ -153,7 +175,7 @@ def _plot_pca(data: dict, order: tuple[str, ...]) -> None:
                     color=COLORS[name],
                     marker=MARKERS[group_index],
                     edgecolors="none",
-                    label=data["groups"][name]["label"],
+                    label=_display_label(data, name),
                     zorder=2 if name == "aind_source" else 3,
                 )
             axis.scatter(
@@ -240,7 +262,7 @@ def _plot_distances(
         axis.set_xticks(
             positions,
             [
-                data["groups"][name]["label"].replace(" ", "\n", 1)
+                _display_label(data, name).replace(" ", "\n", 1)
                 for name in order
             ],
             fontsize=7.5,
@@ -277,7 +299,7 @@ def _report_body(
         for name in order[1:]:
             group = seed_statistics["groups"][name]
             rows.append(
-                f"| {seed['seed']} | {data['groups'][name]['label']} | "
+                f"| {seed['seed']} | {_display_label(data, name)} | "
                 f"{data['groups'][name]['species']} | {data['groups'][name]['n_subjects']} | "
                 f"{group['median']:.2f} | {group['centroid']:.2f} | "
                 f"{group['outside'] * 100:.1f}% |"
@@ -303,10 +325,10 @@ embedding mean, and adapted for the same 500 steps at learning rate 0.001 while
 the core remained frozen. The 614 source-training mice define the coordinate
 system but are not treated as the transfer control.
 
-Kwak uses the corrected canonical choice orientation (`0=left, 1=right`),
-converted from the release's `0=right, 1=left` encoding. Its embedding points
-therefore come from the corrected D=614 reruns rather than the superseded
-2026-09-05 launch.
+Kwak (mouse) is omitted. Its frozen embedding was adapted on CNO sessions and
+evaluated on DMSO sessions, so it does not estimate within-condition subject
+transfer. It will be readmitted only after a DMSO/control-only odd/even-session
+rerun.
 
 PCA is fit independently to each seed's source-training mice; raw coordinates
 are never pooled across seeds. The first three PCs explain
@@ -318,7 +340,7 @@ star is the common initialization point and the dashed ellipse is the Gaussian
 
 The Mahalanobis analysis uses all four embedding dimensions and each seed's
 source covariance. External median distance exceeds the held-out-AIND median in
-{'; '.join(f"{data['groups'][name]['label']} ({count}/3 seeds)" for name, count in direction)}.
+{'; '.join(f"{_display_label(data, name)} ({count}/3 seeds)" for name, count in direction)}.
 
 | seed | population | species | n | median distance | centroid distance | outside source 95% |
 |---:|---|---|---:|---:|---:|---:|
@@ -329,7 +351,7 @@ source covariance. External median distance exceeds the held-out-AIND median in
 Average median distance across the three independently trained spaces, nearest
 to farthest, is:
 
-{chr(10).join(f"{index}. **{data['groups'][name]['label']}** — {value:.2f}" for index, (value, name) in enumerate(rankings, start=1))}
+{chr(10).join(f"{index}. **{_display_label(data, name)}** — {value:.2f}" for index, (value, name) in enumerate(rankings, start=1))}
 
 This ordering is descriptive. Species, task schedule, reward contingencies,
 recording duration, and adaptation-data volume change together across these
@@ -352,7 +374,7 @@ make r2
 def main() -> None:
     data = json.loads(DATA.read_text())
     order = _group_order(data)
-    if set(order) != set(COLORS):
+    if set(order) != set(COLORS) - {"kwak"}:
         raise AssertionError("Embedding plot color map does not match frozen groups")
     statistics = [_statistics(seed, order) for seed in data["seeds"]]
     _plot_pca(data, order)

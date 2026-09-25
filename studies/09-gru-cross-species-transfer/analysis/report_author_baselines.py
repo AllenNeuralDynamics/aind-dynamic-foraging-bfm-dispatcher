@@ -36,7 +36,7 @@ REPORT = STUDY / "analysis" / "reports" / "r1-author-aligned-baselines.md"
 START = "<!-- BEGIN result-1 -->"
 END = "<!-- END result-1 -->"
 DS = (10, 30, 100, 300, 614)
-DATASET_ORDER = (
+ALL_DATASET_ORDER = (
     "grossman",
     "chen",
     "zid",
@@ -51,20 +51,21 @@ DATASET_ORDER = (
     "costa",
     "lopez_mouse",
 )
+DATASET_ORDER = tuple(name for name in ALL_DATASET_ORDER if name != "kwak")
 LABELS = {
-    "grossman": "Grossman",
-    "chen": "Chen",
-    "zid": "Zid",
-    "lebedeva": "Lebedeva",
-    "beron": "Beron",
-    "kwak": "Kwak",
-    "miller": "Miller",
-    "findling": "Findling",
-    "tang": "Tang",
-    "alsio": "Alsiö",
-    "eckstein": "Eckstein",
-    "costa": "Costa",
-    "lopez_mouse": "López-Yépez mouse",
+    "grossman": "Grossman (mouse)",
+    "chen": "Chen (mouse)",
+    "zid": "Zid (human)",
+    "lebedeva": "Lebedeva (mouse)",
+    "beron": "Beron (mouse)",
+    "kwak": "Kwak (mouse)",
+    "miller": "Miller (rat)",
+    "findling": "Findling (human)",
+    "tang": "Tang (macaque)",
+    "alsio": "Alsiö (rat)",
+    "eckstein": "Eckstein (human)",
+    "costa": "Costa (macaque)",
+    "lopez_mouse": "López-Yépez (mouse)",
 }
 TASKS = {
     "grossman": "blockwise dynamic foraging",
@@ -107,7 +108,7 @@ def _gru_for_d(dataset: dict, d: int) -> list[dict]:
 
 def _validation_map(validation: dict) -> dict[str, dict]:
     rows = {row["dataset"]: row for row in validation["datasets"]}
-    if tuple(rows) != DATASET_ORDER:
+    if tuple(rows) != ALL_DATASET_ORDER:
         raise AssertionError("Validation dataset order or membership drifted")
     return rows
 
@@ -174,7 +175,7 @@ def _plot_summary(author_data: dict, matched: dict, validation: dict[str, dict])
             )
         audit = validation[dataset_name]
         details = (
-            f"{audit['species']} · v{audit['schema_version']} · "
+            f"v{audit['schema_version']} · "
             f"n={audit['num_subjects']}, sessions={audit['num_sessions']}, "
             f"test trials={audit['num_test_trials']:,}"
         )
@@ -192,7 +193,7 @@ def _plot_summary(author_data: dict, matched: dict, validation: dict[str, dict])
         axis.set_visible(False)
     fig.suptitle(
         "Frozen-core GRU transfer versus matched common Q\n"
-        "Every panel uses the complete admitted cohort and identical held-out trials",
+        "Every displayed panel uses a valid cohort and identical held-out trials",
         fontsize=17,
     )
     fig.savefig(FIGURE, bbox_inches="tight", dpi=180)
@@ -447,7 +448,7 @@ def _plot_gru_q_subjects(matched: dict, validation: dict[str, dict]) -> None:
         axis.axhline(0, color="#222222", linewidth=1)
         axis.set_xticks(positions, [str(value) for value in DS])
         axis.set_title(
-            f"{LABELS[dataset_name]} · {audit['species']} · "
+            f"{LABELS[dataset_name]} · "
             f"v{audit['schema_version']} · n={n_subjects}\n"
             f"{textwrap.fill(TASKS[dataset_name], 34)}",
             fontsize=9,
@@ -708,7 +709,7 @@ def _stage_a_read(matched: dict) -> list[str]:
         "",
         "The remaining cohorts are unresolved at the 0.05 level: "
         + describe(unresolved)
-        + ". Tang has only two subjects, so its inferential result is especially limited.",
+        + ". Tang (macaque) has only two subjects, so its inferential result is especially limited.",
         "",
         f"Every cohort improves in trial-pooled GRU likelihood from D=10 to D=614. "
         f"The largest gains are "
@@ -728,19 +729,20 @@ def _stage_a_read(matched: dict) -> list[str]:
             f"favors GRU by {result['pooled']:+.5f}, while the arithmetic mean subject "
             f"difference is {result['mean']:+.5f} (median {result['median']:+.5f}; "
             f"{result['fraction']:.0%} of subjects favor GRU; p={result['p']:.3g}). "
-            "All Zid subjects contribute the same 150 held-out trials, so this reversal is "
+            "All Zid (human) subjects contribute the same 150 held-out trials, so this reversal is "
             "not unequal trial weighting. It reflects the nonlinear difference between a "
             "geometric pooled likelihood and arithmetic per-subject likelihood differences "
-            "in the heterogeneous Zid distribution. The subject-paired result is primary for "
+            "in the heterogeneous Zid (human) distribution. The subject-paired result is primary for "
             "claims about a typical subject; the pooled score remains descriptive of total "
             "trial prediction.",
         ]
     lines += [
         "",
         "This screen therefore supports broad transfer, but not universal superiority over "
-        "a fitted subject-level Q model. López-Yépez, Grossman, Lebedeva, and Chen are the "
-        "positive-transfer cases; Findling, Eckstein, Miller, Kwak, and subject-balanced Zid "
-        "are the main stress tests for Stage-B model selection. No new author model is "
+        "a fitted subject-level Q model. López-Yépez (mouse), Grossman (mouse), Lebedeva "
+        "(mouse), and Chen (mouse) are the positive-transfer cases; Findling (human), "
+        "Eckstein (human), Miller (rat), and subject-balanced Zid (human) are the main "
+        "valid stress tests for Stage-B model selection. No new author model is "
         "implemented until those candidates are explicitly chosen.",
     ]
     return lines
@@ -774,17 +776,19 @@ def _result_block(
         "Every model uses the same immutable adaptation and held-out observations. "
         "GRU points are the three source-training seeds; the curve is their mean ± SD. "
         "Common Q is fitted independently per target subject on the identical adaptation half. "
-        "Existing author-model lines are retained for Grossman, Chen, and Zid, but no new "
+        "Existing author-model lines are retained for Grossman (mouse), Chen (mouse), and "
+        "Zid (human), but no new "
         "author-selected model was implemented in Stage A.",
         "",
-        "For Kwak, both displayed model families come from the choice-orientation correction "
-        "reruns. The release encodes `0=right, 1=left`; ingestion preserves that value as "
-        "`source_choice` and converts it to canonical `0=left, 1=right`. The split manifest "
-        "and trial membership are unchanged.",
+        "Kwak (mouse) is omitted from every figure, table, direction count, and inference in "
+        "this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, "
+        "which confounds subject adaptation with treatment transfer. Readmission requires a "
+        "new DMSO/control-only run using chronological odd DMSO sessions for adaptation and "
+        "chronological even DMSO sessions for testing.",
         "",
         "![Subject-level likelihood relative to the author-selected model](../fig_subject_baseline_likelihood.png)",
         "",
-        "For Grossman, Chen, and Zid, every displayed subject likelihood is relative to "
+        "For Grossman (mouse), Chen (mouse), and Zid (human), every displayed subject likelihood is relative to "
         "that paper's author-selected model. The red zero line is the author reference; "
         "positive values favor the displayed model. The panel title reports the correlation "
         "between author-model likelihood and D=614 GRU improvement. This preserves the "
@@ -902,10 +906,10 @@ def _result_block(
         "### Why common Q can beat an author-selected model",
         "",
         "This report tests held-out generalization after fitting the same adaptation half; "
-        "it does not reproduce each paper's original model-selection objective. Grossman "
+        "it does not reproduce each paper's original model-selection objective. Grossman (mouse) "
         "did compare against Q-learning, but our common Q includes forgetting, a one-step "
-        "choice kernel, and side bias, while the Grossman refit omits the paper's hierarchical "
-        "Stan fit and parameter-ordering constraint. Zid selected its model using all 300 "
+        "choice kernel, and side bias, while the Grossman (mouse) refit omits the paper's hierarchical "
+        "Stan fit and parameter-ordering constraint. Zid (human) selected its model using all 300 "
         "trials and AIC on a smaller analysis cohort, whereas this benchmark fits trials "
         "0–149 and scores 150–299 for all 258 released participants. A ranking reversal here "
         "therefore means that common Q generalizes better under this matched protocol; it is "
@@ -939,7 +943,7 @@ def _result_block(
                 ]
         if dataset_name == "tang":
             lines += [
-                "Tang has only four held-out real sessions in the complete release. All four "
+                "Tang (macaque) has only four held-out real sessions in the complete release. All four "
                 "are shown once across the three rank regions; sessions are not duplicated to "
                 "manufacture nine examples.",
                 "",
@@ -980,9 +984,9 @@ def main() -> None:
     matched = json.loads(MATCHED_DATA.read_text())
     examples = json.loads(EXAMPLE_DATA.read_text())
     validation = _validation_map(json.loads(VALIDATION_DATA.read_text()))
-    if tuple(matched["datasets"]) != DATASET_ORDER:
+    if tuple(matched["datasets"]) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen matched-result dataset membership drifted")
-    if tuple(examples["datasets"]) != DATASET_ORDER:
+    if tuple(examples["datasets"]) != ALL_DATASET_ORDER:
         raise AssertionError("Frozen example dataset membership drifted")
     _plot_summary(author_data, matched, validation)
     _plot_author_subjects(author_data, matched)
