@@ -1,0 +1,62 @@
+# HB warmup probe — one extra D≈30 rung at 4000 warmup.
+#
+# WHAT THIS IS AND IS NOT
+#
+# This is not a hyperparameter scan, and the distinction decides how to read it. Warmup
+# does not change the target distribution: the posterior is fixed by model + priors + data,
+# and warmup only controls how well NUTS adapts to it. So the result must be selected on
+# CONVERGENCE DIAGNOSTICS -- r_hat, bulk ESS, divergences -- and never on
+# heldout/eval_likelihood. Picking the warmup with the best held-out likelihood would be
+# selecting on Monte Carlo noise: it rewards the luckiest sampler run, not a better model,
+# and the differences it chases are smaller than the seed spread.
+#
+# WHY 4000, AND WHY AT D≈30
+#
+# D≈30 is the only rung with a MEASURED convergence failure, so it is the only place a
+# warmup series has a baseline. Together with runs already in hand this gives three points
+# across an 8x span at one D:
+#
+#   warmup  500  -> r_hat 1.0255, min bulk ESS 177, 8 divergences   (measured, FAILED all
+#                   three gates; Beaker 01M1KKHNKZ67YGVVGRDH2G009B)
+#   warmup 2000  -> from the main ladder grid (sweep_beaker.yaml)
+#   warmup 4000  -> this file
+#
+# Three points is enough to tell the two outcomes apart that matter. If the gates improve
+# monotonically and clear somewhere in the series, warmup was the binding constraint and
+# the ladder adopts the smallest setting that passes. If they PLATEAU while still failing,
+# more warmup is not the answer and the problem is geometry or parameterisation -- raise
+# target_accept_prob to 0.9 (now a config edit, no code change) before touching the model.
+#
+# That second outcome is the reason to spend a rung on this rather than simply running the
+# ladder at 2000 and hoping: without a third point, a 2000-warmup failure cannot be told
+# apart from "needs even more warmup", and the next step would be a guess.
+#
+# The 500 point is comparable despite predating the current code: it used the same
+# sampler settings and seed, and neither the theta_raw persistence nor the figure fixes
+# that landed since touch the chain.
+
+entity: AIND-disRNN
+project: mice_data_scaling
+name: hb-warmup-probe
+
+method: grid
+metric:
+  name: heldout/eval_likelihood     # logged, but NOT the selection criterion — see above
+  goal: maximize
+
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=hb_hattori
+  - seed=0
+  - wandb.entity=AIND-disRNN
+  - wandb.project=mice_data_scaling
+  - ${args_no_hyphens}
+
+parameters:
+  data.subject_ratio:
+    values: [0.049]        # D≈30 — the rung whose 500-warmup failure this is calibrating
+  model.num_warmup:
+    values: [4000]         # 2000 comes from the ladder; 500 is already measured

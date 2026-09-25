@@ -37,4 +37,20 @@ command:
 
 parameters:
   data.subject_ratio:
-    values: [0.049]        # D≈30 against the ~614 pool, seed 0 — matches study 01
+    # The full ladder against the ~614 pool, seed 0. Each rung has a GRU counterpart in
+    # ../01-gru-scaling-law/scaling_results.csv, which is the whole point of reusing study
+    # 01's cohort and project — its D column carries 10, 29/30, 99/101, 300/301 and 614, so
+    # every rung below is directly comparable and none of them is a new cell.
+    #
+    #   0.016 -> D≈10    0.049 -> D≈30    0.163 -> D≈100    0.489 -> D≈300
+    #
+    # Run as one grid so the rungs schedule independently and a failure at one D does not
+    # take the others down.
+    #
+    # D≈10 is here as a cheap FALSIFIER, not as a result: at ~1 h it reports back long
+    # before the others, and if 2000 warmup still leaves divergences at the mildest funnel
+    # in the ladder, the settings are wrong everywhere above it and the remaining rungs
+    # should be cancelled rather than left to burn. The converse does not hold — D≈10
+    # passing says little about D≈300, because the group-scale funnel deepens as subjects
+    # are added, which is exactly what sank the 500-warmup D≈30.
+    values: [0.016, 0.049, 0.163, 0.489]

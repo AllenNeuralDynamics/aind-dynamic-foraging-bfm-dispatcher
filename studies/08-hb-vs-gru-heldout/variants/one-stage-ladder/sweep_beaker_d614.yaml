@@ -1,0 +1,59 @@
+# HB full-cohort rung — D=614, the entire pool (subject_ratio 1.0).
+#
+# Separate from sweep_beaker.yaml not because it is exploratory -- study 01 has a D=614 GRU
+# cell, so this is the ladder's most important comparison point, not its least -- but
+# because it is the rung most likely to leave measured territory, and keeping it in its own
+# file and its own launch record means it can be discarded without touching the ladder's.
+#
+# WHERE IT LEAVES MEASURED TERRITORY
+#
+# `benchmarks/RESULTS.md` verifies flat lane scaling to 20,480 lanes (32x the lanes for 1.0x
+# the time on an A100) and explicitly lists "whether the flat regime extends past ~20k
+# lanes" as an open question. With chains vectorized onto one device, this fit's lane count
+# is subjects x sessions x chains:
+#
+#   D≈30  ->   29 x 49 x 4 =   5,684 lanes   inside the verified regime
+#   D≈100 ->  101 x 50 x 4 =  20,200 lanes   at the edge
+#   D≈300 ->  300 x 50 x 4 =  60,000 lanes   already past it
+#   D=614 ->  614 x 50 x 4 = 122,800 lanes   ~6x past it
+#
+# So D≈300 in the main ladder already exits the verified regime; 614 is the next step on an
+# axis this launch is probing either way, not a categorically new gamble. If the flat regime
+# has ended, these two rungs are what will show it.
+#
+# WHAT COULD GO WRONG, AND HOW FAST WE FIND OUT
+#
+# Out-of-memory is the live risk, and it is a cheap one: JAX allocates during compilation
+# and the first gradient, so an OOM surfaces within minutes rather than after hours of
+# sampling. The artifact also grows -- theta_raw at this size is ~1.2 GB -- which is the
+# cost of keeping the fit replayable and is why save_session_sites is opt-in.
+#
+# Convergence is the likelier failure than cost. The group-scale funnel deepens as subjects
+# are added, and it is what sank D≈30 at 500 warmup, so 2000 warmup is least likely to hold
+# here. A D=614 that runs cleanly but fails the gates is still a useful measurement: it puts
+# an upper bound on the ladder, and it is read the same way as every other rung -- on r_hat,
+# bulk ESS and divergences, never on held-out likelihood.
+
+entity: AIND-disRNN
+project: mice_data_scaling
+name: hb-one-stage-d614
+
+method: grid
+metric:
+  name: heldout/eval_likelihood
+  goal: maximize
+
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=hb_hattori
+  - seed=0
+  - wandb.entity=AIND-disRNN
+  - wandb.project=mice_data_scaling
+  - ${args_no_hyphens}
+
+parameters:
+  data.subject_ratio:
+    values: [1.0]          # the whole pool — D=614, matching study 01's largest cell
