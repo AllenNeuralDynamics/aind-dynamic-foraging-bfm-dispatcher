@@ -1,0 +1,17 @@
+{
+  "mode": "resumable-grid",
+  "submission_mode": "beaker-py-from-rendered-spec",
+  "n_tasks": 12,
+  "experiment_id": "01M1YRT8B20NMJ3JAHNVC0RMF4",
+  "experiment_url": "https://beaker.org/ex/01M1YRT8B20NMJ3JAHNVC0RMF4",
+  "dispatcher_commit": "0c2257cb1d2cf7d86fed235aeb2f2419e138d727",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "wandb_group": "gru-e8-d614-expansion@20260907-132625",
+  "clusters": [
+    "ai1/octo-hub-onprem-h200",
+    "ai1/octo-hub-aws-h200"
+  ],
+  "sweep_file": "studies/09-gru-cross-species-transfer/variants/gru-e8-d614-expansion/sweep_boundary.yaml",
+  "created_utc": "2026-09-07T20:26:38.128641+00:00"
+}

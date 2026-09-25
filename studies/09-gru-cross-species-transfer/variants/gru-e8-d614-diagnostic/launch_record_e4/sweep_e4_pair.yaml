@@ -1,0 +1,14 @@
+entity: AIND-disRNN
+project: gru_cross_species_transfer
+name: gru-e4-pair-d614-diagnostic
+method: grid
+command:
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --source-manifest=source_runs_e4_pair.json
+  - ${args_no_hyphens}
+parameters:
+  --dataset:
+    values: [grossman, lebedeva, miller, findling, eckstein]
+  --source-key:
+    values: [e4-d614-s0, e4-d614-s1, e4-d614-s2]
