@@ -1,0 +1,18 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25582240",
+  "wandb_group": "eckstein-bi@slurm-25582240",
+  "wandb_run_id": "m8568oly",
+  "dispatcher_commit": "56b0536e82d594001d924ba3af2ca99f30e49d55",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "eaeadec2a56c4a8099f3e8cfa315a9467c2f6a24",
+  "script": "studies/09-gru-cross-species-transfer/variants/eckstein-bi/eckstein_bi.slurm",
+  "dataset": "eckstein",
+  "canonical_data_root": "/allen/aind/scratch/han.hou/datasets/study09-external-v1v2-20260905/canonical",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-eckstein-bi-25582240",
+  "submitted_at": "2026-09-06T13:32:04-07:00",
+  "started_at": "2026-09-06T13:32:05-07:00",
+  "settled_at": "2026-09-06T13:38:21-07:00",
+  "status": "completed"
+}

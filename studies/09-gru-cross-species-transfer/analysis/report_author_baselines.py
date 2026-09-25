@@ -29,9 +29,7 @@ VALIDATION_DATA = STUDY / "analysis" / "dataset_suite_validation.json"
 SURVEY = STUDY / "DATASET_SURVEY.md"
 FIGURE = STUDY / "analysis" / "fig_author_baseline_likelihood.png"
 SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_baseline_likelihood.png"
-GRU_Q_SUBJECT_FIGURE = (
-    STUDY / "analysis" / "fig_subject_gru_minus_q_likelihood.png"
-)
+GRU_Q_SUBJECT_FIGURE = STUDY / "analysis" / "fig_subject_gru_minus_q_likelihood.png"
 REPORT = STUDY / "analysis" / "reports" / "r1-author-aligned-baselines.md"
 START = "<!-- BEGIN result-1 -->"
 END = "<!-- END result-1 -->"
@@ -87,11 +85,36 @@ AUTHOR_LABELS = {
     "chen-rlck": "4-parameter RLCK",
     "zid-traditional-rlck": "traditional RLCK",
     "zid-history-kernel-foraging": "HK2 foraging RL",
+    "lebedeva-pr": "PR",
+    "beron-rflr": "RFLR",
+    "miller-rhg": "RHG",
+    "findling-weber-imprecision": "Weber-imprecision BI",
+    "findling-weber-imprecision-64p": "Weber BI (64-particle fit)",
+    "eckstein-rl": "counterfactual RL",
+    "eckstein-bi": "Bayesian inference",
 }
+AUTHOR_REFERENCE_PANELS = (
+    ("grossman", "grossman-meta-learning"),
+    ("chen", "chen-rlck"),
+    ("zid", "zid-history-kernel-foraging"),
+    ("lebedeva", "lebedeva-pr"),
+    ("beron", "beron-rflr"),
+    ("miller", "miller-rhg"),
+    ("findling", "findling-weber-imprecision"),
+    ("eckstein", "eckstein-rl"),
+    ("eckstein", "eckstein-bi"),
+)
 EXAMPLE_CATEGORIES = (
     ("lower", "Lower tail"),
     ("median", "Median"),
     ("upper", "Upper tail"),
+)
+PRIMARY_AUTHOR_COHORTS = (
+    "lebedeva",
+    "beron",
+    "miller",
+    "findling",
+    "eckstein",
 )
 
 
@@ -138,7 +161,9 @@ def _p(value: float) -> str:
     return "<.001" if value < 0.001 else f"={value:.3f}".replace("0.", ".")
 
 
-def _plot_summary(author_data: dict, matched: dict, validation: dict[str, dict]) -> None:
+def _plot_summary(
+    author_data: dict, matched: dict, validation: dict[str, dict]
+) -> None:
     apply_presentation_style()
     fig, axes = plt.subplots(4, 4, figsize=(18, 15), constrained_layout=True)
     records = author_data["records"]
@@ -161,7 +186,9 @@ def _plot_summary(author_data: dict, matched: dict, validation: dict[str, dict])
             linewidth=1.6,
             label="GRU mean ± SD",
         )
-        axis.axhline(_metric(dataset["q"]), color="#222222", linestyle="--", label="common Q")
+        axis.axhline(
+            _metric(dataset["q"]), color="#222222", linestyle="--", label="common Q"
+        )
         for baseline, record in records.items():
             if record["dataset"] != dataset_name:
                 continue
@@ -201,19 +228,23 @@ def _plot_summary(author_data: dict, matched: dict, validation: dict[str, dict])
 
 
 def _author_subject_conditions(
-    dataset_name: str, author_data: dict, dataset: dict
+    dataset_name: str,
+    selected_baseline: str,
+    author_data: dict,
+    dataset: dict,
 ) -> tuple[str, list[str], list[list[float]], list[str], list[float], float]:
     records = [
         (key, record)
         for key, record in author_data["records"].items()
         if record["dataset"] == dataset_name
     ]
-    selected = [(key, record) for key, record in records if record["author_selected"]]
-    if len(selected) != 1:
-        raise AssertionError("Expected exactly one author-selected model per dataset")
-    selected_baseline, selected_record = selected[0]
+    selected_record = dict(records).get(selected_baseline)
+    if selected_record is None or not selected_record["author_selected"]:
+        raise AssertionError(
+            "Requested author reference is unavailable or not selected"
+        )
     comparators = sorted(
-        (key, record) for key, record in records if not record["author_selected"]
+        (key, record) for key, record in records if key != selected_baseline
     )
     q = dataset["q"]["metrics"]["per_subject_mean_log_likelihood_nats"]
     subjects = sorted(q)
@@ -269,11 +300,16 @@ def _author_subject_conditions(
 
 def _plot_author_subjects(author_data: dict, matched: dict) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(1, 3, figsize=(16.2, 6.2), constrained_layout=True)
-    for axis, dataset_name in zip(axes, ("grossman", "chen", "zid")):
+    fig, axes = plt.subplots(3, 3, figsize=(18, 16), constrained_layout=True)
+    for axis, (dataset_name, selected_baseline) in zip(
+        axes.flat, AUTHOR_REFERENCE_PANELS
+    ):
         reference_label, labels, values, colors, p_values, correlation = (
             _author_subject_conditions(
-                dataset_name, author_data, matched["datasets"][dataset_name]
+                dataset_name,
+                selected_baseline,
+                author_data,
+                matched["datasets"][dataset_name],
             )
         )
         positions = np.arange(len(labels))
@@ -341,6 +377,10 @@ def _plot_author_subjects(author_data: dict, matched: dict) -> None:
         tick_labels = [
             label.replace("4-parameter ", "4-param\n")
             .replace("traditional ", "traditional\n")
+            .replace("Common Q", "Common\nQ")
+            .replace("counterfactual RL", "counterfactual\nRL")
+            .replace("Bayesian inference", "Bayesian\ninference")
+            .replace("Weber BI (64-particle fit)", "Weber BI\n(64-particle fit)")
             .replace("GRU ", "GRU\n")
             for label in labels
         ]
@@ -383,7 +423,7 @@ def _plot_author_subjects(author_data: dict, matched: dict) -> None:
 
 def _plot_gru_q_subjects(matched: dict, validation: dict[str, dict]) -> None:
     apply_presentation_style()
-    fig, axes = plt.subplots(4, 4, figsize=(18, 16), constrained_layout=True)
+    fig, axes = plt.subplots(3, 4, figsize=(18, 13), constrained_layout=True)
     rng = np.random.default_rng(29)
     for axis, dataset_name in zip(axes.flat, DATASET_ORDER):
         dataset = matched["datasets"][dataset_name]
@@ -442,7 +482,12 @@ def _plot_gru_q_subjects(matched: dict, validation: dict[str, dict]) -> None:
                 ha="center",
                 va="top",
                 fontsize=6.3,
-                bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.7, "pad": 0.5},
+                bbox={
+                    "facecolor": "white",
+                    "edgecolor": "none",
+                    "alpha": 0.7,
+                    "pad": 0.5,
+                },
             )
         audit = validation[dataset_name]
         axis.axhline(0, color="#222222", linewidth=1)
@@ -488,10 +533,13 @@ def _plot_examples(example_data: dict) -> list[Path]:
     module = importlib.import_module(
         "aind_dynamic_foraging_basic_analysis.plot.plot_foraging_session"
     )
-    if hashlib.sha256(Path(module.__file__).read_bytes()).hexdigest() != example_data[
-        "plotting"
-    ]["source_sha256"]:
-        raise AssertionError("Installed plot_foraging_session.py differs from frozen source")
+    if (
+        hashlib.sha256(Path(module.__file__).read_bytes()).hexdigest()
+        != example_data["plotting"]["source_sha256"]
+    ):
+        raise AssertionError(
+            "Installed plot_foraging_session.py differs from frozen source"
+        )
     plot_foraging_session = module.plot_foraging_session
     paths = []
     for dataset_name in DATASET_ORDER:
@@ -548,7 +596,9 @@ def _plot_examples(example_data: dict) -> list[Path]:
                 boundary = example["adapt_prefix_trials"]
                 if boundary is not None:
                     for axis in axes:
-                        axis.axvline(boundary + 0.5, color="#7B3294", linestyle="--", lw=1)
+                        axis.axvline(
+                            boundary + 0.5, color="#7B3294", linestyle="--", lw=1
+                        )
                 if not example["reward_probability_available"]:
                     axes[1].text(
                         0.5,
@@ -582,7 +632,11 @@ def _plot_examples(example_data: dict) -> list[Path]:
                 top=0.88,
                 hspace=0.62,
             )
-            path = STUDY / "analysis" / f"fig_example_sessions_{dataset_name}_{category}.png"
+            path = (
+                STUDY
+                / "analysis"
+                / f"fig_example_sessions_{dataset_name}_{category}.png"
+            )
             fig.savefig(path)
             plt.close(fig)
             paths.append(path)
@@ -607,9 +661,14 @@ def _author_rows(author_data: dict, matched: dict) -> tuple[list[str], list[str]
         dataset_name = record["dataset"]
         dataset = matched["datasets"][dataset_name]
         d614 = _gru_for_d(dataset, 614)
+        role = (
+            "author-selected"
+            if record["author_selected"]
+            else record.get("comparison_role", "paper comparator")
+        )
         rows.append(
             f"| {LABELS[dataset_name]} | {AUTHOR_LABELS[baseline]} | "
-            f"{'yes' if record['author_selected'] else 'paper comparator'} | "
+            f"{role} | "
             f"{_metric(dataset['q']):.5f} | {_metric(record):.5f} | "
             f"{_mean_sd([_metric(row) for row in d614])} |"
         )
@@ -636,9 +695,12 @@ def _author_rows(author_data: dict, matched: dict) -> tuple[list[str], list[str]
 
 def _author_subject_rows(author_data: dict, matched: dict) -> list[str]:
     rows = []
-    for dataset_name in ("grossman", "chen", "zid"):
+    for dataset_name, selected_baseline in AUTHOR_REFERENCE_PANELS:
         reference_label, labels, values, _, p_values, _ = _author_subject_conditions(
-            dataset_name, author_data, matched["datasets"][dataset_name]
+            dataset_name,
+            selected_baseline,
+            author_data,
+            matched["datasets"][dataset_name],
         )
         for label, differences, p_value in zip(labels, values, p_values):
             rows.append(
@@ -647,6 +709,55 @@ def _author_subject_rows(author_data: dict, matched: dict) -> list[str]:
                 f"{statistics.mean(differences):+.5f} | {p_value:.3g} |"
             )
     return rows
+
+
+def _primary_author_read(author_data: dict, matched: dict) -> list[str]:
+    lines = [
+        "### Primary author-model scientific read",
+        "",
+        "Trial-pooled held-out ranking under the matched-half protocol:",
+        "",
+    ]
+    for dataset_name in PRIMARY_AUTHOR_COHORTS:
+        dataset = matched["datasets"][dataset_name]
+        scores = [
+            ("common Q", _metric(dataset["q"])),
+            (
+                "GRU D=614",
+                statistics.mean(_metric(row) for row in _gru_for_d(dataset, 614)),
+            ),
+        ]
+        scores.extend(
+            (AUTHOR_LABELS[key], _metric(record))
+            for key, record in author_data["records"].items()
+            if record["dataset"] == dataset_name and record["author_selected"]
+        )
+        ranking = " > ".join(
+            f"{label} ({value:.5f})"
+            for label, value in sorted(scores, key=lambda item: item[1], reverse=True)
+        )
+        lines.append(f"- **{LABELS[dataset_name]}:** {ranking}")
+
+    primary = _metric(author_data["records"]["findling-weber-imprecision"])
+    sensitivity = _metric(
+        author_data["records"]["findling-weber-imprecision-64p"]
+    )
+    q_score = _metric(matched["datasets"]["findling"]["q"])
+    lines += [
+        "",
+        "For Findling (human), increasing only the fit particle count from 2 to 64 "
+        f"raises held-out likelihood from {primary:.5f} to {sensitivity:.5f} "
+        f"(Δ={sensitivity - primary:+.5f}), nearly reaching common Q ({q_score:.5f}). "
+        "The released two-particle fitting objective therefore contributes material "
+        "Monte Carlo instability. The two-particle result remains the primary "
+        "author-code-parity reference; the 64-particle result is a sensitivity, not a "
+        "replacement author-selected model.",
+        "",
+        "These rankings concern held-out prediction after equal adaptation data. They do "
+        "not recreate the papers' original full-data, hierarchical, or information-criterion "
+        "model-selection analyses.",
+    ]
+    return lines
 
 
 def _stage_a_read(matched: dict) -> list[str]:
@@ -682,9 +793,7 @@ def _stage_a_read(matched: dict) -> list[str]:
         for name in DATASET_ORDER
         if results[name]["p"] < 0.05 and results[name]["mean"] < 0
     ]
-    unresolved = [
-        name for name in DATASET_ORDER if results[name]["p"] >= 0.05
-    ]
+    unresolved = [name for name in DATASET_ORDER if results[name]["p"] >= 0.05]
     direction_mismatch = [
         name
         for name in DATASET_ORDER
@@ -715,7 +824,9 @@ def _stage_a_read(matched: dict) -> list[str]:
         f"The largest gains are "
         + ", ".join(
             f"**{LABELS[name]}** ({value:+.5f})"
-            for name, value in sorted(scaling.items(), key=lambda item: item[1], reverse=True)[:4]
+            for name, value in sorted(
+                scaling.items(), key=lambda item: item[1], reverse=True
+            )[:4]
         )
         + ". Several curves peak at D=100 or D=300, so the evidence supports scaling "
         "the source population but not a universal optimum at the largest D.",
@@ -742,8 +853,8 @@ def _stage_a_read(matched: dict) -> list[str]:
         "a fitted subject-level Q model. López-Yépez (mouse), Grossman (mouse), Lebedeva "
         "(mouse), and Chen (mouse) are the positive-transfer cases; Findling (human), "
         "Eckstein (human), Miller (rat), and subject-balanced Zid (human) are the main "
-        "valid stress tests for Stage-B model selection. No new author model is "
-        "implemented until those candidates are explicitly chosen.",
+        "valid stress tests that motivated the primary-set author-model reproductions "
+        "reported below.",
     ]
     return lines
 
@@ -776,9 +887,10 @@ def _result_block(
         "Every model uses the same immutable adaptation and held-out observations. "
         "GRU points are the three source-training seeds; the curve is their mean ± SD. "
         "Common Q is fitted independently per target subject on the identical adaptation half. "
-        "Existing author-model lines are retained for Grossman (mouse), Chen (mouse), and "
-        "Zid (human), but no new "
-        "author-selected model was implemented in Stage A.",
+        "Author-model lines include the existing Grossman (mouse), Chen (mouse), and "
+        "Zid (human) fits plus the primary-set reproductions for Lebedeva (mouse), "
+        "Beron (mouse), Miller (rat), Findling (human), and both Eckstein (human) "
+        "co-winners.",
         "",
         "Kwak (mouse) is omitted from every figure, table, direction count, and inference in "
         "this report. Its frozen manifest adapts on CNO sessions and tests on DMSO sessions, "
@@ -788,8 +900,9 @@ def _result_block(
         "",
         "![Subject-level likelihood relative to the author-selected model](../fig_subject_baseline_likelihood.png)",
         "",
-        "For Grossman (mouse), Chen (mouse), and Zid (human), every displayed subject likelihood is relative to "
-        "that paper's author-selected model. The red zero line is the author reference; "
+        "Every displayed subject likelihood is relative to the author model named in "
+        "that panel. Eckstein (human) has separate panels for its two co-winners. The "
+        "red zero line is the author reference; "
         "positive values favor the displayed model. The panel title reports the correlation "
         "between author-model likelihood and D=614 GRU improvement. This preserves the "
         "author-relative comparison from the completed first-round report.",
@@ -809,9 +922,7 @@ def _result_block(
     for dataset_name in DATASET_ORDER:
         audit = validation[dataset_name]
         dataset = matched["datasets"][dataset_name]
-        gru = [
-            _mean_sd([_metric(row) for row in _gru_for_d(dataset, d)]) for d in DS
-        ]
+        gru = [_mean_sd([_metric(row) for row in _gru_for_d(dataset, d)]) for d in DS]
         lines.append(
             f"| {LABELS[dataset_name]} — {TASKS[dataset_name]} | {audit['species']} | "
             f"v{audit['schema_version']} | {audit['num_subjects']} | "
@@ -855,12 +966,8 @@ def _result_block(
         pooled = statistics.mean(_metric(row) for row in d614) - statistics.mean(
             _metric(row) for row in d10
         )
-        ten = [
-            row["metrics"]["per_subject_mean_log_likelihood_nats"] for row in d10
-        ]
-        six = [
-            row["metrics"]["per_subject_mean_log_likelihood_nats"] for row in d614
-        ]
+        ten = [row["metrics"]["per_subject_mean_log_likelihood_nats"] for row in d10]
+        six = [row["metrics"]["per_subject_mean_log_likelihood_nats"] for row in d614]
         subjects = sorted(ten[0])
         if any(set(row) != set(subjects) for row in [*ten, *six]):
             raise AssertionError("D=10/D=614 subject keys do not align")
@@ -880,11 +987,13 @@ def _result_block(
         "",
         *_stage_a_read(matched),
         "",
-        "### Existing author-aligned baselines",
+        "### Author-aligned baselines",
         "",
-        "| cohort | published model | author-selected? | common Q | published model refit | GRU D=614 |",
+        "| cohort | published model | role | common Q | published model refit | GRU D=614 |",
         "|---|---|:---:|---:|---:|---:|",
         *author_rows,
+        "",
+        *_primary_author_read(author_data, matched),
         "",
         "### Subject-level differences from the author-selected model",
         "",
@@ -956,7 +1065,9 @@ def _result_block(
         "",
         "### Skipped datasets",
         "",
-        _survey_section("## Skipped cohorts", "## Stage-B author-model feasibility gate"),
+        _survey_section(
+            "## Skipped cohorts", "## Stage-B author-model feasibility gate"
+        ),
         "",
         "### Author-model feasibility — Stage-B stop gate",
         "",
@@ -974,7 +1085,9 @@ def _result_block(
         "- Nominal source D is plotted. Realized source-subject counts were "
         + ", ".join(f"D={d}: {actual_ds[d]}" for d in DS)
         + ".",
-        "- New author-selected models remain outside Stage A.",
+        "- Every primary-set author model uses the same immutable adaptation and held-out "
+        "trials as GRU and common Q; model-specific fitting deviations are disclosed in "
+        "the feasibility table.",
     ]
     return "\n".join(lines)
 

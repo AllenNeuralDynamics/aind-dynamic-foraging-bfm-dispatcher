@@ -1,0 +1,17 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25582233",
+  "wandb_group": "beron-rflr@slurm-25582233",
+  "wandb_run_id": "kx7rc3xy",
+  "dispatcher_commit": "1248fdd5b05ade9ca006f4976e7cd5d6139c2273",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "eaeadec2a56c4a8099f3e8cfa315a9467c2f6a24",
+  "script": "studies/09-gru-cross-species-transfer/variants/beron-rflr/beron_rflr.slurm",
+  "dataset": "beron",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-beron-rflr-25582233",
+  "submitted_at": "2026-09-06T13:26:27-07:00",
+  "started_at": "2026-09-06T13:26:35-07:00",
+  "settled_at": "2026-09-06T13:47:30-07:00",
+  "status": "completed"
+}

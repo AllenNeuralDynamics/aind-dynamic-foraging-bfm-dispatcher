@@ -34,6 +34,36 @@ BASELINES = {
         "agent_class": "ForagerZidHistoryKernel",
         "citation": "Zid et al., Nature Communications (2026), Eq. 22",
     },
+    "lebedeva-pr": {
+        "dataset": "lebedeva",
+        "dataset_id": "lebedeva-et-al-2026",
+        "agent_class": "ForagerLebedevaPR",
+        "citation": "Lebedeva et al., Nature Communications (2026), Eqs. 9-11",
+    },
+    "beron-rflr": {
+        "dataset": "beron",
+        "dataset_id": "beron-et-al-2022",
+        "agent_class": "ForagerBeronRFLR",
+        "citation": "Beron et al., PNAS (2022), Eqs. 3-5",
+    },
+    "miller-rhg": {
+        "dataset": "miller",
+        "dataset_id": "miller-et-al-2022-tab",
+        "agent_class": "ForagerMillerRHG",
+        "citation": "Miller et al., bioRxiv (2021), RHG model",
+    },
+    "eckstein-rl": {
+        "dataset": "eckstein",
+        "dataset_id": "eckstein-et-al-2022",
+        "agent_class": "ForagerEcksteinRL",
+        "citation": "Eckstein et al., Developmental Cognitive Neuroscience (2022), RL",
+    },
+    "eckstein-bi": {
+        "dataset": "eckstein",
+        "dataset_id": "eckstein-et-al-2022",
+        "agent_class": "ForagerEcksteinBI",
+        "citation": "Eckstein et al., Developmental Cognitive Neuroscience (2022), BI",
+    },
 }
 
 

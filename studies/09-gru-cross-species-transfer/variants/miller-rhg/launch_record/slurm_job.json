@@ -1,0 +1,19 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25582234",
+  "wandb_group": "miller-rhg@slurm-25582234",
+  "wandb_run_id": "1rfk72im",
+  "dispatcher_commit": "1248fdd5b05ade9ca006f4976e7cd5d6139c2273",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "eaeadec2a56c4a8099f3e8cfa315a9467c2f6a24",
+  "script": "studies/09-gru-cross-species-transfer/variants/miller-rhg/miller_rhg.slurm",
+  "dataset": "miller",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-miller-rhg-25582234",
+  "submitted_at": "2026-09-06T13:26:28-07:00",
+  "started_at": "2026-09-06T13:26:35-07:00",
+  "settled_at": "2026-09-06T17:36:42-07:00",
+  "elapsed": "04:10:07",
+  "resources": "24 CPU, 64G memory",
+  "status": "completed"
+}
