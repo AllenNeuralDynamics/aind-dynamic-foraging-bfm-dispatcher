@@ -12,10 +12,12 @@ beta=3e-4), and whether the D=614 generalization gap (train LL - held-out LL) ke
 or turns around, at D in {300, 614} (the two cohorts wave 2 tested; D snapped to nominal per
 mult-d-grid's own +/-3 tolerance since resolved subject count varies by seed).
 
-Only state=='finished' rows are trusted (both grids report 100% finished for the cells used
-here -- see r3's launch-verification section). No backfilled rows are used from either file
-for the cells this report reads (wave2 has none; the 6 mult-d-grid backfilled cells fall
-outside the D in {300,614}/beta,mult settings compared here EXCEPT one -- see NOTE below).
+`read_csv_usable` deliberately accepts BOTH state=='finished' rows and flagged backfills
+(heldout_backfilled==True with a recovered value) -- it is not finished-only. Wave2 has zero
+backfilled rows (8/8 finished), but the COMBINED analysis is not backfill-free: four wave-1
+(mult-d-grid) rows feeding the D=300 cells used here ARE backfilled (the old tuned point's
+seed-1 side, mult=2's seed-0 side, and both seeds of mult=5 -- see the r3 report's caveats
+section for run ids and why). D=614 is fully backfill-free across every cell used.
 
     python analysis/r3_penalty_edge_extension.py
 
