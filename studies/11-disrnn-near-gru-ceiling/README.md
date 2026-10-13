@@ -129,7 +129,7 @@ Beaker experiment ids) is in `variants/stage3-wide-latent/notes.md` and
 
 ## Verdict
 
-**At most ~11% of the residual GRU gap closes, and it does not close monotonically or
+**At most ~12% of the residual GRU gap closes, and it does not close monotonically or
 completely at any stage.** Full attribution table, figure, and the two things that had to be
 re-verified before this verdict was trustworthy (a stale hardcoded GRU reference in study 06's
 own report, and a late-training collapse in one of stage1's two seeds) are in
@@ -139,7 +139,7 @@ own report, and a late-training collapse in one of stage1's two seeds) are in
 |---|---|---|---|
 | disRNN tuned (study 06 baseline) | 0.7221 | 0% | verified GRU ceiling is 0.7290 (not the stale 0.7268 study 06's report quotes) → baseline gap is **-0.0069**, not -0.0047 |
 | +stage1 (interaction penalty → 0) | 0.7229 | +11.9% | seed 0 collapsed late in training and is excluded (n=1 for this stage) |
-| +stage1+2 (+ linear update net) | 0.7218 | -4.6% | statistically flat vs. baseline — linearizing the update net adds nothing measurable |
+| +stage1+2 (+ linear update net) | 0.7218 | -4.7% | statistically flat vs. baseline — linearizing the update net adds nothing measurable |
 | +stage1+2+3 (+ latent 5→32) | 0.7228 | +10.6% | back to roughly stage 1's level, not beyond it |
 
 **Bottom line for the study's motivating question.** Removing the interaction-bottleneck penalty

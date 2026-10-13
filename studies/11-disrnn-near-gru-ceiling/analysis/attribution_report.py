@@ -20,6 +20,7 @@ quoted -0.0047 (see the r1 report for the full explanation).
 from __future__ import annotations
 
 import csv
+import re
 from pathlib import Path
 
 import matplotlib
@@ -28,12 +29,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
+REPORT = HERE / "reports" / "r1-near-gru-attribution.md"
 
 RL_BASELINE = 0.7170
 FOCAL = "#1f77b4"
 COLLAPSED = "#c44e52"
 GRU_COLOR = "#333333"
 RL_COLOR = "#888888"
+
+# Table-row labels for the r1 report's "Gap-closure attribution" section, parallel to
+# `labels` (the plot's multi-line x-tick labels) below. index 1 (stage1) carries the
+# footnote marker because it is effectively n=1 (seed 0 excluded, collapsed).
+REPORT_ROW_LABELS = [
+    "disRNN tuned (study 06, baseline)",
+    "+stage1 (interaction penalty \u2192 0)\u1d43",
+    "+stage1+2 (+ linear update net)",
+    "+stage1+2+3 (+ latent 5\u219232)",
+]
 
 
 def load_grid():
@@ -52,6 +64,34 @@ def load_reference():
     s06 = {int(r["seed"]): float(r["heldout_ll"]) for r in rows if r["reference"] == "study06_tuned_D614_mult1_beta3e-4"}
     gru = [float(r["heldout_ll"]) for r in rows if r["reference"] == "gru_ceiling_H256_D614"]
     return s06, gru
+
+
+def update_report_block(means: list[float], gru_mean: float, baseline_gap: float) -> None:
+    """Regenerate the <!-- BEGIN result-1 --> gap-closure table in r1 from computed means.
+
+    Mirrors the pattern in studies/06-disrnn-operating-point-at-scale/analysis/
+    model_selection.py:137-148 and scaling_report.py:528-542.
+    """
+    lines = ["| stage (cumulative) | mean held-out LL | remaining gap to GRU | "
+             "gap closed vs. baseline | % of baseline gap closed |",
+             "|---|---|---|---|---|"]
+    is_baseline = [True, False, False, False]
+    for row_label, m, baseline_row in zip(REPORT_ROW_LABELS, means, is_baseline):
+        gap = gru_mean - m
+        closure = baseline_gap - gap
+        pct = closure / baseline_gap * 100
+        pct_str = "0%" if baseline_row else f"**{pct:+.1f}%**"
+        closure_str = "\u2014" if baseline_row else f"{closure:+.4f}"
+        # "remaining gap to GRU" is displayed model-minus-GRU (negative), matching the
+        # report's residual-gap sign convention throughout -- i.e. -gap, not +gap.
+        lines.append(f"| {row_label} | {m:.4f} | {-gap:+.4f} | {closure_str} | {pct_str} |")
+    block = "<!-- BEGIN result-1 -->\n" + "\n".join(lines) + "\n<!-- END result-1 -->"
+    if not REPORT.exists():
+        return
+    text = REPORT.read_text()
+    new = re.sub(r"<!-- BEGIN result-1 -->.*?<!-- END result-1 -->", block, text, flags=re.S)
+    REPORT.write_text(new)
+    print(f"regenerated result-1 block in {REPORT.name}")
 
 
 def main():
@@ -78,10 +118,20 @@ def main():
 
     print("=== gap-closure attribution (GRU ceiling verified fresh: %.4f) ===" % gru_mean)
     print("baseline gap (study06 tuned vs GRU) = %.4f" % baseline_gap)
+    closure_pcts = []
     for lab, m in zip(labels, means):
         gap = gru_mean - m
         closure = baseline_gap - gap
-        print(f"  {lab.replace(chr(10),' '):45s} mean={m:.4f}  gap={gap:+.4f}  closure={closure:+.4f} ({closure/baseline_gap*100:+.1f}%)")
+        pct = closure / baseline_gap * 100
+        closure_pcts.append(pct)
+        print(f"  {lab.replace(chr(10),' '):45s} mean={m:.4f}  gap={gap:+.4f}  closure={closure:+.4f} ({pct:+.1f}%)")
+    # Max closure across the three relaxation stages (excludes the baseline's own 0% entry
+    # at index 0) -- drives the plot title below so it can't drift out of sync with the data,
+    # per Copilot review on PR #163 (attribution_report.py:113 previously hardcoded "~11%"
+    # against an actual max of 11.9%, which rounds to ~12%).
+    max_closure_pct = max(closure_pcts[1:])
+
+    update_report_block(means, gru_mean, baseline_gap)
 
     plt.rcParams.update({"font.size": 8, "pdf.fonttype": 42, "ps.fonttype": 42})
 
@@ -110,7 +160,7 @@ def main():
     ax.set_xticks(x)
     ax.set_xticklabels(labels, fontsize=7.8)
     ax.set_ylabel("held-out eval likelihood")
-    ax.set_title("Staged relaxation toward GRU capacity closes ~11% of the residual gap, not more", loc="left")
+    ax.set_title(f"Staged relaxation toward GRU capacity closes ~{round(max_closure_pct)}% of the residual gap, not more", loc="left")
     ax.set_ylim(0.672, 0.735)
     ax.set_xlim(-0.4, 4.6)
     for spine in ("top", "right"):

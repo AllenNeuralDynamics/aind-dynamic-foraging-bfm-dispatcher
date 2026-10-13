@@ -2,7 +2,8 @@
 # The launcher expands the sweep's 2-seed grid into 2 autoResume tasks.
 #
 # COMPUTE: same small disRNN as study 03/05/06 (latent_size=5, update-net 16x5, LINEAR
-# choice net) -- nothing like stage 3's wide latent_size=256. Fits comfortably in a
+# choice net) -- nothing like stage 3's wide latent_size=32 (downgraded from the
+# originally planned 256; see study README's downgrade note). Fits comfortably in a
 # fraction of one H200's per-GPU bundle (node = 224 CPU / ~3023 GiB / 8 GPUs ->
 # ~28 CPU / ~378 GiB per GPU slot); sized here to the same 90GiB/12CPU envelope study
 # 06 used on L40S so this task cannot accidentally grab more than 1 GPU on the H200 node.

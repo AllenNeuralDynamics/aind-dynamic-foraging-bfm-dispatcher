@@ -33,7 +33,7 @@ number is also what `nxd_scaling.json` (study 01's own committed data, produced 
 *after* the 0.7268 constant was hardcoded into study 06's script) reports. The 0.7268 constant
 was never refreshed after study 01 re-ran/extended its H=256 column. **This report uses the
 freshly verified 0.7290**, which revises study 06's headline residual gap from the commonly
-quoted **-0.0047** to **-0.0069** (`0.7290 - 0.7221`). Every number below is computed against
+quoted **-0.0047** to **-0.0069** (`0.7221 - 0.7290`). Every number below is computed against
 this corrected baseline; study 06's own README/reports still show the old, stale figure and
 should eventually be corrected too, but that is out of scope for this study's closing analysis.
 
@@ -54,7 +54,7 @@ rule that an excluded row never enters a plotted summary.
 |---|---|---|
 | study06 tuned point (D=614, mult=1, β=3e-4, n_steps=100000) | seed0=0.72247, seed1=0.72170, **mean=0.72208** | `disrnn_data_scaling` / `mult-d-grid@20260718-151409` |
 | GRU ceiling (H=256, D=614) | 0.72910/0.72896/0.72901, **mean=0.72902** | `mice_data_scaling` / `nxd-grid@20260623-102649` |
-| baseline residual gap | **-0.00694** | GRU − study06 tuned |
+| baseline residual gap | **-0.00694** | study06 tuned − GRU |
 | stage1-no-penalty | seed0=**0.67838 (COLLAPSED, excluded)**, seed1=0.72291 | `disrnn_near_gru_ceiling` / `stage1-no-penalty@20260909-021133` |
 | stage2-linear-update-net | seed0=0.72083, seed1=0.72269, mean=**0.72176** | `disrnn_near_gru_ceiling` / `stage2-linear-update-net@20260909-021223` |
 | stage3-wide-latent (latent=32) | seed0=0.72251, seed1=0.72313, mean=**0.72282** | `disrnn_near_gru_ceiling` / `stage3-wide-latent@20260909-140640` |
@@ -63,16 +63,18 @@ rule that an excluded row never enters a plotted summary.
 
 ![Cumulative held-out likelihood across the staged ablation, against the study-06 tuned disRNN and study-01 GRU (H=256) reference lines. The excluded stage1 seed-0 collapse is shown as an open marker below the main trend.](../fig_gru_ceiling_attribution.png)
 
+<!-- BEGIN result-1 -->
 | stage (cumulative) | mean held-out LL | remaining gap to GRU | gap closed vs. baseline | % of baseline gap closed |
 |---|---|---|---|---|
 | disRNN tuned (study 06, baseline) | 0.7221 | -0.0069 | — | 0% |
 | +stage1 (interaction penalty → 0)ᵃ | 0.7229 | -0.0061 | +0.0008 | **+11.9%** |
-| +stage1+2 (+ linear update net) | 0.7218 | -0.0073 | -0.0003 | **-4.6%** |
+| +stage1+2 (+ linear update net) | 0.7218 | -0.0073 | -0.0003 | **-4.7%** |
 | +stage1+2+3 (+ latent 5→32) | 0.7228 | -0.0062 | +0.0007 | **+10.6%** |
+<!-- END result-1 -->
 
 ᵃ stage1's single reliable seed (seed 1); seed 0 collapsed and is excluded (see above).
 
-**Verdict: at most ~11% of the residual gap closes, and it does not close monotonically.**
+**Verdict: at most ~12% of the residual gap closes, and it does not close monotonically.**
 Zeroing the interaction penalty alone (stage 1) recovers essentially all of the closure this
 ablation ever achieves. Adding the update-net linearity (stage 2) does not extend it further —
 the stage1+2 mean (0.7218) is *below* stage 1's healthy seed and statistically indistinguishable

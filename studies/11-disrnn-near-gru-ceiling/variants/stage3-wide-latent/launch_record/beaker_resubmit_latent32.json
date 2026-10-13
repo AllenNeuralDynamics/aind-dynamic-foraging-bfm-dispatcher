@@ -14,21 +14,26 @@
   "job_refs": [
     {
       "type": "beaker_experiment",
-      "id": "01M23R4PMW6C88W4JQM7A1BSEG"
+      "id": "01M23R4PMW6C88W4JQM7A1BSEG",
+      "role": "smoke_test_failed_config_key_error"
     },
     {
       "type": "beaker_experiment",
-      "id": "01M23R8FKZSW7D1CDQZFSNDGW4"
+      "id": "01M23R8FKZSW7D1CDQZFSNDGW4",
+      "role": "smoke_test_batch64_latent256_confirms_arg_packing_ceiling"
     },
     {
       "type": "beaker_experiment",
-      "id": "01M23VHJSCFKF6Y80WDZGSJCZ0"
+      "id": "01M23VHJSCFKF6Y80WDZGSJCZ0",
+      "role": "sizing_probe_latent32_passed"
     },
     {
       "type": "beaker_experiment",
-      "id": "01M23ZX664WP1QJQJNVBYY1V13"
+      "id": "01M23ZX664WP1QJQJNVBYY1V13",
+      "role": "RESULT_PRODUCING: the latent-32 relaunch grid whose 2 finished tasks (exit_code=0 both) are stage3-wide-latent's reported results in analysis/grid.csv (WANDB_RUN_ID stage3-wide-latent-20260909-140640-{6ebc7ff0,c1ac9510}). Submitted spec reconstructed from Beaker's job-execution record and committed at ../launch_record/experiment_resubmit_latent32_submitted.yaml (see that file's header for how/why, and the one field -- context.preemptible -- that had to be inferred rather than read directly)."
     }
   ],
+  "submitted_spec": "experiment_resubmit_latent32_submitted.yaml",
   "supersedes": [
     "01M22Q2AF2JNNJP69RWQ8CG4AA"
   ],
