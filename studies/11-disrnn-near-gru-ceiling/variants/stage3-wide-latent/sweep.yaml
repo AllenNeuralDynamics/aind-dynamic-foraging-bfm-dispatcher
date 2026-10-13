@@ -1,4 +1,4 @@
-# W&B sweep for 10-disrnn-near-gru-ceiling / stage3-wide-latent — step 3 (final) of the
+# W&B sweep for 11-disrnn-near-gru-ceiling / stage3-wide-latent — step 3 (final) of the
 # 3-stage near-GRU ablation. Fixed D=614 (subject_ratio=1.0), 2 seeds.
 #
 # QUESTION (study README). How much of the residual GRU gap (study 06: -0.0114 -> -0.0047
@@ -50,7 +50,7 @@
 #
 # CAVEAT (study README, restated in every variant's notes.md): this is NOT an
 # interpretable disRNN (compounding stage1 + stage2 + this), and its results must NOT be
-# folded into study 06's operating-point verdict — that is why this is study 10, not a
+# folded into study 06's operating-point verdict — that is why this is study 11, not a
 # study-06 wave.
 #
 # TRAINING BUDGET: n_steps=100000, matching study 06's GRU-parity budget (study 01's H256

@@ -1,4 +1,4 @@
-# W&B sweep for 10-disrnn-near-gru-ceiling / stage1-no-penalty — step 1 of the 3-stage
+# W&B sweep for 11-disrnn-near-gru-ceiling / stage1-no-penalty — step 1 of the 3-stage
 # near-GRU ablation. Fixed D=614 (subject_ratio=1.0), 2 seeds.
 #
 # QUESTION (study README). How much of the residual GRU gap (study 06: -0.0114 -> -0.0047
@@ -31,7 +31,7 @@
 # CAVEAT (study README, restated in every variant's notes.md): this and the following two
 # stages are NOT an interpretable disRNN once stage 2/3 relax nonlinearity/width too, and
 # their results must NOT be folded into study 06's operating-point verdict — that is why
-# this is study 10, not a study-06 wave.
+# this is study 11, not a study-06 wave.
 #
 # TRAINING BUDGET: n_steps=100000, matching study 06's GRU-parity budget (study 01's H256
 # GRU). checkpoint_run_heldout_eval=true (unlike study 06's mult-d-grid, which left it

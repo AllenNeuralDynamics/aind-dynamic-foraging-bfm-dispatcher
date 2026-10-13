@@ -1,4 +1,4 @@
-# studies/10-disrnn-near-gru-ceiling/Makefile
+# studies/11-disrnn-near-gru-ceiling/Makefile
 #
 # One PHONY target per report; `all` regenerates everything. Per docs/posthoc-analysis.md
 # "Makefile convention". Invoke from this directory; producers are cwd-independent via

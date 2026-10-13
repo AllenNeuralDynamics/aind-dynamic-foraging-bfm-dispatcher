@@ -1,4 +1,4 @@
-# Study 10 reports
+# Study 11 reports
 
 One report answering the study's single question. Regenerated from committed data via the
 study Makefile.

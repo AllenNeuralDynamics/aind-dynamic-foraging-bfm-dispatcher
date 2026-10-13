@@ -38,7 +38,7 @@
 # the ref, so a branch could otherwise drift mid-run).
 version: v2
 description: >
-  Study 10 stage 3/3 (final) near-GRU ablation -- DOWNGRADED reduced ceiling probe.
+  Study 11 stage 3/3 (final) near-GRU ablation -- DOWNGRADED reduced ceiling probe.
   Stage 2's config (penalty zeroed + linear update net) PLUS latent_size 5 -> 32 (NOT
   the original GRU-H256-matched target of 256, which OOM'd / hit a PJRT arg-packing
   ceiling; see sweep.yaml's DOWNGRADE note). NOT an interpretable disRNN; see study

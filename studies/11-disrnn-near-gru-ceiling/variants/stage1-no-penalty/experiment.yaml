@@ -20,7 +20,7 @@
 # the ref, so a branch could otherwise drift mid-run).
 version: v2
 description: >
-  Study 10 stage 1/3 near-GRU ablation -- penalty-only relaxation. Zeroes ONLY the
+  Study 11 stage 1/3 near-GRU ablation -- penalty-only relaxation. Zeroes ONLY the
   update-net-latent (interaction) penalty via
   model.penalties.update_net_latent_penalty_multiplier=0.0, holding latent_size=5,
   update_net_n_layers=5, and every other penalty at study 06's tuned operating point

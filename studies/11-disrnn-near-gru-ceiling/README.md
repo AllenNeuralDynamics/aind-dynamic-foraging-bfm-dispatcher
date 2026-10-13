@@ -1,4 +1,6 @@
-# 10 — disRNN near-GRU ceiling
+# 11 — disRNN near-GRU ceiling
+
+> **Formerly `10-disrnn-near-gru-ceiling`.** Renumbered to 11 before merge because `studies/10-gru-reservoir-ablation/` (a different, unrelated study) landed on `main` first under accession number 10. W&B tags/groups (`study10`), the wrapper-repo issue [aind-dynamic-foraging-bfm-wrapper#99](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/99), and this study's launch records still say `study10` / "study 10" — that is the immutable historical stamp from when the runs were launched, not a typo.
 
 ## Question
 
@@ -36,7 +38,7 @@ the disentangling mechanism the disRNN architecture exists for. **Stage 2 and st
 configurations are not interpretable disentangled RNNs** — they are disRNN-shaped
 functions pushed toward GRU capacity for exactly one purpose: attributing the
 residual gap. **Their results must NOT be folded into study 06's operating-point
-verdict.** That is the reason this is its own study (10), not a study-06 wave: study
+verdict.** That is the reason this is its own study (11), not a study-06 wave: study
 06's verdict is about the best *interpretable* disRNN; this study is about the ceiling
 of the *disRNN-shaped* function class, which is a different question with a different
 answer that happens to share code.
@@ -71,7 +73,7 @@ step curve available is `checkpoint/eval_likelihood` (seen-subject, every
 (`heldout/final/eval_likelihood`) is only available once, from the end-of-training
 `auto_heldout_finetune` (on by default, unaffected by this flag). This is a wrapper v1
 limitation (documented in the `wrapper-runtime` skill's "two DIFFERENT held-out
-switches" note), not a study-10 config error — noted here so the analysis doesn't
+switches" note), not a study-11 config error — noted here so the analysis doesn't
 mistake a missing per-checkpoint `heldout/*` curve for a bug.
 
 ## Variants index
@@ -169,13 +171,13 @@ substituted with an independent GraphQL pull, committed in `analysis/pull_grid.p
 `analysis/grid.csv` / `analysis/reference_points.csv`):
 
 ```bash
-python studies/util/validate_provenance.py studies/10-disrnn-near-gru-ceiling \
+python studies/util/validate_provenance.py studies/11-disrnn-near-gru-ceiling \
   --variant stage1-no-penalty --wandb-group "stage1-no-penalty@20260909-021133" \
   --beaker --project AIND-disRNN/disrnn_near_gru_ceiling --strict
-python studies/util/validate_provenance.py studies/10-disrnn-near-gru-ceiling \
+python studies/util/validate_provenance.py studies/11-disrnn-near-gru-ceiling \
   --variant stage2-linear-update-net --wandb-group "stage2-linear-update-net@20260909-021223" \
   --beaker --project AIND-disRNN/disrnn_near_gru_ceiling --strict
-python studies/util/validate_provenance.py studies/10-disrnn-near-gru-ceiling \
+python studies/util/validate_provenance.py studies/11-disrnn-near-gru-ceiling \
   --variant stage3-wide-latent --wandb-group "stage3-wide-latent@20260909-140640" \
   --beaker --project AIND-disRNN/disrnn_near_gru_ceiling --strict
 ```
@@ -186,7 +188,7 @@ not just the validator's own output):
 - `records: N/N record(s) predate the schema (no _meta/kind)` — the launcher's own
   `beaker_resumable.json` for a study's *first* launch has never carried `_meta`/`kind`; this is
   systemic across every study in the pack (confirmed on study 09's launch records too, not
-  specific to study 10) and is not a study-10 defect.
+  specific to study 11) and is not a study-11 defect.
 - `beaker: N recorded experiment(s) not seen in the last <scan-limit> workspace experiments` on
   `stage3-wide-latent` — the validator's `check_beaker` collects every `job_refs` id across
   **both** of stage3's launch records (the failed original + the resubmit intervention, which by

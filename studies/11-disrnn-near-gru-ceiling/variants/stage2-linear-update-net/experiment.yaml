@@ -20,7 +20,7 @@
 # the ref, so a branch could otherwise drift mid-run).
 version: v2
 description: >
-  Study 10 stage 2/3 near-GRU ablation -- stage 1's penalty-only relaxation PLUS a
+  Study 11 stage 2/3 near-GRU ablation -- stage 1's penalty-only relaxation PLUS a
   linear update net (model.architecture.update_net_n_layers=0). latent_size stays 5;
   stage 3 is the one that widens it. Isolates the nonlinearity-relaxation effect on
   top of stage 1. NOT an interpretable disRNN; see study README caveat.
