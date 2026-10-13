@@ -30,5 +30,8 @@ One report per scan. Regenerated from committed data via the study Makefile.
   interaction-multiplier axis (β=3e-4) reverses — mult=1 is an interior peak, and the new mult=0.5
   point is worse on both held-out likelihood and the gap. Updates study 06's tuned operating
   point to (mult=1, β=1e-4), provisionally — the β axis is not yet bracketed on both sides.
+  ⚠ **Caveat:** the D=300 side of the gap-flat / interior-peak claims rests partly on 4 backfilled
+  rows with step-mismatched `eval_ll`/`heldout_ll` — kept as-is with a disclosed caveat, see
+  [r3's Caveats section](r3-penalty-edge-extension.md#caveats); D=614 is unaffected.
 - **(H2, follow-on)** generative switch-curve shape at the selected point — added with a
   `generative-*` rollout variant once r2 confirms which checkpoint(s) are worth rolling out.

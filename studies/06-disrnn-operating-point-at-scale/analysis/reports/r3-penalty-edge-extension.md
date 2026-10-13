@@ -64,7 +64,10 @@ grids at both D** — it is not a tie with the old point, it is a new, unambiguo
 **2. But this gain does not come from suppressing overfitting further — the generalization gap is
 flat, not shrinking, once β is already at 3e-4.** At D=614 the gap barely moves as β drops from 3e-4
 to 1e-4 (0.0069 → 0.0069, no measurable change); at D=300 it if anything ticks up slightly (0.0081 →
-0.0084), well inside the seed SEM (~0.0014–0.0016) at that cohort size. The gap's real drop happened
+0.0084), well inside the seed SEM (~0.0014–0.0016) at that cohort size. **⚠ D=300 gap caveat:** the
+β=3e-4 cell behind the 0.0081 figure includes one backfilled seed whose `eval_ll` and `heldout_ll`
+are not from the same training step — see "D=300's generalization-gap cells mix training steps for
+backfilled rows" under Caveats below before reading this comparison. D=614 is unaffected. The gap's real drop happened
 earlier, going from β=1e-3 to β=3e-4 (already reported in r2); past that point, a lighter β keeps
 raising **both** in-sample and held-out likelihood together rather than closing the gap between
 them — the same "fits and transfers, not just fits-less-badly" pattern r2 found for the original
@@ -87,7 +90,11 @@ here reverses both metrics rather than extending an edge trend. The effect is di
 consistent at both D but individually weaker than the β-axis result (D=614 z≈-1.0, D=300 z≈-1.5 for
 mult=0.5 vs mult=1) — read it as "no evidence lighter helps, some evidence it hurts," not as a
 clean reversal on its own; the interior-peak shape of the other four points (10,5,2,1) is the
-stronger part of the claim.
+stronger part of the claim. **⚠ D=300 interior-peak caveat:** the mult=1 and mult=2 cells above each
+include one backfilled seed, and the mult=5 cell's *both* seeds are backfilled — for all of them
+`eval_ll` and `heldout_ll` come from different training steps (see Caveats below). The D=300 side of
+this table's shape should be read with that in mind; D=614, where the z≈-1.0 figure above comes
+from, is fully backfill-free.
 
 **4. The new point closes more of the GRU gap.** Against study 01's GRU curve (D=300: 0.7267;
 D=614: 0.7268), the old tuned point trailed by 0.0075 (D=300) / 0.0047 (D=614); the new β=1e-4 point
@@ -123,6 +130,29 @@ genuine interior optimum rather than an artifact of the tested range's edge.
   new wave-2 points), so this does not undermine the D=300 β-axis win, but it does mean the D=300
   numbers — including the multiplier-axis interior-peak shape in panel b — are not all on fully
   equal training-budget footing. D=614 is the cleaner comparison and the one the ≈5σ claim rests on.
+- **D=300's generalization-gap cells mix training steps for backfilled rows (disclosed per a
+  Copilot review on [PR #164](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/pull/164),
+  kept as-is by explicit decision — not excluded, not recomputed).** The gap reported above is
+  `eval_ll − heldout_ll` per run (`r3_penalty_edge_extension.py:cell_stats`), and for the same 4
+  backfilled rows named in the bullet above, these two terms are **not from the same training
+  step**. `heldout_ll` was recovered by `backfill_lost_heldout.py` from the per-subject held-out
+  table, which only exists because the held-out fine-tune stage ran — and that stage runs at the
+  true *end* of training. `eval_ll` (`checkpoint/eval_likelihood`), by contrast, was read from the
+  same frozen W&B summary that lost its final write, so it reflects an earlier, mid-training step:
+  `final_step` 50,250–78,400 of the 107,560-step budget for these four rows (47–73% of the full
+  schedule), not the true end. The reported gap for **3 of the D=300 cells compared in this report**
+  — mult=1/β=3e-4 (shared by both tables above, 1 of 2 seeds backfilled), mult=2/β=3e-4 (1 of 2 seeds
+  backfilled), and mult=5/β=3e-4 (**both** seeds backfilled) — therefore subtracts a true-end-of-training
+  `heldout_ll` from a mid-training `eval_ll`, not a matched pair. Since within-training eval
+  likelihood declines toward the final checkpoint (Stage A), a mid-training `eval_ll` reads *higher*
+  than a true-end-of-training value would, which **inflates** the computed gap for these cells
+  relative to a step-matched comparison. This affects the absolute gap values quoted at point 2
+  (0.0081, 0.0084) and the gap column of the point-3 table at D=300 only — **every D=614 cell used
+  in this report is backfill-free, so the D=614 gap figures (0.0069→0.0069; 0.0071/0.0079/0.0084/
+  0.0069/0.0076) are unaffected.** Per Han's explicit decision, these D=300 numbers are reported
+  as-is, with this caveat, rather than excluding the backfilled rows or trying to recompute a
+  matched-step gap — the "gap is flat, not shrinking" (point 2) and "mult=1 is an interior peak"
+  (point 3) claims at D=300 should be read with this known imperfection in mind.
 - **Different axes, not a single "penalty knob."** β scales five of six penalty terms uniformly;
   mult scales only the interaction term on top of β. The two "one step lighter" points therefore are
   not comparable points on one 1-D line — this is deliberate (Stage B tested each axis independently,

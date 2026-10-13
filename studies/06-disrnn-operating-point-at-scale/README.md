@@ -39,7 +39,7 @@ values of D**. This study measures that surface.
 |---|---|---|---|
 | penalty selection (existing 03+05 data, **zero new compute**) | Can β be picked from data we already have; does the pick depend on D? | **No** — free at D=100, but the generalization gap **grows with D** (β=3e-4: +0.0027→+0.0083) and the held-out-optimal β is also the most overfit β. Motivates scanning β jointly with D, not fixing it. | [r1](analysis/reports/r1-penalty-selection.md) |
 | `mult-d-grid` (D×mult×β, 80 runs, 2 seeds) | Does 05's peak-then-decline vanish at some point on the penalty×D surface? | **Yes** — at mult=1, β=3e-4, held-out transfer rises monotonically to 0.7221 at D=614, clears the best per-mouse RL baseline, and halves the GRU gap (−0.0114 → −0.0047). The decline was a penalty artifact: the right β must scale *down* as the cohort grows, not stay fixed. ✅ complete 2026-08-02 | [r2](analysis/reports/r2-scaling-surface.md) |
-| `wave2-step-budget-and-penalty-extension` (penalty edge, 8 runs, 2 seeds) | Does going lighter than `mult-d-grid`'s tested floor keep helping, on either penalty axis? | **Split verdict.** The **global-β axis** (mult=1) keeps improving past the tested floor — β=1e-4 beats β=3e-4 by +0.0020 at D=614 (≈5σ) and +0.0038 at D=300, a **new best point**, though the generalization gap is flat rather than shrinking further. The **interaction-multiplier axis** (β=3e-4) reverses — mult=1 is an interior peak; the new mult=0.5 point is worse on both held-out LL and the gap. **Tuned operating point updated to (mult=1, β=1e-4)**, provisionally — the β axis is not yet bracketed on both sides. ✅ complete 2026-09-14 | [r3](analysis/reports/r3-penalty-edge-extension.md) |
+| `wave2-step-budget-and-penalty-extension` (penalty edge, 8 runs, 2 seeds) | Does going lighter than `mult-d-grid`'s tested floor keep helping, on either penalty axis? | **Split verdict.** The **global-β axis** (mult=1) keeps improving past the tested floor — β=1e-4 beats β=3e-4 by +0.0020 at D=614 (≈5σ) and +0.0038 at D=300, a **new best point**, though the generalization gap is flat rather than shrinking further. The **interaction-multiplier axis** (β=3e-4) reverses — mult=1 is an interior peak; the new mult=0.5 point is worse on both held-out LL and the gap. **Tuned operating point updated to (mult=1, β=1e-4)**, provisionally — the β axis is not yet bracketed on both sides. ⚠ the D=300 gap/interior-peak comparison rests on 4 backfilled cells with step-mismatched `eval_ll`/`heldout_ll` — kept as-is with a disclosed caveat, [see r3](analysis/reports/r3-penalty-edge-extension.md#caveats); D=614 unaffected. ✅ complete 2026-09-14 | [r3](analysis/reports/r3-penalty-edge-extension.md) |
 
 ## Scans (variants)
 
@@ -111,6 +111,16 @@ true optimum; (2) training-step count as a tunable.
   [r3](analysis/reports/r3-penalty-edge-extension.md) for the full breakdown, caveats (n=2
   seeds/cell throughout; D=300's old-tuned-point comparator is a backfilled early-stopped run),
   and the β-axis follow-up this suggests (bracket the peak with one more, lighter β).
+
+  **⚠ Disclosure on the D=300 gap/interior-peak claims above.** 4 of `mult-d-grid`'s backfilled
+  rows feed 3 of the D=300 cells this comparison uses (mult=1, mult=2, and both seeds of mult=5,
+  all at β=3e-4); for those rows `eval_ll` and `heldout_ll` come from different training steps
+  (`heldout_ll` from the true end of training, `eval_ll` frozen mid-training) — flagged in a Copilot
+  review of [PR #164](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/pull/164).
+  This can inflate the computed D=300 gap for those cells. Per an explicit decision, the numbers
+  are kept as-is with this caveat rather than excluded or recomputed — see the r3 report's
+  [Caveats section](analysis/reports/r3-penalty-edge-extension.md#caveats) for the full mechanism
+  and run ids. **D=614 is fully backfill-free and unaffected.**
 
 ## Relation to other studies
 
