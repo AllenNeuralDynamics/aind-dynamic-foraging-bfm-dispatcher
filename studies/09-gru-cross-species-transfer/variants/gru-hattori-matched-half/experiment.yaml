@@ -1,0 +1,41 @@
+version: v2
+description: Study 09 Hattori matched-half E4 and E8 GRU transfer
+tasks:
+  - name: study09-gru-hattori
+    image:
+      beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+    command:
+      - bash
+      - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+      - bash
+      - -c
+      - 'echo "Launcher-only template: use code/launch_beaker_resumable.py" >&2; exit 2'
+    context:
+      priority: low
+      preemptible: true
+    constraints:
+      cluster:
+        - ai1/octo-hub-onprem-h200
+        - ai1/octo-hub-aws-h200
+    resources:
+      gpuCount: 1
+      cpuCount: 12
+      memory: 90GiB
+    datasets:
+      - mountPath: /external
+        source:
+          beaker: 01M1ZED14MFW8BC8728QZ3Z30F
+      - mountPath: /deps
+        source:
+          beaker: 01M1RDVWF18JF5QMEB618WJPSF
+    envVars:
+      - name: WANDB_API_KEY
+        secret: han-wandb-api-key
+      - name: WRAPPER_REF
+        value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+      - name: DISPATCHER_REF
+        value: study/09-hattori-admission
+      - name: FORAGING_MODELS_REF
+        value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+    result:
+      path: /results

@@ -21,6 +21,15 @@ import matplotlib as mpl
 # drawn in the same hue, faded, so a reader never re-checks the legend.
 HCOLOR = {16: "#4C72B0", 64: "#55A868", 128: "#C44E52", 256: "#8172B3"}
 
+# Shared species palette: rodents are neutral/cool and primates are warm.
+# These Okabe-Ito-inspired colors retain contrast on white backgrounds.
+SPECIES_COLORS = {
+    "mouse": "#333333",
+    "rat": "#0072B2",
+    "macaque": "#E69F00",
+    "human": "#D55E00",
+}
+
 # t_{0.975, n-1} for small-n 95% CI half-width (= t * sem).
 _T975 = {2: 12.706, 3: 4.303, 4: 3.182, 5: 2.776, 6: 2.571,
          7: 2.447, 8: 2.365, 9: 2.306, 10: 2.262}
@@ -35,13 +44,15 @@ def apply_presentation_style() -> None:
     """Set presentation-grade rcParams (large fonts, no top/right spines).
 
     Font (Han, 2026-08): Helvetica by default, falling back to Arial / DejaVu
-    Sans on hosts where Helvetica isn't installed (e.g. Linux compute).
+    Sans on hosts where Helvetica isn't installed (e.g. Linux compute). SVG
+    labels remain editable ``<text>`` elements rather than glyph paths.
     """
     mpl.rcParams.update({
         "figure.dpi": 140, "savefig.dpi": 200,
         "axes.spines.top": False, "axes.spines.right": False,
         "font.family": "sans-serif",
         "font.sans-serif": ["Helvetica", "Arial", "DejaVu Sans"],
+        "svg.fonttype": "none",
         "font.size": 15,
         "axes.labelsize": 17,
         "axes.titlesize": 15,

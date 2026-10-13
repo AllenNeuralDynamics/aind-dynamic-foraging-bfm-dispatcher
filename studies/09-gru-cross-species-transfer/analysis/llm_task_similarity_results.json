@@ -1,0 +1,1189 @@
+{
+  "_meta": {
+    "produced_by": "analysis/report_llm_task_similarity.py",
+    "produced_at_pt": "2026-09-15T22:15:47-07:00",
+    "dispatcher_git_sha": null,
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "gru-grossman-matched-half@20260905-022602",
+      "gru-chen-matched-half@20260905-024731",
+      "gru-zid-matched-half@20260905-025752",
+      "gru-lebedeva-matched-half@20260905-232924",
+      "gru-beron-matched-half@20260905-232924",
+      "gru-kwak-matched-half@20260906-071413",
+      "gru-miller-matched-half@20260905-232924",
+      "gru-findling-matched-half@20260905-232924",
+      "gru-alsio-matched-half@20260905-232925",
+      "gru-eckstein-matched-half@20260905-232924",
+      "gru-costa-matched-half@20260905-232924",
+      "gru-lopez-mouse-matched-half@20260905-232924",
+      "q-matched-half@20260905-024031",
+      "q-expanded-matched-half@20260906-001656",
+      "q-expanded-matched-half@20260906-kwak-choicefix",
+      "gru-hattori-matched-half@20260907-200329",
+      "q-hattori-matched-half@slurm-25585753",
+      "gru-costa-matched-half@20260914-162457",
+      "q-expanded-matched-half@slurm-26386210",
+      "e4-e8-d614-source@20260906-195409",
+      "gru-e8-d614-diagnostic@20260907-071400",
+      "gru-e8-d614-expansion@20260907-132415",
+      "gru-e8-d614-expansion@20260907-132625",
+      "gru-hattori-matched-half@20260907-200328",
+      "gru-e8-d614-expansion@20260914-162554",
+      "alsio-dual-rate-sticky@slurm-26383281",
+      "beron-rflr@slurm-25582233",
+      "chen-rlck@20260905-123624",
+      "costa-feedback-dependent-bias-ck1@slurm-26386211",
+      "costa-feedback-dependent-bias@slurm-26386087",
+      "eckstein-bi@slurm-25582240",
+      "eckstein-rl@slurm-25582239",
+      "findling-weber@slurm-25582235",
+      "findling-weber@slurm-25582241",
+      "grossman-meta-learning@20260905-124420",
+      "hattori-q-learning@slurm-25585754",
+      "lebedeva-pr@slurm-25582232",
+      "lopez-double-trace@slurm-26383278",
+      "miller-rhg@slurm-25582234",
+      "zid-history-kernel@20260905-123624",
+      "zid-history-kernel@20260905-151851"
+    ]
+  },
+  "inputs": {
+    "analysis/llm_task_cards.json": "25af9bf7d192941a776d92c640ce18118964077af070b3fefb13c7c194e5ebf3",
+    "analysis/llm_task_similarity_judgments.json": "88917a0013193f3e66b0dbe789a6f22048525786389017ea595bd7f8f9ebfd82",
+    "analysis/generalization_drivers_e8.json": "51d891b8fcea5fb4afffb7fad5c09b8f35c0e0e832dfbebec31af616f41afda6",
+    "analysis/task_design_features_e8.json": "9c03da9fb7fdeca6e51222924e0b4b33bfbf300668e69daf42bc1768d32f8e0a"
+  },
+  "contract": {
+    "llm_task_distance_to_aind": "One minus the fraction of pairwise comparisons judged closer to AIND; ties contribute one-half win. Each candidate is compared with all 11 alternatives, so zero means closest and one means farthest.",
+    "full_design_distance_to_aind": "The previous seven-axis categorical Hamming distance to the nearest of the three AIND task prototypes.",
+    "uncertainty": "The LLM task distance has no error bar because this first pass has one judge. Performance and embedding error bars are SEM across three source seeds.",
+    "performance_metric": "E8 D=614 three-source-seed mean subject-balanced normalized-likelihood difference.",
+    "correlation": "Cohort-level Spearman correlation with exact two-sided permutation for n<=8 and deterministic 100,000-draw permutation otherwise.",
+    "rng_seed": 20260915
+  },
+  "judge": {
+    "model": "OpenAI Codex current session (exact deployment ID unavailable)",
+    "prompt_version": "study09-task-similarity-v2",
+    "n_candidates": 12,
+    "n_unordered_pairs": 66,
+    "n_implied_ordered_encodings": 132,
+    "same_session_single_judge": true,
+    "independent_model_replicates": 0,
+    "independent_pairwise_api_calls": 0,
+    "blinding": "Input-level only: cards omit species, study/author identity, outcomes, embeddings, and the hand-coded design distance. Response apparatus remains visible as a secondary task feature."
+  },
+  "audit": {
+    "all_pairs_complete": true,
+    "all_pairs_mirrored_in_reverse_order": true,
+    "mirrored_order_consistency_fraction": 1.0,
+    "limitation": "The single judge produced an ordinal tiering. Its 66 implied pairwise outcomes were encoded in both A/B directions, so the 100% consistency is an invariant check rather than an empirical estimate of position bias."
+  },
+  "ranking": [
+    {
+      "card_id": "T02",
+      "cohort": "grossman",
+      "label": "Grossman (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_task_distance_to_aind": 0.045454545454545414,
+      "full_design_distance_to_aind": 0.0,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.013466090022330124,
+        0.013582298038924745,
+        0.014101404283067609
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.01526188579997556,
+        0.015378093816570182,
+        0.015897200060713046
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        1.0097869422190424,
+        0.9997662407654245,
+        0.6679923901456493
+      ],
+      "complete_case_feature_geometry": {
+        "feature_task_distance_to_aind_proxy": 0.0,
+        "full_pc_space_distance_to_aind_proxy": 0.0,
+        "nearest_aind_proxy": "uncoupled_no_baiting",
+        "empirical_schedule_distance_to_grossman": 0.0,
+        "pc_scores": [
+          -0.03025685407557096,
+          0.43844001995754706,
+          0.08789465779257981,
+          -0.02027746768061553,
+          0.02996169277221274,
+          -0.12366399527239628,
+          0.05114215673072506,
+          0.031490941706333715,
+          -3.740087348535159e-18,
+          -6.993359147934748e-17
+        ]
+      }
+    },
+    {
+      "card_id": "T08",
+      "cohort": "hattori",
+      "label": "Hattori (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_task_distance_to_aind": 0.045454545454545414,
+      "full_design_distance_to_aind": 0.0,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.009381016024219924,
+        0.00938599058878331,
+        0.009369016302582578
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.010983032464758513,
+        0.0109880070293219,
+        0.010971032743121167
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        4.873081857542993,
+        6.132237142422753,
+        4.755103094466332
+      ],
+      "complete_case_feature_geometry": {
+        "feature_task_distance_to_aind_proxy": 1.0945884093046936,
+        "full_pc_space_distance_to_aind_proxy": 1.1263636042612404,
+        "nearest_aind_proxy": "coupled_baiting",
+        "empirical_schedule_distance_to_grossman": 1.5929186853096884,
+        "pc_scores": [
+          -0.5382060949687034,
+          -0.44741792573287886,
+          -0.07059243400497478,
+          0.5451325234764027,
+          -0.09164898261288598,
+          -0.03821103816692869,
+          0.01620763426602855,
+          0.00547211923887676,
+          -3.233447062661541e-17,
+          4.8753186558887186e-17
+        ]
+      }
+    },
+    {
+      "card_id": "T03",
+      "cohort": "lopez_mouse",
+      "label": "L\u00f3pez-Y\u00e9pez (mouse)",
+      "species": "mouse",
+      "analysis_tier": "stress_test",
+      "llm_task_distance_to_aind": 0.18181818181818177,
+      "full_design_distance_to_aind": 0.2857142857142857,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.06196787975524809,
+        0.06102658449412335,
+        0.062098737123100656
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        -0.024344212460946757,
+        -0.0252855077220715,
+        -0.02421335509309419
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        18.885290336966257,
+        10.442779881225,
+        26.074676622033497
+      ]
+    },
+    {
+      "card_id": "T11",
+      "cohort": "lebedeva",
+      "label": "Lebedeva (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_task_distance_to_aind": 0.2727272727272727,
+      "full_design_distance_to_aind": 0.2857142857142857,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.009636551814848793,
+        0.009776548513749317,
+        0.00966309506875751
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.0048903877336290424,
+        0.005030384432529567,
+        0.00491693098753776
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        2.8683257838207736,
+        2.976366451387069,
+        2.6355145530330972
+      ],
+      "complete_case_feature_geometry": {
+        "feature_task_distance_to_aind_proxy": 0.9983671923406058,
+        "full_pc_space_distance_to_aind_proxy": 1.050956039888428,
+        "nearest_aind_proxy": "coupled_baiting",
+        "empirical_schedule_distance_to_grossman": 1.3868319688562305,
+        "pc_scores": [
+          -0.6502706428470313,
+          -0.304180150195893,
+          -0.10271179307555309,
+          -0.27784783193976154,
+          0.13645481039385915,
+          -0.05137583755757389,
+          -0.16863254740933376,
+          -0.0011615973823068844,
+          -4.621225843442987e-17,
+          2.099761094325827e-17
+        ]
+      }
+    },
+    {
+      "card_id": "T06",
+      "cohort": "beron",
+      "label": "Beron (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_task_distance_to_aind": 0.36363636363636365,
+      "full_design_distance_to_aind": 0.42857142857142855,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.0022052473493752167,
+        0.0003794569098606315,
+        0.0018609816266096368
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.0041110392428508336,
+        0.0022852488033362484,
+        0.0037667735200852537
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        5.382361322866974,
+        4.294291240177981,
+        4.796599537933474
+      ],
+      "complete_case_feature_geometry": {
+        "feature_task_distance_to_aind_proxy": 0.9328124757992029,
+        "full_pc_space_distance_to_aind_proxy": 0.9772805661846338,
+        "nearest_aind_proxy": "coupled_baiting",
+        "empirical_schedule_distance_to_grossman": 1.217203015734388,
+        "pc_scores": [
+          -0.47609747877123326,
+          -0.3377928129830434,
+          0.13451440758870037,
+          -0.30972434809451327,
+          -0.026619519662118164,
+          0.09060233008518455,
+          0.18128086111973793,
+          -0.010527621607335936,
+          -6.009004624224432e-17,
+          7.119823135443813e-18
+        ]
+      }
+    },
+    {
+      "card_id": "T01",
+      "cohort": "eckstein",
+      "label": "Eckstein (human)",
+      "species": "human",
+      "analysis_tier": "primary",
+      "llm_task_distance_to_aind": 0.4545454545454546,
+      "full_design_distance_to_aind": 0.5714285714285714,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.001335891449834481,
+        0.0007341819196932109,
+        -0.003977406299885633
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        -0.026892740905746115,
+        -0.027494450435887385,
+        -0.03220603865546623
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        17.460532676952738,
+        18.246012790665272,
+        14.986822590165508
+      ]
+    },
+    {
+      "card_id": "T04",
+      "cohort": "chen",
+      "label": "Chen (mouse)",
+      "species": "mouse",
+      "analysis_tier": "primary",
+      "llm_task_distance_to_aind": 0.5909090909090908,
+      "full_design_distance_to_aind": 0.5714285714285714,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.008076350923500786,
+        0.005738837779724504,
+        0.008581876857658988
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.004073893268850326,
+        0.001736380125074044,
+        0.004579419203008528
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        11.34941372170915,
+        9.53204727439311,
+        14.431960704365935
+      ],
+      "complete_case_feature_geometry": {
+        "feature_task_distance_to_aind_proxy": 0.9446860685948997,
+        "full_pc_space_distance_to_aind_proxy": 1.0048953300790227,
+        "nearest_aind_proxy": "uncoupled_no_baiting",
+        "empirical_schedule_distance_to_grossman": 1.2034120979118856,
+        "pc_scores": [
+          0.5016142316732726,
+          -0.10684967444439361,
+          -0.443422389647086,
+          -0.19321173444307005,
+          -0.28813326102465164,
+          -0.027607974331541277,
+          -0.02782492247378315,
+          0.004363504871456393,
+          -2.4350923596157083e-17,
+          -1.2040213978735261e-17
+        ]
+      }
+    },
+    {
+      "card_id": "T09",
+      "cohort": "miller",
+      "label": "Miller (rat)",
+      "species": "rat",
+      "analysis_tier": "primary",
+      "llm_task_distance_to_aind": 0.5909090909090908,
+      "full_design_distance_to_aind": 0.5714285714285714,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        -0.003444473697894468,
+        -0.008029507567580918,
+        -0.003906577994684857
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        -0.010454314028400802,
+        -0.015039347898087252,
+        -0.01091641832519119
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        10.157484443901774,
+        8.093827316128705,
+        11.023632124127465
+      ],
+      "complete_case_feature_geometry": {
+        "feature_task_distance_to_aind_proxy": 1.3453309668967786,
+        "full_pc_space_distance_to_aind_proxy": 1.3535303781441563,
+        "nearest_aind_proxy": "uncoupled_no_baiting",
+        "empirical_schedule_distance_to_grossman": 1.7585961439993991,
+        "pc_scores": [
+          0.8261228812056424,
+          -0.4859335933275094,
+          0.5580729874783618,
+          0.011264898231229205,
+          0.017962610617501637,
+          -0.015799401281055808,
+          -0.046020235848226,
+          0.0013281346999624135,
+          -2.888613300193716e-17,
+          -3.830663448486401e-17
+        ]
+      }
+    },
+    {
+      "card_id": "T05",
+      "cohort": "costa",
+      "label": "Costa (macaque)",
+      "species": "macaque",
+      "analysis_tier": "stress_test",
+      "llm_task_distance_to_aind": 0.7272727272727273,
+      "full_design_distance_to_aind": 0.5714285714285714,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.0016465113768873163,
+        0.00017707711269820958,
+        0.001961754538272298
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.04672147042640129,
+        0.045252036162212184,
+        0.04703671358778627
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        5.95470904131549,
+        4.050726467782714,
+        6.199885833183579
+      ]
+    },
+    {
+      "card_id": "T12",
+      "cohort": "findling",
+      "label": "Findling (human)",
+      "species": "human",
+      "analysis_tier": "primary",
+      "llm_task_distance_to_aind": 0.8181818181818181,
+      "full_design_distance_to_aind": 0.7142857142857143,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        -0.02457645868166669,
+        -0.02823622929076719,
+        -0.024602088484877438
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        -0.0076060746480166586,
+        -0.011265845257117157,
+        -0.007631704451227406
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        15.059652944048663,
+        15.944777764556315,
+        12.127030293092536
+      ]
+    },
+    {
+      "card_id": "T10",
+      "cohort": "alsio",
+      "label": "Alsi\u00f6 (rat)",
+      "species": "rat",
+      "analysis_tier": "stress_test",
+      "llm_task_distance_to_aind": 0.9090909090909091,
+      "full_design_distance_to_aind": 0.7142857142857143,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.0022427253347026,
+        0.0012747924506063546,
+        0.0022716666534634555
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [],
+      "embedding_centroid_mahalanobis_by_seed": [
+        11.265054391375257,
+        13.433581227174265,
+        15.041403621798725
+      ]
+    },
+    {
+      "card_id": "T07",
+      "cohort": "zid",
+      "label": "Zid (human)",
+      "species": "human",
+      "analysis_tier": "primary",
+      "llm_task_distance_to_aind": 1.0,
+      "full_design_distance_to_aind": 0.7142857142857143,
+      "gru_minus_bari_normalized_likelihood_by_seed": [
+        0.00865703276263119,
+        0.003515536707094258,
+        0.004924009137030949
+      ],
+      "gru_minus_author_normalized_likelihood_by_seed": [
+        0.029863833713275056,
+        0.024722337657738125,
+        0.026130810087674816
+      ],
+      "embedding_centroid_mahalanobis_by_seed": [
+        13.82694207139438,
+        14.434293359712651,
+        11.481511746432396
+      ],
+      "complete_case_feature_geometry": {
+        "feature_task_distance_to_aind_proxy": 0.9679986947562644,
+        "full_pc_space_distance_to_aind_proxy": 1.0143738776023141,
+        "nearest_aind_proxy": "uncoupled_no_baiting",
+        "empirical_schedule_distance_to_grossman": 1.1591475371315754,
+        "pc_scores": [
+          0.5608427440238314,
+          -0.08243136734448522,
+          -0.4581908329228043,
+          0.11428245538992954,
+          0.2702484694461084,
+          0.05746276125292828,
+          0.05371291860933258,
+          -0.005679540154569064,
+          -1.6133481169222206e-16,
+          -9.432018727590515e-17
+        ]
+      }
+    }
+  ],
+  "relationships": {
+    "gru_minus_bari_vs_llm_task_distance": {
+      "n_cohorts": 12,
+      "spearman_rho": -0.6105300740655785,
+      "permutation_p_two_sided": 0.039109608903910964,
+      "permutation_method": "monte_carlo",
+      "n_permutations": 100000,
+      "leave_one_cohort_out_range": [
+        -0.7077699357146958,
+        -0.5159871144242621
+      ]
+    },
+    "gru_minus_author_vs_llm_task_distance": {
+      "n_cohorts": 11,
+      "spearman_rho": 0.1004576682949891,
+      "permutation_p_two_sided": 0.7698623013769862,
+      "permutation_method": "monte_carlo",
+      "n_permutations": 100000,
+      "leave_one_cohort_out_range": [
+        -0.1768325556625402,
+        0.24316221747202585
+      ]
+    },
+    "embedding_distance_vs_llm_task_distance": {
+      "n_cohorts": 12,
+      "spearman_rho": 0.44912557172640244,
+      "permutation_p_two_sided": 0.14537854621453786,
+      "permutation_method": "monte_carlo",
+      "n_permutations": 100000,
+      "leave_one_cohort_out_range": [
+        0.2961283309258334,
+        0.7123361933644681
+      ]
+    },
+    "full_design_distance_vs_llm_task_distance": {
+      "n_cohorts": 12,
+      "spearman_rho": 0.9750406275392387,
+      "permutation_p_two_sided": 9.99990000099999e-06,
+      "permutation_method": "monte_carlo",
+      "n_permutations": 100000,
+      "leave_one_cohort_out_range": [
+        0.9673571297684023,
+        0.9814798787003114
+      ]
+    }
+  },
+  "complete_case_feature_geometry": {
+    "contract": {
+      "cohorts": [
+        "grossman",
+        "chen",
+        "zid",
+        "lebedeva",
+        "beron",
+        "miller",
+        "hattori"
+      ],
+      "categorical_axes": [
+        "schedule_family",
+        "arm_coupling",
+        "baiting",
+        "choice_target",
+        "physical_context",
+        "response_modality",
+        "reward_modality"
+      ],
+      "empirical_schedule_features": [
+        "mean_arm_lag1_autocorrelation",
+        "cross_arm_correlation",
+        "probability_change_rate",
+        "mean_absolute_arm_step_on_change",
+        "mean_absolute_reward_gap",
+        "mean_reward_probability",
+        "equal_probability_fraction"
+      ],
+      "encoding": "Categorical axes are one-hot encoded so a one-axis mismatch has unit squared distance before block weighting. Empirical cohort means are z-scored with the frozen seven-cohort population mean and SD. The categorical and empirical blocks each receive one-half total weight.",
+      "aind_proxy": "The three categorical AIND prototypes are exact. Their empirical schedule coordinates use Grossman (mouse), because source-curriculum empirical schedule summaries are not yet frozen. Interpret this as an AIND proxy.",
+      "pca": "PCA is fit outcome-blind to seven complete-case cohorts plus three AIND proxy rows. Distance uses the smallest leading-PC subspace explaining at least 90% of feature variance; all-PC distance is retained as sensitivity.",
+      "retained_components": 4,
+      "retained_explained_variance": 0.9290701823130357
+    },
+    "feature_names": [
+      "categorical::schedule_family::blockwise",
+      "categorical::schedule_family::random_walk",
+      "categorical::arm_coupling::coupled",
+      "categorical::arm_coupling::independent",
+      "categorical::baiting::False",
+      "categorical::baiting::True",
+      "categorical::choice_target::abstract_option",
+      "categorical::choice_target::spatial_action",
+      "categorical::physical_context::freely_moving",
+      "categorical::physical_context::head_fixed",
+      "categorical::physical_context::online",
+      "categorical::response_modality::computer_input",
+      "categorical::response_modality::lick",
+      "categorical::response_modality::nose_poke",
+      "categorical::response_modality::wheel",
+      "categorical::reward_modality::liquid_food",
+      "categorical::reward_modality::monetary_points",
+      "categorical::reward_modality::water",
+      "empirical::mean_arm_lag1_autocorrelation",
+      "empirical::cross_arm_correlation",
+      "empirical::probability_change_rate",
+      "empirical::mean_absolute_arm_step_on_change",
+      "empirical::mean_absolute_reward_gap",
+      "empirical::mean_reward_probability",
+      "empirical::equal_probability_fraction"
+    ],
+    "explained_variance_ratio": [
+      0.41244038865176785,
+      0.26942241924404264,
+      0.14749649470278808,
+      0.09971087971443719,
+      0.03535819877492571,
+      0.016335947813959622,
+      0.0149042068701481,
+      0.004331464227930844,
+      9.866558445875273e-33,
+      2.3598541209004197e-34
+    ],
+    "principal_component_loadings": [
+      {
+        "component": 1,
+        "explained_variance_ratio": 0.41244038865176785,
+        "top_loadings": [
+          {
+            "feature": "empirical::mean_absolute_arm_step_on_change",
+            "loading": -0.44900547999077706
+          },
+          {
+            "feature": "empirical::cross_arm_correlation",
+            "loading": 0.4360385735992135
+          },
+          {
+            "feature": "empirical::mean_absolute_reward_gap",
+            "loading": -0.40045579991082836
+          },
+          {
+            "feature": "empirical::probability_change_rate",
+            "loading": 0.35355695464345993
+          },
+          {
+            "feature": "empirical::mean_arm_lag1_autocorrelation",
+            "loading": -0.23842277121223135
+          },
+          {
+            "feature": "empirical::mean_reward_probability",
+            "loading": 0.22256276869935485
+          }
+        ]
+      },
+      {
+        "component": 2,
+        "explained_variance_ratio": 0.26942241924404264,
+        "top_loadings": [
+          {
+            "feature": "empirical::equal_probability_fraction",
+            "loading": 0.7849840897210068
+          },
+          {
+            "feature": "empirical::mean_absolute_arm_step_on_change",
+            "loading": 0.2816949270718152
+          },
+          {
+            "feature": "empirical::probability_change_rate",
+            "loading": -0.24513003363153238
+          },
+          {
+            "feature": "empirical::mean_reward_probability",
+            "loading": 0.23181649799498646
+          },
+          {
+            "feature": "empirical::cross_arm_correlation",
+            "loading": 0.21030330825487656
+          },
+          {
+            "feature": "categorical::response_modality::lick",
+            "loading": 0.17284276944573893
+          }
+        ]
+      },
+      {
+        "component": 3,
+        "explained_variance_ratio": 0.14749649470278808,
+        "top_loadings": [
+          {
+            "feature": "empirical::mean_arm_lag1_autocorrelation",
+            "loading": -0.7047128191298309
+          },
+          {
+            "feature": "empirical::probability_change_rate",
+            "loading": 0.44229289164431684
+          },
+          {
+            "feature": "empirical::mean_absolute_reward_gap",
+            "loading": 0.3309689175848286
+          },
+          {
+            "feature": "empirical::mean_absolute_arm_step_on_change",
+            "loading": 0.2591194763262243
+          },
+          {
+            "feature": "categorical::response_modality::computer_input",
+            "loading": -0.10982520218903252
+          },
+          {
+            "feature": "categorical::reward_modality::monetary_points",
+            "loading": -0.10982520218903252
+          }
+        ]
+      }
+    ],
+    "rows": {
+      "grossman": {
+        "label": "Grossman (mouse)",
+        "row_type": "external_cohort",
+        "annotation": {
+          "schedule_family": "blockwise",
+          "arm_coupling": "independent",
+          "baiting": false,
+          "choice_target": "spatial_action",
+          "physical_context": "head_fixed",
+          "response_modality": "lick",
+          "reward_modality": "water"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.9503330763389792,
+          "cross_arm_correlation": -0.3751140471580059,
+          "probability_change_rate": 0.05261265150488741,
+          "mean_absolute_arm_step_on_change": 0.5552543321075497,
+          "mean_absolute_reward_gap": 0.47115560660227357,
+          "mean_reward_probability": 0.507579213618801,
+          "equal_probability_fraction": 0.1701539508003226
+        },
+        "pc_scores": [
+          -0.03025685407557096,
+          0.43844001995754706,
+          0.08789465779257981,
+          -0.02027746768061553,
+          0.02996169277221274,
+          -0.12366399527239628,
+          0.05114215673072506,
+          0.031490941706333715,
+          -3.740087348535159e-18,
+          -6.993359147934748e-17
+        ],
+        "feature_task_distance_to_aind_proxy": 0.0,
+        "full_pc_space_distance_to_aind_proxy": 0.0,
+        "nearest_aind_proxy": "uncoupled_no_baiting",
+        "empirical_schedule_distance_to_grossman": 0.0
+      },
+      "chen": {
+        "label": "Chen (mouse)",
+        "row_type": "external_cohort",
+        "annotation": {
+          "schedule_family": "random_walk",
+          "arm_coupling": "independent",
+          "baiting": false,
+          "choice_target": "spatial_action",
+          "physical_context": "freely_moving",
+          "response_modality": "nose_poke",
+          "reward_modality": "liquid_food"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.9776481239347978,
+          "cross_arm_correlation": -0.4595430743591359,
+          "probability_change_rate": 0.1533117726573962,
+          "mean_absolute_arm_step_on_change": 0.1017154123013256,
+          "mean_absolute_reward_gap": 0.2853131279712794,
+          "mean_reward_probability": 0.560302045161456,
+          "equal_probability_fraction": 0.1111018448398747
+        },
+        "pc_scores": [
+          0.5016142316732726,
+          -0.10684967444439361,
+          -0.443422389647086,
+          -0.19321173444307005,
+          -0.28813326102465164,
+          -0.027607974331541277,
+          -0.02782492247378315,
+          0.004363504871456393,
+          -2.4350923596157083e-17,
+          -1.2040213978735261e-17
+        ],
+        "feature_task_distance_to_aind_proxy": 0.9446860685948997,
+        "full_pc_space_distance_to_aind_proxy": 1.0048953300790227,
+        "nearest_aind_proxy": "uncoupled_no_baiting",
+        "empirical_schedule_distance_to_grossman": 1.2034120979118856
+      },
+      "zid": {
+        "label": "Zid (human)",
+        "row_type": "external_cohort",
+        "annotation": {
+          "schedule_family": "random_walk",
+          "arm_coupling": "independent",
+          "baiting": false,
+          "choice_target": "abstract_option",
+          "physical_context": "online",
+          "response_modality": "computer_input",
+          "reward_modality": "monetary_points"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.9729577924406239,
+          "cross_arm_correlation": -0.02153081367884547,
+          "probability_change_rate": 0.16980373856005807,
+          "mean_absolute_arm_step_on_change": 0.09999999999999998,
+          "mean_absolute_reward_gap": 0.30635400516795863,
+          "mean_reward_probability": 0.5081111111111112,
+          "equal_probability_fraction": 0.09999999999999999
+        },
+        "pc_scores": [
+          0.5608427440238314,
+          -0.08243136734448522,
+          -0.4581908329228043,
+          0.11428245538992954,
+          0.2702484694461084,
+          0.05746276125292828,
+          0.05371291860933258,
+          -0.005679540154569064,
+          -1.6133481169222206e-16,
+          -9.432018727590515e-17
+        ],
+        "feature_task_distance_to_aind_proxy": 0.9679986947562644,
+        "full_pc_space_distance_to_aind_proxy": 1.0143738776023141,
+        "nearest_aind_proxy": "uncoupled_no_baiting",
+        "empirical_schedule_distance_to_grossman": 1.1591475371315754
+      },
+      "lebedeva": {
+        "label": "Lebedeva (mouse)",
+        "row_type": "external_cohort",
+        "annotation": {
+          "schedule_family": "blockwise",
+          "arm_coupling": "coupled",
+          "baiting": false,
+          "choice_target": "spatial_action",
+          "physical_context": "head_fixed",
+          "response_modality": "wheel",
+          "reward_modality": "water"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.9872266472592448,
+          "cross_arm_correlation": -1.0,
+          "probability_change_rate": 0.006381341671611113,
+          "mean_absolute_arm_step_on_change": 0.5999999999999999,
+          "mean_absolute_reward_gap": 0.5999999999999999,
+          "mean_reward_probability": 0.5,
+          "equal_probability_fraction": 0.0
+        },
+        "pc_scores": [
+          -0.6502706428470313,
+          -0.304180150195893,
+          -0.10271179307555309,
+          -0.27784783193976154,
+          0.13645481039385915,
+          -0.05137583755757389,
+          -0.16863254740933376,
+          -0.0011615973823068844,
+          -4.621225843442987e-17,
+          2.099761094325827e-17
+        ],
+        "feature_task_distance_to_aind_proxy": 0.9983671923406058,
+        "full_pc_space_distance_to_aind_proxy": 1.050956039888428,
+        "nearest_aind_proxy": "coupled_baiting",
+        "empirical_schedule_distance_to_grossman": 1.3868319688562305
+      },
+      "beron": {
+        "label": "Beron (mouse)",
+        "row_type": "external_cohort",
+        "annotation": {
+          "schedule_family": "blockwise",
+          "arm_coupling": "coupled",
+          "baiting": false,
+          "choice_target": "spatial_action",
+          "physical_context": "freely_moving",
+          "response_modality": "nose_poke",
+          "reward_modality": "water"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.960014658632713,
+          "cross_arm_correlation": -0.9999999999999999,
+          "probability_change_rate": 0.01996654409416038,
+          "mean_absolute_arm_step_on_change": 0.5802106489909495,
+          "mean_absolute_reward_gap": 0.5800838072744021,
+          "mean_reward_probability": 0.5,
+          "equal_probability_fraction": 0.0
+        },
+        "pc_scores": [
+          -0.47609747877123326,
+          -0.3377928129830434,
+          0.13451440758870037,
+          -0.30972434809451327,
+          -0.026619519662118164,
+          0.09060233008518455,
+          0.18128086111973793,
+          -0.010527621607335936,
+          -6.009004624224432e-17,
+          7.119823135443813e-18
+        ],
+        "feature_task_distance_to_aind_proxy": 0.9328124757992029,
+        "full_pc_space_distance_to_aind_proxy": 0.9772805661846338,
+        "nearest_aind_proxy": "coupled_baiting",
+        "empirical_schedule_distance_to_grossman": 1.217203015734388
+      },
+      "miller": {
+        "label": "Miller (rat)",
+        "row_type": "external_cohort",
+        "annotation": {
+          "schedule_family": "random_walk",
+          "arm_coupling": "independent",
+          "baiting": false,
+          "choice_target": "spatial_action",
+          "physical_context": "freely_moving",
+          "response_modality": "nose_poke",
+          "reward_modality": "liquid_food"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.9173343555759021,
+          "cross_arm_correlation": 0.003459098890095038,
+          "probability_change_rate": 0.9919330136224065,
+          "mean_absolute_arm_step_on_change": 0.11116071525605109,
+          "mean_absolute_reward_gap": 0.3812997818808393,
+          "mean_reward_probability": 0.4962274369248047,
+          "equal_probability_fraction": 0.016618267999066814
+        },
+        "pc_scores": [
+          0.8261228812056424,
+          -0.4859335933275094,
+          0.5580729874783618,
+          0.011264898231229205,
+          0.017962610617501637,
+          -0.015799401281055808,
+          -0.046020235848226,
+          0.0013281346999624135,
+          -2.888613300193716e-17,
+          -3.830663448486401e-17
+        ],
+        "feature_task_distance_to_aind_proxy": 1.3453309668967786,
+        "full_pc_space_distance_to_aind_proxy": 1.3535303781441563,
+        "nearest_aind_proxy": "uncoupled_no_baiting",
+        "empirical_schedule_distance_to_grossman": 1.7585961439993991
+      },
+      "hattori": {
+        "label": "Hattori (mouse)",
+        "row_type": "external_cohort",
+        "annotation": {
+          "schedule_family": "blockwise",
+          "arm_coupling": "coupled",
+          "baiting": true,
+          "choice_target": "spatial_action",
+          "physical_context": "head_fixed",
+          "response_modality": "lick",
+          "reward_modality": "water"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.9748765640274126,
+          "cross_arm_correlation": -0.9954177547821944,
+          "probability_change_rate": 0.013515312461357811,
+          "mean_absolute_arm_step_on_change": 0.42759044220497355,
+          "mean_absolute_reward_gap": 0.4375693932185736,
+          "mean_reward_probability": 0.34850509739494334,
+          "equal_probability_fraction": 0.0
+        },
+        "pc_scores": [
+          -0.5382060949687034,
+          -0.44741792573287886,
+          -0.07059243400497478,
+          0.5451325234764027,
+          -0.09164898261288598,
+          -0.03821103816692869,
+          0.01620763426602855,
+          0.00547211923887676,
+          -3.233447062661541e-17,
+          4.8753186558887186e-17
+        ],
+        "feature_task_distance_to_aind_proxy": 1.0945884093046936,
+        "full_pc_space_distance_to_aind_proxy": 1.1263636042612404,
+        "nearest_aind_proxy": "coupled_baiting",
+        "empirical_schedule_distance_to_grossman": 1.5929186853096884
+      },
+      "aind::uncoupled_baiting": {
+        "label": "uncoupled_baiting",
+        "row_type": "aind_proxy",
+        "annotation": {
+          "schedule_family": "blockwise",
+          "arm_coupling": "independent",
+          "baiting": true,
+          "choice_target": "spatial_action",
+          "physical_context": "head_fixed",
+          "response_modality": "lick",
+          "reward_modality": "water"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.9503330763389792,
+          "cross_arm_correlation": -0.3751140471580059,
+          "probability_change_rate": 0.05261265150488741,
+          "mean_absolute_arm_step_on_change": 0.5552543321075497,
+          "mean_absolute_reward_gap": 0.47115560660227357,
+          "mean_reward_probability": 0.507579213618801,
+          "equal_probability_fraction": 0.1701539508003226
+        },
+        "pc_scores": [
+          -0.05299093297348904,
+          0.46027791146189945,
+          0.10021096158659618,
+          0.07296738422294392,
+          -0.03422266220979506,
+          0.03506230874806938,
+          -0.03385209155773093,
+          -0.12678366958569298,
+          -3.149566296416407e-17,
+          -4.217801586371856e-17
+        ]
+      },
+      "aind::uncoupled_no_baiting": {
+        "label": "uncoupled_no_baiting",
+        "row_type": "aind_proxy",
+        "annotation": {
+          "schedule_family": "blockwise",
+          "arm_coupling": "independent",
+          "baiting": false,
+          "choice_target": "spatial_action",
+          "physical_context": "head_fixed",
+          "response_modality": "lick",
+          "reward_modality": "water"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.9503330763389792,
+          "cross_arm_correlation": -0.3751140471580059,
+          "probability_change_rate": 0.05261265150488741,
+          "mean_absolute_arm_step_on_change": 0.5552543321075497,
+          "mean_absolute_reward_gap": 0.47115560660227357,
+          "mean_reward_probability": 0.507579213618801,
+          "equal_probability_fraction": 0.1701539508003226
+        },
+        "pc_scores": [
+          -0.03025685407557096,
+          0.43844001995754706,
+          0.08789465779257981,
+          -0.02027746768061553,
+          0.02996169277221274,
+          -0.12366399527239628,
+          0.05114215673072506,
+          0.031490941706333715,
+          -3.740087348535159e-18,
+          -6.993359147934748e-17
+        ]
+      },
+      "aind::coupled_baiting": {
+        "label": "coupled_baiting",
+        "row_type": "aind_proxy",
+        "annotation": {
+          "schedule_family": "blockwise",
+          "arm_coupling": "coupled",
+          "baiting": true,
+          "choice_target": "spatial_action",
+          "physical_context": "head_fixed",
+          "response_modality": "lick",
+          "reward_modality": "water"
+        },
+        "empirical_schedule_features": {
+          "mean_arm_lag1_autocorrelation": 0.9503330763389792,
+          "cross_arm_correlation": -0.3751140471580059,
+          "probability_change_rate": 0.05261265150488741,
+          "mean_absolute_arm_step_on_change": 0.5552543321075497,
+          "mean_absolute_reward_gap": 0.47115560660227357,
+          "mean_reward_probability": 0.507579213618801,
+          "equal_probability_fraction": 0.1701539508003226
+        },
+        "pc_scores": [
+          -0.1105009991911474,
+          0.42744757265121003,
+          0.10632977741160024,
+          0.07769158851807072,
+          -0.04396485049244393,
+          0.19719484179571023,
+          -0.07715593016747531,
+          0.0700067865069417,
+          -3.740087348535159e-18,
+          -1.442244024808965e-17
+        ]
+      }
+    }
+  },
+  "complete_case_relationships": {
+    "feature_distance_vs_llm_task_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": 0.16366341767699433,
+      "permutation_p_two_sided": 0.7238095238095238,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        -0.20291986247835697,
+        0.46381682852195877
+      ]
+    },
+    "empirical_grossman_distance_vs_llm_task_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": -0.054554472558998104,
+      "permutation_p_two_sided": 0.9222222222222223,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        -0.5507824838698261,
+        0.20597146021777488
+      ]
+    },
+    "feature_distance_vs_empirical_grossman_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": 0.8571428571428573,
+      "permutation_p_two_sided": 0.023809523809523808,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        0.7714285714285715,
+        0.942857142857143
+      ]
+    },
+    "retained_vs_all_pc_feature_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": 1.0,
+      "permutation_p_two_sided": 0.0003968253968253968,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "gru_minus_bari_vs_feature_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": -0.3571428571428572,
+      "permutation_p_two_sided": 0.4444444444444444,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        -0.5428571428571429,
+        0.028571428571428574
+      ]
+    },
+    "gru_minus_bari_vs_llm_task_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": -0.7092081432669753,
+      "permutation_p_two_sided": 0.08571428571428572,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        -0.7944613465542746,
+        -0.5797710356524485
+      ]
+    },
+    "gru_minus_author_vs_feature_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": -0.28571428571428575,
+      "permutation_p_two_sided": 0.555952380952381,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        -0.48571428571428577,
+        0.14285714285714288
+      ]
+    },
+    "gru_minus_author_vs_llm_task_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": -0.16366341767699433,
+      "permutation_p_two_sided": 0.7238095238095238,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        -0.8827348295047495,
+        0.0
+      ]
+    },
+    "embedding_distance_vs_feature_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": 0.3571428571428572,
+      "permutation_p_two_sided": 0.4444444444444444,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        -0.028571428571428574,
+        0.5428571428571429
+      ]
+    },
+    "embedding_distance_vs_llm_task_distance": {
+      "n_cohorts": 7,
+      "spearman_rho": 0.8365019125713041,
+      "permutation_p_two_sided": 0.026984126984126985,
+      "permutation_method": "exact",
+      "n_permutations": 5040,
+      "leave_one_cohort_out_range": [
+        0.7356123579206245,
+        0.9856107606091624
+      ]
+    }
+  }
+}

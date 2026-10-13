@@ -1,0 +1,11 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 15,
+  "experiment_id": "01M2H3T9JD04B74HFZ9W4YHKCV",
+  "experiment_url": "https://beaker.org/ex/01M2H3T9JD04B74HFZ9W4YHKCV",
+  "dispatcher_commit": "2bd9a945621ead0729cae72c781f6b2bbc3d0b3e",
+  "wandb_group": "gru-costa-matched-half@20260914-162457",
+  "input_dataset_id": "01M2H3GAY254P1VRW26DWY625T",
+  "sweep_file": "studies/09-gru-cross-species-transfer/variants/gru-costa-matched-half/sweep_reward_fix.yaml",
+  "created_utc": "2026-09-14T23:25:13.479391+00:00"
+}

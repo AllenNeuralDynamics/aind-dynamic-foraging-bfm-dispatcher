@@ -12,3 +12,5 @@
 PyYAML>=6,<7
 pandas>=2.2,<3
 pyarrow>=17,<22
+scipy>=1.13,<2
+h5py>=3.11,<4

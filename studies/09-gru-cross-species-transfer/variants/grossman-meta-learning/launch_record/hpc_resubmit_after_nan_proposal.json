@@ -1,0 +1,54 @@
+{
+  "_meta": {
+    "produced_by": "launch_record.write_intervention",
+    "produced_at_pt": "2026-09-05T13:04:42-07:00",
+    "dispatcher_git_sha": "571ad6005469c915b156b29113884476cbb2a2c0",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "grossman-meta-learning@20260905-124420"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "hpc",
+  "wandb_group": "grossman-meta-learning@20260905-124420",
+  "job_refs": [
+    {
+      "type": "slurm_job",
+      "id": "25580843"
+    }
+  ],
+  "supersedes": [
+    "25580836",
+    "1wu5oo73"
+  ],
+  "trigger": {
+    "symptom": "Grossman fit failed after 70 seconds when a differential-evolution proposal produced a NaN choice probability.",
+    "cause": "A divergent long-horizon optimizer proposal reached a NaN Q-state before the likelihood function could reject it.",
+    "evidence": {
+      "slurm_job": "25580836",
+      "wandb_run": "1wu5oo73",
+      "log": "/home/han.hou/logfile/job_25580836.err"
+    }
+  },
+  "tasks": [
+    {
+      "orig_slurm_job": "25580836",
+      "new_slurm_job": "25580843",
+      "orig_wandb_run": "1wu5oo73",
+      "new_wandb_run": "ti1b81e8"
+    }
+  ],
+  "deviations": {
+    "fresh_run_ids": true,
+    "fresh_group": true,
+    "context_changed": {
+      "foraging_models_commit": {
+        "from": "25f5f1ce64705edbf266feb8d57ff83a018b12c5",
+        "to": "a75ae23e0d5bce7985d3c4f5f7f30c7a971e0070"
+      }
+    }
+  },
+  "cost": {
+    "failed_wall_time_seconds": 70
+  }
+}

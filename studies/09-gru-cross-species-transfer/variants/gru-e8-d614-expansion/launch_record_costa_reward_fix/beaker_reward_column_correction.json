@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "produced_by": "launch_record.write_intervention",
+    "produced_at_pt": "2026-09-14T16:28:24-07:00",
+    "dispatcher_git_sha": "2bd9a945621ead0729cae72c781f6b2bbc3d0b3e",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "gru-e8-d614-expansion@20260914-162554"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "beaker",
+  "wandb_group": "gru-e8-d614-expansion@20260914-162554",
+  "job_refs": [
+    {
+      "type": "beaker_experiment",
+      "id": "01M2H3VQZA4VG8P0FWFWCVCRP2"
+    }
+  ],
+  "supersedes": [
+    "01M1YRT8B20NMJ3JAHNVC0RMF4"
+  ],
+  "trigger": {
+    "symptom": "The block-reset author model was near chance despite strong published learning effects.",
+    "cause": "The Costa adapter treated released column 9 as reward; the official coding template identifies rewarded/unrewarded feedback as column 11.",
+    "evidence": {
+      "official_coding_template": "Zenodo record 20086410 stochastic_coding_template.docx",
+      "incorrect_adapter_index": 8,
+      "correct_reward_index": 10,
+      "source_md5": "b388fe98ad9197c696ed87882b8fdbc5",
+      "canonical_parquet_sha256": "e6f0a017d13cf4b8653a43ef2debc9d74af307b81ae6f1fed4276bbbdd7c461d",
+      "split_manifest_sha256": "9dc04136ab185bd7ec9e60749a0a15e37ea3179649bb0e2ae6aff7356725dd30",
+      "audit_sha256": "d5fd33fb06da8f1fea2810c1673595543b0b8e8b8b3e86bd0f20de740aad0d58"
+    }
+  },
+  "tasks": [],
+  "deviations": {
+    "fresh_run_ids": true,
+    "corrected_reward_column": true,
+    "heldout_trial_keys_unchanged": true,
+    "beaker_input_dataset": "01M2H3GAY254P1VRW26DWY625T"
+  },
+  "cost": {}
+}

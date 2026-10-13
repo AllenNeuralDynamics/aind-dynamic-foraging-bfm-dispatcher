@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "entity": "AIND-disRNN",
+  "project": "mice_data_scaling",
+  "group": "v2-sc-active@20260622-144622",
+  "architecture": {
+    "model": "gru",
+    "hidden_size": 128
+  },
+  "source_dispatcher_commit": "1cc0303fe7ec36039e54e9a1a9acddc990c007db",
+  "source_wrapper_commit": "65c3350d801c7596f88f57adef6f4d7e435b9c35",
+  "checkpoint_policy": "best_eval",
+  "embedding_finetuning": {
+    "n_steps": 500,
+    "lr": 0.001,
+    "selection_policy": "fixed_final"
+  },
+  "runs": {
+    "d10-s0": {
+      "nominal_D": 10,
+      "actual_n_source_subjects": 10,
+      "seed": 0,
+      "run_id": "v2-sc-active-20260622-144622-4bb879a6",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTAxMDczOQ==",
+      "artifact_digest": "a9e35917be4a5814fdb047867a8b18b5"
+    },
+    "d10-s1": {
+      "nominal_D": 10,
+      "actual_n_source_subjects": 10,
+      "seed": 1,
+      "run_id": "v2-sc-active-20260622-144622-f8f4f377",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTI3NjI5Ng==",
+      "artifact_digest": "bea2a480b308319b2e18ab2bb2959e73"
+    },
+    "d10-s2": {
+      "nominal_D": 10,
+      "actual_n_source_subjects": 10,
+      "seed": 2,
+      "run_id": "v2-sc-active-20260622-144622-c4f91751",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTEwNDg1NQ==",
+      "artifact_digest": "b56be70de3c0a189a549da8753c9ab95"
+    },
+    "d30-s0": {
+      "nominal_D": 30,
+      "actual_n_source_subjects": 29,
+      "seed": 0,
+      "run_id": "v2-sc-active-20260622-144622-e8c3edb2",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTE4NTA1Mg==",
+      "artifact_digest": "0689a3b8334508481c059654c90da398"
+    },
+    "d30-s1": {
+      "nominal_D": 30,
+      "actual_n_source_subjects": 30,
+      "seed": 1,
+      "run_id": "v2-sc-active-20260622-144622-5e008e40",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNzAzNjY1Ng==",
+      "artifact_digest": "f61b26612dc85b8d4a0c81e84a9061bb"
+    },
+    "d30-s2": {
+      "nominal_D": 30,
+      "actual_n_source_subjects": 30,
+      "seed": 2,
+      "run_id": "v2-sc-active-20260622-144622-19a88c23",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTUxMzQ1Mw==",
+      "artifact_digest": "adc1562c86890393e5c93a0e677fed26"
+    },
+    "d100-s0": {
+      "nominal_D": 100,
+      "actual_n_source_subjects": 99,
+      "seed": 0,
+      "run_id": "v2-sc-active-20260622-144622-4becb8b9",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTYyOTU0Nw==",
+      "artifact_digest": "c32656bbd1c3ad846979a730b0f20884"
+    },
+    "d100-s1": {
+      "nominal_D": 100,
+      "actual_n_source_subjects": 101,
+      "seed": 1,
+      "run_id": "v2-sc-active-20260622-144622-e7f3851f",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTYxOTk0NQ==",
+      "artifact_digest": "ae632b74e05a862bc6e64cc05832fcb4"
+    },
+    "d100-s2": {
+      "nominal_D": 100,
+      "actual_n_source_subjects": 101,
+      "seed": 2,
+      "run_id": "v2-sc-active-20260622-144622-35610e21",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTYyMTQ3OA==",
+      "artifact_digest": "88b9d32c7ba840bd6256afa9b7de10eb"
+    },
+    "d300-s0": {
+      "nominal_D": 300,
+      "actual_n_source_subjects": 300,
+      "seed": 0,
+      "run_id": "v2-sc-active-20260622-144622-212ad763",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTg4NTI4MQ==",
+      "artifact_digest": "d59b1e976e62dec4bc907bb37dc2a965"
+    },
+    "d300-s1": {
+      "nominal_D": 300,
+      "actual_n_source_subjects": 301,
+      "seed": 1,
+      "run_id": "v2-sc-active-20260622-144622-c4ff4e08",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTg4MjM3Nw==",
+      "artifact_digest": "bd217e54d5f8172f76366a53830d7b01"
+    },
+    "d300-s2": {
+      "nominal_D": 300,
+      "actual_n_source_subjects": 300,
+      "seed": 2,
+      "run_id": "v2-sc-active-20260622-144622-8c0d52a5",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNTkwMDExMw==",
+      "artifact_digest": "fcf9ebeb2ef97daeeaaf1bb2cac0cb55"
+    },
+    "d614-s0": {
+      "nominal_D": 614,
+      "actual_n_source_subjects": 614,
+      "seed": 0,
+      "run_id": "v2-sc-active-20260622-144622-ecd6f7e6",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNjE1MDYyNg==",
+      "artifact_digest": "62e1a1e1615dbfbaa93af64b39708a77"
+    },
+    "d614-s1": {
+      "nominal_D": 614,
+      "actual_n_source_subjects": 614,
+      "seed": 1,
+      "run_id": "v2-sc-active-20260622-144622-3603897b",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNjEwNzM3Nw==",
+      "artifact_digest": "08e27c94c5308f48d7c4dca284a0a428"
+    },
+    "d614-s2": {
+      "nominal_D": 614,
+      "actual_n_source_subjects": 614,
+      "seed": 2,
+      "run_id": "v2-sc-active-20260622-144622-d6462060",
+      "artifact_id": "QXJ0aWZhY3Q6MzAyNjE1NzEwMg==",
+      "artifact_digest": "c2a992ec6a687a094e955850807a03c0"
+    }
+  }
+}

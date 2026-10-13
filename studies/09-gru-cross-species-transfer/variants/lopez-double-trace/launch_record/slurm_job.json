@@ -1,0 +1,26 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "26383278",
+  "wandb_group": "lopez-double-trace@slurm-26383278",
+  "dispatcher_commit": "533a2dd783c3708e5e442478452a45552cf81829",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "d855a1a2b4075ee02c8d6597e97f768174eb031c",
+  "script": "studies/09-gru-cross-species-transfer/variants/lopez-double-trace/lopez_double_trace.slurm",
+  "dataset": "lopez_mouse",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-lopez-double-trace-26383278",
+  "submitted_at": "2026-09-14T15:38:27-07:00",
+  "started_at": "2026-09-14T15:38:39-07:00",
+  "wandb_run_id": "06aep00b",
+  "status": "success",
+  "status_note": "The committed W&B run and result artifact report success; SLURM accounting could not be refreshed while Cisco DNS did not resolve the HPC host.",
+  "outputs": {
+    "normalized_likelihood": 0.6156843139536378,
+    "accuracy": 0.7686899642218331,
+    "brier_score": 0.1591501027,
+    "n_trials": 77662,
+    "ordered_trial_key_sha256": "97c51d6e0ea5431474a371eed08f6dbe266383fe760ca7b6f9246bb0edaca38f",
+    "test_metrics_sha256": "f0416fc0273cdc28c55d550578a2e10f2c81c8c556d904eb368bd99753ff398b",
+    "test_trial_predictions_sha256": "11f528033197c4a961c528a1bceac0f6efe21738e65f33a56e1395fce70b72a5"
+  }
+}

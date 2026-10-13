@@ -1,0 +1,53 @@
+{
+  "_meta": {
+    "produced_by": "launch_record.write_intervention",
+    "produced_at_pt": "2026-09-14T15:44:27-07:00",
+    "dispatcher_git_sha": "549270cfdd605bd8a96f1efb0e9eefefdabf6bc4",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "costa-feedback-dependent@slurm-26383290"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "hpc",
+  "wandb_group": "costa-feedback-dependent@slurm-26383290",
+  "job_refs": [
+    {
+      "type": "slurm_job",
+      "id": "26383290"
+    }
+  ],
+  "supersedes": [
+    "26383279"
+  ],
+  "trigger": {
+    "symptom": "Costa source download returned HTTP 406 before model fitting began.",
+    "cause": "The job redundantly fetched the Zenodo release instead of using the already audited persistent canonical suite.",
+    "evidence": {
+      "failed_job": "26383279",
+      "failed_log": "/home/han.hou/logfile/job_26383279.err",
+      "canonical_data_root": "/allen/aind/scratch/han.hou/datasets/study09-external-v1v2-20260905/canonical",
+      "parquet_sha256": "e065dded606301b1ca40f072289b2e4faa15a114250919f90be5e345ff9278ae",
+      "split_sha256": "9dc04136ab185bd7ec9e60749a0a15e37ea3179649bb0e2ae6aff7356725dd30",
+      "audit_sha256": "d0afd657cc7951c85ef9043a968a488858bf99f81840feccf69b90580c072efe"
+    }
+  },
+  "tasks": [
+    {
+      "orig_slurm_job": "26383279",
+      "new_slurm_job": "26383290"
+    }
+  ],
+  "deviations": {
+    "fresh_run_ids": true,
+    "fresh_group": true,
+    "data_root_changed": true,
+    "dispatcher_commit": {
+      "from": "533a2dd783c3708e5e442478452a45552cf81829",
+      "to": "549270cfdd605bd8a96f1efb0e9eefefdabf6bc4"
+    }
+  },
+  "cost": {
+    "failed_wall_time_seconds": 33
+  }
+}

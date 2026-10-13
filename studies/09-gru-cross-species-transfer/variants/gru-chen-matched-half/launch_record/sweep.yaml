@@ -1,0 +1,27 @@
+entity: AIND-disRNN
+project: gru_cross_species_transfer
+name: gru-chen-matched-half
+method: grid
+command:
+  - python
+  - /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/09-gru-cross-species-transfer/run_gru_transfer.py
+  - --dataset=chen
+  - ${args_no_hyphens}
+parameters:
+  --source-key:
+    values:
+      - d10-s0
+      - d10-s1
+      - d10-s2
+      - d30-s0
+      - d30-s1
+      - d30-s2
+      - d100-s0
+      - d100-s1
+      - d100-s2
+      - d300-s0
+      - d300-s1
+      - d300-s2
+      - d614-s0
+      - d614-s1
+      - d614-s2
