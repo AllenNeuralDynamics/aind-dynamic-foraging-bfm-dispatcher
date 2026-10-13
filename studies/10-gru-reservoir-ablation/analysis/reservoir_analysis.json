@@ -1,15 +1,16 @@
 {
   "_meta": {
     "produced_by": "analysis/report_reservoir.py",
-    "produced_at_pt": "2026-09-09T06:28:28-07:00",
-    "dispatcher_git_sha": null,
+    "produced_at_pt": "2026-10-13T13:52:10-07:00",
+    "dispatcher_git_sha": "8e6079ba19584937b7609b9f08b235292561554e",
     "wrapper_git_sha": "847a270945a29a0ce6ab78c89df660d084c7be95",
     "wandb_groups": [
       "frozen-random-core-d614@20260908-045745",
       "heldout-rerun-v2-retry@20260623-065818",
       "frozen-random-core-h128-dcurve@20260908-111444",
       "frozen-random-core-d614@20260907-175533",
-      "frozen-random-core-d614@20260907-184115"
+      "frozen-random-core-d614@20260907-184115",
+      "v2-sc-active@20260622-144622"
     ]
   },
   "reservoir_seed_likelihoods": [

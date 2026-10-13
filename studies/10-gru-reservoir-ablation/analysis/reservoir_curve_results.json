@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_dcurve.py",
-    "produced_at_pt": "2026-09-09T06:25:09-07:00",
-    "dispatcher_git_sha": null,
+    "produced_at_pt": "2026-10-13T13:49:40-07:00",
+    "dispatcher_git_sha": "8e6079ba19584937b7609b9f08b235292561554e",
     "wrapper_git_sha": "847a270945a29a0ce6ab78c89df660d084c7be95",
     "wandb_groups": [
       "frozen-random-core-h128-dcurve@20260908-111444",

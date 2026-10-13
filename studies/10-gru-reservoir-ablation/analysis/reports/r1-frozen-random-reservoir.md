@@ -25,6 +25,11 @@ reproduce: make -C studies/10-gru-reservoir-ablation r1
 <!-- BEGIN result-1 -->
 ![Reservoir comparison](../fig_reservoir_vs_trained.png)
 
+Left: pooled held-out normalized likelihood; each small dot is one source seed,
+with curves showing three-seed means and shading/error bars showing seed SD.
+Purple crosses are the separate exact-split D=614 replication. Right: seed-averaged
+paired differences for 149 held-out mice, with the mean and subject-bootstrap 95% CI.
+
 | nominal D | realized D by seed | trained GRU | frozen reservoir | reservoir − trained |
 |---:|---|---:|---:|---:|
 | 10 | 10, 10, 10 | 0.721793 | 0.711852 | -0.009942 |
