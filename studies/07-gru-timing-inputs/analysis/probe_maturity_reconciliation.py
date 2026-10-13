@@ -232,11 +232,10 @@ def _figure(df, gru_off, gru_net):
     for xi, v in zip(x, df.baseline):
         ax.text(xi, v + 0.0006, f"{v:.4f}", ha="center", fontsize=10)
     ax.axhline(gru_off, color=ORANGE, lw=2, ls="--", zorder=4)
-    ax.text(len(df) - 0.55, gru_off, f"GRU OFF\nbaseline\n{gru_off:.4f}",
-            color=ORANGE, fontsize=9, va="center", ha="left")
     ax.set_xticks(x); ax.set_xticklabels(short); ax.set_ylim(0.70, 0.755)
     ax.set_ylabel("baseline norm. likelihood")
-    ax.set_title("Matching maturity aligns the baseline:\nall-stage probe \u2248 GRU baseline")
+    ax.set_title(f"Matching maturity aligns the baseline:\nall-stage probe \u2248 GRU OFF baseline "
+                 f"({gru_off:.4f}, dashed)")
     ax.set_xlim(-0.6, len(df) + 0.4)
     ax = axs[1]
     w = 0.26
@@ -244,11 +243,10 @@ def _figure(df, gru_off, gru_net):
     ax.bar(x, df.d_lick * 1000, w, color=PURPLE, label="+ licks only", zorder=3)
     ax.bar(x + w, df.d_both * 1000, w, color=BLUE, label="+ both", zorder=3)
     ax.axhline(gru_net * 1000, color=ORANGE, lw=2, ls="--", zorder=4)
-    ax.text(len(df) - 0.58, gru_net * 1000, f"GRU realized\n+{gru_net * 1000:.2f}",
-            color=ORANGE, fontsize=9, va="center", ha="left")
     ax.set_xticks(x); ax.set_xticklabels(short)
     ax.set_ylabel("\u0394 over baseline (\u00d71000)")
-    ax.set_title("The probe \u0394 is unchanged (slightly larger)\nall-stage; GRU realizes ~90% of it")
+    ax.set_title(f"The probe \u0394 is unchanged (slightly larger)\nall-stage; GRU realizes ~90% "
+                 f"(+{gru_net * 1000:.2f}, dashed)")
     ax.legend(frameon=False, fontsize=10, loc="upper left")
     ax.set_ylim(0, 9.6)
     fig.suptitle("Reconciling the logistic probe to the GRU's all-stage population "

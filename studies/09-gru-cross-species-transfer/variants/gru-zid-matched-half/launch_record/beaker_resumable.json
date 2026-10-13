@@ -1,0 +1,9 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 15,
+  "experiment_id": "01M1RG1X3W0VK8ZBYQ8ZB4V4BR",
+  "experiment_url": "https://beaker.org/ex/01M1RG1X3W0VK8ZBYQ8ZB4V4BR",
+  "dispatcher_commit": "4e45011460c6f7aa8d6b95c6ad484ff4ee1b1a04",
+  "sweep_file": "studies/09-gru-cross-species-transfer/variants/gru-zid-matched-half/sweep.yaml",
+  "created_utc": "2026-09-05T09:58:05.046136+00:00"
+}

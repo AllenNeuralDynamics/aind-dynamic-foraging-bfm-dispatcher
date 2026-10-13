@@ -6,6 +6,11 @@
 # which dispatcher surface is actually a public API. A requirements file gives CI
 # what it needs without pre-empting that. See #97.
 #
-# The launcher helpers under test need only PyYAML; nothing here touches SLURM,
+# The launcher helpers under test need PyYAML. The external bandit schema tests
+# also exercise the canonical pandas table format; nothing here touches SLURM,
 # Beaker, W&B or the network.
 PyYAML>=6,<7
+pandas>=2.2,<3
+pyarrow>=17,<22
+scipy>=1.13,<2
+h5py>=3.11,<4

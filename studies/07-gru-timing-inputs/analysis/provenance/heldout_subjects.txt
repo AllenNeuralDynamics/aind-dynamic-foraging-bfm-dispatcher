@@ -1,0 +1,174 @@
+# Held-out mice for the r3 behavioural-mechanism analysis (why_features_help.py).
+# Derivation (snapshot 20260603): the r1/calibrate_timing_features eligible cohort
+#   (train + held-out split, 771 subjects) MINUS the union of every study-07 GRU
+#   training cohort (resolved_subject_ids across all runs of W&B project
+#   mice_rt_lick_scaling; union = 614 mice). Remainder = 157 mice never used to
+#   train the GRU. The GRU's own 149-mouse eval set is a subset of these; the exact
+#   list could not be pulled (its W&B table file is on a denylisted host) but the
+#   8-mouse difference is immaterial -- all 157 are genuinely never-trained.
+# 125 of these 157 enter the r3 regressions; the other 32 are early (2019-2020)
+# OLD-SCHEMA sessions that lack the `reaction_time` field and the in-session
+# timing columns (goCue_start_time_in_session / choice_time_in_session) that
+# build_sequence needs to compute previous-trial RT, so RT is undefined for them
+# and they drop from the (RT-dependent) regression. (Their lick-time columns are
+# present; it is the RT that cannot be formed.) Verified: read_trials for these
+# subjects exposes goCue_start_time / left_lick_time / right_lick_time but no
+# reaction_time / *_in_session timing columns.
+# One subject_id per line.
+452275
+453476
+453478
+455525
+472184
+494693
+616134
+627042
+637701
+639875
+641494
+643773
+648586
+651475
+651554
+652743
+655100
+656489
+659778
+663373
+668463
+668551
+671087
+671245
+673396
+680398
+680399
+680599
+682342
+684039
+687069
+687070
+687552
+697929
+697930
+699982
+700708
+708299
+710414
+711039
+711041
+711254
+711281
+712031
+713379
+713862
+716324
+721403
+722683
+722989
+726649
+727456
+736198
+736199
+744779
+745505
+746346
+747886
+749472
+751153
+751765
+751920
+753122
+754372
+756567
+757214
+761406
+762611
+763704
+764693
+765232
+765365
+765373
+765861
+766556
+766998
+767462
+767463
+769359
+770803
+774826
+775741
+775745
+776259
+777027
+777098
+777271
+778103
+778336
+780618
+780621
+781162
+781369
+781896
+781897
+782394
+784956
+785951
+786234
+787625
+788732
+788733
+790584
+790726
+790768
+791174
+793397
+795395
+797673
+798520
+798664
+800175
+801996
+802292
+802953
+805496
+807885
+808584
+809488
+810756
+810758
+812305
+812307
+813165
+813167
+813171
+813992
+814147
+814196
+815334
+818020
+818585
+818908
+819169
+820243
+821576
+823161
+823163
+823166
+826160
+829048
+829489
+829569
+832634
+835178
+835444
+836656
+836657
+837689
+838101
+838332
+839483
+841356
+841363
+841599
+845710
+850597

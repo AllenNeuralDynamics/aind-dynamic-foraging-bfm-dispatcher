@@ -1,0 +1,30 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25585754",
+  "wandb_group": "hattori-q-learning@slurm-25585754",
+  "wandb_run_id": "1pb53uvj",
+  "dispatcher_commit": "703e750eb44e9103214aca1ced8c82557925849f",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "script": "studies/09-gru-cross-species-transfer/variants/hattori-q-learning/hattori_q_learning.slurm",
+  "dataset": "hattori",
+  "dataset_id": "hattori-et-al-2023-imaging-mature",
+  "canonical_data_root": "/allen/aind/scratch/han.hou/datasets/study09-hattori-mature-canonical-20260907",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-hattori-q-25585754",
+  "submitted_at": "2026-09-07T19:55:34-07:00",
+  "started_at": "2026-09-07T19:55:35-07:00",
+  "completed_at": "2026-09-07T20:27:39-07:00",
+  "elapsed": "00:32:04",
+  "exit_code": "0:0",
+  "status": "success",
+  "outputs": {
+    "normalized_likelihood": 0.5556990047925375,
+    "accuracy": 0.6917734732935104,
+    "brier_score": 0.2009961094694254,
+    "n_trials": 68972,
+    "test_metrics_sha256": "ded20db3412612b5a76054444970fee8548040279c2fdad1d18f6b43206fd7ad",
+    "test_trial_predictions_sha256": "910e5c0332f552e22eef6ae1ea1e3b0c5ea19931f8649bbc714f57fb99e6cfc3",
+    "baseline_rl_output_sha256": "2b6b2359339a61801a8ecb7960b972022630f0a1577e19f45905d4e6c8697020"
+  }
+}

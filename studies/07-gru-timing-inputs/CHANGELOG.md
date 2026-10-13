@@ -3,6 +3,25 @@
 Per-study log; newest first. One entry per merged PR or significant milestone.
 Dates in America/Los_Angeles.
 
+## 2026-09-03 — r3 mechanism report (why RT/licks help), on the held-out mice
+
+- Added report **r3** and producer `analysis/why_features_help.py`: two logistic
+  regressions (`stay ~ prev_reward * z(prev logRT)` and `* z(prev total licks)`)
+  with per-mouse cluster-bootstrap 95% CIs. Finding: prev-trial RT predicts
+  switching reward-INDEPENDENTLY (a global engagement signal), lick count is
+  reward-GATED (more licking after no-reward → abandon; after reward → mild stay).
+- Cohort = the **held-out mice** (pinned in `analysis/provenance/heldout_subjects.txt`:
+  eligible cohort minus the union of every GRU training cohort; 157 listed, 125
+  enter the regressions — the other 32 are early old-schema sessions lacking the
+  `reaction_time` field that `build_sequence` needs to form previous-trial RT). Chosen because the GRU's
+  likelihood gain is scored on held-out mice, so the mechanism is shown on the
+  population it explains — and the coupling is population-general (the same trend
+  holds on the train mice), which is why the model generalizes. Effects are firmer
+  than the earlier train-set draw (rewarded-lick z≈+3.9 vs +2.6).
+- Note: mouse-clustering is essential — naive trial-level SEs are anti-conservative
+  by ~an order of magnitude. The lowest-lick bin dips (very-low-lick = disengaged
+  trials switch more), the same engagement signal the RT panel carries.
+
 ## 2026-09-03 — Probe/GRU maturity reconciliation + broken report figure paths
 
 - The logistic probe is mature-only + curricula; the GRU runs use

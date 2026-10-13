@@ -1,0 +1,9 @@
+{
+  "failed_slurm_job_id": "25582237",
+  "failed_state": "FAILED",
+  "failed_exit_code": "1:0",
+  "failure": "OSF source download returned HTTP 403 before model fitting",
+  "replacement_slurm_job_id": "25582240",
+  "intervention": "reused the permanent checksum-audited canonical Eckstein data bundle",
+  "scientific_change": false
+}

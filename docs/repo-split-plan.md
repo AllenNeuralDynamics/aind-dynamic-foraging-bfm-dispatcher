@@ -12,10 +12,12 @@ status: approved
 
 # Repo-split plan: extract `studies/` into `aind-dynamic-foraging-bfm-studies`
 
-> **Status:** approved 2026-07-16, not yet executed. Delegated to a separate
-> agent for execution. Originally written 2026-06-30 after the
+> **Status:** approved 2026-07-16, not yet executed. Re-reviewed 2026-09-03:
+> the architectural decision still stands, but execution is blocked on the
+> pre-split hardening and branch freeze below. Originally written 2026-06-30 after the
 > `posthoc-analysis` standard-structure migration (ending at commit `122abfd`,
-> later merged to `main`); revised 2026-07-16 when the split was approved.
+> later merged to `main`); revised 2026-07-16 when the split was approved and
+> amended 2026-09-03 after a fresh repository audit.
 
 ## TL;DR
 
@@ -29,6 +31,12 @@ Split `aind-dynamic-foraging-bfm-dispatcher` at the framework/application seam:
 
 All eight studies (`01`–`08`) move in one pass. Preserve per-file history via
 `git filter-repo`.
+
+Do **not** execute the older numbered steps verbatim. The 2026-09-03 amendment
+adds four gates that must land first: dual-repository provenance, a
+self-contained studies `AGENTS.md`, explicit CI ownership, and a freeze of all
+branches that touch `studies/`. Build and verify the extracted repository
+locally before its first push; never publish a temporarily broken `main`.
 
 ## Decision (2026-07-16): split now
 
@@ -68,10 +76,9 @@ load-bearing fact has flipped:
   naming unless both launchers are patched. Prefixed it is; flatten later only
   together with a launcher change.
 
-Execution notes: the sandbox cannot create `.git` directories, so
-`gh repo create` and the initial clones on the Mac and HPC checkouts are the
-user's steps; everything else is delegable. Prereq 1 below re-verified
-2026-07-16: no open PRs, `git log origin/main..HEAD -- studies/` empty.
+Dated observation (2026-07-16): there were then no open PRs and no local
+study commits ahead of `origin/main`. This is historical context only; the
+execution-time branch audit below is authoritative.
 
 ### Re-verified 2026-09-01 (deltas since the 2026-07-16 decision)
 
@@ -83,11 +90,12 @@ are left as the dated observations they were.
   `08-hb-vs-gru-heldout` has only `README.md`, `figures/` and `variants/`, so it
   is not yet normalized to the posthoc-reporting layout and will not satisfy the
   `make all` gate in the verification checklist below.
-- **Prereq 1 no longer holds.** Open PRs exist against both repos — dispatcher
-  #73 and wrapper #65. The extract must wait for them: a commit that is not on
-  `main` when `git filter-repo` runs is dropped from the studies repo silently,
-  with no error and no warning. This is the one prerequisite whose failure mode
-  is data loss rather than churn.
+- **Prereq 1 no longer held.** Dispatcher PR #73 contained study work that
+  would have been dropped if it were absent from dispatcher `main` at filter
+  time. Wrapper PR #65 mattered only because the studies depended on its
+  coupled change/pinned revision; filtering dispatcher history cannot itself
+  carry or drop wrapper commits. These PR numbers are dated observations, not
+  execution-time status.
 - **The target repo name is gated on the rename.** #74 renames the project
   identity `disrnn` -> `dynamic-foraging-bfm` and is sequenced *before* this split, so the
   new repo is created as **`aind-dynamic-foraging-bfm-studies`** and the cross-repo shell
@@ -98,7 +106,51 @@ are left as the dated observations they were.
   exist. The rename has since landed (ADR-0007), so the repo names below are
   the real ones.
 
-## Should we do this now? (discussion 2026-06-30 — the "not yet" lean is SUPERSEDED by the 2026-07-16 decision above; the analysis-layer findings and contract hardening below still stand)
+### Re-reviewed 2026-09-03 (execution-hardening amendment)
+
+The split remains the right seam, and the evidence is stronger: the current
+tree has 670 tracked files under `studies/` (~22 MB); over the preceding three
+months, 368 non-merge commits touched `studies/`, 104 touched `code/`, and only
+13 touched both. There are still no Python imports from `studies/**` into the
+dispatcher launchers. The active cross-repo surface is paths, configuration,
+and provenance rather than Python APIs.
+
+The runbook nevertheless needed correction before execution:
+
+- **Provenance changes meaning after extraction.** `studies/util/_meta.py`
+  currently runs `git rev-parse HEAD` and writes that value as
+  `dispatcher_git_sha`. In the new repo the same call returns the *studies*
+  SHA, silently mislabelling it as dispatcher provenance. The Beaker launcher
+  likewise records the dispatcher SHA but not the SHA of the external repo
+  containing the sweep. Dual-repo provenance is therefore a prerequisite,
+  specified below.
+- **A sibling `AGENTS.md` link is not inheritance.** Agents working from a
+  studies-only clone are not guaranteed to load the dispatcher's file. The
+  new repo must carry its own concise, enforceable safety, provenance, issue,
+  and PR-merge rules, with links to the dispatcher for detailed playbooks.
+- **CI and the skills pack now exist and know about studies.** Dispatcher CI
+  stays with the launcher tests. The new repo gets study validation CI. The
+  bundled `aind-behavior-foundation-model-skills` pack stays in dispatcher but
+  its codebase map, study/reporting paths, and launch examples must understand
+  the sibling studies checkout.
+- **Do not rewrite historical records.** Active READMEs, scripts, templates,
+  and comments move to sibling-dispatcher paths; immutable
+  `launch_record/**` files retain the paths and refs that were true when the
+  launch occurred.
+- **The target repo is not yet present.** An authenticated `git ls-remote`
+  check on 2026-09-03 returned “repository not found.” Repository creation and
+  visibility are explicit user-controlled steps; do not hardcode `--public`.
+- **The source is not frozen.** As of 2026-09-03, remote branches for studies
+  07 and 08 contain study commits not on `main`. Re-check live PRs and branches
+  immediately before extraction; branch names and counts in this paragraph are
+  observations, not a durable allowlist.
+
+## Historical discussion (2026-06-30; non-operative)
+
+> The “not yet” recommendation and “package first” sequencing below were
+> superseded on 2026-07-16. Preserve this section as decision history, but do
+> not use it as an execution checklist. The analysis-contract findings remain
+> relevant.
 
 **Lean at the time: not yet.** The split is a defensible long-term direction but
 premature today, and separating the *analysis* layer — not the whole `studies/`
@@ -173,17 +225,43 @@ Because that contract is small (7 keys) and stable, it is genuinely fine to keep
 the analysis layer where it is; these guards make the W&B boundary safe to cross
 whether or not analysis ever becomes its own repo.
 
-## Prerequisites (do these before executing)
+## Prerequisites (hard gates; do these before extracting)
 
-1. **All in-flight PRs against dispatcher must be merged first.** The integration
-   line is now merged to `main`; any commits not on `main` at split time will be
-   silently dropped from the studies extract.
-   -> verify: `git log origin/main..HEAD -- studies/` prints nothing.
-2. **Snapshot AGENTS.md rev**, since content flows across both repos.
-   -> verify: record `git log -1 --format=%H AGENTS.md` in the studies-repo
-   commit message.
-3. **Confirm no import-time coupling** from `studies/**` onto `code/**`.
-   -> verify (already true 2026-06-25): `rg -n "from (launchers|code|dispatcher)" studies/` is empty.
+1. **Track the migration.** Confirm an existing repo-split issue or file one on
+   the dispatcher, assign an owner, put it on project 184, and make its “Done
+   when” checklist match this runbook. Migration PRs use `Refs #<issue>`;
+   close the issue only after the final smoke verification.
+2. **Freeze all study work, not only open PRs.** Enumerate live PRs and every
+   remote branch whose diff against `origin/main` touches `studies/**`. Merge or
+   explicitly abandon each branch; do not assume a remote branch without a PR
+   is disposable. Abandonment requires the owner's confirmation and a manifest
+   entry with the branch tip SHA and reason, followed by remote-branch deletion.
+   Never merge a PR without explicit user confirmation, and never squash-merge.
+   -> verify: no surviving remote branch contains a study commit absent from
+   `origin/main`; every deliberately abandoned tip is recorded in `MIGRATION.md`.
+3. **Extract the current remote truth.** Fetch, require a clean worktree, check
+   out the exact `origin/main` SHA in the scratch clone, and record that full
+   SHA as `source_dispatcher_commit`. Do not extract from a stale local `main`.
+   -> verify: `git rev-parse HEAD` equals
+   `git ls-remote origin refs/heads/main | cut -f1`.
+4. **Land dual-repository provenance before extraction.** The dispatcher
+   launchers and study helpers must implement the contract below, with tests.
+   This commit must be on `main` so `git filter-repo` carries the studies half
+   into the new repository.
+5. **Allocate CI, skills, and agent rules.** Decide the exact files that stay in
+   dispatcher versus seed the studies repo. Update the skills pack to understand
+   both roots. Draft a self-contained studies `AGENTS.md`; do not rely on a
+   sibling file being automatically loaded.
+6. **Confirm no import-time coupling** from `studies/**` onto `code/**`.
+   -> verify: `rg -n "from (launchers|code|dispatcher)|import (launchers|code|dispatcher)" studies/`
+   is empty apart from comments or prose.
+7. **Resolve the study-08 verification gap.** Either add its normalized
+   `Makefile` before the freeze or record an explicit, temporary CI exception
+   with an owner and follow-up issue. Absence must not make the all-studies loop
+   fail ambiguously.
+8. **Choose repository visibility explicitly.** Match the source repository by
+   default. Creating a public repository requires explicit user confirmation;
+   never embed `--public` as an assumed migration step.
 
 ## Target state
 
@@ -208,8 +286,10 @@ aind-dynamic-foraging-bfm-dispatcher/
 
 ```text
 aind-dynamic-foraging-bfm-studies/
-├── AGENTS.md                    # studies-specific rules; Related: back to dispatcher AGENTS
-├── README.md                    # index of studies; how to clone alongside dispatcher
+├── AGENTS.md                    # self-contained critical rules + canonical links
+├── README.md                    # study index + side-by-side clone instructions
+├── .github/workflows/ci.yml     # offline regeneration/provenance checks
+├── requirements-dev.txt         # dependencies required by studies CI
 ├── studies/                     # prefix KEPT — see resolved Q1
 │   ├── 01-gru-scaling-law/
 │   │   ├── analysis/
@@ -222,8 +302,11 @@ aind-dynamic-foraging-bfm-studies/
 │   ├── 03-disrnn-beta-scan/
 │   ├── 04-gru-vs-disrnn-embedding-recovery/
 │   ├── 05-disrnn-scaling-law/
+│   ├── 06-disrnn-operating-point-at-scale/
+│   ├── 07-gru-timing-inputs/
+│   ├── 08-hb-vs-gru-heldout/
 │   └── util/
-└── .gitignore                   # ignore per-study analysis/_cache_*.json, etc.
+└── .gitignore                   # ignore W&B pulls/caches; keep curated outputs
 ```
 
 Path prefix trade-off (resolved 2026-07-16, see Decision above and Q1):
@@ -244,7 +327,9 @@ Path prefix trade-off (resolved 2026-07-16, see Decision above and Q1):
 | `docs/**` | stays in dispatcher; studies repo links back |
 | `environment/**` | stays in dispatcher |
 | `.codeocean/**` | stays in dispatcher |
-| `AGENTS.md` | stays; studies repo gets a **new** `AGENTS.md` that inherits via `Related` link |
+| `.github/workflows/ci.yml` | dispatcher launcher CI stays; studies repo gets a new study-validation workflow |
+| `aind-behavior-foundation-model-skills/**` | stays in dispatcher; update paths and two-repo guidance in the same migration |
+| `AGENTS.md` | stays; studies repo gets a **self-contained** critical-rule subset plus canonical links |
 | `README.md`, `LICENSE`, `CODE_OF_CONDUCT.md` | copy-forward (fresh, not filter-repo'd) into studies repo |
 | `.gitignore` | copy-forward the studies-relevant rules; drop dispatcher-only rules |
 | `artifacts/` | untracked already; regenerated locally in either repo |
@@ -274,175 +359,347 @@ Ditto for content references (`code/config/model/gru_scaling.yaml` becomes
 `../aind-dynamic-foraging-bfm-dispatcher/code/config/model/gru_scaling.yaml`).
 
 Files to update in the studies repo after extraction: **regenerate the list at
-execution time** —
+execution time, excluding immutable launch records** —
 
 ```bash
-rg -l 'code/launch|code/config|code/hpc|code/beaker' studies/
+rg -l 'code/launch|code/config|code/hpc|code/beaker' studies/ \
+  --glob '!**/launch_record/**'
 ```
 
-As of 2026-07-16 this hits ~20 files across studies 01–05: per-study
-`README.md`s, `variants/*/notes.md`, `variants/*/sweep.yaml` and
-`variants/*/experiment.yaml` (comment lines only),
-`variants/*/launch_record/*.yaml` (comment lines only),
-`01-gru-scaling-law/launch_heldout_rerun.py` (docstring),
-`01-gru-scaling-law/analysis/rl_baseline_verdict.md`, and
-`01-gru-scaling-law/analysis/rl_baseline.py` (an error-message string). Nearly
-all are docs/comments; only the last two are code strings.
+The 2026-09-03 audit found 32 matching files when historical launch records are
+included, up from ~20 in the 2026-07-16 count. Rewrite only active READMEs,
+`notes.md`, scripts, live sweep/experiment templates, and current error/help
+strings. Do **not** rewrite `launch_record/**`: an old path in a frozen record is
+part of the record of what actually ran. After the active rewrite, inspect all
+remaining matches and classify them as immutable history or a missed live
+reference; do not suppress the check wholesale.
 
 Long-term (out of scope for this split): promote the launchers to a proper
 Python package with console-script entrypoints so the shell path drops out
 entirely. Track as follow-up.
 
+## Cross-repo provenance contract (must land before extraction)
+
+A split is successful only if a launch can still answer “which study definition
+and which runtime control plane produced this run?” without inferring from a
+mutable branch or sibling checkout. Use these exact field names:
+
+| Surface | Required fields | Shape and source |
+|---|---|---|
+| Beaker/HPC launch record | `studies_git_commit`, `studies_git_branch`, `studies_git_dirty` | full 40-character SHA plus informational branch and boolean dirty state, resolved from the Git root containing the supplied sweep |
+| Beaker/HPC launch record | `dispatcher_git_commit`, `dispatcher_git_branch`, `dispatcher_git_dirty` | full SHA, branch and dirty state from the launcher checkout |
+| Beaker/HPC launch record | `wrapper_git_commit`, `foraging_models_git_commit` | full SHAs resolved by the launcher from the submitted runtime refs |
+| W&B `meta.*` | `meta.studies_commit`, `meta.dispatcher_commit`, `meta.wrapper_commit`, `meta.foraging_models_commit` | the same four immutable full SHAs; branches are optional display metadata, never identity |
+| Analysis JSON `_meta` | `studies_git_sha`, `studies_git_dirty` | analysis-producer checkout HEAD and boolean dirty state |
+| Analysis JSON `_meta` | `source_dispatcher_git_shas`, `source_wrapper_git_shas`, `source_foraging_models_git_shas` | sorted unique arrays resolved from the source launch records; use `[]` plus an explicit provenance finding when unavailable, never a guessed scalar |
+
+Additional rules:
+
+- A dirty studies checkout is rejected for a scientific launch unless an
+  explicit diagnostic-only override is recorded in the launch record. Analysis
+  may run dirty during development, but `_meta.studies_git_dirty` must say so.
+- After extraction, `studies/util/_meta.py` must never write its own repository
+  HEAD under `dispatcher_git_sha`. Keep already-committed legacy outputs
+  unchanged; new or intentionally regenerated outputs use the new schema.
+- A study-wide `.dispatcher_pin` may be a convenient default for a new launch,
+  but it is not historical provenance because variants can use different
+  dispatcher commits. The per-launch resolved refs are authoritative.
+- Add unit tests that place the sweep in a second temporary Git repository and
+  assert that studies and dispatcher SHAs are distinct and correct. Test both
+  Beaker and HPC record paths and the W&B metadata injection.
+
+The no-submit smoke test and the optional real launch below inspect these exact
+fields rather than merely running `--help`.
+
 ## Migration mechanics
 
-### Step 1 — Extract `studies/` with full history
+### Step 0 — Land the pre-split hardening
 
-Run in a scratch clone (never on the working repo):
+On a dispatcher branch linked to the tracking issue:
 
-```bash
-mkdir -p /scratch/repo-split && cd /scratch/repo-split
-git clone --no-local https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher.git extract
-cd extract
-pip install git-filter-repo   # if not already installed
-git filter-repo --path studies/
-```
+1. implement the exact dual-repository provenance schema above in the Beaker
+   and HPC launchers plus `studies/util/_meta.py`;
+2. add tests using a sweep in a separate temporary Git repository;
+3. update the bundled skills so they can locate a sibling studies repo while
+   remaining correct before the split; and
+4. define the new repo's root files and CI in this plan, but create them only in
+   the scratch extract during Step 3—do not stage them under dispatcher paths.
 
-Result: `extract/` now contains only files under `studies/`, with per-file
-history preserved (`git log --follow studies/01-gru-scaling-law/analysis/rl_baseline.py`
-should show every commit that touched it, across the
-`data-scaling-law` → `01-gru-scaling-law` rename — verified working on the
-source repo 2026-07-16).
+Open a PR with `Refs #<issue>`. Do not merge it automatically: request Copilot
+review, resolve every thread, then stop for explicit user confirmation. Merge
+with a merge commit, never squash.
 
--> verify: `git log --oneline | wc -l` in `extract/` is > 250 (255 non-merge
-   commits touched `studies/` in the last 3 months alone).
--> verify: `git log --follow --oneline studies/01-gru-scaling-law/analysis/rl_baseline.py`
-   shows at least commits `1e30716`, `342f5ae`, `122abfd`, etc.
+### Step 1 — Freeze branches and snapshot remote truth
 
-### Step 2 — Add fresh top-level files
-
-In `extract/`, add:
-
-- `AGENTS.md` (studies-specific; see template below).
-- `README.md` (index + side-by-side clone instructions).
-- `LICENSE` (copy from dispatcher).
-- `CODE_OF_CONDUCT.md` (copy from dispatcher).
-- `.gitignore` (copy dispatcher's, prune dispatcher-only rules).
-
-Commit as **one commit** with message:
-
-```text
-chore: initialise aind-dynamic-foraging-bfm-studies from aind-dynamic-foraging-bfm-dispatcher
-
-Extracted studies/ from aind-dynamic-foraging-bfm-dispatcher via git filter-repo.
-Source revision: <dispatcher HEAD sha at split time>
-```
-
-### Step 3 — Create the GitHub repo and push
+Immediately before extraction, fetch all refs and enumerate both same-repo and
+fork PR heads. Exclude `origin/HEAD` and `origin/main` from the branch loop:
 
 ```bash
-gh repo create AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies --public --confirm
+git fetch origin --prune
+gh pr list --state open --limit 500 \
+  --json number,headRefName,headRefOid,isCrossRepository,files
+git for-each-ref --format='%(refname:short) %(objectname)' refs/remotes/origin/ |
+while read -r ref sha; do
+  case "$ref" in origin/HEAD|origin/main) continue ;; esac
+  git log --oneline origin/main.."$sha" -- studies/
+done
+git ls-remote origin refs/heads/main
+```
+
+For cross-repository PRs, inspect `headRefOid` through the GitHub API or fetch
+the PR ref explicitly; do not assume it appears under `refs/remotes/origin/`.
+Merge or deliberately abandon every study-touching branch as specified in the
+prerequisites, then repeat the audit.
+
+Record the final full SHA and the AGENTS revision in a temporary operator note;
+Step 3 promotes them into tracked `MIGRATION.md`:
+
+```bash
+SOURCE_DISPATCHER_COMMIT=<full-origin-main-sha>
+AGENTS_SOURCE_COMMIT=$(git log -1 --format=%H origin/main -- AGENTS.md)
+```
+
+No study commits land in dispatcher between this snapshot and the removal PR;
+urgent study work waits or targets the extracted repository.
+
+### Step 2 — Extract `studies/` with full history
+
+Use a fresh temporary directory and a pinned, isolated `git-filter-repo`
+installation. Select and record the reviewed tool version at execution time:
+
+set -euo pipefail
+MIGRATION_ROOT=$(mktemp -d)
+FILTER_REPO_VERSION=<reviewed-version>
+python3 -m venv "$MIGRATION_ROOT/venv"
+"$MIGRATION_ROOT/venv/bin/pip" install "git-filter-repo==$FILTER_REPO_VERSION"
+git clone --no-local https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher.git "$MIGRATION_ROOT/extract"
+cd "$MIGRATION_ROOT/extract"
+git checkout -B main "$SOURCE_DISPATCHER_COMMIT"
+git ls-tree -r --full-tree "$SOURCE_DISPATCHER_COMMIT" studies/ > "$MIGRATION_ROOT/source-tree.tsv"
+find studies -type f -path '*/launch_record/*' -exec shasum -a 256 {} + | sort > "$MIGRATION_ROOT/source-launch-records.sha256"
+"$MIGRATION_ROOT/venv/bin/git-filter-repo" --path studies/
+git ls-tree -r --full-tree HEAD studies/ > "$MIGRATION_ROOT/extracted-tree.tsv"
+diff -u "$MIGRATION_ROOT/source-tree.tsv" "$MIGRATION_ROOT/extracted-tree.tsv"
+```
+
+The tree manifests must match before any assembly edits: modes, blob IDs, and
+paths prove every tracked study file crossed the boundary. `git filter-repo`
+removes the source remote intentionally; do not add the target remote yet.
+
+Also verify `git log --follow` for representative files from multiple studies,
+including study 01's `analysis/rl_baseline.py` back through `1e30716`.
+
+### Step 3 — Assemble a complete studies repository locally
+
+Before any push, add:
+
+- `MIGRATION.md` containing the source repo URL, `SOURCE_DISPATCHER_COMMIT`,
+  `AGENTS_SOURCE_COMMIT`, pinned filter-repo version, extraction time, operator,
+  abandoned branch tip SHAs/reasons (if any), the one initial direct-push
+  exception, and the reserved annotated tag name `studies-split-v1`;
+- `migration/source-tree.tsv` and
+  `migration/source-launch-records.sha256` copied from Step 2;
+- a self-contained `AGENTS.md` using the amended template below;
+- a README with all eight studies and side-by-side clone instructions;
+- `LICENSE`, `CODE_OF_CONDUCT.md`, and a studies-only `.gitignore`;
+- `requirements-dev.txt` and `.github/workflows/ci.yml`; and
+- provenance fixtures or tests that belong with the studies side.
+
+Rewrite only active cross-repo references. Use searches that cover the current
+and retired repo names, absolute paths, and generic launcher/config paths:
+
+```bash
+rg -n 'aind-(disrnn|dynamic-foraging-bfm)-dispatcher|python[[:space:]]+code/|(^|[[:space:]`])code/(launch|config|hpc|beaker)' studies/ \
+  --glob '!**/launch_record/**'
+```
+
+Run the same search including `launch_record/**`; classify every remaining
+match in `MIGRATION.md` as immutable history or intentional. Preserve all
+launch records byte-for-byte. Keep shared `code/config/` and `code/beaker/`
+templates in dispatcher; exact study-specific sweep/experiment manifests stay
+under their variants. Resolve study 08's Makefile exception.
+
+Commit the assembled state with source SHAs in both `MIGRATION.md` and the
+commit message. Focused path/CI commits may follow. Once all content and checks
+are complete, call the current HEAD the **assembly commit**. Add its full SHA to
+`MIGRATION.md` in one final local metadata commit; this is not self-referential
+because the recorded SHA names its parent. The first published `main` contains
+both commits and must be internally usable. The annotated tag created in Step 5
+identifies the exact initial published tip.
+
+### Step 4 — Verify locally before repository creation
+
+Run the full checklist below. Generate a machine-readable assembly diff:
+compare the extracted tree manifest with the assembled tree, then record every
+new or changed path in `migration/assembly-changes.tsv` with one of these
+reasons: `root-seed`, `active-path-rewrite`, `provenance-schema`,
+`study08-normalization`, or `ci`. Fail on any unclassified path.
+
+For artifacts, provide a comparison script that removes only the explicit
+metadata allowlist (`produced_at_pt` and the documented provenance-schema
+transition), then compares JSON structurally, CSV cells exactly, report
+`BEGIN/END` blocks exactly, and image checksums exactly. Numeric or narrative
+differences are not migration noise.
+
+Also run external-sweep tests, render a tiny Beaker spec with `--no-submit`,
+and exercise the HPC metadata helper without submission. Inspect the exact
+schema table fields and confirm the studies/dispatcher SHAs differ correctly.
+Do not create the GitHub repository while any required check is red.
+
+### Step 5 — Create the GitHub repository and publish the verified state
+
+The user chooses visibility explicitly. Prefer matching the source repository;
+public visibility requires explicit confirmation.
+
+```bash
+gh repo create AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies --<confirmed-visibility>
 git remote add origin git@github.com:AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies.git
 git push -u origin main
 ```
 
--> verify: `gh repo view AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies` succeeds.
-
-### Step 4 — Update the new repo's cross-repo references
-
-Sweep the files listed under "Cross-repo runtime dependency" above; prefix
-`code/...` -> `../aind-dynamic-foraging-bfm-dispatcher/code/...`. Commit:
-
-```text
-docs: point launcher references at sibling aind-dynamic-foraging-bfm-dispatcher clone
-```
-
--> verify: `rg -n "python code/launch" studies/` returns no matches.
--> verify: dry-run a launch (`python -m py_compile` on the launch scripts;
-   optionally trigger one `launch_beaker_resumable.py --help` from the
-   studies repo to confirm the sibling clone assumption works).
-
-### Step 5 — Remove `studies/` from dispatcher
-
-On a fresh branch in the dispatcher working tree:
+The initial push is the one documented exception to “all tracked changes
+through a PR”: an empty repository has no protected base branch. Immediately
+tag the exact published tip, then enable dispatcher-equivalent protection:
 
 ```bash
-git checkout -b chore/remove-studies-after-split
+git tag -a studies-split-v1 -m "Initial studies split from $SOURCE_DISPATCHER_COMMIT"
+git push origin studies-split-v1
+```
+
+`MIGRATION.md` names the operator, assembly commit, and reserved tag name; the
+annotated tag supplies the non-self-referential identity of the published tip.
+Every subsequent change uses a PR. Verify visibility, tag target, branch
+protection, studies CI, and a fresh clone before accepting new work.
+
+### Step 6 — Remove `studies/` from dispatcher through a PR
+
+Only after the studies repository is published and verified, fetch current
+remote truth and prove that `studies/**` has not changed since extraction. If
+this diff is non-empty, stop and restart at Step 1 with a new source boundary:
+
+```bash
+set -euo pipefail
+git fetch origin --prune
+git merge-base --is-ancestor "$SOURCE_DISPATCHER_COMMIT" origin/main
+test "$(git rev-list --count "$SOURCE_DISPATCHER_COMMIT"..origin/main -- studies/)" -eq 0
+git diff --exit-code "$SOURCE_DISPATCHER_COMMIT"..origin/main -- studies/
+git switch -c chore/remove-studies-after-split origin/main
 git rm -r studies/
 ```
 
-Update dispatcher `README.md` "Studies" section to link to
-`aind-dynamic-foraging-bfm-studies`. Update `AGENTS.md` to remove study-specific rules
-that migrate (if any — most are framework-general and stay).
+Update dispatcher README/AGENTS pointers and finalize the skills-pack changes
+so codebase-map distinguishes dispatcher from studies. Keep launcher CI in
+dispatcher and run it after deletion.
 
-Commit:
+Open a PR with `Refs #<issue>`, the `studies-split-v1` tag and assembly commit, and an explanation
+that dispatcher history is not rewritten. **Stop before merge and ask the user
+for confirmation.** If approved, merge with a merge commit; never squash.
 
-```text
-chore(dispatcher): remove studies/ after extraction to aind-dynamic-foraging-bfm-studies
+### Step 7 — Update operational checkouts and verify launch behavior
 
-Studies extracted with full history to
-https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies (see that
-repo's initial commit for the split source revision).
-```
+Clone studies alongside dispatcher wherever launches are initiated. Do not add
+it to Code Ocean or Beaker runtimes without evidence that an entrypoint reads
+study files after submission.
 
-Open a PR; **merge with merge commit** (not squash) per AGENTS.md §9.
+The required migration gate is the no-submit Beaker render plus HPC metadata
+test from Step 4. A minimal real launch is stronger but requires separate user
+authorization. If authorized, confirm the W&B run and committed launch record
+contain every exact provenance field. If authorization is declined or deferred,
+record that fact, create an owned follow-up issue for the live check, and allow
+the migration issue to close after all non-live acceptance criteria pass.
 
--> verify: dispatcher's CI still passes (if any).
--> verify: `git log --follow studies/01-gru-scaling-law/analysis/rl_baseline.py`
-   in dispatcher still shows history up to the removal commit.
-
-### Step 6 — Update Beaker / CO workflows
-
-Anywhere the CO capsule or Beaker templates hardcode `studies/...` paths,
-either:
-- update the path to point at `../aind-dynamic-foraging-bfm-studies/...` (side-by-side
-  layout also inside the container), or
-- clone the studies repo inside the container entrypoint.
-
-Verify by launching one small variant end-to-end after the split.
+Reconcile every issue checkbox before closure; do not use a PR auto-close while
+live verification remains outstanding.
 
 ## Verification checklist (end-to-end)
 
-Run in `aind-dynamic-foraging-bfm-studies/` after the split — every study has a `Makefile`;
-study 01 is the deepest regeneration test, but run all five:
+Run from a fresh clone of `aind-dynamic-foraging-bfm-studies` using the same
+offline commands CI uses. Network-backed W&B pulls remain separate producer
+targets, never CI prerequisites.
 
 ```bash
-source /allen/aind/scratch/han.hou/miniforge3/etc/profile.d/conda.sh
-conda activate dynamic-foraging-bfm-cpu
-for s in studies/0*/; do (cd "$s" && make all); done
+python3 -m pip install -r requirements-dev.txt
+for s in studies/0*/; do
+  if test -f "$s/Makefile"; then make -C "$s" all; else echo "EXEMPT $s"; fi
+done
 ```
 
-- [ ] `make all` exits 0 in every study that has one (`01`–`07`).
-      `08-hb-vs-gru-heldout` has no `Makefile` yet — see the 2026-09-01
-      re-verification; either normalize it first or record it as a known gap.
-- [ ] Regenerated JSONs are byte-identical to pre-split (aside from
-      `_meta.produced_at_pt`/`dispatcher_git_sha`).
-- [ ] Study 01's reports re-render identically between the `BEGIN/END`
-      markers.
-- [ ] `git log --follow studies/01-gru-scaling-law/analysis/rl_baseline.py`
-      shows commits going back to `1e30716`.
-- [ ] Dispatcher `git status` clean after the removal PR merges.
-- [ ] One trial launch from the studies repo (`launch_beaker_resumable.py
-      --help` at minimum) succeeds pointing at sibling dispatcher.
+- [ ] `MIGRATION.md` records the source repository, exact dispatcher/AGENTS
+      SHAs, filter-repo version, operator, assembly commit, initial-push/tag
+      exception, and every abandoned branch disposition.
+- [ ] Pre-edit source/extract tree manifests match exactly; every later changed
+      or added path appears in `migration/assembly-changes.tsv` with an allowed
+      reason.
+- [ ] Representative `git log --follow` checks across studies retain pre-split
+      history, including study 01 back through `1e30716`.
+- [ ] `migration/source-launch-records.sha256` verifies every historical
+      `launch_record/**` file byte-for-byte.
+- [ ] Every active cross-repo path resolves; every remaining old/absolute path
+      is classified as immutable history or intentional.
+- [ ] `make all` exits 0 for studies `01`–`07`; study 08 either passes its own
+      Makefile or has a visible, owned temporary CI exception.
+- [ ] The normalized artifact comparator reports no unclassified JSON, CSV,
+      report-block, image, numeric, or narrative difference.
+- [ ] New analysis JSON contains `_meta.studies_git_sha`,
+      `_meta.studies_git_dirty`, and the three exact sorted source-SHA arrays;
+      it never relabels the studies HEAD as dispatcher provenance.
+- [ ] External-sweep tests and the Beaker `--no-submit` record contain all exact
+      launch-record and W&B fields in the provenance schema table; Beaker and
+      HPC derive the same values.
+- [ ] Studies CI passes in a fresh clone; dispatcher CI passes after removal.
+- [ ] Repository visibility, `studies-split-v1` tag target, assembly SHA, and
+      `main` protection match the recorded decisions.
+- [ ] A real launch either passes with all four W&B source commits or is deferred
+      to a linked, owned follow-up issue with explicit user direction.
 
 ## Studies-repo `AGENTS.md` template
+
+The new file is deliberately self-contained for critical rules. Links provide
+detail; they do not substitute for rules an agent must obey from a studies-only
+checkout.
 
 ```markdown
 # AGENTS.md — aind-dynamic-foraging-bfm-studies
 
-Behavioural rules for this repo. Framework-wide rules (HPC safety,
-Conventional Commits, PR merge policy, Beaker scheduling, verify-with-data,
-posthoc-analysis, human-facing logs) live in the sibling repo
-`aind-dynamic-foraging-bfm-dispatcher` at `AGENTS.md` and are inherited by reference —
-do not duplicate here.
+Scientific study definitions, launch manifests, frozen inputs, analysis, and
+reports for dynamic-foraging-bfm. The sibling dispatcher owns launch/runtime
+control-plane code.
 
-## Studies-repo-specific rules
+## Required workflow
 
-- Every study is a subfolder of this repo root, laid out per
-  [`aind-dynamic-foraging-bfm-dispatcher/docs/study-organization.md`](../aind-dynamic-foraging-bfm-dispatcher/docs/study-organization.md).
-- Post-hoc analysis and reporting: per
-  [`aind-dynamic-foraging-bfm-dispatcher/docs/posthoc-analysis.md`](../aind-dynamic-foraging-bfm-dispatcher/docs/posthoc-analysis.md).
-- Launch commands assume `../aind-dynamic-foraging-bfm-dispatcher/` exists as a sibling
-  clone. See top-level `README.md` for the layout.
+- Every tracked change starts with an assigned GitHub issue on project 184.
+- One scientific question per `studies/NN-{model}-{purpose}/`; conditions are
+  self-contained variants, not new studies. Never renumber an accession.
+- Treat `launch_record/**` as immutable history. Do not rewrite old paths,
+  refs, names, or results to match the current tree.
+- Scientific launches use clean checkouts and immutable full SHAs for studies,
+  dispatcher, wrapper, and foraging-models. Always provide the required label
+  and scientific note; verify schedulable capacity before a large launch and
+  use only approved hub clusters.
+- Reports are code: regenerate from committed frozen inputs, keep W&B pull
+  caches ignored, and inspect numeric/artifact diffs before claiming a result.
+- Use Conventional Commits. Open a PR for changes; never squash-merge and never
+  merge any PR without explicit user confirmation. Resolve every review thread.
+- Never global-replace `disrnn`: it remains a model-family name and is also
+  frozen in historical records.
+
+## Repository relationship
+
+Launch commands assume this side-by-side layout:
+
+    aind-dynamic-foraging-bfm-dispatcher/
+    aind-dynamic-foraging-bfm-studies/
+
+From this repo, invoke launchers through
+`../aind-dynamic-foraging-bfm-dispatcher/code/`. The detailed operational rules
+and skills live in the dispatcher:
+
+- https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/blob/main/AGENTS.md
+- https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/tree/main/aind-behavior-foundation-model-skills
+- https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/blob/main/docs/study-organization.md
+
+Load `study-conventions`, `posthoc-reporting`, and the relevant launch skill
+before creating a study, producing a report, or submitting work.
 ```
 
 ## Non-goals (explicitly out of scope)
@@ -450,44 +707,40 @@ do not duplicate here.
 - **Do not** promote the `code/` launchers to a pip-installable package
   in this migration. That's a separate refactor; do it after the split
   proves stable.
-- **Do not** split individual studies into their own repos. One studies
-  monorepo suffices until we have >5 studies or a clear ownership boundary.
+- **Do not** split individual studies into their own repos. Eight studies
+  still share conventions, utilities, and ownership; revisit only when a clear
+  ownership or release boundary appears, not at an arbitrary study count.
 - **Do not** move `docs/` into the studies repo. Framework conventions
   belong with the framework; studies link back.
 - **Do not** rewrite dispatcher history (only `studies/` is filter-repo'd,
   and only in the extract clone).
 
-## Open questions (Q1, Q2, Q4 resolved 2026-07-16; Q3, Q6 resolve at execution)
+## Resolved decisions and execution-time checks
 
-1. **Path prefix in the new repo.** ~~Flat vs. prefixed?~~ **RESOLVED:
-   prefixed** (`studies/01-gru-scaling-law/`). Not just lower churn — the
-   launchers derive the W&B group by finding the literal `studies` path
-   component (`launch_hpc.py:218`, `launch_beaker_resumable.py:135`); flat
-   silently breaks group naming. See Decision section.
-2. **`.codeocean/` capsule scope.** **RESOLVED: launchers only.** Verified
-   via `.codeocean/app-panel.json`: the capsule's Reproducible Run executes
-   `code/launch_beaker.py` against `code/beaker/sweep_mvp.yaml` and writes a
-   launch record to `/results` — it never touches `studies/`. Nothing to
-   change in the capsule.
-3. **`code/config/`, `code/beaker/` templates.** Some templates
-   (`sweep_scaling.yaml`, `sweep_gru_scaling.yaml`) are named after
-   study 01 but live in dispatcher. Do they move with the studies
-   extract, or stay as reusable dispatcher templates? Recommend: stay in
-   dispatcher for now; extract to study-specific `variants/*/sweep.yaml`
-   only if a study needs a diverging copy.
-4. **`aind-dynamic-foraging-bfm-wrapper` version pin.** Each study's `environment.lock`
-   pins the wrapper; after the split those pins migrate with the studies.
-   **RESOLVED: yes**, the studies repo also pins dispatcher — one-line file
-   `.dispatcher_pin` alongside each `environment.lock`, stamped at launch
-   time like `_meta.dispatcher_git_sha` already is in analysis JSONs.
-5. **CI.** Dispatcher has no `.github/workflows/` today. If CI is added
-   before the split, does it run study Makefiles? If yes, split it too.
-6. **Existing branches on dispatcher.** After `studies/` is removed from
-   `main`, any long-lived feature branch that touched `studies/` becomes
-   painful to merge. Enumerate open branches first
-   (`gh pr list --state open --json headRefName,files`), rebase or close
-   before Step 5. (Checked 2026-07-16: zero open PRs — re-check at
-   execution time.)
+1. **Path prefix — resolved:** keep `studies/`. Both launchers derive W&B
+   study/variant metadata from that literal component. Flattening is a later
+   launcher-interface change, not part of this migration.
+2. **Code Ocean — resolved:** launcher/control-plane only. It does not consume
+   `studies/`; do not add a studies clone without evidence that a runtime path
+   needs it.
+3. **Shared dispatcher templates — resolved:** `code/config/` and
+   `code/beaker/` stay in dispatcher. Exact study-specific sweep and experiment
+   manifests stay under the variant. Move a template only when it stops being
+   shared, through a separate reviewed change.
+4. **Pins and provenance — superseded 2026-09-03:** do not treat one
+   `.dispatcher_pin` per study as authoritative history. Record resolved
+   studies, dispatcher, wrapper, and foraging-models SHAs per launch. A default
+   dispatcher ref may exist for convenience, but launch records and W&B
+   metadata are the source of truth.
+5. **CI — resolved:** the existing dispatcher workflow remains with launcher
+   tests. The studies repo gets an offline regeneration/provenance workflow and
+   its own pinned development dependencies.
+6. **Branches — execution-time hard gate:** enumerate open PRs and all remote
+   branches, including branches with no PR. No study commit may remain only off
+   `main` when extraction begins.
+7. **Visibility — execution-time user decision:** match the source repository
+   unless the user explicitly chooses otherwise. Public creation is never an
+   inferred default.
 
 ## Code Ocean: launch surface and archive, not a home (decided 2026-07-16)
 

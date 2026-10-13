@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "produced_by": "manual SLURM launch record",
+    "produced_at_pt": "2026-09-15T07:20:00-07:00",
+    "dispatcher_git_sha": "28b6a384e7bdb49b016f3b01551d6ce004ed49ca",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "foraging_models_git_sha": "75bcfebacfd99fd28c1656bb7c7c035a5415f548",
+    "wandb_groups": [
+      "costa-feedback-dependent-bias@slurm-26386087"
+    ]
+  },
+  "kind": "matched-half sensitivity",
+  "platform": "hpc",
+  "wandb_group": "costa-feedback-dependent-bias@slurm-26386087",
+  "wandb_run_id": "1qyvsk6u",
+  "slurm_job_id": "26386087",
+  "status": "completed",
+  "exit_code": "0:0",
+  "resources": {
+    "partition": "aind",
+    "cpus": 24,
+    "memory": "64G",
+    "gpu": false
+  },
+  "result": {
+    "heldout_trials": 162960,
+    "normalized_likelihood": 0.5851518426019356,
+    "ordered_trial_key_sha256": "cfb2fda156b6b3ff4e8e6b555c8b8267ac971964f0957795c9f3db968d09d4a7",
+    "artifact_digest": "4b923bfd13af5dbde9937197dbe24619"
+  },
+  "comparison": "Costa dual-rate learning plus fitted shape-choice bias under the shared matched-half session protocol"
+}

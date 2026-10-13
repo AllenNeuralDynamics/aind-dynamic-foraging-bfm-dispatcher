@@ -1,0 +1,19 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25582235",
+  "wandb_group": "findling-weber@slurm-25582235",
+  "wandb_run_id": "sls99so5",
+  "dispatcher_commit": "1248fdd5b05ade9ca006f4976e7cd5d6139c2273",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "eaeadec2a56c4a8099f3e8cfa315a9467c2f6a24",
+  "script": "studies/09-gru-cross-species-transfer/variants/findling-weber/findling_weber.slurm",
+  "dataset": "findling",
+  "fit_particles": 2,
+  "evaluation_particles": 256,
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-findling-weber-25582235",
+  "submitted_at": "2026-09-06T13:26:28-07:00",
+  "started_at": "2026-09-06T13:26:35-07:00",
+  "settled_at": "2026-09-06T13:27:20-07:00",
+  "status": "completed"
+}

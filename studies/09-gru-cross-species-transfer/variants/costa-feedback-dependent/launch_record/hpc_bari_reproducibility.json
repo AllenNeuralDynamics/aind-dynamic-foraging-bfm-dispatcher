@@ -1,0 +1,26 @@
+{
+  "_meta": {
+    "produced_by": "manual SLURM launch record",
+    "produced_at_pt": "2026-09-15T09:30:00-07:00",
+    "dispatcher_git_sha": "c58217e1164cda3929ce6905a0585b6f40b43810",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "foraging_models_git_sha": "f6e5d9aafaed45b60274546fd2b5e9635d80ce1a",
+    "wandb_groups": ["q-expanded-matched-half@slurm-26386210"]
+  },
+  "kind": "matched-half reproducibility rerun",
+  "platform": "hpc",
+  "wandb_group": "q-expanded-matched-half@slurm-26386210",
+  "wandb_run_id": "im1e7wb5",
+  "slurm_job_id": "26386210_7",
+  "status": "completed",
+  "exit_code": "0:0",
+  "resources": {"partition": "aind", "cpus": 24, "memory": "64G", "gpu": false},
+  "result": {
+    "heldout_trials": 162960,
+    "normalized_likelihood": 0.6310437182159756,
+    "ordered_trial_key_sha256": "cfb2fda156b6b3ff4e8e6b555c8b8267ac971964f0957795c9f3db968d09d4a7",
+    "artifact_digest": "19b5e26ad94fc1bd4cecece49906c248"
+  },
+  "comparison": "Fresh Costa Bari2019 common-Q rerun under the identical frozen matched-half protocol",
+  "interpretation": "The pooled held-out normalized likelihood reproduces the previous frozen value exactly to machine precision."
+}

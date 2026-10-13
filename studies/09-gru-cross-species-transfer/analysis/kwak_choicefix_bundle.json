@@ -1,0 +1,14 @@
+{
+  "beaker_dataset_id": "01M1VGY7MV148S9GWM2HW38FRQ",
+  "beaker_dataset_name": "study09-kwak-choicefix-20260906",
+  "beaker_workspace": "ai1/aind-dynamic-foraging-foundation-model",
+  "canonical_choice_contract": "0=left, 1=right",
+  "source_choice_contract": "0=right, 1=left",
+  "transformation": "animal_response = 1 - source_choice",
+  "files": {
+    "kwak.audit.json": "d01ebb90eeaa52cf635178ae4ec593605f681abd7a04e90bf4f740ef499e2aac",
+    "kwak.parquet": "e1639965875189986d0a8fef26a0e43cba74c341879927a2680fd1bed96de3b6",
+    "kwak.split.json": "f876fce2fa913aaa6da76ccc5b913d1a2c5b867f6e68f00c330e6bbf33563f5b"
+  },
+  "supersedes_kwak_in_beaker_dataset": "01M1TMMETY8M1V0F0E2V6XP146"
+}

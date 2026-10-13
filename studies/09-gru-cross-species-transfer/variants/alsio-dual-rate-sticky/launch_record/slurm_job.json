@@ -1,0 +1,29 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "26383281",
+  "wandb_group": "alsio-dual-rate-sticky@slurm-26383281",
+  "dispatcher_commit": "533a2dd783c3708e5e442478452a45552cf81829",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "d855a1a2b4075ee02c8d6597e97f768174eb031c",
+  "script": "studies/09-gru-cross-species-transfer/variants/alsio-dual-rate-sticky/alsio_dual_rate_sticky.slurm",
+  "dataset": "alsio",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-alsio-dual-rate-sticky-26383281",
+  "submitted_at": "2026-09-14T15:38:27-07:00",
+  "started_at": "2026-09-14T15:38:39-07:00",
+  "completed_at": "2026-09-14T15:55:55-07:00",
+  "elapsed": "00:17:16",
+  "exit_code": "0:0",
+  "wandb_run_id": "kt1u4q17",
+  "status": "success",
+  "outputs": {
+    "normalized_likelihood": 0.5274464368195364,
+    "accuracy": 0.6070405003743062,
+    "brier_score": 0.22559806266960244,
+    "n_trials": 225751,
+    "ordered_trial_key_sha256": "d36eca671a736fd0f91e322a04167e2e967253564405fe9f7fd0f71762c541f0",
+    "test_metrics_sha256": "0b96c937db6684443212a79644cccaa5cb76646b908647624b89378386e3d4be",
+    "test_trial_predictions_sha256": "08cb0e128156133e210cde3bb2dfa297d18c37ae33134e25d67034077457870a",
+    "baseline_rl_output_sha256": "cae47aef4c4211664c6825d1278cb3a7f440f0dad94bc985dde403c92a3bc228"
+  }
+}

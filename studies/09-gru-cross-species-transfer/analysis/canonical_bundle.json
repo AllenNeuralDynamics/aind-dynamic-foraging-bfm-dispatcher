@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "name": "study09-external-v1v2-20260905",
+  "beaker_dataset_id": "01M1TMMETY8M1V0F0E2V6XP146",
+  "beaker_workspace": "ai1/aind-dynamic-foraging-foundation-model",
+  "created_at": "2026-09-05T22:56:34-07:00",
+  "committed_at": "2026-09-05T22:56:43-07:00",
+  "file_count": 39,
+  "datasets": [
+    "grossman",
+    "chen",
+    "zid",
+    "lebedeva",
+    "beron",
+    "kwak",
+    "miller",
+    "findling",
+    "tang",
+    "alsio",
+    "eckstein",
+    "costa",
+    "lopez_mouse"
+  ],
+  "contents": "Canonical Parquet tables, v1/v2 split manifests, and exact-count source audits",
+  "digest_manifest": "analysis/dataset_suite_validation.json"
+}

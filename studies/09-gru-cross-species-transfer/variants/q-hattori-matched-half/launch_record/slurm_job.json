@@ -1,0 +1,18 @@
+{
+  "mode": "slurm-job",
+  "n_tasks": 1,
+  "slurm_job_id": "25585749",
+  "wandb_group": "q-hattori-matched-half@slurm-25585749",
+  "dispatcher_commit": "82924dc75bc4164a88c7d0f700ebb6020ce1e5f1",
+  "wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "script": "studies/09-gru-cross-species-transfer/variants/q-hattori-matched-half/q_hattori_matched_half.slurm",
+  "dataset": "hattori",
+  "canonical_data_root": "/allen/aind/scratch/han.hou/datasets/study09-hattori-canonical-20260907",
+  "output_root": "/allen/aind/scratch/han.hou/outputs/study09-q-hattori-25585749",
+  "submitted_at": "2026-09-07T19:20:01-07:00",
+  "started_at": "2026-09-07T19:20:02-07:00",
+  "wandb_run_id": "n8u5w9rv",
+  "status": "cancelled_superseded",
+  "superseded_reason": "Included Hattori training days 1-14; mature-only cohort required."
+}

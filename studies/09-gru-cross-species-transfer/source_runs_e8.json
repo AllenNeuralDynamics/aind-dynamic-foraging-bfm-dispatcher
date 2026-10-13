@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "entity": "AIND-disRNN",
+  "project": "mice_data_scaling",
+  "group": "e4-e8-d614-source@20260906-195409",
+  "source_beaker_experiment_id": "01M1WWK9HP269XQS440Y29631F",
+  "architecture": {
+    "model": "gru",
+    "hidden_size": 128,
+    "subject_embedding_size": 8
+  },
+  "source_dispatcher_commit": "ab399a50a736add59fcc189d0ac14e2dc6687279",
+  "source_wrapper_commit": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+  "source_foraging_models_commit": "faa0f5ad063e375765aa9c31c7d3fee5eca78ecf",
+  "checkpoint_policy": "best_eval",
+  "embedding_finetuning": {
+    "n_steps": 500,
+    "lr": 0.001,
+    "selection_policy": "fixed_final"
+  },
+  "runs": {
+    "e8-d614-s0": {
+      "nominal_D": 614,
+      "actual_n_source_subjects": 614,
+      "seed": 0,
+      "subject_embedding_size": 8,
+      "run_id": "e4-e8-d614-source-20260906-195409-4413e385",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-4413e385",
+      "artifact_id": "QXJ0aWZhY3Q6MzU1NDgxMjgwMw==",
+      "artifact_digest": "219c3741d6e0e74de1d4e2d0adbbc651",
+      "heldout_table_artifact_id": "QXJ0aWZhY3Q6MzU1NDkxMjcwNg==",
+      "heldout_table_artifact_digest": "0086432c807ee589fe1c9db8f7618816",
+      "beaker_job_id": "01M1WWK9ZRFQY79EK3R8KCV3PT",
+      "beaker_result_dataset_id": "01M1WWK9WG50PF4130CZ19QBGQ",
+      "heldout_final_eval_likelihood": 0.7292184829711914,
+      "heldout_final_train_likelihood": 0.7272206544876099
+    },
+    "e8-d614-s1": {
+      "nominal_D": 614,
+      "actual_n_source_subjects": 614,
+      "seed": 1,
+      "subject_embedding_size": 8,
+      "run_id": "e4-e8-d614-source-20260906-195409-849b588d",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-849b588d",
+      "artifact_id": "QXJ0aWZhY3Q6MzU1NDc3MjAwNA==",
+      "artifact_digest": "011c1f731c731ed6ed89f4daf27e589b",
+      "heldout_table_artifact_id": "QXJ0aWZhY3Q6MzU1NDg3MjcxMg==",
+      "heldout_table_artifact_digest": "9e5e3049b8e213af3f7ee120b4ece7dc",
+      "beaker_job_id": "01M1WWKA3EG8Q82CG7FE2QZXG5",
+      "beaker_result_dataset_id": "01M1WWK9ZYHJMT3AZJP49VKFFA",
+      "heldout_final_eval_likelihood": 0.7291982173919678,
+      "heldout_final_train_likelihood": 0.7271100282669067
+    },
+    "e8-d614-s2": {
+      "nominal_D": 614,
+      "actual_n_source_subjects": 614,
+      "seed": 2,
+      "subject_embedding_size": 8,
+      "run_id": "e4-e8-d614-source-20260906-195409-5c1c0d2c",
+      "wandb_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/runs/e4-e8-d614-source-20260906-195409-5c1c0d2c",
+      "artifact_id": "QXJ0aWZhY3Q6MzU1NDcyNzQ0OA==",
+      "artifact_digest": "3d771b5b33bc2ac4cdb1f165230624c8",
+      "heldout_table_artifact_id": "QXJ0aWZhY3Q6MzU1NDgzMTUxMg==",
+      "heldout_table_artifact_digest": "1b80d333b83bb3333a1067edcab34ca3",
+      "beaker_job_id": "01M1WWKA7DMX90CCHQZ9GAY91B",
+      "beaker_result_dataset_id": "01M1WWKA3JMEA6B2BFN7GF11SQ",
+      "heldout_final_eval_likelihood": 0.7291742563247681,
+      "heldout_final_train_likelihood": 0.7271637320518494
+    }
+  },
+  "frozen_at_pt": "2026-09-07T07:09:41-07:00"
+}

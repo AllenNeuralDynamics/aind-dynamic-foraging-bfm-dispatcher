@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "produced_by": "launch_record.write_intervention",
+    "produced_at_pt": "2026-09-14T15:55:10-07:00",
+    "dispatcher_git_sha": "05e56ed62359a460d86e37affd885b97e3821a23",
+    "wrapper_git_sha": "9595dd371ab87de49c281d8ca4bb6ae8af7c32e4",
+    "wandb_groups": [
+      "costa-feedback-dependent@slurm-26383372"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "hpc",
+  "wandb_group": "costa-feedback-dependent@slurm-26383372",
+  "job_refs": [
+    {
+      "type": "slurm_job",
+      "id": "26383372"
+    }
+  ],
+  "supersedes": [
+    "26383290"
+  ],
+  "trigger": {
+    "symptom": "The first canonical-data resubmit fit continuous value trajectories across multiple real stimulus blocks.",
+    "cause": "The generic runner reset latent values at session boundaries, but Costa et al. reset acquisition values at each 80-trial stimulus block.",
+    "evidence": {
+      "cancelled_job": "26383290",
+      "paper_section": "Costa et al. 2016 Computational modeling, Reinforcement learning model",
+      "source_block_column": "source_block"
+    }
+  },
+  "tasks": [
+    {
+      "orig_slurm_job": "26383290",
+      "new_slurm_job": "26383372"
+    }
+  ],
+  "deviations": {
+    "fresh_run_ids": true,
+    "fresh_group": true,
+    "blockwise_value_reset": true,
+    "dispatcher_commit": {
+      "from": "549270cfdd605bd8a96f1efb0e9eefefdabf6bc4",
+      "to": "05e56ed62359a460d86e37affd885b97e3821a23"
+    }
+  },
+  "cost": {
+    "cancelled_wall_time_seconds": 442
+  }
+}
