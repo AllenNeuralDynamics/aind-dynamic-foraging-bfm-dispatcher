@@ -1,0 +1,56 @@
+# HB one-stage ladder on Beaker — production rungs.
+#
+# One grid point per rung of study 01's D dial. D≈30 (0.049) is the baseline rung;
+# add 0.163 (D≈101) here once D≈30 has landed.
+#
+# Fixed values live in the configs, not in this file:
+#   data   -> code/config/data/mice_snapshot_scaling.yaml   (study 01's own file)
+#   model  -> code/config/model/hb_hattori.yaml
+# This sweep only selects them and declares the grid axis.
+#
+# `wandb.project` MUST appear in `command:` below and not only in the top-level
+# `project:` key. The resumable launcher sets the W&B *group* only; the project comes
+# from Hydra, whose default is `test`. The top-level `project:` is read exclusively by
+# the native wandb controller, which this route does not use.
+#
+# Project is study 01's `mice_data_scaling`, deliberately — see notes.md "Deviations".
+
+entity: AIND-disRNN
+project: mice_data_scaling
+name: hb-one-stage-beaker
+
+method: grid
+metric:
+  name: heldout/eval_likelihood
+  goal: maximize
+
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=hb_hattori
+  - seed=0
+  - wandb.entity=AIND-disRNN
+  - wandb.project=mice_data_scaling
+  - ${args_no_hyphens}
+
+parameters:
+  data.subject_ratio:
+    # The full ladder against the ~614 pool, seed 0. Each rung has a GRU counterpart in
+    # studies/01-gru-scaling-law/scaling_results.csv, which is the whole point of reusing study
+    # 01's cohort and project — its D column carries 10, 29/30, 99/101, 300/301 and 614, so
+    # every rung below is directly comparable and none of them is a new cell.
+    #
+    #   0.016 -> D≈10    0.049 -> D≈30    0.163 -> D≈100    0.489 -> D≈300
+    #
+    # Run as one grid so the rungs schedule independently and a failure at one D does not
+    # take the others down.
+    #
+    # D≈10 is here as a cheap FALSIFIER, not as a result: at ~1 h it reports back long
+    # before the others, and if 2000 warmup still leaves divergences at the mildest funnel
+    # in the ladder, the settings are wrong everywhere above it and the remaining rungs
+    # should be cancelled rather than left to burn. The converse does not hold — D≈10
+    # passing says little about D≈300, because the group-scale funnel deepens as subjects
+    # are added, which is exactly what sank the 500-warmup D≈30.
+    values: [0.016, 0.049, 0.163, 0.489]

@@ -58,8 +58,8 @@
   ],
   "deviations": {
     "record_origin": "Written after the fact (2026-10-13) from the job's own Beaker status and entrypoint log, plus the W&B run config. It was not produced by the launcher at submission time.",
-    "submitted_spec_retained": false,
-    "submitted_spec_note": "The rendered experiment_resumable_submitted.yaml for this submission was lost with scratch space, and the Beaker client in use cannot fetch a submitted spec back. The commits above are the SHAs the container entrypoint reports having checked out, which is stronger evidence of what ran than a spec would be. The exact launched command line is in the job log; its subject_ratio argument was cut off in the log line and is confirmed from the W&B config (0.049).",
+    "submitted_spec_retained": true,
+    "submitted_spec_note": "CORRECTION: an earlier version of this record said the submitted spec could not be fetched back from Beaker. That was wrong: experiment.spec() returns it. The spec as Beaker holds it is in beaker_diag/experiment_resumable_submitted.yaml. It is the server-side representation, not the launcher's pre-submit render, so key order and defaults may differ from that file. Its refs (dispatcher a3c9bfc, wrapper 08efa82, models 459c05c, all full SHAs) equal the SHAs the container logged, which is asserted, and its command carries data.subject_ratio=0.049.",
     "commits_reachable_from_main": "All three are ancestors of today's main on their repos. The wrapper commit is a feature commit (feat(hb): collect the sampler diagnostics ...), not a merge to main at the time of the run.",
     "_meta_note": "_meta describes this record's producer, not the run: its commit fields are the sandbox checkout at write time. The run's own commits are under tasks[0].executed_commits."
   },

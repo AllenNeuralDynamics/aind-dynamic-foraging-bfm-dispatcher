@@ -1,0 +1,41 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 2,
+  "experiment_id": "01M1PGEPRYGY542Y5JBQB17EED",
+  "experiment_url": "https://beaker.org/ex/01M1PGEPRYGY542Y5JBQB17EED",
+  "dispatcher_commit": "bb902bc5127fa5f5ddccb6e15ee1866eb1ae9752",
+  "sweep_file": "studies/08-hb-vs-gru-heldout/variants/one-stage-ladder/sweep_beaker_draws.yaml",
+  "created_utc": "2026-09-04 15:26:33.758499+00:00",
+  "wandb_group": "one-stage-ladder@20260904-082628",
+  "beaker_label": "draws-2000",
+  "cluster": [
+    "ai1/octo-hub-onprem-h200"
+  ],
+  "resources": {
+    "gpuCount": 1,
+    "memory": "128 GiB"
+  },
+  "wrapper_commit": "610519ededa1b6a0dc8d5891bdc436f39166352f",
+  "foraging_models_commit": "459c05c38332eb5c954e7cbca328f0a0fe370891",
+  "tasks": [
+    {
+      "task": "one-stage-ladder-20260904-082628-000",
+      "subject_ratio": 0.016,
+      "wandb_run_id": "one-stage-ladder-20260904-082628-dd76b428",
+      "state": "exit 0",
+      "started_utc": "2026-09-04 15:27:16",
+      "exited_utc": "2026-09-05 19:17:37",
+      "wall_hours": 27.84
+    },
+    {
+      "task": "one-stage-ladder-20260904-082628-001",
+      "subject_ratio": 0.049,
+      "wandb_run_id": "one-stage-ladder-20260904-082628-c918dd65",
+      "state": "exit 0",
+      "started_utc": "2026-09-04 15:27:16",
+      "exited_utc": "2026-09-05 11:01:57",
+      "wall_hours": 19.58
+    }
+  ],
+  "record_note": "Written after the fact (2026-10-13), not by the launcher. Draws probe: D~10 and D~29 at warmup 2000 and 2000 draws, after the instrumented run ruled out tree-depth truncation, adaptation and heavy tails. Two parallel tasks. Commits are the SHAs the container entrypoint logged and they equal the submitted spec's refs (asserted). Each task's subject_ratio is from the spec's own command and equals the ratio in that job's log (asserted); task order is never assumed. The extra fields wrapper_commit, foraging_models_commit, wandb_group, cluster, resources and tasks were added by hand."
+}
