@@ -4,6 +4,7 @@ slug: frozen-random-reservoir
 status: draft
 authors: [han]
 wandb_groups:
+  - v2-sc-active@20260622-144622
   - frozen-random-core-d614@20260908-045745
   - heldout-rerun-v2-retry@20260623-065818
   - frozen-random-core-h128-dcurve@20260908-111444

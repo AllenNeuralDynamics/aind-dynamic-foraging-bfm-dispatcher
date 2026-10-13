@@ -8,6 +8,23 @@ Are the dynamics of an untrained frozen random GRU reservoir sufficient for
 generalization from source-training AIND subjects to held-out AIND subjects, or
 does the Study 01 result require learned recurrent dynamics?
 
+## Verdict
+
+The native frozen reservoir remains near 0.711 likelihood across D=10–614,
+while the trained GRU improves from 0.7218 to 0.7282. In the exact D=614
+comparison, the mean paired difference is -0.016328 (subject-bootstrap 95% CI
+[-0.017289, -0.015381]), below the predeclared -0.002 non-inferiority margin.
+This control supports a benefit from learned dynamics under the tested training
+and adaptation procedure; it does not rule out tuned reservoirs.
+
+## Variants
+
+| Variant | Status | W&B group | Beaker experiment |
+|---|---|---|---|
+| D=614 exact-split replication | Complete, three seeds | `frozen-random-core-d614@20260908-045745` | [01M20E3AD2T3EMMAZ9VEYA8267](https://beaker.org/ex/01M20E3AD2T3EMMAZ9VEYA8267) |
+| H128 curve, D=10–300 | Complete, twelve cells | `frozen-random-core-h128-dcurve@20260908-111444` | [01M213NMJA2PSGPWX5EN28FYZM](https://beaker.org/ex/01M213NMJA2PSGPWX5EN28FYZM) |
+| D=614 curve point | Complete, three pilot seeds; accepted cohort drift | `frozen-random-core-d614@20260907-175533`, `frozen-random-core-d614@20260907-184115` | [seed 0](https://beaker.org/ex/01M1Z86SE16551913JFAA8D189), [seeds 1–2](https://beaker.org/ex/01M1ZATF3VZS00RZ82JQTWWQSG) |
+
 ## Design
 
 - Positive control: immutable Study 01 v2 trained-GRU curve.
@@ -80,6 +97,9 @@ W&B group `frozen-random-core-h128-dcurve@20260908-111444`.
 All 12 curve cells completed successfully. The frozen, reproducible results and
 the separate exact-split D=614 sensitivity replication are in
 [`analysis/reports/r1-frozen-random-reservoir.md`](analysis/reports/r1-frozen-random-reservoir.md).
+
+`make -C studies/10-gru-reservoir-ablation r1` regenerates the report offline;
+`make -C studies/10-gru-reservoir-ablation validate` checks its launch records.
 
 ## Scope boundary
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-13
+
+- Wrapped plot labels and added all five D tick labels plus the seed-SD caption.
+- Completed the provenance for published curve/paired results and original
+  Study 01 reference cells without changing their likelihood values.
+- Fixed validation of native launcher records in labeled launch directories;
+  kept the original submitted specifications intact.
+
 ## 2026-09-07
 
 - Created the H128/D614/E4 frozen-random reservoir control.

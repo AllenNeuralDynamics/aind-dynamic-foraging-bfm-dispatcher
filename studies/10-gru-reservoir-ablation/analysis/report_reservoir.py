@@ -137,7 +137,7 @@ def _make_figure(
         ]
     )
 
-    figure, axes = plt.subplots(1, 2, figsize=(10.5, 4.2))
+    figure, axes = plt.subplots(1, 2, figsize=(12, 5))
     axis = axes[0]
     axis.plot(ds, means, color="#7DB7E8", marker="o", label="Trained GRU (E=4)")
     axis.fill_between(ds, means - sds, means + sds, color="#7DB7E8", alpha=0.18)
@@ -179,8 +179,9 @@ def _make_figure(
         label="Exact-split D=614 replication",
     )
     axis.set_xscale("log")
+    axis.set_xticks(ds, labels=[str(d) for d in ds])
     axis.set_xlabel("Source-training subjects (D)")
-    axis.set_ylabel("Held-out-subject normalized likelihood")
+    axis.set_ylabel("Held-out-subject\nnormalized likelihood", fontsize=16)
     axis.set_title("Source-domain generalization")
     axis.legend(frameon=False, fontsize=8)
 
@@ -211,11 +212,11 @@ def _make_figure(
     axis.set_xlim(-0.55, 0.55)
     axis.set_xticks([0])
     axis.set_xticklabels(["Reservoir - trained GRU"])
-    axis.set_ylabel("Paired normalized-likelihood difference")
+    axis.set_ylabel("Paired normalized-likelihood\ndifference", fontsize=16)
     axis.set_title(f"Held-out subjects (n={len(values)})")
     axis.legend(frameon=False, fontsize=8, loc="lower right")
     figure.tight_layout()
-    figure.savefig(FIGURE, dpi=180)
+    figure.savefig(FIGURE, dpi=180, bbox_inches="tight")
     plt.close(figure)
 
 
@@ -234,7 +235,10 @@ def main() -> None:
     curve_summary = _curve_summary(reference, curve)
     reservoir_values = [item["heldout_likelihood"] for item in data["reservoir"]]
     trained_values = [item["heldout_likelihood"] for item in data["trained_gru"]]
-    groups = data["_meta"]["wandb_groups"] + curve["_meta"]["wandb_groups"]
+    groups = list(dict.fromkeys(
+        data["_meta"]["wandb_groups"] + curve["_meta"]["wandb_groups"]
+        + reference["_meta"]["wandb_groups"]
+    ))
     summary = {
         "_meta": build_meta(
             "analysis/report_reservoir.py", groups, study_root=STUDY
@@ -265,6 +269,11 @@ def main() -> None:
         for cell in curve_summary
     )
     result = f"""![Reservoir comparison](../fig_reservoir_vs_trained.png)
+
+Left: pooled held-out normalized likelihood; each small dot is one source seed,
+with curves showing three-seed means and shading/error bars showing seed SD.
+Purple crosses are the separate exact-split D=614 replication. Right: seed-averaged
+paired differences for 149 held-out mice, with the mean and subject-bootstrap 95% CI.
 
 | nominal D | realized D by seed | trained GRU | frozen reservoir | reservoir − trained |
 |---:|---|---:|---:|---:|

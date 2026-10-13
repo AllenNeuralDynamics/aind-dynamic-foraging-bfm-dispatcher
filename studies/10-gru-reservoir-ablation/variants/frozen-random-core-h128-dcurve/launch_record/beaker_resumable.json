@@ -3,7 +3,8 @@
   "n_tasks": 12,
   "experiment_id": "01M213NMJA2PSGPWX5EN28FYZM",
   "experiment_url": "https://beaker.org/ex/01M213NMJA2PSGPWX5EN28FYZM",
-  "dispatcher_commit": null,
+  "dispatcher_commit": "53efa6b047ac7080a3fc4468c0cbeac1afc1a65d",
+  "dispatcher_commit_source": "Recovered from the submitted spec DISPATCHER_REF; verified against the Beaker job specs on 2026-10-13",
   "sweep_file": "studies/10-gru-reservoir-ablation/variants/frozen-random-core-h128-dcurve/sweep.yaml",
   "created_utc": "2026-09-08T18:14:49.731689+00:00"
 }

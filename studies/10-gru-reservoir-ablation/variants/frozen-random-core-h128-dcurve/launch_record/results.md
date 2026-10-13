@@ -5,7 +5,11 @@
 - Beaker experiment:
   [`01M213NMJA2PSGPWX5EN28FYZM`](https://beaker.org/ex/01M213NMJA2PSGPWX5EN28FYZM)
 - Resources: 12 independent one-H200 GPU tasks, 12 CPU, 90 GiB each.
+- Cluster/priority: `ai1/octo-hub-onprem-h200`, normal, non-preemptible.
+- Submitted: 2026-09-08 11:14 PT.
+- Settled: 2026-09-09 06:11 PT (last Beaker job finalized).
 - Status: all 12 cells completed successfully at 90,000 training steps.
+- Feeds: [Report 1](../../../analysis/reports/r1-frozen-random-reservoir.md), D=10–300 curve points.
 
 | nominal D | realized D by seed | frozen-reservoir mean likelihood |
 |---:|---|---:|
@@ -17,4 +21,3 @@
 Every run passed the full frozen-parameter audit: the GRU and session-conditioning
 parameters were bitwise unchanged; source embeddings and readout parameters changed.
 The D=614 curve cell is recorded separately as the accepted pilot in Report 1.
-
