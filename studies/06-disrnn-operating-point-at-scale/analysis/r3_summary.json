@@ -1,7 +1,7 @@
 {
   "_meta": {
     "produced_by": "analysis/r3_penalty_edge_extension.py",
-    "produced_at_pt": "2026-09-14T15:18:15-07:00",
+    "produced_at_pt": "2026-10-13T15:15:43-07:00",
     "dispatcher_git_sha": null,
     "wrapper_git_sha": null,
     "wandb_groups": [

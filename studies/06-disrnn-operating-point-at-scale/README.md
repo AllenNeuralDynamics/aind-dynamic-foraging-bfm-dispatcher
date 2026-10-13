@@ -101,8 +101,8 @@ true optimum; (2) training-step count as a tunable.
 
   **Results (r3, 2026-09-14) — 8/8 runs finished, verified independently via W&B GraphQL.**
   The two lighter-penalty axes disagree. The **global-β axis** (mult=1 fixed) keeps improving
-  past `mult-d-grid`'s tested floor: β=1e-4 beats β=3e-4 by +0.0020 at D=614 (≈5σ against this
-  cell's own seed SEM) and +0.0038 at D=300 — a new best point at both cohorts — while the
+  past `mult-d-grid`'s tested floor: β=1e-4 beats β=3e-4 by +0.0020 at D=614 (≈5σ against the
+  combined SEM of the old and new two-seed cells) and +0.0038 at D=300 — a new best point at both cohorts — while the
   generalization gap stays flat rather than shrinking further (0.0069→0.0069 at D=614). The
   **interaction-multiplier axis** (β=3e-4 fixed) reverses instead of extending: mult=1 turns
   out to be an interior peak on both held-out likelihood and the gap, and the new mult=0.5

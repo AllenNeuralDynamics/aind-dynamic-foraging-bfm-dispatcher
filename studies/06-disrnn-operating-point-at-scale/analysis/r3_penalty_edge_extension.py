@@ -22,11 +22,12 @@ outside the D in {300,614}/beta,mult settings compared here EXCEPT one -- see NO
 OUTPUTS:
   analysis/r3_summary.json               - curated per-(D,mult,beta) stats + provenance
   analysis/reports/fig_r3_penalty_edge_extension.png - the verdict figure
-Does NOT regenerate reports/r3-penalty-edge-extension.md -- unlike scaling_report.py (r2), this
-producer has no markdown-block updater; the report's prose and tables were written by hand
-against this script's output and must be checked/updated by hand if grid.csv or grid_wave2.csv
-changes. If the report needs to track this producer's numbers automatically in the future,
-implement an updater following scaling_report.py's pattern rather than assuming one exists.
+Regenerates the <!-- BEGIN result-1 --> (beta-axis table) and <!-- BEGIN result-2 -->
+(multiplier-axis table) blocks in reports/r3-penalty-edge-extension.md, following
+scaling_report.py's (r2) update_report_block pattern -- the two data tables are producer-owned;
+everything outside the marker pairs (prose, caveats, the "what it says" discussion) is
+hand-written and untouched by a re-run. Re-running this script twice on unchanged
+grid.csv/grid_wave2.csv must produce an EMPTY diff on the report file.
 """
 from __future__ import annotations
 
@@ -50,6 +51,7 @@ from _meta import build_meta  # noqa: E402
 GRID_CSV = HERE / "grid.csv"
 WAVE2_CSV = HERE / "grid_wave2.csv"
 FIG = HERE / "reports" / "fig_r3_penalty_edge_extension.png"
+REPORT = HERE / "reports" / "r3-penalty-edge-extension.md"
 WANDB_GROUPS = [
     "mult-d-grid@20260718-151409",
     "wave2-step-budget-and-penalty-extension@20260909-021546",
@@ -110,6 +112,58 @@ def cell_stats(rows: list[dict], D_nom: int, mult: float, beta: float) -> dict:
     }
 
 
+def _find_cell(cells: list[dict], D: int, mult: float, beta: float) -> dict | None:
+    for c in cells:
+        if c["D"] == D and abs(c["mult"] - mult) < 1e-6 and abs(c["beta"] - beta) < 1e-9:
+            return c
+    return None
+
+
+def update_report_block(cells: list[dict]) -> None:
+    """Regenerate the beta-axis (result-1) and multiplier-axis (result-2) tables in
+    reports/r3-penalty-edge-extension.md from this run's `cells`. Mirrors
+    scaling_report.py's update_report_block (r2) / model_selection.py's (r1): a producer-owned
+    <!-- BEGIN result-N --> / <!-- END result-N --> block pair per table; everything outside
+    the markers (prose, caveats) is hand-written and untouched.
+    """
+    if not REPORT.exists():
+        return
+    text = REPORT.read_text()
+
+    # result-1: beta axis (mult=1 fixed), heavy -> light, with Delta(new-old) and its z-score
+    # against the COMBINED SEM of the old (beta=3e-4) and new (beta=1e-4) two-seed cells --
+    # never the new cell's own SEM alone (see the Copilot-flagged 2026-09 correction).
+    beta_lines = ["| D | β=1e-3 | β=3e-4 (old tuned pt.) | β=1e-4 (new) | Δ (new − old) |",
+                  "|---|---|---|---|---|"]
+    for D in (300, 614):
+        heavy = _find_cell(cells, D, 1.0, 0.0010)
+        old = _find_cell(cells, D, 1.0, 0.0003)
+        new = _find_cell(cells, D, 1.0, 0.0001)
+        delta = new["heldout_mean"] - old["heldout_mean"]
+        combined_sem = np.sqrt(old["heldout_sem"] ** 2 + new["heldout_sem"] ** 2)
+        z = delta / combined_sem
+        beta_lines.append(
+            f"| {D} | {heavy['heldout_mean']:.4f} | {old['heldout_mean']:.4f} | "
+            f"**{new['heldout_mean']:.4f}** | +{delta:.4f} (z≈{z:.1f}) |"
+        )
+    block1 = "<!-- BEGIN result-1 -->\n" + "\n".join(beta_lines) + "\n<!-- END result-1 -->"
+    text = re.sub(r"<!-- BEGIN result-1 -->.*?<!-- END result-1 -->", block1, text, flags=re.S)
+
+    # result-2: interaction-multiplier axis (beta=3e-4 fixed), mult 10 -> 0.5; mult=1 bolded
+    # as the old tuned point (and, per r3's verdict, the interior peak on this axis).
+    mult_lines = ["| D | mult=10 | 5 | 2 | 1 (old tuned pt.) | 0.5 (new) |",
+                  "|---|---|---|---|---|---|"]
+    for D in (300, 614):
+        vals = [_find_cell(cells, D, m, 0.0003) for m in (10.0, 5.0, 2.0, 1.0, 0.5)]
+        cols = [f"**{v['heldout_mean']:.4f}**" if m == 1.0 else f"{v['heldout_mean']:.4f}"
+                for m, v in zip((10.0, 5.0, 2.0, 1.0, 0.5), vals)]
+        mult_lines.append(f"| {D} | " + " | ".join(cols) + " |")
+    block2 = "<!-- BEGIN result-2 -->\n" + "\n".join(mult_lines) + "\n<!-- END result-2 -->"
+    text = re.sub(r"<!-- BEGIN result-2 -->.*?<!-- END result-2 -->", block2, text, flags=re.S)
+
+    REPORT.write_text(text)
+
+
 def main() -> None:
     orig = read_csv_usable(GRID_CSV)
     wave2 = read_csv_usable(WAVE2_CSV)
@@ -164,6 +218,9 @@ def main() -> None:
 
     make_figure(all_rows, beta_axis_settings, mult_axis_settings)
     print(f"wrote {FIG}")
+
+    update_report_block(cells)
+    print(f"updated {REPORT}")
 
 
 def make_figure(all_rows, beta_axis_settings, mult_axis_settings):

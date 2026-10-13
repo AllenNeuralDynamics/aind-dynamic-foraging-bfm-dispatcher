@@ -13,9 +13,12 @@ Writes analysis/grid_wave2.csv -- one row per run: D, mult, beta, seed, state, h
 
 NOTE on sandbox execution: ``wandb.Api()`` fails in the Claude Science Mac sandbox (spawns a
 blocked ``wandb-core`` helper subprocess). This script is written for a working wandb SDK
-environment (HPC login node, or any machine with normal wandb auth) per pull_grid.py's own
-convention. When run from the sandbox, use the GraphQL route documented in the
-posthoc-reporting skill's ``references/wandb-graphql-sandbox.md`` instead (same output schema).
+environment with normal wandb auth, per pull_grid.py's own convention -- that means an
+authenticated HPC *compute* node reached via ``srun``/``sbatch`` (never the login node; see
+AGENTS.md Sec 5, HPC Execution Safety), not any machine with wandb credentials. When run
+from the sandbox (where the SDK route above is unavailable), use the GraphQL route documented
+in the posthoc-reporting skill's ``references/wandb-graphql-sandbox.md`` instead (same output
+schema) -- that is the route this study's own r3 producer actually used.
 """
 from __future__ import annotations
 

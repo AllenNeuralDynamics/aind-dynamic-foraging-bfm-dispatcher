@@ -35,8 +35,9 @@ reported at launch close-out.
 **Verdict: no single answer — the two axes disagree.** Lightening the **global penalty β** (mult=1
 fixed) keeps helping past the tested floor: held-out likelihood rises monotonically at **both**
 D=300 and D=614 as β drops from 1e-3 → 3e-4 → 1e-4, with the new point beating the old tuned point
-by a margin that clears seed noise (D=614: +0.0020, ≈5σ against this cell's own combined SEM;
-D=300: +0.0038, ≈2.4σ). Lightening only the **interaction multiplier** (β=3e-4 fixed, mult=1→0.5)
+by a margin that clears seed noise (D=614: +0.0020, ≈5σ against the combined SEM of the old
+(β=3e-4) and new (β=1e-4) two-seed cells; D=300: +0.0038, ≈2.4σ by the same combined-SEM
+calculation). Lightening only the **interaction multiplier** (β=3e-4 fixed, mult=1→0.5)
 does the opposite: held-out likelihood **drops** relative to mult=1 at both D, and mult=1 turns out
 to be an interior peak on this axis, not an edge — the "does the edge keep improving" hypothesis is
 confirmed on the β axis and rejected on the multiplier axis.
@@ -48,10 +49,12 @@ confirmed on the β axis and rejected on the multiplier axis.
 **1. The β axis has not converged — mult=1, β=1e-4 is the new best point tested, at both cohort
 sizes.**
 
+<!-- BEGIN result-1 -->
 | D | β=1e-3 | β=3e-4 (old tuned pt.) | β=1e-4 (new) | Δ (new − old) |
 |---|---|---|---|---|
 | 300 | 0.7167 | 0.7192 | **0.7229** | +0.0038 (z≈2.4) |
 | 614 | 0.7160 | 0.7221 | **0.7241** | +0.0020 (z≈5.2) |
+<!-- END result-1 -->
 
 (mult=1 throughout; n=2 seeds/cell; z = Δ / combined SEM of the two cells being compared.) The
 D=614 jump clears seed noise convincingly; the D=300 jump is directionally identical and a smaller,
@@ -71,10 +74,12 @@ tuned point (r2 point 5), now shown to extend past the original grid's edge too.
 At fixed β=3e-4, held-out likelihood across mult∈{10,5,2,1,0.5} is **not** monotonic in mult — it
 dips through mult=5→2, peaks sharply at mult=1, then drops again at the new mult=0.5 point:
 
+<!-- BEGIN result-2 -->
 | D | mult=10 | 5 | 2 | 1 (old tuned pt.) | 0.5 (new) |
 |---|---|---|---|---|---|
 | 300 | 0.7170 | 0.7184 | 0.7183 | **0.7192** | 0.7168 |
 | 614 | 0.7191 | 0.7183 | 0.7164 | **0.7221** | 0.7207 |
+<!-- END result-2 -->
 
 mult=1 is simultaneously the best point on held-out likelihood *and* the smallest generalization gap
 on this axis (D=614 gap: 0.0071, 0.0079, 0.0084, **0.0069**, 0.0076 for mult=10→0.5) — going lighter
