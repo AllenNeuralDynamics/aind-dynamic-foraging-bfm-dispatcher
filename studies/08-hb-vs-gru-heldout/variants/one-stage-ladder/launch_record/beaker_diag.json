@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "produced_by": "manual backfill 2026-10-13 via launch_record.write_intervention",
+    "produced_at_pt": "2026-10-13T15:11:20-07:00",
+    "dispatcher_git_sha": "90359afe5c965dff77356ddcc8a5b4d48b9cb3d6",
+    "wrapper_git_sha": null,
+    "wandb_groups": [
+      "one-stage-ladder@20260903-230522"
+    ]
+  },
+  "kind": "probe",
+  "platform": "beaker",
+  "wandb_group": "one-stage-ladder@20260903-230522",
+  "job_refs": [
+    {
+      "type": "beaker_experiment",
+      "id": "01M1NGB9S8TAP8MH3R165T6RSC"
+    }
+  ],
+  "supersedes": [],
+  "trigger": {
+    "symptom": "The D~29 rung at warmup 2000 / 500 draws / 4 chains had zero divergences but failed the ESS and R-hat gates (bulk ESS roughly 100, R-hat roughly 1.04; the figures are quoted from sweep_beaker_diag.yaml's header, not re-derived here).",
+    "cause": "Unknown at launch. Two hypotheses were under test: trajectories truncated at max_tree_depth (slow mixing with no divergences, cheap to fix) versus genuinely slow mixing (fixed by more draws). The run changes no sampler setting; it only collects the extra NUTS fields (num_steps, energy, accept_prob) that distinguish them.",
+    "evidence": [
+      "Beaker experiment 01M1MQB0SRRBDDRKP1SX3T55DV (the ladder wave that produced the failing D~29 rung)",
+      "sweep_beaker_diag.yaml in this variant"
+    ]
+  },
+  "tasks": [
+    {
+      "beaker_experiment": "01M1NGB9S8TAP8MH3R165T6RSC",
+      "wandb_run": "one-stage-ladder-20260903-230522-24405066",
+      "grid": {
+        "data.subject_ratio": [
+          0.049
+        ]
+      },
+      "settings": {
+        "num_warmup": 2000,
+        "num_samples": 500,
+        "num_chains": 4,
+        "seed": 0,
+        "subjects": 29
+      },
+      "executed_commits": {
+        "dispatcher": "a3c9bfc243086c64bb1464d8eee6924a6874ead8",
+        "wrapper": "08efa82f4ce1f9d26582cd0ea3947f975bbefadf",
+        "foraging_models": "459c05c38332eb5c954e7cbca328f0a0fe370891"
+      },
+      "outcome": {
+        "exit_code": 0,
+        "started": "2026-09-04T06:05:46Z",
+        "exited": "2026-09-04T19:35:52Z",
+        "wall_time": "13h30m06s",
+        "wandb_state": "finished"
+      }
+    }
+  ],
+  "deviations": {
+    "record_origin": "Written after the fact (2026-10-13) from the job's own Beaker status and entrypoint log, plus the W&B run config. It was not produced by the launcher at submission time.",
+    "submitted_spec_retained": false,
+    "submitted_spec_note": "The rendered experiment_resumable_submitted.yaml for this submission was lost with scratch space, and the Beaker client in use cannot fetch a submitted spec back. The commits above are the SHAs the container entrypoint reports having checked out, which is stronger evidence of what ran than a spec would be. The exact launched command line is in the job log; its subject_ratio argument was cut off in the log line and is confirmed from the W&B config (0.049).",
+    "commits_reachable_from_main": "All three are ancestors of today's main on their repos. The wrapper commit is a feature commit (feat(hb): collect the sampler diagnostics ...), not a merge to main at the time of the run.",
+    "_meta_note": "_meta describes this record's producer, not the run: its commit fields are the sandbox checkout at write time. The run's own commits are under tasks[0].executed_commits."
+  },
+  "cost": {}
+}
