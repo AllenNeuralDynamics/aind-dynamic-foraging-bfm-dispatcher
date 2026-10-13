@@ -38,7 +38,7 @@ command:
 parameters:
   data.subject_ratio:
     # The full ladder against the ~614 pool, seed 0. Each rung has a GRU counterpart in
-    # ../01-gru-scaling-law/scaling_results.csv, which is the whole point of reusing study
+    # studies/01-gru-scaling-law/scaling_results.csv, which is the whole point of reusing study
     # 01's cohort and project — its D column carries 10, 29/30, 99/101, 300/301 and 614, so
     # every rung below is directly comparable and none of them is a new cell.
     #
