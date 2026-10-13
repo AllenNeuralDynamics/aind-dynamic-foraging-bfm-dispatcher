@@ -212,13 +212,21 @@ def load_records(launch_record_dir: Path | str) -> list[dict]:
     read the old shape is what lets a study adopt this incrementally.
     """
     out = []
-    for p in sorted(Path(launch_record_dir).glob("*.json")):
+    root = Path(launch_record_dir)
+    directories = [root, *sorted(root.parent.glob(root.name + "_*"))]
+    for p in sorted(path for directory in directories for path in directory.glob("*.json")):
         try:
             d = json.loads(p.read_text())
         except (OSError, json.JSONDecodeError) as e:
             out.append({"_schema": "unreadable", "_path": str(p), "_error": f"{type(e).__name__}: {e}"})
             continue
-        d.setdefault("_schema", "current" if "_meta" in d and "kind" in d else "legacy")
+        if "_meta" in d and "kind" in d:
+            schema = "current"
+        elif d.get("mode") == "resumable-grid":
+            schema = "launcher"
+        else:
+            schema = "legacy"
+        d.setdefault("_schema", schema)
         d["_path"] = str(p)
         out.append(d)
     return out

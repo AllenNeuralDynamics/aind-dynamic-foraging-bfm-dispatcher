@@ -1,0 +1,7 @@
+# Runtime commits for Study 10.
+-e git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper.git@847a270945a29a0ce6ab78c89df660d084c7be95#egg=aind_dynamic_foraging_bfm_wrapper
+aind-dynamic-foraging-models @ git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-models.git@459c05c38332eb5c954e7cbca328f0a0fe370891
+
+# Study 01 positive-control producers.
+trained_gru_wrapper_git_commit=65c3350d801c7596f88f57adef6f4d7e435b9c35
+trained_gru_dispatcher_git_commit=1cc0303fe7ec36039e54e9a1a9acddc990c007db
