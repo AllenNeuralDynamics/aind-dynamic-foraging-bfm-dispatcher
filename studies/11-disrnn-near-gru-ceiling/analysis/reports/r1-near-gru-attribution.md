@@ -25,17 +25,23 @@ disRNN's capacity/regularization design versus something else in the architectur
 
 ## ⚠️ Before the numbers: two things had to be re-verified, and both moved the answer
 
-**1. The published "GRU ceiling" (0.7268) is stale.** Study 06's `analysis/scaling_report.py`
-hardcodes `GRU = {..., 614: 0.7268}`. Re-pulling study 01's actual GRU H=256, D=614 runs from
-W&B (`nxd-grid@20260623-102649`, 3 seeds, all `state=="finished"`, all early-stopped at step
-90505) gives **0.7290** (seeds 0.72910/0.72896/0.72901 — SD < 0.0001, tight agreement). This
-number is also what `nxd_scaling.json` (study 01's own committed data, produced 2026-09-01,
-*after* the 0.7268 constant was hardcoded into study 06's script) reports. The 0.7268 constant
-was never refreshed after study 01 re-ran/extended its H=256 column. **This report uses the
-freshly verified 0.7290**, which revises study 06's headline residual gap from the commonly
-quoted **-0.0047** to **-0.0069** (`0.7221 - 0.7290`). Every number below is computed against
-this corrected baseline; study 06's own README/reports still show the old, stale figure and
-should eventually be corrected too, but that is out of scope for this study's closing analysis.
+**1. This study deliberately switches the GRU comparator from study 06's H128 reference to
+study 01's H256 reference — this is a different model, not a corrected number for the same
+one.** Study 06's `analysis/scaling_report.py` hardcodes `GRU = {..., 614: 0.7268}`, which is
+study 01's **original fixed-hidden_size=128** curve at D=614 (`studies/01-gru-scaling-law/
+README.md`'s v1 historical record). Study 01's later N×D joint scaling grid
+(`analysis/reports/r7-nxd-joint-scaling-grid.md`, `nxd-grid@20260623-102649`, 3 seeds, all
+`state=="finished"`, all early-stopped at step 90505) reports H128 and H256 **separately** at
+D=614: H128=**0.7282**, H256=**0.7290** (seeds 0.72910/0.72896/0.72901, SD<0.0001). Both are
+distinct from, and both postdate, the 0.7268 constant. **This report uses H256's 0.7290**, not
+because 0.7268 was wrong for what it measured, but because this study's stage 3 was always
+designed as a GRU-**H256**-matched capacity probe (the study README's downgrade note explains
+why the executed stage 3 ended up at latent_size=32 instead of the planned 256) — H128 is
+simply the wrong comparator for that question. Comparing against H256 revises the residual gap
+from the commonly quoted **-0.0047** (against H128's 0.7268) to **-0.0069** (`0.7221 - 0.7290`,
+against H256's 0.7290). Every number below is computed against the H256 comparator; study 06's
+own README/reports still compare against the H128 figure, which is correct for what *that*
+study was asking but is not restated here.
 
 **2. `stage1-no-penalty` seed 0 diverged late in training and is excluded from all summary
 statistics.** Its `checkpoint/eval_likelihood` step curve tracks the healthy seed almost exactly
@@ -50,6 +56,7 @@ rule that an excluded row never enters a plotted summary.
 
 ## Verified numbers
 
+<!-- BEGIN result-2 -->
 | quantity | value | source |
 |---|---|---|
 | study06 tuned point (D=614, mult=1, β=3e-4, n_steps=100000) | seed0=0.72247, seed1=0.72170, **mean=0.72208** | `disrnn_data_scaling` / `mult-d-grid@20260718-151409` |
@@ -58,6 +65,7 @@ rule that an excluded row never enters a plotted summary.
 | stage1-no-penalty | seed0=**0.67838 (COLLAPSED, excluded)**, seed1=0.72291 | `disrnn_near_gru_ceiling` / `stage1-no-penalty@20260909-021133` |
 | stage2-linear-update-net | seed0=0.72083, seed1=0.72269, mean=**0.72176** | `disrnn_near_gru_ceiling` / `stage2-linear-update-net@20260909-021223` |
 | stage3-wide-latent (latent=32) | seed0=0.72251, seed1=0.72313, mean=**0.72282** | `disrnn_near_gru_ceiling` / `stage3-wide-latent@20260909-140640` |
+<!-- END result-2 -->
 
 ## Gap-closure attribution
 
@@ -73,6 +81,12 @@ rule that an excluded row never enters a plotted summary.
 <!-- END result-1 -->
 
 ᵃ stage1's single reliable seed (seed 1); seed 0 collapsed and is excluded (see above).
+
+<!-- NOT auto-regenerated: hand-written interpretation, not a table fill-in (per Copilot
+review on PR #163). attribution_report.py's verify_verdict_numbers() re-derives the closure
+%s, the -0.0069 baseline gap, and the 0.7218 stage1+2 mean quoted below from the CSVs and
+raises make-all-failing AssertionError if a CSV change makes this prose stale; a CSV change
+should still prompt a human read-through of the rest of this paragraph's claims. -->
 
 **Verdict: at most ~12% of the residual gap closes, and it does not close monotonically.**
 Zeroing the interaction penalty alone (stage 1) recovers essentially all of the closure this
@@ -95,12 +109,14 @@ GRU-parity capacity requires the wrapper's `update_latents` `vmap` fix
 
 ## Generalization gap (checkpoint/eval_likelihood − heldout/final/eval_likelihood)
 
+<!-- BEGIN result-3 -->
 | stage | seed0 gap | seed1 gap | mean |
 |---|---|---|---|
 | study06 tuned (baseline) | 0.0067 | 0.0071 | 0.0069 |
 | stage1-no-penalty | 0.0044 (collapsed run, not meaningful) | 0.0063 | — (use seed1: 0.0063) |
 | stage2-linear-update-net | 0.0073 | 0.0059 | 0.0066 |
 | stage3-wide-latent | 0.0060 | 0.0065 | 0.0063 |
+<!-- END result-3 -->
 
 All four settings' generalization gaps sit in a tight 0.0059-0.0073 band (0.0063-0.0069 using
 only healthy runs). **Relaxing disRNN's penalty, nonlinearity, and width toward a GRU-shaped
@@ -121,7 +137,14 @@ surface at D=614.
   the study answers "at latent_size=32," not at GRU-matched capacity.
 - **stage1-no-penalty is effectively n=1** after excluding the collapsed seed. A third seed would
   materially strengthen this stage's estimate; none was launched.
-- **The corrected GRU_CEIL (0.7290) is not yet reflected in study 06's own committed reports**
-  (`analysis/scaling_report.py`'s hardcoded `GRU` dict, and the prose in `r2-scaling-surface.md`
-  quoting "-0.0047"/"0.7268"). This is a pre-existing staleness in study 06, surfaced by this
-  study's independent re-verification; fixing study 06's own report is out of scope here.
+- **This report's H256 GRU comparator (0.7290) is deliberately different from study 06's own
+  H128 comparator (0.7268)** (`analysis/scaling_report.py`'s hardcoded `GRU` dict, and the prose
+  in `r2-scaling-surface.md` quoting "-0.0047"/"0.7268") — not a correction of it. Study 06 was
+  asking a different question (does the tuned disRNN close the gap to a GRU at the *same*
+  hidden_size budget it was tuned against) and 0.7268 is the right number for that; this study
+  needs the H256 figure specifically because stage 3's capacity-match target was always
+  latent_size=256. Both numbers are independently real study-01 N×D-grid cells (H128=0.7282,
+  H256=0.7290 — this 0.7282 vs. study 06's quoted 0.7268 is itself a later, separately re-run
+  N×D-grid value for the same H128 size, not reconciled here since it doesn't change this
+  study's own H256-referenced analysis). Reconciling study 06's own report to the later H128
+  grid value is out of scope here.

@@ -17,9 +17,14 @@ Also pulls the two external reference points this study's report compares agains
 
 Writes analysis/grid.csv (this study's 3 stages) and analysis/reference_points.csv
 (the two external comparators, independently re-verified — see the r1 report for why
-this matters: study 06's own scaling_report.py hardcodes a STALE GRU=0.7268 constant at
-D=614 that predates a later re-run of study 01's nxd-grid; the live re-pull here gives
-0.7290 (3 seeds, tight agreement), which is the number this study's report uses).
+this matters: this study deliberately compares against study 01's H=256 N×D-grid cell
+(0.7290 at D=614, 3 seeds, tight agreement; `analysis/reports/r7-nxd-joint-scaling-grid.md`),
+NOT study 06's hardcoded `GRU = {..., 614: 0.7268}` constant. Those are two DIFFERENT GRU
+sizes, not a stale vs. fresh reading of the same one: 0.7268 is study 01's original
+fixed-H128 curve at D=614 (`studies/01-gru-scaling-law/README.md`); H128's own later N×D-grid
+cell is 0.7282, still distinct from 0.7290. This study needs the wider H256 comparator
+specifically because stage 3's capacity-match target was always latent_size=256 — see this
+study's README downgrade note for why the executed stage 3 ended up at latent_size=32 instead).
 """
 from __future__ import annotations
 
@@ -140,7 +145,13 @@ def parse_reference_points():
         if r["state"] == "finished" and D == 614 and beta == 0.0003 and mult == 1:
             rows.append(dict(reference="study06_tuned_D614_mult1_beta3e-4", project=S06_PROJECT,
                               group=S06_GROUP, seed=(cfg.get("data") or {}).get("seed"),
-                              heldout_ll=summ.get("heldout/eval_likelihood"), final_step=summ.get("_step")))
+                              heldout_ll=summ.get("heldout/eval_likelihood"),
+                              # checkpoint_ll feeds r1's "Generalization gap" table
+                              # (checkpoint_ll - heldout_ll); added per Copilot review on
+                              # PR #163 so that table can regenerate from this CSV instead
+                              # of staying hand-copied.
+                              checkpoint_ll=summ.get("checkpoint/eval_likelihood"),
+                              final_step=summ.get("_step")))
 
     for g in GRU_GROUPS:
         for r in fetch_group_runs("AIND-disRNN", GRU_PROJECT.split("/")[1], g):
@@ -151,12 +162,12 @@ def parse_reference_points():
             D = len(ids) or None
             if r["state"] == "finished" and arch.get("hidden_size") == 256 and D == 614:
                 rows.append(dict(reference="gru_ceiling_H256_D614", project=GRU_PROJECT, group=g,
-                                  seed=(cfg.get("data") or {}).get("seed"),
+                                  seed=(cfg.get("data") or {}).get("seed"), checkpoint_ll=None,
                                   heldout_ll=summ.get("heldout/final/eval_likelihood"), final_step=summ.get("_step")))
 
     out = HERE / "reference_points.csv"
     with out.open("w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        w = csv.DictWriter(f, fieldnames=["reference", "project", "group", "seed", "heldout_ll", "checkpoint_ll", "final_step"])
         w.writeheader()
         w.writerows(rows)
     print(f"wrote {out} — {len(rows)} rows")

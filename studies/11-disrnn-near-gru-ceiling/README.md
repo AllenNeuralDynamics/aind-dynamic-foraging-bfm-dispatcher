@@ -28,7 +28,9 @@ stage is attributable to that one change:
 2. **stage2-linear-update-net** — stage 1's config + linear update net
    (`update_net_n_layers=0`).
 3. **stage3-wide-latent** — stage 2's config + `latent_size` 5 -> 256, matching study
-   01's H=256 GRU capacity exactly (the ceiling probe).
+   01's H=256 GRU capacity exactly (the ceiling probe). **As executed, this stage widened
+   only to `latent_size=32`**, not the planned 256 — see the downgrade note below; 256
+   itself OOM'd and was never completed.
 
 ## ⚠️ Caveat — this is NOT an interpretable disRNN
 
@@ -131,13 +133,14 @@ Beaker experiment ids) is in `variants/stage3-wide-latent/notes.md` and
 
 **At most ~12% of the residual GRU gap closes, and it does not close monotonically or
 completely at any stage.** Full attribution table, figure, and the two things that had to be
-re-verified before this verdict was trustworthy (a stale hardcoded GRU reference in study 06's
-own report, and a late-training collapse in one of stage1's two seeds) are in
+re-verified before this verdict was trustworthy (this study's deliberate switch of the GRU
+comparator from study 06's H128 reference to study 01's H256 reference — see r1's opening
+caveat for why — and a late-training collapse in one of stage1's two seeds) are in
 [r1](analysis/reports/r1-near-gru-attribution.md).
 
 | stage (cumulative) | mean held-out LL | % of baseline gap closed | note |
 |---|---|---|---|
-| disRNN tuned (study 06 baseline) | 0.7221 | 0% | verified GRU ceiling is 0.7290 (not the stale 0.7268 study 06's report quotes) → baseline gap is **-0.0069**, not -0.0047 |
+| disRNN tuned (study 06 baseline) | 0.7221 | 0% | this study compares against study 01's **H256** GRU reference (0.7290), not study 06's H128 reference (0.7268) — a deliberate comparator change to match stage 3's original GRU-H256-matched capacity target, not a correction of 0.7268 → baseline gap is **-0.0069** against H256, vs. -0.0047 against H128 |
 | +stage1 (interaction penalty → 0) | 0.7229 | +11.9% | seed 0 collapsed late in training and is excluded (n=1 for this stage) |
 | +stage1+2 (+ linear update net) | 0.7218 | -4.7% | statistically flat vs. baseline — linearizing the update net adds nothing measurable |
 | +stage1+2+3 (+ latent 5→32) | 0.7228 | +10.6% | back to roughly stage 1's level, not beyond it |

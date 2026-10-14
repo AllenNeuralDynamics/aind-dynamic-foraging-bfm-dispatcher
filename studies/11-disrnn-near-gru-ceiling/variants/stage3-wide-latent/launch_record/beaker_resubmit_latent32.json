@@ -51,13 +51,13 @@
       "orig_task": "stage3-wide-latent-20260909-021255-000",
       "new_task": "stage3-wide-latent-20260909-140640-000",
       "orig_wandb_run": "stage3-wide-latent-20260909-021255-d128cc6f",
-      "new_wandb_run": null
+      "new_wandb_run": "stage3-wide-latent-20260909-140640-6ebc7ff0"
     },
     {
       "orig_task": "stage3-wide-latent-20260909-021255-001",
       "new_task": "stage3-wide-latent-20260909-140640-001",
       "orig_wandb_run": "stage3-wide-latent-20260909-021255-c66208ca",
-      "new_wandb_run": null
+      "new_wandb_run": "stage3-wide-latent-20260909-140640-c1ac9510"
     }
   ],
   "deviations": {

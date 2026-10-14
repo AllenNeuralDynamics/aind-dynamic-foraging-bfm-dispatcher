@@ -5,15 +5,25 @@
 Starting point: stage2-linear-update-net's config (interaction penalty zeroed +
 linear update net, `latent_size=5`).
 
-The ONE additional change here: `model.architecture.latent_size=5 -> 256`, chosen to
-match study 01's H=256 GRU exactly (the GRU_CEIL reference, ~0.7267-0.7268 at D=614) —
-the closest a disRNN-shaped model can get to that architecture's raw capacity.
+The ONE additional change here, **as actually executed**: `model.architecture.
+latent_size` 5 -> **32**. This was originally planned as `latent_size=256`, chosen
+to match study 01's H=256 GRU exactly (the GRU_CEIL reference, ~0.7267-0.7268 at
+D=614) — the closest a disRNN-shaped model can get to that architecture's raw
+capacity. `latent_size=256` OOM'd and was never completed (see "Risk flagged before
+launch" and "OOM diagnosis" below); the variant was downgraded to a **6.4x** latent
+widening (5→32) instead of the planned 51.2x (5→256) — see the study README's
+downgrade note and the "Relaunch" section below for the full story.
 
-This is the ceiling probe of the staged ablation: with the penalty, the nonlinearity,
-AND the width all relaxed, how much of the residual gap remains. If a gap persists
-even here, it is not explained by disRNN's capacity or regularization — something
-else in the architecture (e.g. the multiplicative gated update rule itself, vs. a GRU's
-gating) would be the remaining candidate.
+This is a **reduced** ceiling probe of the staged ablation: with the penalty, the
+nonlinearity, and the width (partially) relaxed, how much of the residual gap
+remains. Because `latent_size=32` falls far short of GRU-H256 parity, a persisting
+gap at this stage does **not** by itself rule out disRNN's capacity or
+regularization as the explanation — it only shows that the first 6.4x of latent
+widening is insufficient. Distinguishing "capacity/regularization isn't the
+remaining bottleneck" from "the effect only shows up much closer to
+latent_size=256" requires the wrapper's `update_latents` `vmap` fix
+([wrapper#99](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/99))
+and an actual `latent_size=256` run, neither of which this variant achieves.
 
 ## Risk flagged before launch
 

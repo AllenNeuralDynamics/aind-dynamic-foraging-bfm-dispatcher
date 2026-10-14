@@ -9,24 +9,45 @@ analysis/fig_gru_ceiling_attribution.png.
 
 Run `python analysis/pull_grid.py` first to refresh both CSVs from W&B.
 
-NOTE on the GRU reference: study 06's analysis/scaling_report.py hardcodes
-GRU = {..., 614: 0.7268}. That constant predates a later re-run of study 01's
-nxd-grid (produced_at 2026-09-01 per nxd_scaling.json's _meta) and is now STALE.
-The live re-pull in reference_points.csv gives 0.7290 (3 seeds, SD<0.0001,
-all early-stopped at step 90505) -- this is the number used here. This means
-the residual gap this study attributes against is -0.0069, not the commonly
-quoted -0.0047 (see the r1 report for the full explanation).
+NOTE on the GRU reference: this study intentionally compares against study 01's
+H=256 capacity-grid cell (0.7290, `nxd-grid@20260623-102649`, 3 seeds, SD<0.0001,
+all early-stopped at step 90505) rather than study 06's hardcoded `GRU = {...,
+614: 0.7268}` constant. The two are DIFFERENT model sizes, not two readings of the
+same one: 0.7268 is study 01's original fixed-H128 curve at D=614
+(studies/01-gru-scaling-law/README.md), while 0.7290 is the later N x D grid's
+separate H=256 cell (analysis/reports/r7-nxd-joint-scaling-grid.md). This study
+needs the wider H256 comparator specifically because stage 3's capacity-match
+target was always latent_size=256 (the GRU-H256-matched ceiling probe), even
+though the executed stage 3 ended up downgraded to latent_size=32 -- see the
+study README's downgrade note. Using H256 means the residual gap this study
+attributes against is -0.0069 (vs. the H256 comparator), not the -0.0047 commonly
+quoted against study 06's old H128 comparator (see the r1 report for the full
+explanation).
+
+Everything below `## Gap-closure attribution` and `## Verified numbers`/
+`## Generalization gap` in the r1 report is regenerated from the two CSVs
+(update_report_block / update_verified_numbers_block / update_generalization_gap_block).
+The `## Verdict` prose is NOT regenerated -- written interpretation doesn't fit a
+table-fill template -- but `verify_verdict_numbers()` re-derives the handful of
+figures the verdict quotes (the ~12%/10.6%/11.9% closure percentages, the ~89%
+remaining-gap figure, the -0.0069 baseline gap, and the 0.7218 stage1+2 mean) and
+raises if any of them no longer match the text, so a CSV change that would make
+the verdict stale fails `make all` instead of silently landing.
 """
 from __future__ import annotations
 
 import csv
 import re
+import sys
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from pull_grid import GRU_GROUPS, GRU_PROJECT, S06_GROUP, S06_PROJECT, STUDY10_GROUPS, STUDY10_PROJECT
 
 HERE = Path(__file__).resolve().parent
 REPORT = HERE / "reports" / "r1-near-gru-attribution.md"
@@ -62,8 +83,28 @@ def load_reference():
     with (HERE / "reference_points.csv").open() as f:
         rows = list(csv.DictReader(f))
     s06 = {int(r["seed"]): float(r["heldout_ll"]) for r in rows if r["reference"] == "study06_tuned_D614_mult1_beta3e-4"}
-    gru = [float(r["heldout_ll"]) for r in rows if r["reference"] == "gru_ceiling_H256_D614"]
-    return s06, gru
+    s06_ckpt = {int(r["seed"]): float(r["checkpoint_ll"]) for r in rows
+                if r["reference"] == "study06_tuned_D614_mult1_beta3e-4" and r.get("checkpoint_ll")}
+    gru_by_seed = {int(r["seed"]): float(r["heldout_ll"]) for r in rows if r["reference"] == "gru_ceiling_H256_D614"}
+    gru = [gru_by_seed[k] for k in sorted(gru_by_seed)]
+    return s06, s06_ckpt, gru
+
+
+def _write_block(tag: str, lines: list[str]) -> None:
+    """Rewrite one <!-- BEGIN <tag> --> ... <!-- END <tag> --> block in the r1 report.
+
+    Shared by all three regenerated sections (result-1/2/3) so each stays a one-line
+    call instead of repeating the read/sub/write boilerplate.
+    """
+    block = f"<!-- BEGIN {tag} -->\n" + "\n".join(lines) + f"\n<!-- END {tag} -->"
+    if not REPORT.exists():
+        return
+    text = REPORT.read_text()
+    new = re.sub(rf"<!-- BEGIN {tag} -->.*?<!-- END {tag} -->", block, text, flags=re.S)
+    if new == text and f"<!-- BEGIN {tag} -->" not in text:
+        raise RuntimeError(f"{REPORT.name} has no <!-- BEGIN {tag} --> marker to regenerate")
+    REPORT.write_text(new)
+    print(f"regenerated {tag} block in {REPORT.name}")
 
 
 def update_report_block(means: list[float], gru_mean: float, baseline_gap: float) -> None:
@@ -85,18 +126,113 @@ def update_report_block(means: list[float], gru_mean: float, baseline_gap: float
         # "remaining gap to GRU" is displayed model-minus-GRU (negative), matching the
         # report's residual-gap sign convention throughout -- i.e. -gap, not +gap.
         lines.append(f"| {row_label} | {m:.4f} | {-gap:+.4f} | {closure_str} | {pct_str} |")
-    block = "<!-- BEGIN result-1 -->\n" + "\n".join(lines) + "\n<!-- END result-1 -->"
+    _write_block("result-1", lines)
+
+
+def update_verified_numbers_block(s06_seeds, s06_ckpt, gru_seeds, baseline_gap,
+                                   stage1, stage1_healthy, stage2, stage3) -> None:
+    """Regenerate the <!-- BEGIN result-2 --> "Verified numbers" table in r1.
+
+    One row per raw data source this report depends on, so every number in the rest
+    of the report is traceable back to a CSV row instead of being hand-typed.
+    """
+    s06_mean = float(np.mean(list(s06_seeds.values())))
+    gru_mean = float(np.mean(gru_seeds))
+    stage10_group = STUDY10_GROUPS["stage1-no-penalty"]
+    stage20_group = STUDY10_GROUPS["stage2-linear-update-net"]
+    stage30_group = STUDY10_GROUPS["stage3-wide-latent"]
+
+    def seed_str(d: dict[int, float], collapsed: set[int] = frozenset()) -> str:
+        parts = []
+        for k in sorted(d):
+            tag = " (COLLAPSED, excluded)" if k in collapsed else ""
+            parts.append(f"seed{k}=**{d[k]:.5f}{tag}**" if tag else f"seed{k}={d[k]:.5f}")
+        return ", ".join(parts)
+
+    lines = ["| quantity | value | source |", "|---|---|---|"]
+    lines.append(f"| study06 tuned point (D=614, mult=1, \u03b2=3e-4, n_steps=100000) | "
+                 f"{seed_str(s06_seeds)}, **mean={s06_mean:.5f}** | "
+                 f"`{S06_PROJECT.split('/')[1]}` / `{S06_GROUP}` |")
+    gru_vals = "/".join(f"{v:.5f}" for v in gru_seeds)
+    lines.append(f"| GRU ceiling (H=256, D=614) | {gru_vals}, **mean={gru_mean:.5f}** | "
+                 f"`{GRU_PROJECT.split('/')[1]}` / `{GRU_GROUPS[0]}` |")
+    lines.append(f"| baseline residual gap | **{-baseline_gap:+.5f}** | study06 tuned \u2212 GRU |")
+    lines.append(f"| stage1-no-penalty | {seed_str(stage1, collapsed=set(stage1) - set(stage1_healthy))} | "
+                 f"`{STUDY10_PROJECT.split('/')[1]}` / `{stage10_group}` |")
+    lines.append(f"| stage2-linear-update-net | {seed_str(stage2)}, mean=**{np.mean(list(stage2.values())):.5f}** | "
+                 f"`{STUDY10_PROJECT.split('/')[1]}` / `{stage20_group}` |")
+    lines.append(f"| stage3-wide-latent (latent=32) | {seed_str(stage3)}, mean=**{np.mean(list(stage3.values())):.5f}** | "
+                 f"`{STUDY10_PROJECT.split('/')[1]}` / `{stage30_group}` |")
+    _write_block("result-2", lines)
+
+
+def update_generalization_gap_block(s06_seeds, s06_ckpt, stages: dict) -> None:
+    """Regenerate the <!-- BEGIN result-3 --> generalization-gap table in r1.
+
+    gap = checkpoint_ll - heldout_ll per seed, from the same two CSVs as everything
+    else in this report (reference_points.csv now also carries study06's checkpoint_ll
+    -- see pull_grid.py -- so this table no longer needs a number nobody can re-derive).
+    """
+    def gaps(heldout: dict[int, float], checkpoint: dict[int, float]) -> dict[int, float]:
+        return {k: checkpoint[k] - heldout[k] for k in heldout if k in checkpoint}
+
+    s06_gaps = gaps(s06_seeds, s06_ckpt)
+    rows = [("study06 tuned (baseline)", s06_gaps, None)]
+    for stage, label in [("stage1-no-penalty", "stage1-no-penalty"),
+                          ("stage2-linear-update-net", "stage2-linear-update-net"),
+                          ("stage3-wide-latent", "stage3-wide-latent")]:
+        heldout = {k: v["heldout"] for k, v in stages[stage].items()}
+        checkpoint = {k: v["checkpoint"] for k, v in stages[stage].items()}
+        rows.append((label, gaps(heldout, checkpoint), None))
+
+    lines = ["| stage | seed0 gap | seed1 gap | mean |", "|---|---|---|---|"]
+    for label, g, _ in rows:
+        g0, g1 = g.get(0), g.get(1)
+        if label == "stage1-no-penalty":
+            # seed 0 collapsed late in training (see "Verified numbers" / gap-closure
+            # tables above) -- its generalization gap is not a meaningful comparison point.
+            lines.append(f"| {label} | {g0:.4f} (collapsed run, not meaningful) | {g1:.4f} | "
+                         f"\u2014 (use seed1: {g1:.4f}) |")
+        else:
+            lines.append(f"| {label} | {g0:.4f} | {g1:.4f} | {np.mean([g0, g1]):.4f} |")
+    _write_block("result-3", lines)
+
+
+def verify_verdict_numbers(closure_pcts: list[float], max_closure_pct: float,
+                            baseline_gap: float, stage12_mean: float) -> None:
+    """Re-derive the handful of figures the (hand-written) Verdict prose quotes and
+    raise if any no longer match the committed text.
+
+    The Verdict section is interpretive narrative, not a table fill-in, so it is not
+    auto-regenerated like result-1/2/3 (per the Copilot review on PR #163's suggested
+    alternative: "generate ... or clearly separate as non-regenerated narrative").
+    This check is the enforcement half of that: a CSV change that would make the
+    verdict's numbers stale now fails `make all` instead of landing silently.
+    """
     if not REPORT.exists():
         return
     text = REPORT.read_text()
-    new = re.sub(r"<!-- BEGIN result-1 -->.*?<!-- END result-1 -->", block, text, flags=re.S)
-    REPORT.write_text(new)
-    print(f"regenerated result-1 block in {REPORT.name}")
+    checks = [
+        (f"~{round(max_closure_pct)}% of the residual gap closes", "headline max-closure %"),
+        (f"{closure_pcts[3]:.1f}% vs. {closure_pcts[1]:.1f}%", "stage3 vs. stage1 closure % comparison"),
+        (f"~{round(100 - closure_pcts[3])}% of the residual gap remains", "remaining-gap % at latent_size=32"),
+        (f"{-baseline_gap:.4f}", "baseline residual gap (-0.0069)"),
+        (f"{stage12_mean:.4f}", "stage1+2 mean held-out LL (0.7218)"),
+    ]
+    missing = [(needle, why) for needle, why in checks if needle not in text]
+    if missing:
+        detail = "; ".join(f"{why}: expected {needle!r} not found in Verdict text" for needle, why in missing)
+        raise AssertionError(
+            f"{REPORT.name}'s Verdict section is stale relative to the CSVs -- {detail}. "
+            "Verdict prose is hand-written (not auto-regenerated); update it by hand to "
+            "match the recomputed numbers above, then re-run."
+        )
+    print("verified Verdict section numbers against recomputed values (still current)")
 
 
 def main():
     stages = load_grid()
-    s06_seeds, gru_seeds = load_reference()
+    s06_seeds, s06_ckpt, gru_seeds = load_reference()
 
     s06_mean = float(np.mean(list(s06_seeds.values())))
     gru_mean = float(np.mean(gru_seeds))
@@ -132,6 +268,12 @@ def main():
     max_closure_pct = max(closure_pcts[1:])
 
     update_report_block(means, gru_mean, baseline_gap)
+    update_verified_numbers_block(s06_seeds, s06_ckpt, gru_seeds, baseline_gap,
+                                   stage1, stage1_healthy, stage2, stage3)
+    update_generalization_gap_block(s06_seeds, s06_ckpt, stages)
+    # closure_pcts = [baseline(0%), stage1, stage1+2, stage1+2+3]; the Verdict quotes
+    # stage1 (index 1) vs. stage1+2+3 (index 3), and the stage1+2 mean (index 2 of `means`).
+    verify_verdict_numbers(closure_pcts, max_closure_pct, baseline_gap, means[2])
 
     plt.rcParams.update({"font.size": 8, "pdf.fonttype": 42, "ps.fonttype": 42})
 
