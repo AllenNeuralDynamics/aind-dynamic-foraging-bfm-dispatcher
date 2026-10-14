@@ -2,6 +2,12 @@
 
 One entry per merged PR (or coherent unreleased batch).
 
+## 2026-10-14 (third round): Stan diagnostics corrected, freezer inputs pinned
+
+- **Stan R-hat and ESS were wrong, and r4's Stan comparison is redone.** The Stan trainer reshaped PyStan's flat draw axis chain-major; PyStan's axis is draw-major with the chain innermost, so the four chains were mixed. The one finished Stan run (D=29) logged lowest bulk ESS 7007 and R-hat 1.0049 to W&B; from its saved draws with the correct axis they are 1220 and 1.0030. `analysis/recompute_stan_diagnostics.py` recomputes them from `analysis/stan_inputs/` (pinned by sha256; the file's recorded fit time equals the W&B run's), and the wrong-axis computation reproduces the logged values exactly from the same draws. `convergence.py` reads the recomputed values; `hb_runs.json` keeps the logged ones as recorded. Stan against NumPyro at D = 29 is now 1.36x ESS per draw (was 7.8x), 2.3x wall time, 0.59x ESS per second (was 3.4x). Stan's 23 divergences are unchanged. The earlier 7.8x and 3.4x are retracted.
+- `freeze_hb_subjects.py` verifies, before reading any input, the posterior (sha256, size, source-dataset W&B run), the fit JSON and the per-subject table against the pinned `hb_posterior_manifest.json`, which now carries the fit-JSON and table hashes. Re-run: the frozen CSVs are byte-identical; swapping two same-shaped tables is refused.
+- `summarize_hb_posteriors.py` docstring describes the manifest, not subject count, as what matches a file to a run.
+
 ## 2026-10-14 (second round): report location, hashing, wording
 
 - Reports moved from `reports/` to `analysis/reports/`, the layout the study-wrapup convention and the ten other studies with reports use; `update_reports.py`, the image links and this changelog follow. `make all` regenerates them identically.

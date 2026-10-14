@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/convergence.py",
-    "produced_at_pt": "2026-10-14T01:03:46-07:00",
-    "dispatcher_git_sha": "5ee65ffa26aca28451591c93332d8c7aece217ad",
+    "produced_at_pt": "2026-10-14T14:58:01-07:00",
+    "dispatcher_git_sha": "67c4d439be227f2973352bb0e9861d13ddbb8e58",
     "wrapper_git_sha": "5eaf328024c87ba7d24c75d0f9f2354150ca4c70",
     "wandb_groups": [
       "one-stage-ladder@20260903-052244",
@@ -198,16 +198,22 @@
       "wandb_run_id": "hlbo30c3",
       "fit_seconds": 53001.13864159584,
       "divergences": 23,
-      "max_rhat": 1.0048933621036606,
-      "min_ess_bulk": 7007.143552050102,
-      "ess_per_draw": 0.8758929440062627,
-      "ess_per_second": 0.13220741538089945,
-      "hardware": "8 CPU cores, one chain per process (HPC)"
+      "max_rhat": 1.0030059345701872,
+      "min_ess_bulk": 1220.0903079605232,
+      "ess_per_draw": 0.1525112884950654,
+      "ess_per_second": 0.023020077289490223,
+      "hardware": "8 CPU cores, one chain per process (HPC)",
+      "diagnostics_source": "analysis/stan_d29_diagnostics.json, recomputed from the saved draws",
+      "wandb_logged_WRONG": {
+        "max_rhat": 1.0048933621036606,
+        "min_ess_bulk": 7007.143552050102,
+        "why": "chain-major reshape of a draw-major axis mixed the chains"
+      }
     },
     "ratios": {
-      "stan_ess_per_draw_over_numpyro": 7.790497355535466,
+      "stan_ess_per_draw_over_numpyro": 1.356488595827321,
       "stan_wall_over_numpyro": 2.318091230787711,
-      "stan_ess_per_second_over_numpyro": 3.360738029662523
+      "stan_ess_per_second_over_numpyro": 0.5851748101244367
     }
   }
 }

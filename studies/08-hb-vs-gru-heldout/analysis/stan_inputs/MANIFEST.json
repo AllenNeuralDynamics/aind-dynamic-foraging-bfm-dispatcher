@@ -1,0 +1,19 @@
+{
+  "what": "The posterior draws and metadata of the one finished HB-Stan fit (D=29, seed 0, 4 chains x 2000 warmup + 2000 draws), written by HBStanTrainer on HPC.",
+  "wandb_run_id": "hlbo30c3",
+  "wandb_group": "stan-arm@20260905-020928",
+  "identity_link": "The saved JSON's metrics.hb/fit_seconds equals this W&B run's hb/fit_seconds exactly (checked by recompute_stan_diagnostics.py). The trainer wrote fixed file names into one directory shared by every Stan run of the sweep, and only this run finished, so the files are its.",
+  "copied": "2026-10-14, by a recorded HPC job (ssh:hpc-code, 4b46d8c8) that copied the files and recorded the source sha256; the copy was verified equal.",
+  "files": {
+    "stan_d29_one_stage_fit.npz": {
+      "sha256": "13af37a66e36043ebbd517d3d339d5183112ce52ad461b5d1d710749596c098d",
+      "size_bytes": 1195894,
+      "source": "/home/han.hou/outputs/disrnn/hb_stan_artifacts/stan_one_stage_fit.npz"
+    },
+    "stan_d29_one_stage_fit.json": {
+      "sha256": "f185ce476a35ba4be43b965d959be60d9488558ddfab6a3851b7b32b09e14b1f",
+      "size_bytes": 1619,
+      "source": "/home/han.hou/outputs/disrnn/hb_stan_artifacts/stan_one_stage_fit.json"
+    }
+  }
+}

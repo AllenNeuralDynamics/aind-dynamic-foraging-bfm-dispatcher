@@ -12,7 +12,9 @@
     "size_bytes": 2517931,
     "beaker_dataset": "01M1KKHNM96AWFGT476W4ETKAN",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260903-052244-530a93db"
+    "dataset_wandb_run": "one-stage-ladder-20260903-052244-530a93db",
+    "fit_json_sha256": "c5a62ef00d936b8d1d8bc49dadac3b599336abd76e45d0a72989f0aa5501cede",
+    "per_subject_table_sha256": "b4e85f370e2f544f44eab31110ea7fee3fb96c1a06ceb4ff6bba656bf24c47a7"
   },
   "d614_0.nc": {
     "wandb_run_id": "one-stage-ladder-20260903-154828-d2378737",
@@ -27,7 +29,9 @@
     "size_bytes": 2436574269,
     "beaker_dataset": "01M1MQB7P1BW155EPT3YD16S9S",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260903-154828-d2378737"
+    "dataset_wandb_run": "one-stage-ladder-20260903-154828-d2378737",
+    "fit_json_sha256": "768edf2d12a8135647af4ef7e05436f0872d02cc765c0be59bd406264038feba",
+    "per_subject_table_sha256": "78549676986afa37d5db20478f09f2e4d4d43d676d3dd0a72ec35bc56dff7b21"
   },
   "diag_0.nc": {
     "wandb_run_id": "one-stage-ladder-20260903-230522-24405066",
@@ -42,7 +46,9 @@
     "size_bytes": 70775101,
     "beaker_dataset": "01M1NGB9SHG6VVRWNHW2A553SB",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260903-230522-24405066"
+    "dataset_wandb_run": "one-stage-ladder-20260903-230522-24405066",
+    "fit_json_sha256": "268f5b2a05838c56ebfa3e321e63308c46466c998425455ff4a1ec9f77404e82",
+    "per_subject_table_sha256": "d4c3f62e13163bfba2b6796bc41e707e90b122ffb64f300a2c1af13becc39266"
   },
   "draws_0.nc": {
     "wandb_run_id": "one-stage-ladder-20260904-082628-dd76b428",
@@ -57,7 +63,9 @@
     "size_bytes": 75122285,
     "beaker_dataset": "01M1PGEPS9TG1FYCN1FR0VVTP7",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260904-082628-dd76b428"
+    "dataset_wandb_run": "one-stage-ladder-20260904-082628-dd76b428",
+    "fit_json_sha256": "2789e446ef10aab60ac582232b4cb2c28db4bf2d4a22ea3a604f866086476d01",
+    "per_subject_table_sha256": "34ae39feff7c1a8dc97cbc7014317f918dcc11a72fc533e58eacb5c0e4726801"
   },
   "draws_1.nc": {
     "wandb_run_id": "one-stage-ladder-20260904-082628-c918dd65",
@@ -72,7 +80,9 @@
     "size_bytes": 282995085,
     "beaker_dataset": "01M1PGEPWV990M3H1FPKG0KF7F",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260904-082628-c918dd65"
+    "dataset_wandb_run": "one-stage-ladder-20260904-082628-c918dd65",
+    "fit_json_sha256": "333606acb1633fad66897d6d965f41286c80cc3fc1e406321e8ac6c51b08ff90",
+    "per_subject_table_sha256": "17b0e60a3de8f88b33ceb196f185a259cd5942c459153d2795321473e955c48a"
   },
   "ladder_0.nc": {
     "wandb_run_id": "one-stage-ladder-20260903-154819-2d8fa0a3",
@@ -87,7 +97,9 @@
     "size_bytes": 18762237,
     "beaker_dataset": "01M1MQB0T022E19W7HFQND7H0K",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260903-154819-2d8fa0a3"
+    "dataset_wandb_run": "one-stage-ladder-20260903-154819-2d8fa0a3",
+    "fit_json_sha256": "a94004492eb4fc054deab7d81b9f08949ce94180608ce97f9ec2be8dc46303aa",
+    "per_subject_table_sha256": "ab970b3cf833cccde00591200066d23816482a93d5c132f742c6b0eb34070f1e"
   },
   "ladder_1.nc": {
     "wandb_run_id": "one-stage-ladder-20260903-154819-b2820f5c",
@@ -102,7 +114,9 @@
     "size_bytes": 70731037,
     "beaker_dataset": "01M1MQB0XFNMR7JV0JH9YAPM3T",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260903-154819-b2820f5c"
+    "dataset_wandb_run": "one-stage-ladder-20260903-154819-b2820f5c",
+    "fit_json_sha256": "ca3dabb535afed9fbe028df56fde961c5cba969017a5ac9d3a363fc6d1b07a60",
+    "per_subject_table_sha256": "d4c3f62e13163bfba2b6796bc41e707e90b122ffb64f300a2c1af13becc39266"
   },
   "ladder_2.nc": {
     "wandb_run_id": "one-stage-ladder-20260903-154819-77709a28",
@@ -117,7 +131,9 @@
     "size_bytes": 369277709,
     "beaker_dataset": "01M1MQB11AY2D0XF0Y9ECMJ16A",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260903-154819-77709a28"
+    "dataset_wandb_run": "one-stage-ladder-20260903-154819-77709a28",
+    "fit_json_sha256": "bf934ec750454188631469e86c859f7a95bf60d3705413861d95fb905368507a",
+    "per_subject_table_sha256": "4c6812365853d5fb6e07f57a184b38361ccc130186ec623b85dcde685a56f240"
   },
   "ladder_3.nc": {
     "wandb_run_id": "one-stage-ladder-20260903-154819-fe8fe870",
@@ -132,7 +148,9 @@
     "size_bytes": 1118612141,
     "beaker_dataset": "01M1MQB15GC4HNQVNGWKVDQ099",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260903-154819-fe8fe870"
+    "dataset_wandb_run": "one-stage-ladder-20260903-154819-fe8fe870",
+    "fit_json_sha256": "f4086c5d9b9e3b407f8a0963d590639e89656f8b746228fcdcec1d4f3732af7b",
+    "per_subject_table_sha256": "30dfb25d72a72405f0464ee27fb9e5621221585a7df6582da89c2d9795af6b79"
   },
   "w4000_0.nc": {
     "wandb_run_id": "one-stage-ladder-20260903-154825-dbbc207d",
@@ -147,6 +165,8 @@
     "size_bytes": 70731037,
     "beaker_dataset": "01M1MQB4N5W8V2ZN6XJJQCRX8V",
     "beaker_path": "hb_artifacts/one_stage_fit.nc",
-    "dataset_wandb_run": "one-stage-ladder-20260903-154825-dbbc207d"
+    "dataset_wandb_run": "one-stage-ladder-20260903-154825-dbbc207d",
+    "fit_json_sha256": "91bc978a0c7d2f7aab9903dd3709f864af60068aee14caf39d1390c7e5d2a61a",
+    "per_subject_table_sha256": "fcd4d6a8fa0615389ef4939c9acea75e1cd154e5a070f24d707ebc8717ef47fd"
   }
 }

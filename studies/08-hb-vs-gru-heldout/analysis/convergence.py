@@ -65,6 +65,12 @@ def stan_vs_numpyro(post: pd.DataFrame, runs: pd.DataFrame) -> dict:
     assert len(st_rows) == 1, f"expected exactly one finished counted Stan run in {STAN_GROUP}, found {len(st_rows)}"
     st = st_rows.iloc[0]
     assert int(st.n_subjects) == 29 and int(st.n_draws) == int(npy.total_draws) == 8000
+    # Stan's R-hat and ESS come from recompute_stan_diagnostics.py, which recomputes them from the saved draws with
+    # PyStan's chain axis. The values in hb_runs.json are what the trainer logged to W&B from a chain-major reshape that
+    # mixed the chains; they are kept there as recorded and must not feed a reported number.
+    sd = json.loads((HERE / "stan_d29_diagnostics.json").read_text())
+    assert sd["wandb_run_id"] == st.wandb_run_id and sd["n_draws"] == int(st.n_draws)
+    st_rhat, st_ess = sd["population_mean"]["max_rhat"], sd["population_mean"]["min_ess_bulk"]
     out = {"cohort_D": 29, "settings": "4 chains x (2000 warmup + 2000 draws), 8000 retained draws each",
            "diagnostic_sites": "population_mean (the five population means); Stan's own definition",
            "numpyro": {"wandb_run_id": npy.wandb_run_id, "fit_seconds": npy_fit, "divergences": int(npy.divergences),
@@ -72,9 +78,12 @@ def stan_vs_numpyro(post: pd.DataFrame, runs: pd.DataFrame) -> dict:
                        "ess_per_draw": float(npy.popmean_min_ess / npy.total_draws), "ess_per_second": float(npy.popmean_min_ess / npy_fit),
                        "hardware": "one GPU (Beaker)"},
            "stan": {"wandb_run_id": st.wandb_run_id, "fit_seconds": float(st.fit_seconds), "divergences": int(st.divergences),
-                    "max_rhat": float(st.max_rhat), "min_ess_bulk": float(st.min_ess_bulk),
-                    "ess_per_draw": float(st.min_ess_bulk / st.n_draws), "ess_per_second": float(st.min_ess_bulk / st.fit_seconds),
-                    "hardware": "8 CPU cores, one chain per process (HPC)"}}
+                    "max_rhat": float(st_rhat), "min_ess_bulk": float(st_ess),
+                    "ess_per_draw": float(st_ess / st.n_draws), "ess_per_second": float(st_ess / st.fit_seconds),
+                    "hardware": "8 CPU cores, one chain per process (HPC)",
+                    "diagnostics_source": "analysis/stan_d29_diagnostics.json, recomputed from the saved draws",
+                    "wandb_logged_WRONG": {"max_rhat": float(st.max_rhat), "min_ess_bulk": float(st.min_ess_bulk),
+                                           "why": "chain-major reshape of a draw-major axis mixed the chains"}}}
     out["ratios"] = {"stan_ess_per_draw_over_numpyro": out["stan"]["ess_per_draw"] / out["numpyro"]["ess_per_draw"],
                      "stan_wall_over_numpyro": out["stan"]["fit_seconds"] / out["numpyro"]["fit_seconds"],
                      "stan_ess_per_second_over_numpyro": out["stan"]["ess_per_second"] / out["numpyro"]["ess_per_second"]}

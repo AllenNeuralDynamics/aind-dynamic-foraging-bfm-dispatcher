@@ -16,7 +16,12 @@ Transform (aind_dynamic_foraging_models.hierarchical_bayes.model.hattori2019_ses
 Phi(mu_p), inverse temperature is Phi(mu_p) * beta_max (10), bias_l is mu_p unchanged. The posterior
 mean is taken over the transformed draws, not by transforming the mean of mu_p.
 
-    python freeze_hb_subjects.py <post_dir> <meta_dir> <file_to_run_manifest.json>
+    python freeze_hb_subjects.py <post_dir> <meta_dir> hb_posterior_manifest.json
+
+The manifest is the pinned one used by summarize_hb_posteriors.py. Before any input is read as data, every one of
+the three inputs per run is verified against it: the posterior (sha256, size, and the W&B run directory of its
+source dataset, which must equal ``wandb_run_id``), the fit JSON (sha256) and the per-subject table (sha256).
+Without that, swapping same-shaped files would silently attach likelihoods or posterior means to the wrong run.
 """
 from __future__ import annotations
 
@@ -47,6 +52,23 @@ def sha(path: Path) -> str:
     return h.hexdigest()
 
 
+def _verify_pins(fname: str, m: dict, nc: Path, fit_json: Path, table: Path) -> None:
+    """Refuse to read an input that is not the exact file the manifest pins for this run."""
+    need = ("sha256", "size_bytes", "dataset_wandb_run", "fit_json_sha256", "per_subject_table_sha256")
+    missing = [k for k in need if k not in m]
+    if missing:
+        raise RuntimeError(f"{fname}: manifest entry lacks {missing}; an unpinned input cannot be attached to a run")
+    if m["dataset_wandb_run"] != m["wandb_run_id"]:
+        raise RuntimeError(f"{fname}: source dataset holds W&B run {m['dataset_wandb_run']}, not {m['wandb_run_id']}")
+    if nc.stat().st_size != int(m["size_bytes"]):
+        raise RuntimeError(f"{fname}: {nc.stat().st_size} bytes on disk but {m['size_bytes']} pinned")
+    for label, path, key in (("posterior", nc, "sha256"), ("fit json", fit_json, "fit_json_sha256"),
+                             ("per-subject table", table, "per_subject_table_sha256")):
+        got = sha(path)
+        if got != m[key]:
+            raise RuntimeError(f"{fname}: {label} sha256 {got[:12]} does not match the pinned {m[key][:12]}")
+
+
 def to_natural(mu_p: np.ndarray) -> np.ndarray:
     """mu_p (..., 5) -> parameters in natural units, same shape."""
     out = np.empty_like(mu_p)
@@ -58,11 +80,12 @@ def to_natural(mu_p: np.ndarray) -> np.ndarray:
 
 def main(post_dir: str, meta_dir: str, manifest_path: str) -> None:
     post_dir, meta_dir = Path(post_dir), Path(meta_dir)
-    runs = json.loads(Path(manifest_path).read_text())          # {"ladder_0.nc": {wandb_run_id, group, subject_ratio, ...}}
+    runs = json.loads(Path(manifest_path).read_text())          # the pinned hb_posterior_manifest.json
     held, subj, man = [], [], {}
     for fname, m in sorted(runs.items()):
         stem = fname[:-3]
         nc, fit_json, table = post_dir / fname, meta_dir / f"{stem}_one_stage_fit.json", meta_dir / f"{stem}_per_subject_matched.json"
+        _verify_pins(fname, m, nc, fit_json, table)
         meta = json.loads(fit_json.read_text())
         ids = [str(s) for s in meta["_meta"]["subject_ids"]]
         mu_p = xr.open_dataset(nc, group="posterior")["mu_p"].load().values   # (chain, draw, subject, 5)

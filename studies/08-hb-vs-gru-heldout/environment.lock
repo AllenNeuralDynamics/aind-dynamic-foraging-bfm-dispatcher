@@ -10,7 +10,8 @@ matplotlib==3.11.0
 PyYAML==6.0.3
 requests==2.34.2
 #
-# Posterior producers (summarize_hb_posteriors, freeze_hb_subjects) read the saved NumPyro posteriors (netCDF/HDF5):
+# Posterior producers (summarize_hb_posteriors, freeze_hb_subjects) read the saved NumPyro posteriors (netCDF/HDF5), and
+# recompute_stan_diagnostics reads the saved Stan draws (npz) with arviz:
 #   Python 3.12.14, a separate environment ("hb-arviz1"); arviz 1.x is the line the container image uses.
 #   numpy==2.5.2  scipy==1.18.0  pandas==3.0.5  xarray==2026.7.0  arviz==1.3.0  netCDF4==1.7.4  h5netcdf==1.8.1  h5py==3.16.0
 #

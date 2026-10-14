@@ -7,9 +7,10 @@ group-level and subject-level parameters are read (``population_mean``, ``popula
 ``log_sigma_mean``, ``log_sigma_spread``, ``mu_p``, ``log_sigma``); the session-level sites are the
 bulk of the file and do not enter the gates.
 
-Input is a directory of ``.nc`` files named ``<anything>.nc`` plus a manifest mapping each file to
-its W&B run. A file is matched to a run by its subject count, never by job order: the subject
-count is read from the posterior itself and must equal the count implied by the run's
+Input is a directory of ``.nc`` files plus a pinned manifest mapping each file to its W&B run. The
+manifest, not job order and not the subject count, decides which run a file belongs to: several D=29
+runs share both a subject count and a divergence count, so those cannot identify a posterior. The
+subject count read from the file is only a consistency check, against the count implied by the run's
 ``subject_ratio`` (0.016/0.049/0.163/0.489/1.0 -> 10/29/99/300/614, from the cohort logs).
 
     python summarize_hb_posteriors.py <posterior_dir> <manifest.json>

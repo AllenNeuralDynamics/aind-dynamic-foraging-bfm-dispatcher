@@ -50,14 +50,14 @@ Gates: no divergences, worst R-hat below 1.01, lowest bulk ESS at least 400.
 |  | NumPyro | Stan |
 |---|---|---|
 | divergences | 5 | 23 |
-| max R-hat (population means) | 1.0049 | 1.0049 |
-| lowest bulk ESS (population means) | 899 | 7007 |
-| ESS per retained draw | 0.112 | 0.876 |
+| max R-hat (population means) | 1.0049 | 1.0030 |
+| lowest bulk ESS (population means) | 899 | 1220 |
+| ESS per retained draw | 0.112 | 0.153 |
 | wall time (hours), as run | 6.35 | 14.72 |
-| ESS per second | 0.039 | 0.132 |
+| ESS per second | 0.039 | 0.023 |
 | hardware | one GPU (Beaker) | 8 CPU cores, one chain per process (HPC) |
 
-Stan has 7.8x the effective sample per draw, takes 2.3x the wall time as run, and delivers 3.4x the effective sample per second.
+Relative to NumPyro, Stan's effective sample per draw is 1.36x, its wall time as run is 2.3x, and its effective sample per second is 0.59x.
 <!-- END result-4 -->
 
 ## Reading
@@ -66,12 +66,13 @@ Stan has 7.8x the effective sample per draw, takes 2.3x the wall time as run, an
 - **At D = 99 and above the per-mouse chains do not mix, and the sampler flagged zero divergences.** Zero divergences does not rule out funnel or other posterior geometry; only R-hat and ESS were computed for these rungs, so the cause of the poor mixing is not identified here. The group-level sites at D = 300 are nearly mixed while the per-mouse sites are not.
 - **The trainer's own diagnostics cover group-level sites only.** They would report D = 300 as acceptable. The recomputation here is what shows its per-mouse sites are not mixed.
 - **Warmup and draws trade differently.** Raising warmup from 500 to 2000 removed the divergences at D = 29 but did not raise the lowest ESS (177 to 103); 4000 warmup raised it only modestly (140). Only more draws moved the lowest ESS toward the gate, and that brought divergences back.
-- **Stan against NumPyro, like for like.** On the population means, with the same cohort and draw budget, Stan gives several times the effective sample per draw but took longer in wall time as run, on different hardware. The comparison is for D = 29 only: Stan has no completed fit at any larger cohort.
+- **Stan against NumPyro, like for like.** On the population means, with the same cohort and draw budget, Stan gives somewhat more effective sample per draw but took longer in wall time as run, on different hardware, so NumPyro delivered more effective sample per second. Both fail the divergence gate. The comparison is for D = 29 only: Stan has no completed fit at any larger cohort.
 
 ## Limits
 
 - One seed per setting, so differences between warmup settings at D = 29 are within what seed variation could produce; this was not measured.
 - R-hat and ESS here cover the group-level and per-mouse sites, not the session-level parameters.
+- **Correction.** An earlier version of this report said Stan had 7.8x the effective sample per draw and 3.4x per second. Those used the R-hat and ESS the Stan trainer logged to W&B, which came from a chain-major reshape of PyStan's draw-major flat axis and so mixed the four chains. They are recomputed from the saved draws with the correct axis (`analysis/recompute_stan_diagnostics.py`); the wrong-axis computation reproduces the logged values exactly from the same draws. The Stan R-hat and ESS in `hb_runs.json` are the logged, wrong values and are not used.
 - Stan's diagnostics are on the five population means only, so the Stan comparison uses the population-mean site of the NumPyro fit; an earlier figure that compared Stan's population-mean ESS with NumPyro's lowest ESS over all sites was not like for like and is superseded by this table.
 - Wall time compares the two as the project ran them (one GPU against eight CPU cores), not the frameworks on equal hardware. Threading and slicing experiments on the Stan side were inconclusive and are recorded in `variants/stan-arm/launch_record/`; they are not results.
 

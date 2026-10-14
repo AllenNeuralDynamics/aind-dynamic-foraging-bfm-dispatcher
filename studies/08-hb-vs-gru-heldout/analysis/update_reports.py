@@ -126,8 +126,8 @@ def region_r4() -> str:
         table(["setting", "worst R-hat", "lowest ESS", "divergences", "passes all gates"], b), "",
         f"**Stan against NumPyro at D = 29**, {c['settings']}; diagnostics on {c['diagnostic_sites']}:", "",
         table(["", "NumPyro", "Stan"], cmp_rows), "",
-        f"Stan has {ra['stan_ess_per_draw_over_numpyro']:.1f}x the effective sample per draw, takes {ra['stan_wall_over_numpyro']:.1f}x the wall time as run, "
-        f"and delivers {ra['stan_ess_per_second_over_numpyro']:.1f}x the effective sample per second.",
+        f"Relative to NumPyro, Stan's effective sample per draw is {ra['stan_ess_per_draw_over_numpyro']:.2f}x, its wall time as run is "
+        f"{ra['stan_wall_over_numpyro']:.1f}x, and its effective sample per second is {ra['stan_ess_per_second_over_numpyro']:.2f}x.",
     ])
 
 
