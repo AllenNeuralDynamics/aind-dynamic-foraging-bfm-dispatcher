@@ -1,0 +1,132 @@
+# The experiment spec as Beaker holds it (experiment.spec), fetched 2026-10-13. This is the server-side
+# representation of what was submitted, not the launcher's pre-submit render, so key order and defaults
+# may differ from that file. WANDB_API_KEY is a secret reference (name only), not a value.
+budget: ''
+tasks:
+- image:
+    beaker: 01M1JHDCQEEMRMH4EHQGEX7QY8
+  result:
+    path: /results
+  context:
+    priority: normal
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  name: one-stage-ladder-20260904-082628-000
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=hb_hattori
+  - seed=0
+  - wandb.entity=AIND-disRNN
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=0.016
+  - model.num_samples=2000
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: BFM_OUTPUT_DIR
+    value: /results
+  - name: WRAPPER_REF
+    value: 610519ededa1b6a0dc8d5891bdc436f39166352f
+  - name: DISPATCHER_REF
+    value: bb902bc5127fa5f5ddccb6e15ee1866eb1ae9752
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: one-stage-ladder-20260904-082628-dd76b428
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: one-stage-ladder@20260904-082628
+  - name: BFM_META_STUDY
+    value: 08-hb-vs-gru-heldout
+  - name: BFM_META_VARIANT
+    value: one-stage-ladder
+  - name: BFM_META_LAUNCH_ID
+    value: 20260904-082628
+  - name: BFM_META_CONFIG_HASH
+    value: 29e61fc7
+  - name: BFM_META_LABEL
+    value: draws-2000
+  - name: BFM_META_NOTE
+    value: D10+D30 at warmup 2000 / 2000 draws; tests whether 4x draws clears ESS>=400
+      after the instrumented rung ruled out truncation, adaptation and heavy tails
+  resources:
+    gpuCount: 1
+    memory: 128 GiB
+  hostNetworking: false
+  leaderSelection: false
+  propagateFailure: false
+  propagatePreemption: false
+- image:
+    beaker: 01M1JHDCQEEMRMH4EHQGEX7QY8
+  result:
+    path: /results
+  context:
+    priority: normal
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  name: one-stage-ladder-20260904-082628-001
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=hb_hattori
+  - seed=0
+  - wandb.entity=AIND-disRNN
+  - wandb.project=mice_data_scaling
+  - data.subject_ratio=0.049
+  - model.num_samples=2000
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: BFM_OUTPUT_DIR
+    value: /results
+  - name: WRAPPER_REF
+    value: 610519ededa1b6a0dc8d5891bdc436f39166352f
+  - name: DISPATCHER_REF
+    value: bb902bc5127fa5f5ddccb6e15ee1866eb1ae9752
+  - name: FORAGING_MODELS_REF
+    value: 459c05c38332eb5c954e7cbca328f0a0fe370891
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: one-stage-ladder-20260904-082628-c918dd65
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: one-stage-ladder@20260904-082628
+  - name: BFM_META_STUDY
+    value: 08-hb-vs-gru-heldout
+  - name: BFM_META_VARIANT
+    value: one-stage-ladder
+  - name: BFM_META_LAUNCH_ID
+    value: 20260904-082628
+  - name: BFM_META_CONFIG_HASH
+    value: 29e61fc7
+  - name: BFM_META_LABEL
+    value: draws-2000
+  - name: BFM_META_NOTE
+    value: D10+D30 at warmup 2000 / 2000 draws; tests whether 4x draws clears ESS>=400
+      after the instrumented rung ruled out truncation, adaptation and heavy tails
+  resources:
+    gpuCount: 1
+    memory: 128 GiB
+  hostNetworking: false
+  leaderSelection: false
+  propagateFailure: false
+  propagatePreemption: false
+version: v2
+description: "one-stage-ladder@20260904-082628 \u2014 2 resumable grid tasks (autoResume)"
+retry: {}

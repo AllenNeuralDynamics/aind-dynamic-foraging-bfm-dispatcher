@@ -214,7 +214,7 @@ def load_records(launch_record_dir: Path | str) -> list[dict]:
     out = []
     root = Path(launch_record_dir)
     directories = [root, *sorted(root.parent.glob(root.name + "_*"))]
-    for p in sorted(path for directory in directories for path in directory.glob("*.json")):
+    for p in sorted(path for directory in directories for path in directory.rglob("*.json")):
         try:
             d = json.loads(p.read_text())
         except (OSError, json.JSONDecodeError) as e:
