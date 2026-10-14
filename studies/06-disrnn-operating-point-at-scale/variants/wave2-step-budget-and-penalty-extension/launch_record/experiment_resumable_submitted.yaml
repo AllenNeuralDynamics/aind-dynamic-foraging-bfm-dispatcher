@@ -1,0 +1,546 @@
+version: v2
+description: "wave2-step-budget-and-penalty-extension@20260909-021546 \u2014 8 resumable\
+  \ grid tasks (autoResume), pruned from 16-task cartesian render (dropped duplicate\
+  \ mult-d-grid point + untested both-axes-lighter combo)"
+tasks:
+- name: wave2-step-budget-and-penalty-extension-20260909-021546-000
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_data_scaling
+  - data.ignore_policy=exclude
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.lr=1e-3
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  - model.training.checkpoint_run_heldout_eval=true
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - data.subject_ratio=0.489
+  - model.penalties.update_net_latent_penalty_multiplier=1
+  - model.penalties.beta=1e-4
+  - seed=0
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: wave2-step-budget-and-penalty-extension-20260909-021546-271e731c
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: wave2-step-budget-and-penalty-extension@20260909-021546
+  - &id001
+    name: BFM_META_STUDY
+    value: 06-disrnn-operating-point-at-scale
+  - &id002
+    name: BFM_META_VARIANT
+    value: wave2-step-budget-and-penalty-extension
+  - &id003
+    name: BFM_META_LAUNCH_ID
+    value: 20260909-021546
+  - &id004
+    name: BFM_META_CONFIG_HASH
+    value: 83a9cd8b
+  - &id005
+    name: BFM_META_LABEL
+    value: wave2-penalty-ext
+  - &id006
+    name: BFM_META_NOTE
+    value: 'Stage B: extend penalty range lighter than mult-d-grid''s tested floor
+      at D=300,614; checkpoint_run_heldout_eval=true for a real held-out-vs-step curve.'
+  result:
+    path: /results
+  context:
+    priority: low
+    preemptible: true
+- name: wave2-step-budget-and-penalty-extension-20260909-021546-001
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_data_scaling
+  - data.ignore_policy=exclude
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.lr=1e-3
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  - model.training.checkpoint_run_heldout_eval=true
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - data.subject_ratio=0.489
+  - model.penalties.update_net_latent_penalty_multiplier=1
+  - model.penalties.beta=1e-4
+  - seed=1
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: wave2-step-budget-and-penalty-extension-20260909-021546-b15021b9
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: wave2-step-budget-and-penalty-extension@20260909-021546
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+  context:
+    priority: low
+    preemptible: true
+- name: wave2-step-budget-and-penalty-extension-20260909-021546-002
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_data_scaling
+  - data.ignore_policy=exclude
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.lr=1e-3
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  - model.training.checkpoint_run_heldout_eval=true
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - data.subject_ratio=0.489
+  - model.penalties.update_net_latent_penalty_multiplier=0.5
+  - model.penalties.beta=3e-4
+  - seed=0
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: wave2-step-budget-and-penalty-extension-20260909-021546-917108c7
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: wave2-step-budget-and-penalty-extension@20260909-021546
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+  context:
+    priority: low
+    preemptible: true
+- name: wave2-step-budget-and-penalty-extension-20260909-021546-003
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_data_scaling
+  - data.ignore_policy=exclude
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.lr=1e-3
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  - model.training.checkpoint_run_heldout_eval=true
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - data.subject_ratio=0.489
+  - model.penalties.update_net_latent_penalty_multiplier=0.5
+  - model.penalties.beta=3e-4
+  - seed=1
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: wave2-step-budget-and-penalty-extension-20260909-021546-7389639e
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: wave2-step-budget-and-penalty-extension@20260909-021546
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+  context:
+    priority: low
+    preemptible: true
+- name: wave2-step-budget-and-penalty-extension-20260909-021546-004
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_data_scaling
+  - data.ignore_policy=exclude
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.lr=1e-3
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  - model.training.checkpoint_run_heldout_eval=true
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - data.subject_ratio=1.0
+  - model.penalties.update_net_latent_penalty_multiplier=1
+  - model.penalties.beta=1e-4
+  - seed=0
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: wave2-step-budget-and-penalty-extension-20260909-021546-7a026328
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: wave2-step-budget-and-penalty-extension@20260909-021546
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+  context:
+    priority: low
+    preemptible: true
+- name: wave2-step-budget-and-penalty-extension-20260909-021546-005
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_data_scaling
+  - data.ignore_policy=exclude
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.lr=1e-3
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  - model.training.checkpoint_run_heldout_eval=true
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - data.subject_ratio=1.0
+  - model.penalties.update_net_latent_penalty_multiplier=1
+  - model.penalties.beta=1e-4
+  - seed=1
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: wave2-step-budget-and-penalty-extension-20260909-021546-f046f2d8
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: wave2-step-budget-and-penalty-extension@20260909-021546
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+  context:
+    priority: low
+    preemptible: true
+- name: wave2-step-budget-and-penalty-extension-20260909-021546-006
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_data_scaling
+  - data.ignore_policy=exclude
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.lr=1e-3
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  - model.training.checkpoint_run_heldout_eval=true
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - data.subject_ratio=1.0
+  - model.penalties.update_net_latent_penalty_multiplier=0.5
+  - model.penalties.beta=3e-4
+  - seed=0
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: wave2-step-budget-and-penalty-extension-20260909-021546-95f4f701
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: wave2-step-budget-and-penalty-extension@20260909-021546
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+  context:
+    priority: low
+    preemptible: true
+- name: wave2-step-budget-and-penalty-extension-20260909-021546-007
+  image:
+    beaker: han-hou/dynamic-foraging-bfm-wrapper-main-20260902
+  command:
+  - bash
+  - /workspace/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=disrnn
+  - wandb.project=disrnn_data_scaling
+  - data.ignore_policy=exclude
+  - model.architecture.choice_net_n_layers=0
+  - model.architecture.latent_size=5
+  - model.architecture.update_net_n_units_per_layer=16
+  - model.architecture.update_net_n_layers=5
+  - model.architecture.session_encoding_type=scalar
+  - model.architecture.session_n_pretrain_steps=30000
+  - model.architecture.session_n_warmup_steps=20000
+  - model.training.lr=1e-3
+  - model.training.n_steps=100000
+  - model.training.n_warmup_steps=7500
+  - model.training.checkpoint_every_n_steps=10000
+  - model.training.checkpoint_run_heldout_eval=true
+  - model.training.length_bucketing=true
+  - model.training.length_bucket_grid=128
+  - data.subject_ratio=1.0
+  - model.penalties.update_net_latent_penalty_multiplier=0.5
+  - model.penalties.beta=3e-4
+  - seed=1
+  constraints:
+    cluster:
+    - ai1/octo-hub-onprem-h200
+  resources:
+    gpuCount: 1
+    cpuCount: 12
+    memory: 90GiB
+  envVars:
+  - name: WANDB_API_KEY
+    secret: han-wandb-api-key
+  - name: WRAPPER_REF
+    value: 9595dd371ab87de49c281d8ca4bb6ae8af7c32e4
+  - name: DISPATCHER_REF
+    value: 4b926dc53ee7b4be8c0b55a8f195b7fbde5fd5f3
+  - name: FORAGING_MODELS_REF
+    value: faa0f5ad063e375765aa9c31c7d3fee5eca78ecf
+  - name: BFM_RESUMABLE_OUTPUT_DIR
+    value: /results/run
+  - name: WANDB_RUN_ID
+    value: wave2-step-budget-and-penalty-extension-20260909-021546-b54f9d3e
+  - name: WANDB_RESUME
+    value: allow
+  - name: WANDB_RUN_GROUP
+    value: wave2-step-budget-and-penalty-extension@20260909-021546
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  result:
+    path: /results
+  context:
+    priority: low
+    preemptible: true
