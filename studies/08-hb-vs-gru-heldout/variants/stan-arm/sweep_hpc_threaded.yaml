@@ -1,3 +1,8 @@
+# STATUS (2026-10-13): LAUNCHED AND CANCELLED, NOT A RECOMMENDED CONFIGURATION. The comments below
+# are the rationale as written at launch and are kept for the record. Threaded runs were cancelled
+# before finishing and gave no measurable gain in the one clean test; see launch_record/ and
+# notes.md. Do not re-run without a new hypothesis.
+#
 # HB Stan arm, threaded — the relaunch of sweep_hpc.yaml with reduce_sum actually using cores.
 #
 #     python code/launch_hpc.py \

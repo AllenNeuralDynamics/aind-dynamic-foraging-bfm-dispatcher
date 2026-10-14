@@ -49,8 +49,10 @@ num_chains: 4
 # Threading: httpstan DOES compile with STAN_THREADS defined, so the model's reduce_sum can
 # thread across subjects within a chain. Stan reads STAN_NUM_THREADS at runtime and falls back
 # to one thread when it is unset, which is how the first D~29/D~99 pair ran -- HBStanTrainer
-# now derives it from SLURM_CPUS_PER_TASK // num_chains, so the CPU request is load-bearing.
-# Size the job as num_chains * threads: 32 CPUs gives 4 chains x 8 threads.
+# now derives it from SLURM_CPUS_PER_TASK // num_chains, so the CPU request sets the thread
+# count. Threading showed no measurable gain in the one clean test (D~99, exclusive node, 16
+# threads per chain; see variants/stan-arm/notes.md), and chains run as separate processes, so
+# there is no established reason to request more than a few CPUs per chain.
 
 beta_max: 10.0                # upper bound of softmax_inverse_temperature, per the paper
 

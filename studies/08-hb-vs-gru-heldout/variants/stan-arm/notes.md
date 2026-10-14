@@ -39,15 +39,23 @@ measurement to stand on.
   `01M1PGEPRYGY542Y5JBQB17EED`) is the only NumPyro fit finished at these settings. D≈100 is
   run because it is the first rung whose lane count (~20k) is well past the ~1000-lane
   threshold where `RESULTS.md` expects JAX to start winning — i.e. the rung that could
-  actually falsify the inferred claim — but NumPyro has no finished D≈99 fit at any setting,
-  so that number stands alone until one lands.
+  actually falsify the inferred claim. NumPyro has a finished D≈99 fit at warmup 2000 / 500
+  draws, but its chains did not mix (study-08 report r4), so it is not a usable comparator,
+  and no D≈99 run exists at these settings. No Stan D≈99 fit has completed under any
+  configuration tried (see the launch records).
 - **Threading was off in the first launch, and that was my error, not a pystan limit.**
   httpstan *does* compile with `STAN_THREADS` defined (`httpstan/models.py`), so `reduce_sum`
   threads across subjects within a chain — but Stan reads `STAN_NUM_THREADS` at runtime and
   uses one thread when it is unset. Launch `20260905-020928` therefore ran single-threaded on
   an 8-CPU allocation. `HBStanTrainer` now derives the count from
-  `SLURM_CPUS_PER_TASK // num_chains`. Any timing from that first launch is a **floor**, not
-  Stan's speed.
+  `SLURM_CPUS_PER_TASK // num_chains`.
+  **Outcome of trying threads:** the one clean test (exclusive 112-core node, D≈99, 4 chains
+  x 16 threads) showed no measurable gain: under 160 iterations in 3 h, about the
+  single-thread rate. The other threaded attempts are uninformative (one pair shared a node
+  with a third job; one pair was cancelled at about 20 minutes). The completed D≈29 fit
+  (14.7 h, 8 CPUs) is therefore the only completed real-cohort Stan timing, and is the
+  configuration the study reports. See `launch_record/` for each attempt and why it ended.
+  A `reduce_sum` reslice was also tried; its effect is unresolved (the records say why).
 - **`aind-dynamic-foraging-models` is pinned to a branch on the HPC CPU env.** The `.stan`
   program ships in that package (next to the NumPyro model it ports) and is not in the
   released 0.14.0 the env carried, so the branch is installed `--no-deps` into
