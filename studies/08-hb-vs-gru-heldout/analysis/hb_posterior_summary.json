@@ -1,0 +1,613 @@
+{
+  "_meta": {
+    "produced_by": "analysis/summarize_hb_posteriors.py",
+    "produced_at_pt": "2026-10-13T17:14:33-07:00",
+    "dispatcher_git_sha": "547ba1a7c2ad9953040e1d7bfa7a7f5c5859dada",
+    "wrapper_git_sha": null,
+    "wandb_groups": [
+      "one-stage-ladder@20260903-052244",
+      "one-stage-ladder@20260903-154819",
+      "one-stage-ladder@20260903-154825",
+      "one-stage-ladder@20260903-154828",
+      "one-stage-ladder@20260903-230522",
+      "one-stage-ladder@20260904-082628"
+    ]
+  },
+  "gates": {
+    "max_rhat": 1.01,
+    "min_ess_bulk": 400,
+    "divergences": 0
+  },
+  "runs": [
+    {
+      "wandb_run_id": "one-stage-ladder-20260903-052244-530a93db",
+      "group": "one-stage-ladder@20260903-052244",
+      "subject_ratio": 0.049,
+      "num_warmup": 500,
+      "num_samples": 500,
+      "divergences_wandb": 8,
+      "beaker_experiment": "01M1KKHNKZ67YGVVGRDH2G009B",
+      "n_subjects_in_file": 29,
+      "file": "d30_att2_0.nc",
+      "n_subjects": 29,
+      "chains": 4,
+      "draws_per_chain": 500,
+      "divergences": 8,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.011842859260747,
+            "min_ess_bulk": 329.9722975890882
+          },
+          "population_scale": {
+            "max_rhat": 1.0120304075362996,
+            "min_ess_bulk": 401.1595466846354
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.0078738344924185,
+            "min_ess_bulk": 391.63643586025233
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.0239912788788814,
+            "min_ess_bulk": 204.91068443415372
+          }
+        },
+        "max_rhat": 1.0239912788788814,
+        "min_ess_bulk": 204.91068443415372
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.0250819894451533,
+            "min_ess_bulk": 202.9143467804571
+          },
+          "log_sigma": {
+            "max_rhat": 1.0254731898244782,
+            "min_ess_bulk": 176.74186734096847
+          }
+        },
+        "max_rhat": 1.0254731898244782,
+        "min_ess_bulk": 176.74186734096847
+      },
+      "max_rhat": 1.0254731898244782,
+      "min_ess_bulk": 176.74186734096847,
+      "gates": {
+        "divergences": false,
+        "max_rhat": false,
+        "min_ess_bulk": false
+      },
+      "passes_all_gates": false
+    },
+    {
+      "wandb_run_id": "one-stage-ladder-20260903-154828-d2378737",
+      "group": "one-stage-ladder@20260903-154828",
+      "subject_ratio": 1.0,
+      "num_warmup": 2000,
+      "num_samples": 500,
+      "divergences_wandb": 0,
+      "beaker_experiment": "01M1MQB7NVE8N9THHXVC4W7X8Z",
+      "n_subjects_in_file": 614,
+      "file": "d614_0.nc",
+      "n_subjects": 614,
+      "chains": 4,
+      "draws_per_chain": 500,
+      "divergences": 0,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.5747494627325604,
+            "min_ess_bulk": 7.376493382225675
+          },
+          "population_scale": {
+            "max_rhat": 1.5945317886721009,
+            "min_ess_bulk": 6.939079940141487
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.5602999710561198,
+            "min_ess_bulk": 7.113464735575858
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.5582819257901055,
+            "min_ess_bulk": 7.254950172042517
+          }
+        },
+        "max_rhat": 1.5945317886721009,
+        "min_ess_bulk": 6.939079940141487
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.690618253763657,
+            "min_ess_bulk": 6.411949097304543
+          },
+          "log_sigma": {
+            "max_rhat": 1.8917086116486947,
+            "min_ess_bulk": 5.7728250590405565
+          }
+        },
+        "max_rhat": 1.8917086116486947,
+        "min_ess_bulk": 5.7728250590405565
+      },
+      "max_rhat": 1.8917086116486947,
+      "min_ess_bulk": 5.7728250590405565,
+      "gates": {
+        "divergences": true,
+        "max_rhat": false,
+        "min_ess_bulk": false
+      },
+      "passes_all_gates": false
+    },
+    {
+      "wandb_run_id": "one-stage-ladder-20260903-230522-24405066",
+      "group": "one-stage-ladder@20260903-230522",
+      "subject_ratio": 0.049,
+      "num_warmup": 2000,
+      "num_samples": 500,
+      "divergences_wandb": 0,
+      "beaker_experiment": "01M1NGB9S8TAP8MH3R165T6RSC",
+      "n_subjects_in_file": 29,
+      "file": "diag_0.nc",
+      "n_subjects": 29,
+      "chains": 4,
+      "draws_per_chain": 500,
+      "divergences": 0,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.0190960931394757,
+            "min_ess_bulk": 306.21931689327425
+          },
+          "population_scale": {
+            "max_rhat": 1.0114646422687195,
+            "min_ess_bulk": 332.60887947194385
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.023933441979168,
+            "min_ess_bulk": 237.93898284606738
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.044933708793614,
+            "min_ess_bulk": 142.32574921892297
+          }
+        },
+        "max_rhat": 1.044933708793614,
+        "min_ess_bulk": 142.32574921892297
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.031982586810673,
+            "min_ess_bulk": 141.0441159526094
+          },
+          "log_sigma": {
+            "max_rhat": 1.0323946175373517,
+            "min_ess_bulk": 102.65739454257381
+          }
+        },
+        "max_rhat": 1.0323946175373517,
+        "min_ess_bulk": 102.65739454257381
+      },
+      "max_rhat": 1.044933708793614,
+      "min_ess_bulk": 102.65739454257381,
+      "gates": {
+        "divergences": true,
+        "max_rhat": false,
+        "min_ess_bulk": false
+      },
+      "passes_all_gates": false
+    },
+    {
+      "wandb_run_id": "one-stage-ladder-20260904-082628-dd76b428",
+      "group": "one-stage-ladder@20260904-082628",
+      "subject_ratio": 0.016,
+      "num_warmup": 2000,
+      "num_samples": 2000,
+      "divergences_wandb": 15,
+      "beaker_experiment": "01M1PGEPRYGY542Y5JBQB17EED",
+      "n_subjects_in_file": 10,
+      "file": "draws_0.nc",
+      "n_subjects": 10,
+      "chains": 4,
+      "draws_per_chain": 2000,
+      "divergences": 15,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.0011118621927073,
+            "min_ess_bulk": 2676.9232510656047
+          },
+          "population_scale": {
+            "max_rhat": 1.0012160015724436,
+            "min_ess_bulk": 2871.389514505882
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.00157306069457,
+            "min_ess_bulk": 2272.771499316482
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.00413111198495,
+            "min_ess_bulk": 1768.3339865958421
+          }
+        },
+        "max_rhat": 1.00413111198495,
+        "min_ess_bulk": 1768.3339865958421
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.0039854942840143,
+            "min_ess_bulk": 1275.2959139910397
+          },
+          "log_sigma": {
+            "max_rhat": 1.0048084003301618,
+            "min_ess_bulk": 755.8249490177211
+          }
+        },
+        "max_rhat": 1.0048084003301618,
+        "min_ess_bulk": 755.8249490177211
+      },
+      "max_rhat": 1.0048084003301618,
+      "min_ess_bulk": 755.8249490177211,
+      "gates": {
+        "divergences": false,
+        "max_rhat": true,
+        "min_ess_bulk": true
+      },
+      "passes_all_gates": false
+    },
+    {
+      "wandb_run_id": "one-stage-ladder-20260904-082628-c918dd65",
+      "group": "one-stage-ladder@20260904-082628",
+      "subject_ratio": 0.049,
+      "num_warmup": 2000,
+      "num_samples": 2000,
+      "divergences_wandb": 5,
+      "beaker_experiment": "01M1PGEPRYGY542Y5JBQB17EED",
+      "n_subjects_in_file": 29,
+      "file": "draws_1.nc",
+      "n_subjects": 29,
+      "chains": 4,
+      "draws_per_chain": 2000,
+      "divergences": 5,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.0049084208985528,
+            "min_ess_bulk": 899.4475233434539
+          },
+          "population_scale": {
+            "max_rhat": 1.003139197464361,
+            "min_ess_bulk": 1188.3623219960734
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.0032632572754037,
+            "min_ess_bulk": 1103.417391089629
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.005270942680466,
+            "min_ess_bulk": 734.6239743129522
+          }
+        },
+        "max_rhat": 1.005270942680466,
+        "min_ess_bulk": 734.6239743129522
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.007600264277108,
+            "min_ess_bulk": 767.8026677046327
+          },
+          "log_sigma": {
+            "max_rhat": 1.0052344526821488,
+            "min_ess_bulk": 389.5862343638072
+          }
+        },
+        "max_rhat": 1.007600264277108,
+        "min_ess_bulk": 389.5862343638072
+      },
+      "max_rhat": 1.007600264277108,
+      "min_ess_bulk": 389.5862343638072,
+      "gates": {
+        "divergences": false,
+        "max_rhat": true,
+        "min_ess_bulk": false
+      },
+      "passes_all_gates": false
+    },
+    {
+      "wandb_run_id": "one-stage-ladder-20260903-154819-2d8fa0a3",
+      "group": "one-stage-ladder@20260903-154819",
+      "subject_ratio": 0.016,
+      "num_warmup": 2000,
+      "num_samples": 500,
+      "divergences_wandb": 6,
+      "beaker_experiment": "01M1MQB0SRRBDDRKP1SX3T55DV",
+      "n_subjects_in_file": 10,
+      "file": "ladder_0.nc",
+      "n_subjects": 10,
+      "chains": 4,
+      "draws_per_chain": 500,
+      "divergences": 6,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.0092196905488302,
+            "min_ess_bulk": 592.5725736257031
+          },
+          "population_scale": {
+            "max_rhat": 1.004435944198437,
+            "min_ess_bulk": 653.2890321041534
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.0059836285745811,
+            "min_ess_bulk": 686.8874795721206
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.0175573517432,
+            "min_ess_bulk": 355.00364557862287
+          }
+        },
+        "max_rhat": 1.0175573517432,
+        "min_ess_bulk": 355.00364557862287
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.0070377833401554,
+            "min_ess_bulk": 315.1749270434213
+          },
+          "log_sigma": {
+            "max_rhat": 1.0121861364931553,
+            "min_ess_bulk": 232.45154752834137
+          }
+        },
+        "max_rhat": 1.0121861364931553,
+        "min_ess_bulk": 232.45154752834137
+      },
+      "max_rhat": 1.0175573517432,
+      "min_ess_bulk": 232.45154752834137,
+      "gates": {
+        "divergences": false,
+        "max_rhat": false,
+        "min_ess_bulk": false
+      },
+      "passes_all_gates": false
+    },
+    {
+      "wandb_run_id": "one-stage-ladder-20260903-154819-b2820f5c",
+      "group": "one-stage-ladder@20260903-154819",
+      "subject_ratio": 0.049,
+      "num_warmup": 2000,
+      "num_samples": 500,
+      "divergences_wandb": 0,
+      "beaker_experiment": "01M1MQB0SRRBDDRKP1SX3T55DV",
+      "n_subjects_in_file": 29,
+      "file": "ladder_1.nc",
+      "n_subjects": 29,
+      "chains": 4,
+      "draws_per_chain": 500,
+      "divergences": 0,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.0190960931394757,
+            "min_ess_bulk": 306.21931689327425
+          },
+          "population_scale": {
+            "max_rhat": 1.0114646422687195,
+            "min_ess_bulk": 332.60887947194385
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.023933441979168,
+            "min_ess_bulk": 237.93898284606738
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.044933708793614,
+            "min_ess_bulk": 142.32574921892297
+          }
+        },
+        "max_rhat": 1.044933708793614,
+        "min_ess_bulk": 142.32574921892297
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.031982586810673,
+            "min_ess_bulk": 141.0441159526094
+          },
+          "log_sigma": {
+            "max_rhat": 1.0323946175373517,
+            "min_ess_bulk": 102.65739454257381
+          }
+        },
+        "max_rhat": 1.0323946175373517,
+        "min_ess_bulk": 102.65739454257381
+      },
+      "max_rhat": 1.044933708793614,
+      "min_ess_bulk": 102.65739454257381,
+      "gates": {
+        "divergences": true,
+        "max_rhat": false,
+        "min_ess_bulk": false
+      },
+      "passes_all_gates": false
+    },
+    {
+      "wandb_run_id": "one-stage-ladder-20260903-154819-77709a28",
+      "group": "one-stage-ladder@20260903-154819",
+      "subject_ratio": 0.163,
+      "num_warmup": 2000,
+      "num_samples": 500,
+      "divergences_wandb": 0,
+      "beaker_experiment": "01M1MQB0SRRBDDRKP1SX3T55DV",
+      "n_subjects_in_file": 99,
+      "file": "ladder_2.nc",
+      "n_subjects": 99,
+      "chains": 4,
+      "draws_per_chain": 500,
+      "divergences": 0,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.6022399808905434,
+            "min_ess_bulk": 6.820229819501321
+          },
+          "population_scale": {
+            "max_rhat": 1.5978127864622989,
+            "min_ess_bulk": 6.821829039842738
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.594096378722322,
+            "min_ess_bulk": 6.818719624123243
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.5614442388854775,
+            "min_ess_bulk": 7.020819245197798
+          }
+        },
+        "max_rhat": 1.6022399808905434,
+        "min_ess_bulk": 6.818719624123243
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.6111731170642003,
+            "min_ess_bulk": 6.765391426886983
+          },
+          "log_sigma": {
+            "max_rhat": 1.6051535518540916,
+            "min_ess_bulk": 6.767360862364485
+          }
+        },
+        "max_rhat": 1.6111731170642003,
+        "min_ess_bulk": 6.765391426886983
+      },
+      "max_rhat": 1.6111731170642003,
+      "min_ess_bulk": 6.765391426886983,
+      "gates": {
+        "divergences": true,
+        "max_rhat": false,
+        "min_ess_bulk": false
+      },
+      "passes_all_gates": false
+    },
+    {
+      "wandb_run_id": "one-stage-ladder-20260903-154819-fe8fe870",
+      "group": "one-stage-ladder@20260903-154819",
+      "subject_ratio": 0.489,
+      "num_warmup": 2000,
+      "num_samples": 500,
+      "divergences_wandb": 0,
+      "beaker_experiment": "01M1MQB0SRRBDDRKP1SX3T55DV",
+      "n_subjects_in_file": 300,
+      "file": "ladder_3.nc",
+      "n_subjects": 300,
+      "chains": 4,
+      "draws_per_chain": 500,
+      "divergences": 0,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.0135057102889773,
+            "min_ess_bulk": 239.88372996980928
+          },
+          "population_scale": {
+            "max_rhat": 1.0152725737564048,
+            "min_ess_bulk": 481.1715956102007
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.0046815310428363,
+            "min_ess_bulk": 778.0275524015822
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.010610987415885,
+            "min_ess_bulk": 489.7280988040221
+          }
+        },
+        "max_rhat": 1.0152725737564048,
+        "min_ess_bulk": 239.88372996980928
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.0440484431108614,
+            "min_ess_bulk": 76.35430116822555
+          },
+          "log_sigma": {
+            "max_rhat": 1.2828222430881964,
+            "min_ess_bulk": 10.938310674830333
+          }
+        },
+        "max_rhat": 1.2828222430881964,
+        "min_ess_bulk": 10.938310674830333
+      },
+      "max_rhat": 1.2828222430881964,
+      "min_ess_bulk": 10.938310674830333,
+      "gates": {
+        "divergences": true,
+        "max_rhat": false,
+        "min_ess_bulk": false
+      },
+      "passes_all_gates": false
+    },
+    {
+      "wandb_run_id": "one-stage-ladder-20260903-154825-dbbc207d",
+      "group": "one-stage-ladder@20260903-154825",
+      "subject_ratio": 0.049,
+      "num_warmup": 4000,
+      "num_samples": 500,
+      "divergences_wandb": 0,
+      "beaker_experiment": "01M1MQB4MVJ76GK8NQR07WH9HR",
+      "n_subjects_in_file": 29,
+      "file": "w4000_0.nc",
+      "n_subjects": 29,
+      "chains": 4,
+      "draws_per_chain": 500,
+      "divergences": 0,
+      "group_level": {
+        "per_site": {
+          "population_mean": {
+            "max_rhat": 1.0142428610851024,
+            "min_ess_bulk": 240.3201336948359
+          },
+          "population_scale": {
+            "max_rhat": 1.0097707075933213,
+            "min_ess_bulk": 345.58103175665366
+          },
+          "log_sigma_mean": {
+            "max_rhat": 1.0180230542799615,
+            "min_ess_bulk": 362.4016690496027
+          },
+          "log_sigma_spread": {
+            "max_rhat": 1.013972008467359,
+            "min_ess_bulk": 219.8802377084778
+          }
+        },
+        "max_rhat": 1.0180230542799615,
+        "min_ess_bulk": 219.8802377084778
+      },
+      "subject_level": {
+        "per_site": {
+          "mu_p": {
+            "max_rhat": 1.0328390331270547,
+            "min_ess_bulk": 225.1333054520091
+          },
+          "log_sigma": {
+            "max_rhat": 1.042162152585571,
+            "min_ess_bulk": 140.36438126524683
+          }
+        },
+        "max_rhat": 1.042162152585571,
+        "min_ess_bulk": 140.36438126524683
+      },
+      "max_rhat": 1.042162152585571,
+      "min_ess_bulk": 140.36438126524683,
+      "gates": {
+        "divergences": true,
+        "max_rhat": false,
+        "min_ess_bulk": false
+      },
+      "passes_all_gates": false
+    }
+  ]
+}

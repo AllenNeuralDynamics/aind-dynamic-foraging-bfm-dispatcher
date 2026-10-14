@@ -1,0 +1,102 @@
+{
+ "d30_att2_0.nc": {
+  "wandb_run_id": "one-stage-ladder-20260903-052244-530a93db",
+  "group": "one-stage-ladder@20260903-052244",
+  "subject_ratio": 0.049,
+  "num_warmup": 500,
+  "num_samples": 500,
+  "divergences_wandb": 8,
+  "beaker_experiment": "01M1KKHNKZ67YGVVGRDH2G009B",
+  "n_subjects_in_file": 29
+ },
+ "d614_0.nc": {
+  "wandb_run_id": "one-stage-ladder-20260903-154828-d2378737",
+  "group": "one-stage-ladder@20260903-154828",
+  "subject_ratio": 1.0,
+  "num_warmup": 2000,
+  "num_samples": 500,
+  "divergences_wandb": 0,
+  "beaker_experiment": "01M1MQB7NVE8N9THHXVC4W7X8Z",
+  "n_subjects_in_file": 614
+ },
+ "diag_0.nc": {
+  "wandb_run_id": "one-stage-ladder-20260903-230522-24405066",
+  "group": "one-stage-ladder@20260903-230522",
+  "subject_ratio": 0.049,
+  "num_warmup": 2000,
+  "num_samples": 500,
+  "divergences_wandb": 0,
+  "beaker_experiment": "01M1NGB9S8TAP8MH3R165T6RSC",
+  "n_subjects_in_file": 29
+ },
+ "draws_0.nc": {
+  "wandb_run_id": "one-stage-ladder-20260904-082628-dd76b428",
+  "group": "one-stage-ladder@20260904-082628",
+  "subject_ratio": 0.016,
+  "num_warmup": 2000,
+  "num_samples": 2000,
+  "divergences_wandb": 15,
+  "beaker_experiment": "01M1PGEPRYGY542Y5JBQB17EED",
+  "n_subjects_in_file": 10
+ },
+ "draws_1.nc": {
+  "wandb_run_id": "one-stage-ladder-20260904-082628-c918dd65",
+  "group": "one-stage-ladder@20260904-082628",
+  "subject_ratio": 0.049,
+  "num_warmup": 2000,
+  "num_samples": 2000,
+  "divergences_wandb": 5,
+  "beaker_experiment": "01M1PGEPRYGY542Y5JBQB17EED",
+  "n_subjects_in_file": 29
+ },
+ "ladder_0.nc": {
+  "wandb_run_id": "one-stage-ladder-20260903-154819-2d8fa0a3",
+  "group": "one-stage-ladder@20260903-154819",
+  "subject_ratio": 0.016,
+  "num_warmup": 2000,
+  "num_samples": 500,
+  "divergences_wandb": 6,
+  "beaker_experiment": "01M1MQB0SRRBDDRKP1SX3T55DV",
+  "n_subjects_in_file": 10
+ },
+ "ladder_1.nc": {
+  "wandb_run_id": "one-stage-ladder-20260903-154819-b2820f5c",
+  "group": "one-stage-ladder@20260903-154819",
+  "subject_ratio": 0.049,
+  "num_warmup": 2000,
+  "num_samples": 500,
+  "divergences_wandb": 0,
+  "beaker_experiment": "01M1MQB0SRRBDDRKP1SX3T55DV",
+  "n_subjects_in_file": 29
+ },
+ "ladder_2.nc": {
+  "wandb_run_id": "one-stage-ladder-20260903-154819-77709a28",
+  "group": "one-stage-ladder@20260903-154819",
+  "subject_ratio": 0.163,
+  "num_warmup": 2000,
+  "num_samples": 500,
+  "divergences_wandb": 0,
+  "beaker_experiment": "01M1MQB0SRRBDDRKP1SX3T55DV",
+  "n_subjects_in_file": 99
+ },
+ "ladder_3.nc": {
+  "wandb_run_id": "one-stage-ladder-20260903-154819-fe8fe870",
+  "group": "one-stage-ladder@20260903-154819",
+  "subject_ratio": 0.489,
+  "num_warmup": 2000,
+  "num_samples": 500,
+  "divergences_wandb": 0,
+  "beaker_experiment": "01M1MQB0SRRBDDRKP1SX3T55DV",
+  "n_subjects_in_file": 300
+ },
+ "w4000_0.nc": {
+  "wandb_run_id": "one-stage-ladder-20260903-154825-dbbc207d",
+  "group": "one-stage-ladder@20260903-154825",
+  "subject_ratio": 0.049,
+  "num_warmup": 4000,
+  "num_samples": 500,
+  "divergences_wandb": 0,
+  "beaker_experiment": "01M1MQB4MVJ76GK8NQR07WH9HR",
+  "n_subjects_in_file": 29
+ }
+}
