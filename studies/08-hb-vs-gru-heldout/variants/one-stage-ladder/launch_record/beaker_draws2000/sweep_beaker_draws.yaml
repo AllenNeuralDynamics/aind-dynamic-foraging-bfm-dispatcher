@@ -1,0 +1,60 @@
+# HB draws probe — D≈10 and D≈30 at 2000 draws.
+#
+# WHY DRAWS, AND WHY THIS IS THE LAST LEVER
+#
+# The ladder's D≈29 rungs fail the ESS and r_hat gates with ZERO divergences, and the
+# instrumented rung (Beaker 01M1NGB9S8TAP8MH3R165T6RSC, wrapper#90) ruled out every cheaper
+# explanation:
+#
+#   reached_max_tree_depth   0.00% of 2000 draws   -> trajectories are not truncated;
+#                                                     raising max_tree_depth changes nothing
+#   tree_depth               6 for 94% of draws, max 9 against a cap of 10
+#   n_steps                  mean 68 against a cap of 1023
+#   acceptance_rate          0.86 mean / 0.90 median against a target of 0.8
+#                                                  -> adaptation reached its target;
+#                                                     warmup did not end early
+#   E-BFMI                   0.78-0.93 per chain (flag below 0.3)
+#                                                  -> no heavy tails the momentum cannot cross
+#
+# Clean geometry, on-target adaptation, no divergences, and still bulk ESS ~103 with r_hat
+# ~1.04 and four overlapping chains. That is genuinely slow mixing, which leaves draws as
+# the only remaining lever -- and it is the one case where more draws is the correct fix
+# rather than a way of papering over geometry.
+#
+# 2000 draws: ESS ~103 from 500 draws/chain needs roughly 4x to clear the gate of 400.
+# Warmup stays at the config's 2000. The warmup series (500 -> 8 divergences, 2000 -> 0,
+# 4000 -> 0 with no ESS gain) already showed 4000 buys nothing but wall time, so raising
+# both would spend compute to confound two knobs.
+#
+# WHY ONLY TWO RUNGS
+#
+# D≈10 and D≈30 are the rungs that complete, so they answer "does 4x draws actually clear
+# the gates" fastest and against a measured baseline. D≈99/300/614 have not finished even at
+# 500 draws, and launching them here would add long jobs to an already contended node while
+# testing a fix that is not yet known to work. If these two clear, the rest follow.
+
+entity: AIND-disRNN
+project: mice_data_scaling
+name: hb-draws-probe
+
+method: grid
+metric:
+  name: heldout/eval_likelihood
+  goal: maximize
+
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=hb_hattori
+  - seed=0
+  - wandb.entity=AIND-disRNN
+  - wandb.project=mice_data_scaling
+  - ${args_no_hyphens}
+
+parameters:
+  data.subject_ratio:
+    values: [0.016, 0.049]     # D≈10 and D≈30 — the rungs with a measured baseline
+  model.num_samples:
+    values: [2000]             # 4x, to lift bulk ESS ~103 past the gate of 400

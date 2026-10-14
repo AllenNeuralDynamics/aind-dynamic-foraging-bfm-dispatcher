@@ -7,17 +7,29 @@ held-out cohort with matched conditioning.
 |---|---|
 | **W&B project** | `mice_data_scaling` — **study 01's project, not a new one** (see deviation below) |
 | **Launch surface** | Beaker (`sweep_beaker.yaml` + `experiment_beaker.yaml`); `production.sbatch` still carries pre-rename paths |
-| **Status** | D10 complete on the current code. D30 in flight. D101 and above not yet attempted on the current code |
+| **Status** | All five rungs (D≈10/30/100/300/614) have run on the current code and finished. **No HB rung passes the convergence gates**, and the D≈99, 300 and 614 chains did not mix, so their held-out numbers are not results; see the rung table and study-08 report r4 ([PR #168](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/pull/168)) |
 
-### Rung state, 2026-09-03
+### Rung state, 2026-10-14
 
-| rung | ratio | state |
-|---|---|---|
-| D≈10 | 0.016 | complete — path smoke plus three fixed-seed replicates, all exit 0 |
-| D≈30 | 0.049 | in flight — Beaker experiment `01M1K112YCMY31GNDKHESW9G6Z`, production sampler 500/500/4 |
-| D≈101 | 0.163 | not attempted on the current code |
+The production grid (`sweep_beaker.yaml`, warmup 2000 / 500 draws / 4 chains) and the full-cohort rung
+(`sweep_beaker_d614.yaml`) have both run; each submission has a record under `launch_record/`.
+Convergence is recomputed from each run's saved posterior (report r4): worst R-hat and lowest bulk ESS
+over the group-level and per-mouse sites.
 
-**The D30 and D101 rungs have never completed.** Both crashed on 2026-08-29 in group
+| rung | ratio | Beaker experiment | state | worst R-hat / lowest ESS / divergences |
+|---|---|---|---|---|
+| D≈10 | 0.016 | `01M1MQB0SRRBDDRKP1SX3T55DV` (ladder) | finished | 1.018 / 232 / 6 |
+| D≈29 | 0.049 | same | finished | 1.045 / 103 / 0 |
+| D≈99 | 0.163 | same | finished, chains not mixed | 1.611 / 7 / 0 |
+| D≈300 | 0.489 | same | finished, per-mouse chains not mixed | 1.283 / 11 / 0 |
+| D=614 | 1.0 | `01M1MQB7NVE8N9THHXVC4W7X8Z` (full cohort) | finished, chains not mixed | 1.892 / 6 / 0 |
+
+Sampler probes at D≈29 (same seed): warmup 4000 (`01M1MQB4MVJ76GK8NQR07WH9HR`), the sampler-diagnostic run
+(`01M1NGB9S8TAP8MH3R165T6RSC`, which reproduces the ladder's D≈29 numbers exactly), and 2000 draws at D≈10 and
+D≈29 (`01M1PGEPRYGY542Y5JBQB17EED`), the nearest to passing the gates. Two first launches were cancelled about five
+minutes in and are recorded as such (`beaker_ladder_try1_cancelled`, `beaker_warmup4000_try1_cancelled`).
+
+**The 2026-08-29 D30 and D101 attempts never completed.** Both crashed on 2026-08-29 in group
 `hb-one_stage@20260829-181251` (SLURM 25489921/22/23), seconds after the trainer started.
 That group is the *relaunch* recorded in `launch_record/hpc_ladder_relaunch.json`, whose
 record documents only the earlier `ModuleNotFoundError: wandb` failure and the resubmission
@@ -32,8 +44,9 @@ recorded in W&B, so they are not comparable with anything run since.
 
 ## What differs
 
-Only `data.subject_ratio`: 0.016 / 0.049 / 0.163, giving D ≈ 10 / 30 / 101 against the
-~614 pool. Everything else matches study 01's `mice_snapshot_scaling` config — same
+Only `data.subject_ratio`: 0.016 / 0.049 / 0.163 / 0.489 / 1.0, giving D ≈ 10 / 30 / 100 / 300 / 614
+against the ~614 pool (the last is the whole pool). The probe launches also vary the sampler settings
+(warmup, draws) at D≈29. Everything else matches study 01's `mice_snapshot_scaling` config — same
 snapshot `20260603`, curricula, `min_sessions=10`, `heldout_every_n=5`,
 `mature_only=false`, `ignore_policy=exclude`, `eval_every_n=2`.
 
