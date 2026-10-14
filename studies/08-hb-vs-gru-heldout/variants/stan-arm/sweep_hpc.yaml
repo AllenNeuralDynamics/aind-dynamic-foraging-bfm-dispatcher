@@ -6,7 +6,13 @@
 #
 #     python code/launch_hpc.py \
 #       --sweep-yaml studies/08-hb-vs-gru-heldout/variants/stan-arm/sweep_hpc.yaml \
-#       --mode cpu --sbatch-extra=--array=0-1 --agent-count 1
+#       --mode cpu --agent-count 1 \
+#       --sbatch-extra='--array=0-1 --cpus-per-task=8 --mem=128G --time=72:00:00'
+#
+# The --sbatch-extra is the request this sweep was actually launched with (launch record
+# hpc_stan_arm.json). It is required: the CPU script's defaults are 2 CPUs and 5 hours, which cannot
+# hold four chains or a fit that took about 14.7 h. That request completed D~29; it does not establish
+# that D~99 can finish in 72 h (no D~99 Stan fit has completed under any configuration tried).
 #
 # WHY HPC AND NOT BEAKER: Stan is CPU-only. The NumPyro ladder runs on Beaker for the GPU;
 # this arm has nothing to put on one, and the reference benchmark was measured on CPU too.
