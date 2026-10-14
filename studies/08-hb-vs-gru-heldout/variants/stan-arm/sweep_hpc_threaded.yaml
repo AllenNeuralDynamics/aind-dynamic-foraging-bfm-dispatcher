@@ -22,11 +22,15 @@
 # posterior, so keeping that grid intact leaves it identifiable in W&B.
 #
 # BOTH RUNGS, and D≈29 is here on purpose even though it already has a completed fit.
-# That fit (launch 20260905-020928, 53001 s) ran the pre-reslice model, whose reduce_sum
-# copied its parameter arrays into every partial sum. Its POSTERIOR is valid — same target
-# density — so its ESS and r_hat stand, but its wall time is a floor rather than Stan's
-# speed, and the ESS/second comparison against NumPyro is built on it. Re-running D≈29 here
-# converts that floor into a measurement and prices the reslice on identical data and seed.
+# That fit (launch 20260905-020928, 53001 s) ran the pre-reslice model, which passes the
+# parameter arrays to reduce_sum as shared arguments. The reslice was proposed on the theory
+# that this makes reduce_sum copy them into every partial sum; that theory was never
+# validated (see launch_record/hpc_stan_reslice_serial.json), and the direction of the
+# reslice's effect is unresolved. The pre-reslice posterior is valid -- same target density --
+# so its ESS and r_hat stand, and its 53001 s is simply the timing of that implementation on
+# its 8-CPU allocation, neither a lower nor an upper bound. The ESS/second comparison against
+# NumPyro is built on it. Re-running D≈29 here was meant to price the reslice on identical
+# data and seed.
 #
 # --exclusive is not optional: Stan's TBB threads busy-wait, so a threaded job sharing a node
 # inflates load far past its core count and slows every neighbour including itself. The first
@@ -40,9 +44,10 @@
 # nothing else needs editing.
 #
 # Rates this replaces, for reference. Thread count unrecorded (expected one): D≈29 ~1300 iter/h (completed in 14.7 h),
-# D≈99 ~53 iter/h. Threaded but pre-reslice: D≈99 managed under 160 iterations in 3 h on 92
-# busy cores — no better than one thread, because reduce_sum was copying ~3.7M autodiff
-# variables per gradient rather than computing. That is the fix this sweep tests.
+# D≈99 reached 600 of 16000 iterations in 9 h 41 m. Threaded but pre-reslice: D≈99 managed under
+# 160 iterations in 3 h on 92 busy cores, no better than the unthreaded rate. The cause was
+# hypothesised to be reduce_sum copying the shared parameter arguments; that was never
+# validated, and this sweep was to test the reslice proposed on that theory.
 
 entity: AIND-disRNN
 project: mice_data_scaling

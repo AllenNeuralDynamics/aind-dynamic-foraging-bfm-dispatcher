@@ -60,7 +60,9 @@ beta_max: 10.0                # upper bound of softmax_inverse_temperature, per 
 # falls back to int(time.time()), so the rung cannot be reproduced from its own config.
 seed: ${seed}
 
-# Population draws plus diagnostics and provenance. A cohort fit costs hours.
+# Population draws plus diagnostics and provenance. A cohort fit costs hours. Every run of a
+# sweep gets this same path, so HBStanTrainer writes into a subdirectory named for the W&B run
+# (artifact_dir/<run id>/); without that, a later rung would overwrite an earlier rung's posterior.
 artifact_dir: ${oc.env:BFM_OUTPUT_DIR,${oc.env:DISRNN_OUTPUT_DIR,/results}}/hb_stan_artifacts
 
 run_name_component: hb_stan
