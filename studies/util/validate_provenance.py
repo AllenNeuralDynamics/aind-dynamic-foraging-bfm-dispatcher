@@ -105,6 +105,25 @@ def check_backfill_documented(analysis_dir: Path, records: list[dict], findings:
                  f"{n_backfilled} recovered value(s), documented by a backfill record")
 
 
+def recorded_for_group(records: list[dict], wandb_group: str) -> list[dict]:
+    """Records attributable to ``wandb_group`` (top-level ``wandb_group`` or ``_meta.wandb_groups``).
+
+    A variant can hold launches that feed several W&B groups (study 08's one-stage-ladder has
+    many), and records are now discovered recursively, so "recorded but not seen" must be judged
+    per group: a record for another group's experiment is not missing from this group's scan.
+    Records that name no group cannot be attributed and are left out of that comparison.
+    """
+    out = []
+    for r in records:
+        groups = set()
+        if r.get("wandb_group"):
+            groups.add(r["wandb_group"])
+        groups.update((r.get("_meta") or {}).get("wandb_groups") or [])
+        if wandb_group in groups:
+            out.append(r)
+    return out
+
+
 def check_beaker(wandb_group: str, records: list[dict], workspace: str,
                  scan_limit: int, findings: list) -> None:
     """Check 3 — every Beaker experiment for this group appears in some record.
@@ -143,8 +162,8 @@ def check_beaker(wandb_group: str, records: list[dict], workspace: str,
                 found.add(exp.id)
                 break
 
-    unrecorded = found - recorded
-    missing = recorded - found
+    unrecorded = found - recorded                      # any record counts: it is written down somewhere
+    missing = experiment_ids_in(recorded_for_group(records, wandb_group)) - found
     if unrecorded:
         _finding(findings, "ERROR", "beaker",
                  f"{len(unrecorded)} Beaker experiment(s) target group {wandb_group} but appear "
