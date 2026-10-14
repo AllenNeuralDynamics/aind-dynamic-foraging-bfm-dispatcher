@@ -88,6 +88,7 @@ review on PR #163). attribution_report.py's verify_verdict_numbers() re-derives 
 raises make-all-failing AssertionError if a CSV change makes this prose stale; a CSV change
 should still prompt a human read-through of the rest of this paragraph's claims. -->
 
+<!-- BEGIN verdict -->
 **Verdict: at most ~12% of the residual gap closes, and it does not close monotonically.**
 Zeroing the interaction penalty alone (stage 1) recovers essentially all of the closure this
 ablation ever achieves. Adding the update-net linearity (stage 2) does not extend it further —
@@ -106,6 +107,7 @@ capacity/regularization not being the dominant remaining bottleneck at this scal
 cannot distinguish that from "the effect only shows up much closer to latent_size=256." True
 GRU-parity capacity requires the wrapper's `update_latents` `vmap` fix
 ([wrapper#99](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/issues/99)).
+<!-- END verdict -->
 
 ## Generalization gap (checkpoint/eval_likelihood − heldout/final/eval_likelihood)
 

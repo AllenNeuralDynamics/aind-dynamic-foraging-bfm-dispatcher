@@ -211,7 +211,17 @@ def verify_verdict_numbers(closure_pcts: list[float], max_closure_pct: float,
     """
     if not REPORT.exists():
         return
-    text = REPORT.read_text()
+    full_text = REPORT.read_text()
+    # Check ONLY the hand-written Verdict section (between the markers, which sit outside
+    # the generated result-N blocks). Searching the whole report would let regenerated
+    # table values satisfy the checks while the Verdict prose is stale.
+    begin, end = "<!-- BEGIN verdict -->", "<!-- END verdict -->"
+    if full_text.count(begin) != 1 or full_text.count(end) != 1 or \
+            full_text.index(begin) > full_text.index(end):
+        raise AssertionError(
+            f"{REPORT.name}: expected exactly one '{begin}' ... '{end}' pair delimiting the "
+            "Verdict section; cannot verify verdict numbers without it.")
+    text = full_text.split(begin, 1)[1].split(end, 1)[0]
     checks = [
         (f"~{round(max_closure_pct)}% of the residual gap closes", "headline max-closure %"),
         (f"{closure_pcts[3]:.1f}% vs. {closure_pcts[1]:.1f}%", "stage3 vs. stage1 closure % comparison"),
