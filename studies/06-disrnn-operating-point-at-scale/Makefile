@@ -10,11 +10,15 @@
 # from W&B (needs WANDB_API_KEY) -- run before r2 to get the freshest numbers while the grid is
 # still in flight. r2 overlays this study's live grid against study 05's fixed-penalty curve and
 # study 01's GRU curve.
+# r3 regenerates OFFLINE from the committed mult-d-grid (analysis/grid.csv) PLUS wave 2's
+# committed grid_wave2.csv; `pull_wave2` re-pulls the latter from W&B (needs WANDB_API_KEY;
+# wandb.Api() is blocked in the Claude Science sandbox -- see pull_wave2_grid.py's docstring
+# for the GraphQL fallback used from there).
 
 PY ?= python
-.PHONY: all r1 r2 pull
+.PHONY: all r1 r2 r3 pull pull_wave2
 
-all: r1 r2
+all: r1 r2 r3
 
 # r1 = penalty selection (Kevin's in-sample-vs-held-out plot), zero new compute.
 r1:
@@ -24,7 +28,15 @@ r1:
 r2:
 	$(PY) analysis/scaling_report.py
 
+# r3 = wave-2 penalty-edge extension (does lighter-than-mult-d-grid's-floor keep helping?).
+r3:
+	$(PY) analysis/r3_penalty_edge_extension.py
+
 # Refresh analysis/grid.csv from W&B, filtered to this study's group (needs WANDB_API_KEY).
 # Not part of `all` — the committed CSV is the source of truth so reports regenerate offline.
 pull:
 	$(PY) analysis/pull_grid.py
+
+# Refresh analysis/grid_wave2.csv from W&B, filtered to wave 2's group (needs WANDB_API_KEY).
+pull_wave2:
+	$(PY) analysis/pull_wave2_grid.py
