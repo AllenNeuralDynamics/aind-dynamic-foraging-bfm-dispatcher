@@ -95,6 +95,12 @@ def extract() -> list[dict]:
             if run["state"] == "finished":
                 for name in required:
                     K.require(summ, keys[name], label)
+            if spec["counts"] and run["state"] == "finished":
+                # A reported number must be traceable to the seed it ran with. Both are None when the config
+                # lacks them, so absence is rejected rather than frozen as null.
+                if rec["seed"] is None or rec["data_seed"] is None or rec["seed"] != rec["data_seed"]:
+                    raise RuntimeError(f"{label}: resolved seed is missing or inconsistent "
+                                       f"(model.seed={rec['seed']!r}, data.seed={rec['data_seed']!r})")
             rec.update({name: summ.get(key) for name, key in keys.items()})
             rows.append(rec)
     for r in rows:

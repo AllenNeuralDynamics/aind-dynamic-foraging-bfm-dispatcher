@@ -60,7 +60,7 @@ def build() -> dict:
         assert len(h) == 149
         for k in RL:
             m = h.merge(ml[k][["subject_id", "eval_likelihood", "num_eval_trials"]], on="subject_id", validate="one_to_one")
-            assert len(m) == 149 and (m.n_trials == m.num_eval_trials).all(), "HB and RL were not scored on the same trials"
+            assert len(m) == 149 and (m.n_trials == m.num_eval_trials).all(), "HB and RL do not cover the same mice with the same number of scored trials per mouse"
             d = m.likelihood - m.eval_likelihood
             w = stats.wilcoxon(d)
             rows.append({"D": int(r.D), "wandb_run_id": r.wandb_run_id, "rl_model": k, "n_mice": len(m),
@@ -118,7 +118,7 @@ def main() -> None:
     s = d["summary"]
     meta = build_meta("analysis/per_mouse.py", sorted(HEADLINE), HERE.parent)
     (HERE / "per_mouse.json").write_text(json.dumps({"_meta": meta, "cohort": {"n_mice": 149, "n_trials": 1013172},
-        "pairing": "same held-out mice and the same scored trials (asserted); difference = HB likelihood minus the mouse's own RL fit",
+        "pairing": "same 149 held-out mice, joined by subject id, with equal per-mouse scored-trial counts (asserted); the individual trials are not compared, only their counts; difference = HB likelihood minus the mouse's own RL fit",
         "not_mixed_rhat_threshold": NOT_MIXED_RHAT, "summary": s.to_dict("records")}, indent=2) + "\n")
     d["pairs"].to_csv(HERE / "per_mouse.csv", index=False)
     figure(d, HERE / "fig_per_mouse.png")

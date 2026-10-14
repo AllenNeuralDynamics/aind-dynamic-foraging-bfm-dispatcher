@@ -14,10 +14,19 @@ count is read from the posterior itself and must equal the count implied by the 
 
     python summarize_hb_posteriors.py <posterior_dir> <manifest.json>
 
+Each manifest entry pins its file. Subject count and divergence count alone do not identify a posterior (several D=29 runs share both), so before any run metadata is attached to a file the script checks:
+  sha256 / size_bytes   the exact bytes analysed;
+  dataset_wandb_run     the W&B run directory inside the Beaker result dataset the file came from
+                        (``wandb/run-<time>-<run id>/``), which must equal ``wandb_run_id``. That is the
+                        run identity the saved artifact itself lacks: the .nc embeds no run id;
+  draws per chain       read from the file, must equal the run's ``num_samples``.
+The pin fields were added on 2026-10-14 from the Beaker dataset listing and a local hash of the files as downloaded.
+
 Gates, as set in the study plan: zero divergences, max R-hat < 1.01, min bulk ESS >= 400.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -65,7 +74,20 @@ def main(post_dir: str, manifest_path: str) -> None:
     manifest = json.loads(Path(manifest_path).read_text())   # {file: {wandb_run_id, group, subject_ratio, divergences_wandb}}
     rows = []
     for fname, m in sorted(manifest.items()):
-        r = summarize(Path(post_dir) / fname)
+        path = Path(post_dir) / fname
+        missing = [k for k in ("sha256", "size_bytes", "dataset_wandb_run") if k not in m]
+        if missing:
+            raise RuntimeError(f"{fname}: manifest entry lacks {missing}; an unpinned file cannot be attached to a run")
+        if m["dataset_wandb_run"] != m["wandb_run_id"]:
+            raise RuntimeError(f"{fname}: its source dataset holds W&B run {m['dataset_wandb_run']}, not {m['wandb_run_id']}")
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if digest != m["sha256"]:
+            raise RuntimeError(f"{fname}: sha256 {digest[:12]} does not match the pinned {m['sha256'][:12]}; "
+                               "this is not the file the manifest was written for")
+        r = summarize(path)
+        if r["draws_per_chain"] != int(m["num_samples"]):
+            raise RuntimeError(f"{fname}: {r['draws_per_chain']} draws per chain in the file but run {m['wandb_run_id']} "
+                               f"was configured with num_samples={m['num_samples']}")
         expected = N_SUBJECTS[round(float(m["subject_ratio"]), 3)]
         if r["n_subjects"] != expected:
             raise RuntimeError(f"{fname}: posterior has {r['n_subjects']} subjects but run {m['wandb_run_id']} "

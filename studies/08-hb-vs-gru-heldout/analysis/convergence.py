@@ -33,6 +33,7 @@ FULL = "one-stage-ladder@20260903-154828"
 GATES = {"max_rhat": 1.01, "min_ess_bulk": 400}
 # (group, label) of the D~29 runs that differ only in sampler setting; the diagnostic probe is excluded because it
 # repeats the ladder setting exactly (identical numbers, same seed).
+STAN_GROUP = "stan-arm@20260905-020928"   # the counted Stan launch; its one finished run is the D=29 fit
 D29_SETTINGS = [("one-stage-ladder@20260903-052244", "500 / 500"), (LADDER, "2000 / 500"),
                 ("one-stage-ladder@20260903-154825", "4000 / 500"), ("one-stage-ladder@20260904-082628", "2000 / 2000")]
 C = {"group": "#0072B2", "subject": "#D55E00"}
@@ -54,9 +55,15 @@ def load() -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def stan_vs_numpyro(post: pd.DataFrame, runs: pd.DataFrame) -> dict:
-    npy = post[(post.group == "one-stage-ladder@20260904-082628") & (post.D == 29)].iloc[0]
+    npy_rows = post[(post.group == "one-stage-ladder@20260904-082628") & (post.D == 29)]
+    assert len(npy_rows) == 1, f"expected exactly one NumPyro D=29 run in the draws group, found {len(npy_rows)}"
+    npy = npy_rows.iloc[0]
     npy_fit = float(runs[runs.wandb_run_id == npy.wandb_run_id].fit_seconds.iloc[0])
-    st = runs[(runs.kind == "stan") & (runs.state == "finished")].iloc[0]
+    # The pinned counted group, selected explicitly: groups with counts=False are crash history and must never
+    # feed a reported number, even if one of their runs were later to finish.
+    st_rows = runs[(runs.group == STAN_GROUP) & (runs.kind == "stan") & (runs.state == "finished") & runs.counts]
+    assert len(st_rows) == 1, f"expected exactly one finished counted Stan run in {STAN_GROUP}, found {len(st_rows)}"
+    st = st_rows.iloc[0]
     assert int(st.n_subjects) == 29 and int(st.n_draws) == int(npy.total_draws) == 8000
     out = {"cohort_D": 29, "settings": "4 chains x (2000 warmup + 2000 draws), 8000 retained draws each",
            "diagnostic_sites": "population_mean (the five population means); Stan's own definition",

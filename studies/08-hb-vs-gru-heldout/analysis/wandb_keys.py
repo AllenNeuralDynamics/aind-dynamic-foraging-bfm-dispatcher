@@ -74,7 +74,10 @@ CONFIG_FIELDS = {
     "num_warmup": ("model", "num_warmup"),
     "num_samples": ("model", "num_samples"),
     "num_chains": ("model", "num_chains"),
-    "seed": ("seed",),
+    # The root `seed` key is not logged to W&B (it is None on every run). The resolved seed is the one
+    # Hydra interpolates into the model and data configs, which is what the sampler and the cohort split used.
+    "seed": ("model", "seed"),
+    "data_seed": ("data", "seed"),
     "dispatcher_commit": ("dispatcher_commit",),
     "wrapper_commit": ("wrapper_commit",),
     "foraging_models_commit": ("foraging_models_commit",),

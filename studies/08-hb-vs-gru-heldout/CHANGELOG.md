@@ -2,6 +2,13 @@
 
 One entry per merged PR (or coherent unreleased batch).
 
+## 2026-10-14: review fixes to the analysis inputs
+
+- `wandb_keys.CONFIG_FIELDS`: the resolved seed is read from `model.seed` (and `data.seed`). The root `seed` key is not logged to W&B, so every frozen run record had `seed: null`. Counted finished runs without a consistent seed are now rejected. Re-frozen: all 25 records now carry seed 0; no other field changed.
+- `convergence.py`: the Stan run is selected from the pinned counted group `stan-arm@20260905-020928`, and both comparators assert exactly one match.
+- `summarize_hb_posteriors.py` and `hb_posterior_manifest.json`: each posterior file is pinned by sha256 and size, by the Beaker result dataset it came from, and by the W&B run directory inside that dataset (which must equal the run id); draws per chain are checked against the run's `num_samples`. Numbers are unchanged (re-run against the pinned files).
+- `per_mouse.py` and r2: the pairing is stated as what is asserted, matching mice and equal per-mouse scored-trial counts. Individual trials are not compared.
+
 ## [Unreleased] — analysis and reports
 
 Added `analysis/` and `reports/` (r1 to r4), following the posthoc-reporting contract.

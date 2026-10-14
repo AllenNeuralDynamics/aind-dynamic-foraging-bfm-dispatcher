@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/per_mouse.py",
-    "produced_at_pt": "2026-10-13T22:09:04-07:00",
-    "dispatcher_git_sha": "81960a30f42a3e8c6b08099f406abf4e44756a74",
+    "produced_at_pt": "2026-10-14T00:41:11-07:00",
+    "dispatcher_git_sha": "75b5201abbe5e7230d0744d68612623f0b519cce",
     "wrapper_git_sha": "5eaf328024c87ba7d24c75d0f9f2354150ca4c70",
     "wandb_groups": [
       "one-stage-ladder@20260903-154819",
@@ -13,7 +13,7 @@
     "n_mice": 149,
     "n_trials": 1013172
   },
-  "pairing": "same held-out mice and the same scored trials (asserted); difference = HB likelihood minus the mouse's own RL fit",
+  "pairing": "same 149 held-out mice, joined by subject id, with equal per-mouse scored-trial counts (asserted); the individual trials are not compared, only their counts; difference = HB likelihood minus the mouse's own RL fit",
   "not_mixed_rhat_threshold": 1.1,
   "summary": [
     {
