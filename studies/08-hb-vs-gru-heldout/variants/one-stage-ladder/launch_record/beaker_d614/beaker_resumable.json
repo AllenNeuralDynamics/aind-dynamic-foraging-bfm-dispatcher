@@ -1,0 +1,32 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 1,
+  "experiment_id": "01M1MQB7NVE8N9THHXVC4W7X8Z",
+  "experiment_url": "https://beaker.org/ex/01M1MQB7NVE8N9THHXVC4W7X8Z",
+  "dispatcher_commit": "a3c9bfc243086c64bb1464d8eee6924a6874ead8",
+  "sweep_file": "studies/08-hb-vs-gru-heldout/variants/one-stage-ladder/sweep_beaker_d614.yaml",
+  "created_utc": "2026-09-03 22:48:31.163283+00:00",
+  "wandb_group": "one-stage-ladder@20260903-154828",
+  "beaker_label": "d614-w2000",
+  "cluster": [
+    "ai1/octo-hub-onprem-h200"
+  ],
+  "resources": {
+    "gpuCount": 1,
+    "memory": "128 GiB"
+  },
+  "wrapper_commit": "5eaf328024c87ba7d24c75d0f9f2354150ca4c70",
+  "foraging_models_commit": "459c05c38332eb5c954e7cbca328f0a0fe370891",
+  "tasks": [
+    {
+      "task": "one-stage-ladder-20260903-154828-000",
+      "subject_ratio": 1.0,
+      "wandb_run_id": "one-stage-ladder-20260903-154828-d2378737",
+      "state": "exit 0",
+      "started_utc": "2026-09-03 22:48:45",
+      "exited_utc": "2026-09-09 10:52:10",
+      "wall_hours": 132.06
+    }
+  ],
+  "record_note": "Written after the fact (2026-10-13), not by the launcher. The full-cohort rung (subject_ratio 1.0, 614 subjects) at warmup 2000, 500 draws. Added at the relaunch; it has no cancelled predecessor. Ran 132 h wall, exit 0. Commits are the SHAs the container entrypoint logged and they equal the submitted spec's refs (asserted). Each task's subject_ratio is from the spec's own command and equals the ratio in that job's log (asserted); task order is never assumed. The extra fields wrapper_commit, foraging_models_commit, wandb_group, cluster, resources and tasks were added by hand."
+}

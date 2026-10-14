@@ -1,0 +1,59 @@
+{
+  "mode": "resumable-grid",
+  "n_tasks": 4,
+  "experiment_id": "01M1MPVQNC4HGJ7WT3K5PHY6E3",
+  "experiment_url": "https://beaker.org/ex/01M1MPVQNC4HGJ7WT3K5PHY6E3",
+  "dispatcher_commit": "a3c9bfc243086c64bb1464d8eee6924a6874ead8",
+  "sweep_file": "studies/08-hb-vs-gru-heldout/variants/one-stage-ladder/sweep_beaker.yaml",
+  "created_utc": "2026-09-03 22:40:03.244811+00:00",
+  "wandb_group": "one-stage-ladder@20260903-153959",
+  "beaker_label": "ladder-w2000",
+  "cluster": [
+    "ai1/octo-hub-onprem-h200"
+  ],
+  "resources": {
+    "gpuCount": 1,
+    "memory": "128 GiB"
+  },
+  "wrapper_commit": "5eaf328024c87ba7d24c75d0f9f2354150ca4c70",
+  "foraging_models_commit": "459c05c38332eb5c954e7cbca328f0a0fe370891",
+  "tasks": [
+    {
+      "task": "one-stage-ladder-20260903-153959-000",
+      "subject_ratio": 0.016,
+      "wandb_run_id": "one-stage-ladder-20260903-153959-b881694b",
+      "state": "cancelled",
+      "started_utc": "2026-09-03 22:40:16",
+      "exited_utc": "2026-09-03 22:45:03",
+      "wall_hours": 0.08
+    },
+    {
+      "task": "one-stage-ladder-20260903-153959-001",
+      "subject_ratio": 0.049,
+      "wandb_run_id": "one-stage-ladder-20260903-153959-b55831db",
+      "state": "cancelled",
+      "started_utc": "2026-09-03 22:40:16",
+      "exited_utc": "2026-09-03 22:45:02",
+      "wall_hours": 0.08
+    },
+    {
+      "task": "one-stage-ladder-20260903-153959-002",
+      "subject_ratio": 0.163,
+      "wandb_run_id": "one-stage-ladder-20260903-153959-604229c4",
+      "state": "cancelled",
+      "started_utc": "2026-09-03 22:40:17",
+      "exited_utc": "2026-09-03 22:45:04",
+      "wall_hours": 0.08
+    },
+    {
+      "task": "one-stage-ladder-20260903-153959-003",
+      "subject_ratio": 0.489,
+      "wandb_run_id": "one-stage-ladder-20260903-153959-11e1f883",
+      "state": "cancelled",
+      "started_utc": "2026-09-03 22:40:17",
+      "exited_utc": "2026-09-03 22:45:02",
+      "wall_hours": 0.08
+    }
+  ],
+  "record_note": "Written after the fact (2026-10-13), not by the launcher. CANCELLED by me, no results. Stopped about 4m45s into the run (exit 143, no status message on the job) because I had misread an instruction as meaning the launcher's resume semantics were unsafe for HB. They were not: the submitted spec already carries priority normal and preemptible false, which is what protects a checkpoint-less HB fit. The tasks were healthy and still in early setup when killed. The launcher patch I started was reverted and the grid was relaunched unmodified as beaker_ladder_w2000 with identical commits. Kept because the study's crash history is part of its record. Commits are the SHAs the container entrypoint logged and they equal the submitted spec's refs (asserted). Each task's subject_ratio is from the spec's own command and equals the ratio in that job's log (asserted); task order is never assumed. The extra fields wrapper_commit, foraging_models_commit, wandb_group, cluster, resources and tasks were added by hand."
+}

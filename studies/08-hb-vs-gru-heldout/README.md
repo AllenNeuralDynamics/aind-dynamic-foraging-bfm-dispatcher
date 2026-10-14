@@ -35,7 +35,7 @@ yardstick for whether a difference means anything.
 
 | variant | what differs | status |
 |---|---|---|
-| [`one-stage-ladder`](variants/one-stage-ladder/notes.md) | `subject_ratio` 0.016/0.049/0.163 → D≈10/30/101, one-stage estimator | see notes |
+| [`one-stage-ladder`](variants/one-stage-ladder/notes.md) | `subject_ratio` 0.016/0.049/0.163/0.489/1.0 → D≈10/30/100/300/614, one-stage estimator | see notes |
 
 The status and W&B-group columns used to be filled in here as well as in the variant's
 notes, and duplication did exactly what the Status section below predicts: this table read
