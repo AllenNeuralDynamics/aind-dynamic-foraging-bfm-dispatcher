@@ -21,6 +21,9 @@
 # the only remaining lever -- and it is the one case where more draws is the correct fix
 # rather than a way of papering over geometry.
 #
+# Records for the runs cited here: the D~29 ladder rung is launch_record/beaker_ladder_w2000/, the 4000-warmup
+# probe is launch_record/beaker_warmup4000/, the instrumented run is launch_record/beaker_diag/.
+#
 # 2000 draws: ESS ~103 from 500 draws/chain needs roughly 4x to clear the gate of 400.
 # Warmup stays at the config's 2000. The warmup series (500 -> 8 divergences, 2000 -> 0,
 # 4000 -> 0 with no ESS gain) already showed 4000 buys nothing but wall time, so raising
@@ -32,6 +35,8 @@
 # the gates" fastest and against a measured baseline. D≈99/300/614 have not finished even at
 # 500 draws, and launching them here would add long jobs to an already contended node while
 # testing a fix that is not yet known to work. If these two clear, the rest follow.
+# (Written before D~99/300/614 finished. They did, at 500 draws, and their chains did not mix;
+# see study-08 report r4 and launch_record/beaker_ladder_w2000/ and beaker_d614/.)
 
 entity: AIND-disRNN
 project: mice_data_scaling

@@ -22,7 +22,7 @@
     "symptom": "The D~29 rung at warmup 2000 / 500 draws / 4 chains had zero divergences but failed the ESS and R-hat gates (bulk ESS roughly 100, R-hat roughly 1.04; the figures are quoted from sweep_beaker_diag.yaml's header, not re-derived here).",
     "cause": "Unknown at launch. Two hypotheses were under test: trajectories truncated at max_tree_depth (slow mixing with no divergences, cheap to fix) versus genuinely slow mixing (fixed by more draws). The run changes no sampler setting; it only collects the extra NUTS fields (num_steps, energy, accept_prob) that distinguish them.",
     "evidence": [
-      "Beaker experiment 01M1MQB0SRRBDDRKP1SX3T55DV (the ladder wave that produced the failing D~29 rung)",
+      "Beaker experiment 01M1MQB0SRRBDDRKP1SX3T55DV (the ladder wave that produced the failing D~29 rung; its own record is launch_record/beaker_ladder_w2000/beaker_resumable.json)",
       "sweep_beaker_diag.yaml in this variant"
     ]
   },

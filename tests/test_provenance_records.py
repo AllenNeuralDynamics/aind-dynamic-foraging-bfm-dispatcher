@@ -30,6 +30,29 @@ class ProvenanceRecordsTests(unittest.TestCase):
             check_records_parse(records, findings)
             self.assertEqual(findings, [])
 
+    def test_records_in_per_launch_subdirectories_are_loaded(self):
+        """`launch_beaker_resumable.py` output lives in `launch_record/<label>/`.
+
+        A non-recursive glob never saw these, so a strict check passed without auditing
+        them (study 08 had 13 such records and the validator reported one).
+        """
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "launch_record"
+            for label in ("beaker_a", "beaker_b"):
+                (root / label).mkdir(parents=True)
+                record = {
+                    "mode": "resumable-grid", "n_tasks": 1,
+                    "experiment_id": f"experiment-{label}", "created_utc": "2026-09-08T11:57:48Z",
+                    "sweep_file": "sweep.yaml", "dispatcher_commit": "a" * 40,
+                }
+                (root / label / "beaker_resumable.json").write_text(json.dumps(record))
+            records = load_records(root)
+            self.assertEqual(sorted(r["experiment_id"] for r in records),
+                             ["experiment-beaker_a", "experiment-beaker_b"])
+            findings = []
+            check_records_parse(records, findings)
+            self.assertEqual(findings, [])
+
     def test_native_launcher_still_requires_a_real_commit(self):
         findings = []
         check_records_parse([{
