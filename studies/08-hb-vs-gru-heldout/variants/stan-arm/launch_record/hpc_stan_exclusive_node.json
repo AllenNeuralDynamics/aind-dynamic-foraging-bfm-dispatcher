@@ -1,0 +1,56 @@
+{
+  "_meta": {
+    "produced_by": "manual backfill 2026-10-13 via launch_record.write_intervention",
+    "produced_at_pt": "2026-10-13T16:59:52-07:00",
+    "dispatcher_git_sha": "535e646f3ebaf4aea45a01f90a442d6f500fafb3",
+    "wrapper_git_sha": null,
+    "wandb_groups": [
+      "stan-arm@20260905-121427"
+    ]
+  },
+  "kind": "probe",
+  "platform": "hpc",
+  "wandb_group": "stan-arm@20260905-121427",
+  "job_refs": [
+    {
+      "type": "wandb_sweep",
+      "id": "5v3nwgzu"
+    },
+    {
+      "type": "slurm_array_job",
+      "id": "25580832"
+    }
+  ],
+  "supersedes": [
+    "rl6jm43v"
+  ],
+  "trigger": {
+    "symptom": "The threaded pair ran on an oversubscribed node (see hpc_stan_threaded_pair.json).",
+    "cause": "Hypothesis: the previous threaded pair was uninformative because the node was oversubscribed, so D~99 with 16 threads per chain on a whole 112-core node would show whether threading helps.",
+    "evidence": {
+      "wandb_commits": "dispatcher ed783aa4, wrapper 8d0f1eda, models 26ce8ebd (W&B config)"
+    }
+  },
+  "tasks": [
+    {
+      "slurm_task": "25580832_0",
+      "slurm_raw_job": null,
+      "subject_ratio": 0.163,
+      "node": "n279",
+      "cpus": 112,
+      "elapsed": "03:04:35",
+      "slurm_state": "CANCELLED",
+      "wandb_run_id": "ylhj6s4b",
+      "wandb_state": "crashed",
+      "note": "Threads engaged: about 23 cores per chain, 114 TBB threads per process, about 92 busy cores (observed with ps/top during the run; not re-verified). Iteration count at cancellation was not re-verified in this audit; earlier notes say fewer than 160, about the single-thread rate."
+    }
+  ],
+  "deviations": {
+    "cancel_cause_as_stated_at_the_time": "Throughput looked unchanged despite engaged threads; I concluded reduce_sum was deep-copying its shared arguments. That mechanism was an inference reported as a finding and is RETRACTED: the mechanism for no speed-up is unexplained.",
+    "result": "No measurable throughput gain from threading at D~99 in this one clean test.",
+    "source": "Slurm facts (state, elapsed, node, CPUs, submit time) come from sacct as read on 2026-10-13; cohort, host and W&B run id come from each run's W&B config. The two agree on node and duration for every job. sacct truncates the cancelling uid, so who issued each scancel is not recoverable from it; the causes below are the reasons stated at the time and are marked where they were later found wrong."
+  },
+  "cost": {
+    "progress_discarded": "3h04m of 112 CPUs on an exclusive node"
+  }
+}
