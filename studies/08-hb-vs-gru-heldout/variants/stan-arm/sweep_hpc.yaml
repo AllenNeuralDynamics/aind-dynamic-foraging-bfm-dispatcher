@@ -1,0 +1,57 @@
+# HB Stan arm — D≈29 and D≈100 on HPC (dispatcher #129).
+#
+# Two rungs of the SAME cohort the NumPyro ladder used, fit with pystan instead of NumPyro,
+# to measure the cohort-scale framework claim that RESULTS.md currently labels
+# "inferred, not measured".
+#
+#     python code/launch_hpc.py \
+#       --sweep-yaml studies/08-hb-vs-gru-heldout/variants/stan-arm/sweep_hpc.yaml \
+#       --mode cpu --agent-count 1 \
+#       --sbatch-extra='--array=0-1 --cpus-per-task=8 --mem=128G --time=72:00:00'
+#
+# The --sbatch-extra is the request this sweep was actually launched with (launch record
+# hpc_stan_arm.json). It is required: the CPU script's defaults are 2 CPUs and 5 hours, which cannot
+# hold four chains or a fit that took about 14.7 h. That request completed D~29; it does not establish
+# that D~99 can finish in 72 h (no D~99 Stan fit has completed under any configuration tried).
+#
+# WHY HPC AND NOT BEAKER: Stan is CPU-only. The NumPyro ladder runs on Beaker for the GPU;
+# this arm has nothing to put on one, and the reference benchmark was measured on CPU too.
+#
+# WHY ONLY TWO RUNGS: D≈29 is the only rung with a completed NumPyro posterior at these
+# settings (draws-2000 probe, Beaker 01M1PGEPRYGY542Y5JBQB17EED), so it is the sole point
+# where a like-for-like comparison exists today. D≈100 is included because it is the first
+# rung whose lane count (99 x 51 x 4 ≈ 20k) is well past the ~1000-lane threshold at which
+# RESULTS.md expects JAX to start winning — i.e. it is the rung that can actually falsify the
+# inferred claim. NumPyro's D≈99 fit (warmup 2000 / 500 draws) finished but did not mix, so it
+# is not a comparator; do not report a D≈99 Stan number as a head-to-head.
+#
+# CORES: httpstan compiles with STAN_THREADS defined, so reduce_sum threads across subjects
+# within each chain once STAN_NUM_THREADS is set -- HBStanTrainer derives it from
+# SLURM_CPUS_PER_TASK // num_chains. The first launch did not set the variable, so one thread per chain
+# was expected (the effective count was not recorded; see its launch record); its D~99 task reached 600 of 16000 iterations in 9 h 41 m before it was
+# cancelled. Threading was later tried and showed no measurable gain in the one clean test
+# (see notes.md and launch_record/), so do not size CPUs for threads on the strength of this
+# comment: chains run as separate processes, and 8 CPUs is what completed D~29.
+
+entity: AIND-disRNN
+project: mice_data_scaling      # study 01's project, same as the NumPyro rungs
+
+method: grid
+metric:
+  name: hb/min_ess_per_second   # sampler efficiency is what this arm measures
+  goal: maximize
+
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=hb_hattori_stan
+  - seed=0
+  - "wandb.tags=[hb,stan,issue-129]"
+  - ${args_no_hyphens}
+
+parameters:
+  data.subject_ratio:
+    # 0.049 -> D≈29 (has a NumPyro comparator), 0.163 -> D≈100 (does not, yet).
+    values: [0.049, 0.163]

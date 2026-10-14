@@ -27,6 +27,17 @@ source "${CONDA_SH:?CONDA_SH not set; source code/hpc/slurm/user.env before sbat
 # place until nothing references them.
 conda activate dynamic-foraging-bfm-cpu 2>/dev/null || conda activate disrnn-cpu
 
+# AI1 compute nodes carry gcc but NOT g++, while the login node has both -- so anything that
+# compiles C++ inside a job fails only once it lands on a node, and a compiler probe run on
+# the login node reports the wrong answer. pystan/httpstan builds a C++ extension per model,
+# which is what hits this. Harmless for every other CPU job: it only puts a compiler on PATH.
+# Note `module load gcc` alone does not resolve; the version suffix is required.
+if [ -f /usr/share/Modules/init/bash ]; then
+    source /usr/share/Modules/init/bash
+    module load gcc/14-rocky9 2>/dev/null || true
+    command -v g++ >/dev/null && export CXX="$(command -v g++)" CC="$(command -v gcc)"
+fi
+
 WRAPPER_ROOT="${WRAPPER_ROOT:?WRAPPER_ROOT not set; launch via code/launch_hpc.py or pass --export=ALL,WRAPPER_ROOT=/path/to/aind-dynamic-foraging-bfm-wrapper}"
 cd "$WRAPPER_ROOT/code"
 export PYTHONPATH="$WRAPPER_ROOT/code:${PYTHONPATH:-}"

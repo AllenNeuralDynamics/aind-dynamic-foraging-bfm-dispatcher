@@ -1,0 +1,70 @@
+{
+  "_meta": {
+    "produced_by": "manual backfill 2026-10-13 via launch_record.write_intervention",
+    "produced_at_pt": "2026-10-13T16:59:52-07:00",
+    "dispatcher_git_sha": "535e646f3ebaf4aea45a01f90a442d6f500fafb3",
+    "wrapper_git_sha": null,
+    "wandb_groups": [
+      "stan-arm@20260905-180320"
+    ]
+  },
+  "kind": "probe",
+  "platform": "hpc",
+  "wandb_group": "stan-arm@20260905-180320",
+  "job_refs": [
+    {
+      "type": "wandb_sweep",
+      "id": "3io4fnwv"
+    },
+    {
+      "type": "slurm_array_job",
+      "id": "25581035"
+    }
+  ],
+  "supersedes": [
+    "zahkoc2c",
+    "z8joh3a5"
+  ],
+  "trigger": {
+    "symptom": "The threaded reslice confounded two changes (hpc_stan_reslice_threaded.json).",
+    "cause": "Isolate the reslice from threading: same 8 CPUs and STAN_NUM_THREADS=1 as the 53,001 s baseline, so only the slicing differs. (The reslice's rationale, that reduce_sum copies shared parameter arguments, was never validated.)",
+    "evidence": {
+      "wandb_commits": "dispatcher be6886e6, wrapper 8d0f1eda, models 26ce8ebd (W&B config)",
+      "slurm_array_vs_raw_ids": "Task 25581035_0 has raw job id 25581037 and task 25581035_1 has raw id 25581035. The first array element carries the LATER raw id."
+    }
+  },
+  "tasks": [
+    {
+      "slurm_task": "25581035_0",
+      "slurm_raw_job": "25581037",
+      "subject_ratio": 0.049,
+      "node": "n243",
+      "cpus": 8,
+      "elapsed": "06:32:41",
+      "slurm_state": "CANCELLED",
+      "wandb_run_id": "rs0ss9pi",
+      "wandb_state": "crashed",
+      "note": "D~29. Last logged progress 5,200/16000 (raw job log, read earlier in the session)."
+    },
+    {
+      "slurm_task": "25581035_1",
+      "slurm_raw_job": "25581035",
+      "subject_ratio": 0.163,
+      "node": "n244",
+      "cpus": 8,
+      "elapsed": "18:27:26",
+      "slurm_state": "CANCELLED",
+      "wandb_run_id": "0m9a8iqj",
+      "wandb_state": "crashed",
+      "note": "D~99. Last logged progress 2,900/16000 (raw job log). About 157 iterations/h by cumulative average against about 62/h for the single-thread original; both include warmup, so indicative only."
+    }
+  ],
+  "deviations": {
+    "CANCEL_REASONS_WERE_BASED_ON_MISLABELLED_TASKS": "The D~29 task (raw 25581037) was cancelled at 6h33m because I took it for D~99 with fewer than 100 iterations. The D~99 task (raw 25581035) was then cancelled at 18h27m because I read the cancelled D~29 job's frozen log as a 12-hour stall of the live D~99 job. Neither cancellation was justified by the jobs' actual state. Retracted 2026-10-13.",
+    "reslice_effect": "UNRESOLVED, leaning faster at D~99 (about 2.5x by cumulative iterations per hour); inconclusive at D~29 because the original's early-phase timeline is unrecoverable (W&B keeps only the console tail). The reslice was reverted on the models branch feat/stan-three-level on the strength of the mistaken result, and that revert's message quotes the retracted numbers.",
+    "source": "Slurm facts (state, elapsed, node, CPUs, submit time) come from sacct as read on 2026-10-13; cohort, host and W&B run id come from each run's W&B config. The two agree on node and duration for every job. sacct truncates the cancelling uid, so who issued each scancel is not recoverable from it; the causes below are the reasons stated at the time and are marked where they were later found wrong."
+  },
+  "cost": {
+    "progress_discarded": "6h33m (D~29) and 18h27m (D~99) on 8 CPUs each"
+  }
+}
