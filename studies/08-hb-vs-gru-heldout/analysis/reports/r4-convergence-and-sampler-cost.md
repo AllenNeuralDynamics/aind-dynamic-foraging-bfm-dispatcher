@@ -24,7 +24,7 @@ reproduce: make -C studies/08-hb-vs-gru-heldout r4
 
 Gates: no divergences, worst R-hat below 1.01, lowest bulk ESS at least 400.
 
-![Convergence of the NumPyro HB fits](../analysis/fig_convergence.png)
+![Convergence of the NumPyro HB fits](../fig_convergence.png)
 
 **By training-cohort size** (warmup 2000, 500 draws, 4 chains; recomputed from each run's saved posterior):
 
@@ -63,7 +63,7 @@ Stan has 7.8x the effective sample per draw, takes 2.3x the wall time as run, an
 ## Reading
 
 - **No finished HB run passes all three gates.** The closest are the two 2000-draw runs at D = 10 and D = 29, which pass the R-hat and ESS gates at D = 10 and miss ESS narrowly at D = 29, but both have divergent transitions.
-- **At D = 99 and above the per-mouse chains do not mix, with zero divergences.** Slow mixing, not funnel geometry, is the failure there. The group-level sites at D = 300 are nearly mixed while the per-mouse sites are not.
+- **At D = 99 and above the per-mouse chains do not mix, and the sampler flagged zero divergences.** Zero divergences does not rule out funnel or other posterior geometry; only R-hat and ESS were computed for these rungs, so the cause of the poor mixing is not identified here. The group-level sites at D = 300 are nearly mixed while the per-mouse sites are not.
 - **The trainer's own diagnostics cover group-level sites only.** They would report D = 300 as acceptable. The recomputation here is what shows its per-mouse sites are not mixed.
 - **Warmup and draws trade differently.** Raising warmup from 500 to 2000 removed the divergences at D = 29 but did not raise the lowest ESS (177 to 103); 4000 warmup raised it only modestly (140). Only more draws moved the lowest ESS toward the gate, and that brought divergences back.
 - **Stan against NumPyro, like for like.** On the population means, with the same cohort and draw budget, Stan gives several times the effective sample per draw but took longer in wall time as run, on different hardware. The comparison is for D = 29 only: Stan has no completed fit at any larger cohort.

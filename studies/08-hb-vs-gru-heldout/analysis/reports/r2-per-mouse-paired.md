@@ -20,7 +20,7 @@ reproduce: make -C studies/08-hb-vs-gru-heldout r2
 
 Held-out cohort: 149 mice. Pairing: same 149 held-out mice, joined by subject id, with equal per-mouse scored-trial counts (asserted); the individual trials are not compared, only their counts; difference = HB likelihood minus the mouse's own RL fit.
 
-![Per-mouse HB likelihood against the same mouse's own fit](../analysis/fig_per_mouse.png)
+![Per-mouse HB likelihood against the same mouse's own fit](../fig_per_mouse.png)
 
 **Mice on which HB predicts worse than the same mouse's own fit** (median paired difference and Wilcoxon p are for the Hattori2019 fit, the same model family as HB):
 
@@ -42,7 +42,7 @@ The effect per mouse is small in absolute terms (the table gives the median pair
 ## Limits
 
 - Mice are the unit of replication, and the paired test assumes they are independent. Mice share sessions and training conditions, which this analysis does not model.
-- HB and the per-mouse fits are scored on the same held-out trials (asserted for every mouse). The RL fits are the 2026-07-13 baseline runs from study 01, frozen in `analysis/ml_params/`.
+- HB and the per-mouse fits are paired by subject id and have equal per-mouse scored-trial counts (asserted for every mouse). The tables carry counts, not trial identities, so that the individual trials are the same is not verified. The RL fits are the 2026-07-13 baseline runs from study 01, frozen in `analysis/ml_params/`.
 - At the D = 99, 300 and 614 rungs the HB chains did not mix (r4), so those rows describe an unconverged fit and are marked.
 - A per-mouse deficit that is largest for mice with the most trials would be the signature of a prior adding bias; that was not tested here and is not claimed.
 

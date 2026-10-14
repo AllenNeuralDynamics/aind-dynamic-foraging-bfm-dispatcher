@@ -20,7 +20,7 @@ reproduce: make -C studies/08-hb-vs-gru-heldout r1
 
 Held-out cohort: 149 mice, 1,013,172 trials. Pooled trial-weighted per-trial choice likelihood (exp of mean log-likelihood over all held-out trials).
 
-![Held-out likelihood of the hierarchical model, per-mouse classical RL and the GRU](../analysis/fig_three_arm.png)
+![Held-out likelihood of the hierarchical model, per-mouse classical RL and the GRU](../fig_three_arm.png)
 
 **Hierarchical model (HB) at each training-cohort size, against the GRU** (HB: one seed, warmup 2000, 500 draws, 4 chains; GRU: v2-sc-active, mean of its seeds):
 

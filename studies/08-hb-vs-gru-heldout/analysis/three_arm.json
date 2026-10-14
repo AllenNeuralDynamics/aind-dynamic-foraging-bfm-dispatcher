@@ -1,8 +1,8 @@
 {
   "_meta": {
     "produced_by": "analysis/three_arm.py",
-    "produced_at_pt": "2026-10-14T00:41:01-07:00",
-    "dispatcher_git_sha": "75b5201abbe5e7230d0744d68612623f0b519cce",
+    "produced_at_pt": "2026-10-14T01:03:29-07:00",
+    "dispatcher_git_sha": "5ee65ffa26aca28451591c93332d8c7aece217ad",
     "wrapper_git_sha": "5eaf328024c87ba7d24c75d0f9f2354150ca4c70",
     "wandb_groups": [
       "one-stage-ladder@20260903-052244",

@@ -20,7 +20,7 @@ reproduce: make -C studies/08-hb-vs-gru-heldout r3
 
 Exclusions from the primary slope: ML fits pinned at a rate bound (exactly 0 or 1) or with inverse temperature above beta_max=10. Slopes need at least 8 mice. `*` marks a rung whose chains are not mixed.
 
-![HB posterior mean against each mouse's own fit, by parameter](../analysis/fig_shrinkage.png)
+![HB posterior mean against each mouse's own fit, by parameter](../fig_shrinkage.png)
 
 **Theil-Sen slope of the HB posterior mean on the mouse's own fit** (1 = individual differences preserved; below 1 = compressed toward the mean):
 

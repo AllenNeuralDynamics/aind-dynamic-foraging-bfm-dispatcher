@@ -4,9 +4,11 @@
 Offline: reads hb_runs.json, hb_per_subject_heldout.csv, hb_posterior_summary.json, ml_params/ (frozen) and
 study 01's committed rl_baseline.json (used only to check that the RL pooled values reproduce).
 
-A mouse's HB likelihood and its RL likelihood are scored on the same held-out trials (asserted: the HB
-table's n_trials equals the ML table's num_eval_trials for every mouse). Pairs are therefore mice, and the
-paired difference is HB minus RL, so a negative value means HB predicts that mouse worse.
+A mouse's HB likelihood and its RL likelihood cover the same held-out mouse and the same NUMBER of scored
+trials (asserted: the HB table's n_trials equals the ML table's num_eval_trials for every mouse, joined by
+subject id). The tables carry counts, not trial identities, so that the individual trials are the same is
+not verified here. Pairs are mice, and the paired difference is HB minus RL, so a negative value means HB
+predicts that mouse worse.
 
 Outputs: per_mouse.json (with _meta), per_mouse.csv, fig_per_mouse.png.
 """

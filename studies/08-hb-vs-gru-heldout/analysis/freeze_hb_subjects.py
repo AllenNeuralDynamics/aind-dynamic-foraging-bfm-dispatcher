@@ -40,7 +40,11 @@ HEADLINE_GROUPS = ("one-stage-ladder@20260903-154819", "one-stage-ladder@2026090
 
 
 def sha(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    h = hashlib.sha256()
+    with open(path, "rb") as handle:        # streamed: one posterior is about 2.4 GB
+        for block in iter(lambda: handle.read(1 << 20), b""):
+            h.update(block)
+    return h.hexdigest()
 
 
 def to_natural(mu_p: np.ndarray) -> np.ndarray:

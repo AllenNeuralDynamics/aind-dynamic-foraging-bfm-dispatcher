@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).parent
-REPORTS = HERE.parent / "reports"
+REPORTS = HERE / "reports"
 PARAMS = ("learn_rate_rew", "learn_rate_unrew", "forget_rate_unchosen", "softmax_inverse_temperature", "bias_l")
 PNAME = {"learn_rate_rew": "learning rate, rewarded", "learn_rate_unrew": "learning rate, unrewarded",
          "forget_rate_unchosen": "forgetting rate", "softmax_inverse_temperature": "inverse temperature", "bias_l": "left bias"}
@@ -47,7 +47,7 @@ def region_r1() -> str:
     rl = d["rl"]
     return "\n".join([
         f"Held-out cohort: {d['cohort']['n_subjects']} mice, {d['cohort']['n_trials']:,} trials. {d['aggregation'].capitalize()}.",
-        "", f"![Held-out likelihood of the hierarchical model, per-mouse classical RL and the GRU](../analysis/fig_three_arm.png)", "",
+        "", f"![Held-out likelihood of the hierarchical model, per-mouse classical RL and the GRU](../fig_three_arm.png)", "",
         "**Hierarchical model (HB) at each training-cohort size, against the GRU** (HB: one seed, warmup 2000, 500 draws, 4 chains; GRU: "
         f"{d['gru_variant']}, mean of its seeds):", "",
         table(["D", "HB", "GRU", "GRU minus HB", "HB max R-hat", "HB divergences", "R-hat <= 1.1?"], rows), "",
@@ -69,7 +69,7 @@ def region_r2() -> str:
                      f"{b['n_hb_worse']} / {b['n_mice']}", f"{c['n_hb_worse']} / {c['n_mice']}", "no" if not h["not_mixed"] else "yes"])
     return "\n".join([
         f"Held-out cohort: {d['cohort']['n_mice']} mice. Pairing: {d['pairing']}.", "",
-        "![Per-mouse HB likelihood against the same mouse's own fit](../analysis/fig_per_mouse.png)", "",
+        "![Per-mouse HB likelihood against the same mouse's own fit](../fig_per_mouse.png)", "",
         "**Mice on which HB predicts worse than the same mouse's own fit** (median paired difference and Wilcoxon p are for the Hattori2019 fit, "
         "the same model family as HB):", "",
         table(["D", "vs Hattori2019 (n mice)", "median HB minus Hattori2019", "Wilcoxon p", "vs Bari", "vs compare-to-threshold", "chains not mixed"], rows),
@@ -88,7 +88,7 @@ def region_r3() -> str:
     rho = [[PNAME[p]] + [f(rows_by[p][D]["spearman"], 2) for D in Ds] for p in PARAMS]
     return "\n".join([
         f"Exclusions from the primary slope: {d['exclusion']}. Slopes need at least {d['min_n_for_slope']} mice. `*` marks a rung whose chains are not mixed.", "",
-        "![HB posterior mean against each mouse's own fit, by parameter](../analysis/fig_shrinkage.png)", "",
+        "![HB posterior mean against each mouse's own fit, by parameter](../fig_shrinkage.png)", "",
         "**Theil-Sen slope of the HB posterior mean on the mouse's own fit** (1 = individual differences preserved; below 1 = compressed toward the mean):", "",
         table(hdr, body), "",
         "**Spearman rank correlation between the two** (does HB order mice the way their own fits do):", "", table(hdr, rho), "",
@@ -119,7 +119,7 @@ def region_r4() -> str:
                 ["hardware", n["hardware"], s_["hardware"]]]
     return "\n".join([
         f"Gates: no divergences, worst R-hat below {d['gates']['max_rhat']}, lowest bulk ESS at least {d['gates']['min_ess_bulk']}.", "",
-        "![Convergence of the NumPyro HB fits](../analysis/fig_convergence.png)", "",
+        "![Convergence of the NumPyro HB fits](../fig_convergence.png)", "",
         "**By training-cohort size** (warmup 2000, 500 draws, 4 chains; recomputed from each run's saved posterior):", "",
         table(["D", "group-level worst R-hat", "group-level lowest ESS", "per-mouse worst R-hat", "per-mouse lowest ESS", "divergences"], a), "",
         "**By sampler setting at D = 29** (warmup / draws per chain; worst and lowest over every group-level and per-mouse site):", "",

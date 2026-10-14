@@ -2,6 +2,13 @@
 
 One entry per merged PR (or coherent unreleased batch).
 
+## 2026-10-14 (second round): report location, hashing, wording
+
+- Reports moved from `reports/` to `analysis/reports/`, the layout the study-wrapup convention and the ten other studies with reports use; `update_reports.py`, the image links and this changelog follow. `make all` regenerates them identically.
+- `summarize_hb_posteriors.py` and `freeze_hb_subjects.py` hash posteriors with a streaming digest (one input is about 2.4 GB), and the pinned `size_bytes` is now checked.
+- `per_mouse.py` and r2 say what is asserted: equal per-mouse scored-trial counts, not trial identity.
+- r4: zero divergences at D >= 99 does not identify the cause of the poor mixing, and the report no longer says it is not funnel geometry.
+
 ## 2026-10-14: review fixes to the analysis inputs
 
 - `wandb_keys.CONFIG_FIELDS`: the resolved seed is read from `model.seed` (and `data.seed`). The root `seed` key is not logged to W&B, so every frozen run record had `seed: null`. Counted finished runs without a consistent seed are now rejected. Re-frozen: all 25 records now carry seed 0; no other field changed.
@@ -11,7 +18,7 @@ One entry per merged PR (or coherent unreleased batch).
 
 ## [Unreleased] — analysis and reports
 
-Added `analysis/` and `reports/` (r1 to r4), following the posthoc-reporting contract.
+Added `analysis/` and `analysis/reports/` (r1 to r4), following the posthoc-reporting contract.
 
 - **Frozen inputs.** `wandb_keys.py` pins the 14 W&B groups this study may read; `extract_hb_runs.py` freezes their runs with a per-run
   digest; `summarize_hb_posteriors.py` recomputes R-hat, bulk ESS and divergences from every saved NumPyro posterior;

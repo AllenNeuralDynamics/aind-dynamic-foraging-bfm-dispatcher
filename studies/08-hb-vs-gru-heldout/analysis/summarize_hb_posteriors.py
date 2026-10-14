@@ -70,6 +70,15 @@ def summarize(path: Path) -> dict:
     return out
 
 
+def _sha256(path: Path, chunk: int = 1 << 20) -> str:
+    """Streaming digest: one input posterior is about 2.4 GB, so it is never read whole."""
+    h = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for block in iter(lambda: handle.read(chunk), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
 def main(post_dir: str, manifest_path: str) -> None:
     manifest = json.loads(Path(manifest_path).read_text())   # {file: {wandb_run_id, group, subject_ratio, divergences_wandb}}
     rows = []
@@ -80,7 +89,10 @@ def main(post_dir: str, manifest_path: str) -> None:
             raise RuntimeError(f"{fname}: manifest entry lacks {missing}; an unpinned file cannot be attached to a run")
         if m["dataset_wandb_run"] != m["wandb_run_id"]:
             raise RuntimeError(f"{fname}: its source dataset holds W&B run {m['dataset_wandb_run']}, not {m['wandb_run_id']}")
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        size = path.stat().st_size
+        if size != int(m["size_bytes"]):
+            raise RuntimeError(f"{fname}: {size} bytes on disk but {m['size_bytes']} pinned; not the file the manifest was written for")
+        digest = _sha256(path)
         if digest != m["sha256"]:
             raise RuntimeError(f"{fname}: sha256 {digest[:12]} does not match the pinned {m['sha256'][:12]}; "
                                "this is not the file the manifest was written for")
