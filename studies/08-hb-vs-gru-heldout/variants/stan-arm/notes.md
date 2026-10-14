@@ -48,8 +48,9 @@ measurement to stand on.
   threads across subjects within a chain — but Stan reads `STAN_NUM_THREADS` at runtime and
   documents one thread when it is unset. Launch `20260905-020928` did not set it, so it was
   *expected* to run one thread per chain on its 8-CPU allocation. That is inference: the effective
-  count was not recorded, and a `ps` sample during the run showed each chain process with 8 to 10
-  threads at roughly 200% CPU, which one `reduce_sum` thread does not by itself explain. The thread
+  count was not recorded. Two separate `ps` samples were taken during the run (four chain processes at
+  roughly 200% CPU each; python processes listing 8 and 10 OS threads, which counts every thread, not only
+  `reduce_sum` threads), and neither establishes the `reduce_sum` count. The thread
   count of the reported 14.7 h D≈29 fit is therefore unverified (see its launch record).
   `HBStanTrainer` now derives the count from
   `SLURM_CPUS_PER_TASK // num_chains`.

@@ -27,7 +27,8 @@
 # that this makes reduce_sum copy them into every partial sum; that theory was never
 # validated (see launch_record/hpc_stan_reslice_serial.json), and the direction of the
 # reslice's effect is unresolved. The pre-reslice posterior is valid -- same target density --
-# so its ESS and r_hat stand, and its 53001 s is simply the timing of that implementation on
+# so its saved draws are valid (the R-hat and ESS the trainer logged for it are not; see
+# launch_record/hpc_stan_arm.json, wandb_diagnostics_wrong), and its 53001 s is simply the timing of that implementation on
 # its 8-CPU allocation, neither a lower nor an upper bound. The ESS/second comparison against
 # NumPyro is built on it. Re-running D≈29 here was meant to price the reslice on identical
 # data and seed.
