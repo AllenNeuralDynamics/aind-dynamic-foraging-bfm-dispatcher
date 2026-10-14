@@ -158,3 +158,82 @@ genuine interior optimum rather than an artifact of the tested range's edge.
   not comparable points on one 1-D line — this is deliberate (Stage B tested each axis independently,
   see wave2 variant notes), but a reader should not average them into a single "did lighter help"
   verdict.
+
+
+## Code-ref confound check
+
+**Trigger.** A [Copilot review comment on PR #164](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/pull/164#discussion_r4264704530)
+flagged that the wave-2 runs (wrapper `9595dd37`, dispatcher `4b926dc5`, foraging-models `faa0f5ad`)
+and the `mult-d-grid` comparator cell (wrapper `eb5a6bb0`, dispatcher `f8c9e9ec`, foraging-models
+`54a8d3a4`) were launched at different code refs, and asked that this either be re-run at matched
+refs or be verified not to matter before the penalty deltas above are trusted.
+
+**Scope checked.** Every line-level diff between the two ref pairs (122 wrapper commits, 265
+dispatcher commits) that touches a file plausibly on the training/eval path for
+`model=disrnn, data=mice_snapshot_scaling, data.ignore_policy=exclude` — the exact config both
+compared cells use (confirmed from both variants' committed `sweep.yaml`). Diffs were pulled via the
+GitHub compare API and read in full; nothing below is inferred from commit titles or file names
+alone.
+
+**File-by-file verdict (wrapper, `eb5a6bb0..9595dd37`):**
+
+| File | Verdict | Evidence |
+|---|---|---|
+| `model_trainers/disrnn_trainer.py` | safe | Only an import-path swap to the vendored `data_loaders.disrnn_dataset` (see vendoring row below), a pure extraction of the existing subject-count lookup into `_resolve_multisubject_subject_count` (same logic, same inputs), and a `try/except` wrapped around the *post-hoc* `plot_update_rules` call so a plotting failure no longer kills an already-trained-and-evaluated run. None of this touches the loss, penalty application, optimizer, or training loop. |
+| `configs/config_disrnn.yaml` | safe | The entire +16-line diff is one new, additive `data.timing_features` block defaulting `enabled: false`. No existing default value changed. |
+| `data_loaders/mice.py` | safe for this config | Same import swap. Adds optional `session_split_by_subject` / `trial_split_by_subject` params (default `None`) for an external-target-transfer feature — with both `None` (the case here), the original `compute_train_eval_session_ids` + `rnn_utils.split_dataset` branch is preserved verbatim, just moved under an `if ... is None` guard. Dataset construction is routed through a new `_create_disrnn_dataset` dispatcher that sends continuous-feature requests to a new float-safe builder and everything else (our case — only `animal_response`/`rewarded`, both integer) to the unchanged `dl.create_disrnn_dataset`. The new `_augment_features_with_timing` call is a confirmed no-op here: `resolve_timing_config(None)` returns `TimingConfig(enabled=False)`, and neither variant's `sweep.yaml` sets `data.timing_features.*`. |
+| `post_training_analysis/heldout_finetuning.py` | safe for this config | Same import swap. The new `target_data`/`target_bundle` external-target path only engages when a `target_data` config key is present (absent here) — the default branch reproduces the prior call sequence (`_load_heldout_snapshot_selection` → `_build_local_heldout_bundle`) unchanged, with a no-op timing-feature attach for the reason above. The new `selection_policy` field defaults to `"fixed_final"` (an explicit value check, not a behavior change for the default). The new end-of-run `_build_final_target_predictions` + consistency assertion block executes for `ignore_policy=="exclude"` runs, but it only **independently recomputes and asserts equality against** the already-computed `heldout/final/eval_likelihood`; it does not change how that reported number is produced, and a mismatch would raise (crash the run), not silently alter it — since all 8 wave-2 runs finished and reported a value, this path did not perturb the metric. |
+| `training_runner.py` | safe | Only change is adding `"hb"` to the multisubject-personalized model-type set and a new `model_type == "hb"` branch; the `disrnn` path is untouched. |
+| `utils/multisubject.py` | safe (reasoned) | `merge_datasets_with_subject_index` now forwards `first_dataset.rng` to the merged dataset's constructor when present. However `disentangled_rnns.library.rnn_utils.DatasetRNN.__init__` sets `self.rng = rng if rng is not None else np.random.default_rng()` (confirmed from the pinned library source — the library pin itself, `aind-disentangled-rnns@a9b9978`, is unchanged across this diff), and **neither commit ever threads the run's own seed into any `DatasetRNN.rng`** — at baseline the merged dataset got its own fresh unseeded `np.random.default_rng()`; at head it reuses the per-subject dataset's own (also freshly, independently, unseeded) `np.random.default_rng()`. Batch-sampling randomness under `batch_mode=random` was already not seed-controlled in either commit, so this changes *which* unseeded generator object is used, not whether the result is seed-reproducible — no systematic bias, same class of inherent run-to-run stochasticity as any two independently launched runs. |
+| `utils/run_helpers.py` | safe | `DISRNN_META_*`/`BFM_META_*` and `DISRNN_RESTORE_FROM_RUN_ID`/`BFM_RESTORE_FROM_RUN_ID` env-var renames (both read with the new name winning, old name as fallback — no override present for either run) and sibling-checkout dir-name tolerance (`aind-disrnn-dispatcher` vs `aind-dynamic-foraging-bfm-dispatcher`). Affects provenance-stamp plumbing and restore-from-run resolution only, not training/eval computation. |
+| `evaluation/disrnn_evaluation.py` | safe | Import-path swap only. |
+
+**Vendoring fidelity (`aind_disrnn_utils.data_loader` → `data_loaders/disrnn_dataset.py`, wrapper
+commit `bdbde77b`, PR [#67](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/pull/67)).**
+Diffed the vendored module against the actual pinned upstream source
+(`aind_disrnn_utils@74de874d`, the exact commit `pyproject.toml` depended on before the vendoring
+commit removed it). The initial vendoring commit is a byte-identical copy (function bodies unchanged).
+Two follow-on commits in the same diff window (`eeac1aa3`, `9afd8e4a`) replace the per-session
+`df.query("ses_idx == @ses_idx")` loop with a single `groupby("ses_idx", sort=False)` for performance;
+`sort=False` preserves the first-appearance group order that defines `.unique()`'s session-column
+index, and the diff's own comments flag the one known divergence (NaN `ses_idx` values, which
+`groupby` drops and `.unique()` keeps) as deliberately preserved rather than fixed, keeping it a pure
+performance change for the ordinary (no-NaN) case. Both commit messages state the equivalence was
+checked directly: *"dataset tensors, metadata, and the add_model_results dataframe still compare
+equal to the pinned upstream under both ignore policies."* This covers exactly the two `ignore_policy`
+values (`include`, `exclude`) relevant here. **Caveat: this is the author's own commit-message claim,
+not independently re-executed in this check** — no compute access was used here to re-run the
+old-vs-new builder on real data; the claim is accepted on the strength of the diff reasoning above
+(order-preservation under `sort=False`, no-NaN assumption) plus the explicit author verification,
+not independently reproduced.
+
+**Dispatcher (`f8c9e9ec..4b926dc5`), config files reachable by default (not overridden) from either
+run's `sweep.yaml`:**
+
+| File | Verdict | Evidence |
+|---|---|---|
+| `config/data/mice_snapshot_scaling.yaml` | safe | +22/-0 diff is the identical additive `timing_features` block (default `enabled: false`); no existing key's value changed. |
+| `config/model/disrnn.yaml` | safe | Only a comment fix and `DISRNN_OUTPUT_DIR` → `BFM_OUTPUT_DIR` env-var rename, with the old name kept as a fallback (`${oc.env:BFM_OUTPUT_DIR,${oc.env:DISRNN_OUTPUT_DIR,/results}}`) — resolves to the same path either way. |
+| `config/config.yaml` | safe | Same env-var-rename-with-fallback pattern, no value change. |
+
+**`foraging_models` SHA (`54a8d3a4` vs `faa0f5ad`): not applicable to this path.** Grepped every
+`.py` file under the wrapper's `code/` tree at the wave-2 commit for `foraging_models` /
+`dynamic_foraging_models` references: the package is imported only by the baseline-RL trainer, the
+new `hb_trainer.py`, and generative/likelihood-comparison analysis modules. Neither
+`disrnn_trainer.py` nor `heldout_finetuning.py` reference it. The foraging-models ref mismatch cannot
+affect a disRNN run's training or held-out-eval numerics.
+
+**Overall verdict: CONFIRMED SAFE** for the specific config `model=disrnn,
+data=mice_snapshot_scaling, data.ignore_policy=exclude` that both the `mult-d-grid` comparator cell
+and the 8 wave-2 runs use. Every change exercised by this config between the two ref pairs is either
+(a) purely additive and gated behind a config key neither run's `sweep.yaml` sets, (b) a refactor
+whose output-equivalence is demonstrated or directly reasoned from the diff, or (c) unrelated to the
+disRNN training/held-out-eval code path. The r3 penalty-axis deltas above are not confounded by the
+code-ref mismatch flagged in the Copilot review.
+
+**What was not independently re-executed** (provisional, flagged per this check's own standard):
+the vendoring-equivalence claim rests on the wrapper-repo author's own commit-message verification,
+not a fresh run of old-vs-new `create_disrnn_dataset` on real data from this session; and the
+`multisubject.py` rng-forwarding analysis rests on reading the pinned `disentangled_rnns` library
+source rather than executing it. Both are reasoned to be safe from the diff evidence above, but
+neither was re-run end-to-end as part of this check.
