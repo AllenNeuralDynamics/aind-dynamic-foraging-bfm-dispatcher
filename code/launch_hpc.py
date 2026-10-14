@@ -341,7 +341,7 @@ def _model_has_training_block(cmd: list) -> bool:
         return True
     try:
         model_cfg = yaml.safe_load(config_path.read_text())
-    except yaml.YAMLError:
+    except (OSError, yaml.YAMLError):
         return True
     return not isinstance(model_cfg, dict) or "training" in model_cfg
 

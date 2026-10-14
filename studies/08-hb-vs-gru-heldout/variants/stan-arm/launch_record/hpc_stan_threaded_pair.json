@@ -25,7 +25,7 @@
     "5i6iofof"
   ],
   "trigger": {
-    "symptom": "The single-thread D~99 run projected beyond ~250 h at 600 iterations in 9h41m (linear extrapolation).",
+    "symptom": "The D~99 run launched without STAN_NUM_THREADS (expected one thread; effective count unrecorded) projected beyond ~250 h at 600 iterations in 9h41m (linear extrapolation).",
     "cause": "Hypothesis: with reduce_sum threading enabled, D~99 (and D~29) would speed up. Prompted by finding that the earlier claim that threading was impossible was false.",
     "evidence": {
       "wandb_commits": "dispatcher bc8451ab, wrapper 8d0f1eda, models 26ce8ebd (W&B config)"

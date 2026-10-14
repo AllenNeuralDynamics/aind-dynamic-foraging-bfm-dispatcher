@@ -46,12 +46,16 @@ measurement to stand on.
 - **Threading was off in the first launch, and that was my error, not a pystan limit.**
   httpstan *does* compile with `STAN_THREADS` defined (`httpstan/models.py`), so `reduce_sum`
   threads across subjects within a chain — but Stan reads `STAN_NUM_THREADS` at runtime and
-  uses one thread when it is unset. Launch `20260905-020928` therefore ran single-threaded on
-  an 8-CPU allocation. `HBStanTrainer` now derives the count from
+  documents one thread when it is unset. Launch `20260905-020928` did not set it, so it was
+  *expected* to run one thread per chain on its 8-CPU allocation. That is inference: the effective
+  count was not recorded, and a `ps` sample during the run showed each chain process with 8 to 10
+  threads at roughly 200% CPU, which one `reduce_sum` thread does not by itself explain. The thread
+  count of the reported 14.7 h D≈29 fit is therefore unverified (see its launch record).
+  `HBStanTrainer` now derives the count from
   `SLURM_CPUS_PER_TASK // num_chains`.
   **Outcome of trying threads:** the one clean test (exclusive 112-core node, D≈99, 4 chains
   x 16 threads) showed no measurable gain: under 160 iterations in 3 h, about the
-  single-thread rate. The other threaded attempts are uninformative (one pair shared a node
+  rate of the earlier run that left `STAN_NUM_THREADS` unset. The other threaded attempts are uninformative (one pair shared a node
   with a third job; one pair was cancelled at about 20 minutes). The completed D≈29 fit
   (14.7 h, 8 CPUs) is therefore the only completed real-cohort Stan timing, and is the
   configuration the study reports. See `launch_record/` for each attempt and why it ended.

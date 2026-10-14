@@ -21,8 +21,8 @@
 #
 # CORES: httpstan compiles with STAN_THREADS defined, so reduce_sum threads across subjects
 # within each chain once STAN_NUM_THREADS is set -- HBStanTrainer derives it from
-# SLURM_CPUS_PER_TASK // num_chains. The first launch ran at one thread per chain because the
-# variable was unset; its D~99 task reached 600 of 16000 iterations in 9 h 41 m before it was
+# SLURM_CPUS_PER_TASK // num_chains. The first launch did not set the variable, so one thread per chain
+# was expected (the effective count was not recorded; see its launch record); its D~99 task reached 600 of 16000 iterations in 9 h 41 m before it was
 # cancelled. Threading was later tried and showed no measurable gain in the one clean test
 # (see notes.md and launch_record/), so do not size CPUs for threads on the strength of this
 # comment: chains run as separate processes, and 8 CPUs is what completed D~29.

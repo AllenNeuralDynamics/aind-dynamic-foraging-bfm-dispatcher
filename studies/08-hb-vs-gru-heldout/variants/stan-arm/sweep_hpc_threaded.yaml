@@ -10,8 +10,15 @@
 #       --mode cpu --agent-count 1 \
 #       --sbatch-extra='--array=0-1 --cpus-per-task=32 --mem=128G --time=72:00:00'
 #
-# WHY A SECOND SWEEP RATHER THAN AN EDIT: launch 20260905-020928 ran single-threaded because
-# STAN_NUM_THREADS was unset. Its D≈29 rung is still running and will produce a usable
+# THE COMMAND ABOVE IS THE FIRST THREADED ATTEMPT EXACTLY AS LAUNCHED (Slurm array 25580829: 32 CPUs
+# per task, no --exclusive). Both tasks landed on one node and were cancelled at 18 m 55 s. It is
+# neither a safe nor a reproducible configuration. Later launches changed the Slurm request each time;
+# what was actually asked for, node and outcome are in launch_record/hpc_stan_threaded_pair.json,
+# hpc_stan_exclusive_node.json (D~99 on all 112 CPUs of one node) and hpc_stan_reslice_threaded.json
+# (88 and 112 CPUs).
+#
+# WHY A SECOND SWEEP RATHER THAN AN EDIT: launch 20260905-020928 did not set STAN_NUM_THREADS
+# (so one thread per chain was expected; the effective count was not recorded). Its D≈29 rung is still running and will produce a usable
 # posterior, so keeping that grid intact leaves it identifiable in W&B.
 #
 # BOTH RUNGS, and D≈29 is here on purpose even though it already has a completed fit.
@@ -27,11 +34,12 @@
 # threads each, load 149 on an 88-core box. With --exclusive each array task gets its own
 # node, which is what makes running both rungs at once safe.
 #
-# CPUs: 64 = 4 chains x 16 reduce_sum threads, on an exclusive 88-core node. HBStanTrainer derives the split from
+# CPUs: the intent at launch was 4 chains x 16 reduce_sum threads (64 CPUs); no launch requested exactly that
+# (see the records above for what was). HBStanTrainer derives the split from
 # SLURM_CPUS_PER_TASK // num_chains, so changing --cpus-per-task changes the threading and
 # nothing else needs editing.
 #
-# Rates this replaces, for reference. Single-threaded: D≈29 ~1300 iter/h (completed in 14.7 h),
+# Rates this replaces, for reference. Thread count unrecorded (expected one): D≈29 ~1300 iter/h (completed in 14.7 h),
 # D≈99 ~53 iter/h. Threaded but pre-reslice: D≈99 managed under 160 iterations in 3 h on 92
 # busy cores — no better than one thread, because reduce_sum was copying ~3.7M autodiff
 # variables per gradient rather than computing. That is the fix this sweep tests.
