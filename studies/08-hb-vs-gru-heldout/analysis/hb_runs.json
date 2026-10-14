@@ -1,9 +1,9 @@
 {
   "_meta": {
     "produced_by": "analysis/extract_hb_runs.py",
-    "produced_at_pt": "2026-10-13T17:06:21-07:00",
-    "dispatcher_git_sha": "efab8eac0f27e94a7a48d44caf527c51eadddffa",
-    "wrapper_git_sha": null,
+    "produced_at_pt": "2026-10-13T22:07:41-07:00",
+    "dispatcher_git_sha": "81960a30f42a3e8c6b08099f406abf4e44756a74",
+    "wrapper_git_sha": "5eaf328024c87ba7d24c75d0f9f2354150ca4c70",
     "wandb_groups": [
       "one-stage-ladder@20260902-235911",
       "one-stage-ladder@20260903-052244",

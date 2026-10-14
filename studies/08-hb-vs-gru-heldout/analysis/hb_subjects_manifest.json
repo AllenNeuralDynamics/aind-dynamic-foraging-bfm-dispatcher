@@ -1,9 +1,9 @@
 {
   "_meta": {
     "produced_by": "analysis/freeze_hb_subjects.py",
-    "produced_at_pt": "2026-10-13T21:55:52-07:00",
-    "dispatcher_git_sha": "f8fbb94cb4dc5b597156ee16c76da89cbe890a4e",
-    "wrapper_git_sha": null,
+    "produced_at_pt": "2026-10-13T22:08:33-07:00",
+    "dispatcher_git_sha": "81960a30f42a3e8c6b08099f406abf4e44756a74",
+    "wrapper_git_sha": "5eaf328024c87ba7d24c75d0f9f2354150ca4c70",
     "wandb_groups": [
       "one-stage-ladder@20260903-052244",
       "one-stage-ladder@20260903-154819",

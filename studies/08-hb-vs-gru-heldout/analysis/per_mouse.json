@@ -1,9 +1,9 @@
 {
   "_meta": {
     "produced_by": "analysis/per_mouse.py",
-    "produced_at_pt": "2026-10-13T21:57:56-07:00",
-    "dispatcher_git_sha": "bbae6935ba9ab0319a9075b7597ecd354b7c5bf3",
-    "wrapper_git_sha": null,
+    "produced_at_pt": "2026-10-13T22:09:04-07:00",
+    "dispatcher_git_sha": "81960a30f42a3e8c6b08099f406abf4e44756a74",
+    "wrapper_git_sha": "5eaf328024c87ba7d24c75d0f9f2354150ca4c70",
     "wandb_groups": [
       "one-stage-ladder@20260903-154819",
       "one-stage-ladder@20260903-154828"
