@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "entity": "AIND-disRNN",
+  "project": "mice_ignore_scaling",
+  "description": "Trained 3-way (L/R/ignore) GRUs analysed by Study 13: Study 02's nxd-3way D=614 / H128 cell, the 3-way twin of Study 12's model C (same config except data.ignore_policy=include and wrapper 4530d04 vs 9595dd3).",
+  "checkpoint_policy": "best_eval",
+  "models": {
+    "C3": {
+      "role": "primary",
+      "status": "complete",
+      "group": "nxd-3way@20260707-075401",
+      "source_variant": "studies/02-gru-scaling-law-ignore/variants/nxd-3way",
+      "twin_of": "studies/12-gru-dynamics-embedding/source_runs.json models.C",
+      "ignore_policy": "include",
+      "output_size": 3,
+      "architecture": {
+        "model": "gru",
+        "hidden_size": 128,
+        "subject_embedding_size": 4,
+        "session_encoding_type": "scalar"
+      },
+      "runs": {
+        "C3-s0": {
+          "seed": 0,
+          "run_id": "nxd-3way-20260707-075401-61a145ca",
+          "artifact_name": "gru-output-nxd-3way-20260707-075401-61a145ca",
+          "artifact_id": "QXJ0aWZhY3Q6MzExMjQwNTMyMw==",
+          "artifact_digest": "f9a7d3a5bb0b5d7c961d61d9b649c21f",
+          "heldout_likelihood": 0.6275464296340942,
+          "heldout_likelihood_LR_engaged": 0.730445384979248,
+          "heldout_ignore_pr_auc": 0.6367816701219735
+        },
+        "C3-s1": {
+          "seed": 1,
+          "run_id": "nxd-3way-20260707-075401-70798298",
+          "artifact_name": "gru-output-nxd-3way-20260707-075401-70798298",
+          "artifact_id": "QXJ0aWZhY3Q6MzExMjM5NTUwOA==",
+          "artifact_digest": "d747adff81cd6c8e91bffc8e377b1a30",
+          "heldout_likelihood": 0.6274037957191467,
+          "heldout_likelihood_LR_engaged": 0.7303895354270935,
+          "heldout_ignore_pr_auc": 0.6365071984074914
+        },
+        "C3-s2": {
+          "seed": 2,
+          "run_id": "nxd-3way-20260707-075401-9ce451ca",
+          "artifact_name": "gru-output-nxd-3way-20260707-075401-9ce451ca",
+          "artifact_id": "QXJ0aWZhY3Q6MzExMjMzNjQzNw==",
+          "artifact_digest": "5e5abd8f1ae64d3f0a30924cb9df7ca8",
+          "heldout_likelihood": 0.6269398927688599,
+          "heldout_likelihood_LR_engaged": 0.7300697565078735,
+          "heldout_ignore_pr_auc": 0.6354481076440559
+        }
+      }
+    }
+  },
+  "frozen_at_pt": "2026-10-23T13:51:41-07:00"
+}
