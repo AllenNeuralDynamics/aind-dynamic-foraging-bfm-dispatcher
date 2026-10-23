@@ -4,8 +4,9 @@ One entry per merged PR (or coherent unreleased batch).
 
 ## 2026-10-23: status records that the study is closing
 
-- README `## Status` now states the study-level position: all compute done, the negative verdict, the merged PRs, and the two items left (`results.md` stubs, the verdict on #72). The Variants index and Status tables list `stan-arm`.
+- README `## Status` now states the study-level position: all compute done, the negative verdict, the merged PRs, and what is left (the verdict on #72). The Variants index and Status tables list `stan-arm`.
 - `stan-arm/notes.md` gives the variant's end state instead of pointing at the launch records; `one-stage-ladder/notes.md` links r4 in place rather than the merged PR.
+- `results.md` stubs for every launch with a finished run: the six counted `one-stage-ladder` Beaker launches, the smoke and the three seed-0 repro launches (W&B project `test`), and the counted Stan group. Times are from Beaker and `sacct`; numbers are from `analysis/hb_runs.json` and `analysis/convergence.json`, except the smoke and repro likelihoods, which were read from W&B on 2026-10-23. The three repro runs give the same matched held-out likelihood to every digit.
 
 ## 2026-10-14 (third round): Stan diagnostics corrected, freezer inputs pinned
 

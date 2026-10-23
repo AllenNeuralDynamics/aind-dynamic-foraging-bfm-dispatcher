@@ -106,10 +106,8 @@ Merged: models [#77](https://github.com/AllenNeuralDynamics/aind-dynamic-foragin
 wrapper [#100](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/pull/100),
 dispatcher #170 (Stan arm) and #168 (reports r1–r4).
 
-Left before the study is closed:
-
-1. Write the `results.md` stubs for the settled launch groups.
-2. Record the verdict on #72 and close it.
+Every launch with a finished run has a `results.md` beside its launch record. Left before the
+study is closed: record the verdict on #72 and close it.
 
 Per-variant state, in the variant's own notes — this README would only rot as a second copy:
 
