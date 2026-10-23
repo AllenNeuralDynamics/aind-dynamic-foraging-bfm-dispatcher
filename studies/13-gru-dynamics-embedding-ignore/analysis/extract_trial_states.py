@@ -38,6 +38,9 @@ LIKELIHOOD_TOLERANCE = 1e-4
 # a one-trial misalignment gives ~0.2 median).
 READOUT_TOLERANCE = 1e-2
 IGNORE = 2
+# C3-s0 on CPU peaked at 31 GB RSS (analysis/_cache/mem_C3-s0.log, 2026-10-23); a first attempt
+# running alongside another 26 GB job was OOM-killed. Refuse to start below peak + ~30%.
+MIN_AVAILABLE_GB = 40
 
 
 def _wrapper_checkout() -> dict:
@@ -49,6 +52,17 @@ def _wrapper_checkout() -> dict:
         return subprocess.check_output(["git", "-C", str(repo), *args], text=True).strip()
 
     return {"path": str(repo), "head": git("rev-parse", "HEAD"), "dirty": bool(git("status", "--porcelain"))}
+
+
+def _require_memory() -> None:
+    """Fail fast, before loading anything, if the host cannot hold the extraction's peak."""
+    meminfo = dict(line.split(":", 1) for line in Path("/proc/meminfo").read_text().splitlines())
+    available_gb = int(meminfo["MemAvailable"].split()[0]) / 2**20
+    if available_gb < MIN_AVAILABLE_GB:
+        raise MemoryError(
+            f"{available_gb:.0f} GB available, extraction needs ~{MIN_AVAILABLE_GB} GB; "
+            "wait for other jobs to finish rather than run alongside them"
+        )
 
 
 def _inputs_data_cfg(model_dir: Path) -> dict:
@@ -90,6 +104,7 @@ def _session_tasks(snapshot: str) -> "pd.DataFrame":
 
 
 def main(key: str) -> None:
+    _require_memory()
     from post_training_analysis.gru_trial_states import extract_gru_trial_states  # noqa: PLC0415
 
     manifest = json.loads((STUDY / "source_runs.json").read_text())

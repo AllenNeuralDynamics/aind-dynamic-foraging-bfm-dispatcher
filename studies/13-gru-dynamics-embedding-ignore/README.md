@@ -57,5 +57,10 @@ action (two readouts, timesteps vs engaged trials, the 5-symbol input alphabet) 
 | step | state |
 |---|---|
 | C3 source runs frozen | done 2026-10-23 (`make freeze-sources`); L/R likelihoods match Study 02's `scaling.json` |
-| A1 trial table, C3 seed 0 | see [`analysis/trial_states_C3-s0.json`](analysis/trial_states_C3-s0.json) |
+| A1 trial table, C3 seed 0 | done 2026-10-23 on CPU — 4.76M eval trials (8.9% ignored), 8,906 sessions, 614 mice; reproduces all three logged likelihoods to <5e-7 ([`analysis/trial_states_C3-s0.json`](analysis/trial_states_C3-s0.json)). Peak 31 GB RAM: run extractions one at a time |
 | Phase B (r1) | next |
+
+**Open check before same-trial comparisons with C.** C3's eval split has 8,906 sessions and
+4,338,727 engaged trials; C's has 8,903 and 4,339,402. The splits are drawn the same way,
+so the gap is presumably in which sessions/trials survive filtering when ignored trials are
+kept — not yet traced.
