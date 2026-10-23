@@ -300,13 +300,50 @@ def _inject_lineage_into_command(
     # Every HPC sweep needs the override, so inject it here rather than relying on
     # each sweep YAML to remember (which is how studies 01 and 02 both lost their
     # held-out metrics). Skip if the sweep already set it explicitly.
+    # ...but only for models that HAVE a training block. The cognitive baselines (hb_*,
+    # baseline_rl_*) do their own held-out scoring inside the trainer and define no
+    # `model.training`, so an unconditional override is not merely redundant there -- Hydra
+    # refuses to override a key that does not exist and the run dies during config
+    # composition, before the trainer is ever constructed:
+    #     ConfigCompositionException: Could not override
+    #     'model.training.auto_heldout_finetune.output_root'
+    # That is why the HB ladder submitted through a hand-written sbatch instead of this
+    # launcher. Deciding from the model config itself, rather than a name pattern, keeps new
+    # model configs working without touching this list.
     if not any("auto_heldout_finetune.output_root" in str(c) for c in cmd):
-        cmd.append(
-            "model.training.auto_heldout_finetune.output_root="
-            "'${oc.env:BFM_HELDOUT_ROOT,${oc.env:DISRNN_HELDOUT_ROOT,${oc.env:HOME}/outputs/heldout_subject_finetuning}}'"
-        )
+        if _model_has_training_block(cmd):
+            cmd.append(
+                "model.training.auto_heldout_finetune.output_root="
+                "'${oc.env:BFM_HELDOUT_ROOT,${oc.env:DISRNN_HELDOUT_ROOT,${oc.env:HOME}/outputs/heldout_subject_finetuning}}'"
+            )
     sweep_cfg["command"] = cmd
     return sweep_cfg
+
+
+def _model_has_training_block(cmd: list) -> bool:
+    """Does the model config this sweep selects define `training`?
+
+    Read from the dispatcher's own config tree rather than inferred from the model name, so
+    a new config is classified by what it contains. Unknown or unreadable configs return
+    True, keeping the previous behaviour for everything that is not clearly a trainer-side
+    model: the failure this guard prevents is loud and immediate, while the failure the
+    override prevents (studies 01 and 02 silently losing every `heldout/*` metric) is not.
+    """
+    model_name = None
+    for entry in cmd:
+        text = str(entry)
+        if text.startswith("model="):
+            model_name = text.split("=", 1)[1].strip()
+    if not model_name:
+        return True
+    config_path = Path(__file__).resolve().parent / "config" / "model" / f"{model_name}.yaml"
+    if not config_path.exists():
+        return True
+    try:
+        model_cfg = yaml.safe_load(config_path.read_text())
+    except (OSError, yaml.YAMLError):
+        return True
+    return not isinstance(model_cfg, dict) or "training" in model_cfg
 
 
 def _estimate_total_grid_runs(sweep_yaml: Path) -> int | None:

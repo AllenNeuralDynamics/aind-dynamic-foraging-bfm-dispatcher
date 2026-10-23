@@ -179,5 +179,56 @@ class TestRuntimeRefRepositories(unittest.TestCase):
         )
 
 
+class TestHeldoutOverrideInjection(unittest.TestCase):
+    """The held-out override is appended only for models whose config has a `training` block.
+
+    Getting this wrong fails in one of two ways: a cognitive baseline (no `model.training`) dies
+    in Hydra composition, or a neural model silently loses every `heldout/*` metric.
+    """
+
+    OVERRIDE = "auto_heldout_finetune.output_root"
+
+    def _config_dir(self, models: dict):
+        """A temp `code/` tree holding the given model configs; returns a launch_hpc `__file__`."""
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        model_dir = Path(temp.name) / "config" / "model"
+        model_dir.mkdir(parents=True)
+        for name, text in models.items():
+            (model_dir / f"{name}.yaml").write_text(text)
+        return str(Path(temp.name) / "launch_hpc.py")
+
+    def _injected(self, models: dict, command: list) -> bool:
+        with mock.patch.object(launch_hpc, "__file__", self._config_dir(models)):
+            cfg = launch_hpc._inject_lineage_into_command({"command": list(command)}, {})
+        return any(self.OVERRIDE in str(c) for c in cfg["command"])
+
+    def test_model_with_training_receives_the_override(self):
+        self.assertTrue(self._injected({"gru": "type: gru\ntraining:\n  lr: 0.001\n"}, ["python", "model=gru"]))
+
+    def test_model_without_training_does_not(self):
+        self.assertFalse(self._injected({"hb": "type: hb\nnum_chains: 4\n"}, ["python", "model=hb"]))
+
+    def test_an_explicit_override_in_the_sweep_is_not_duplicated(self):
+        cmd = ["python", "model=gru", f"model.training.{self.OVERRIDE}=/x"]
+        with mock.patch.object(launch_hpc, "__file__", self._config_dir({"gru": "training: {}\n"})):
+            out = launch_hpc._inject_lineage_into_command({"command": cmd}, {})["command"]
+        self.assertEqual(sum(self.OVERRIDE in str(c) for c in out), 1)
+
+    def test_unknown_or_unselected_model_keeps_the_old_behaviour(self):
+        self.assertTrue(self._injected({}, ["python", "model=not_a_config"]))
+        self.assertTrue(self._injected({"gru": "training: {}\n"}, ["python"]))
+
+    def test_malformed_or_non_mapping_config_keeps_the_old_behaviour(self):
+        self.assertTrue(self._injected({"bad": "training: [unclosed\n"}, ["python", "model=bad"]))
+        self.assertTrue(self._injected({"listy": "- a\n- b\n"}, ["python", "model=listy"]))
+
+    def test_unreadable_config_keeps_the_old_behaviour(self):
+        models = {"hb": "num_chains: 4\n"}
+        with mock.patch.object(launch_hpc, "__file__", self._config_dir(models)), \
+             mock.patch.object(Path, "read_text", side_effect=PermissionError("denied")):
+            self.assertTrue(launch_hpc._model_has_training_block(["python", "model=hb"]))
+
+
 if __name__ == "__main__":
     unittest.main()

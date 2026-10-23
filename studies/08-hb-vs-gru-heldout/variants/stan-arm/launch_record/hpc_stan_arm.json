@@ -1,0 +1,132 @@
+{
+  "_meta": {
+    "produced_by": "manual repair 2026-10-13 via launch_record.write_intervention",
+    "produced_at_pt": "2026-10-13T16:59:51-07:00",
+    "dispatcher_git_sha": "535e646f3ebaf4aea45a01f90a442d6f500fafb3",
+    "wrapper_git_sha": null,
+    "wandb_groups": [
+      "stan-arm@20260905-020928"
+    ]
+  },
+  "kind": "resubmit",
+  "platform": "hpc",
+  "wandb_group": "stan-arm@20260905-020928",
+  "job_refs": [
+    {
+      "type": "wandb_sweep",
+      "id": "4i17yn5r"
+    },
+    {
+      "type": "slurm_array_job",
+      "id": "25579912"
+    }
+  ],
+  "supersedes": [
+    "25579870"
+  ],
+  "trigger": {
+    "symptom": "The first launch of this sweep (W&B sweep d5fij9gq, Slurm array 25579870) ended in 52 s and 78 s with Slurm state COMPLETED 0:0, and no training ran.",
+    "cause": "launch_hpc.py unconditionally appended model.training.auto_heldout_finetune.output_root to every sweep command. The cognitive-baseline configs define no model.training block, so Hydra refused the override during config composition. Fixed in dispatcher f284584 by injecting it only for models that have a training block; this record is the first launch after that fix.",
+    "evidence": {
+      "slurm_first_launch": "25579870_0 COMPLETED 0:0 00:01:18 n238; 25579870_1 COMPLETED 0:0 00:00:52 n243 (sacct)",
+      "logs": "/home/han.hou/logfile/job_25579870.{out,err} (read at the time; not re-read in this audit)"
+    }
+  },
+  "tasks": [
+    {
+      "slurm_task": "25579912_0",
+      "slurm_raw_job": "25579916",
+      "subject_ratio": 0.163,
+      "node": "n238",
+      "cpus": 8,
+      "elapsed": "09:41:11",
+      "slurm_state": "CANCELLED",
+      "wandb_run_id": "5i6iofof",
+      "wandb_state": "crashed",
+      "note": "Cancelled at 600/16000 iterations (last logged progress, from the raw job log). About 62 iterations/h, so a linear extrapolation puts completion beyond 250 h; early-phase rates include warmup, so that is indicative only. Cancelled to relaunch threaded; see hpc_stan_threaded_pair.json."
+    },
+    {
+      "slurm_task": "25579912_1",
+      "slurm_raw_job": "25579912",
+      "subject_ratio": 0.049,
+      "node": "n243",
+      "cpus": 8,
+      "elapsed": "14:45:33",
+      "slurm_state": "COMPLETED",
+      "wandb_run_id": "hlbo30c3",
+      "wandb_state": "finished",
+      "note": "The only completed Stan fit: 16000/16000 iterations, hb/fit_seconds 53001, 23 divergences (W&B summary)."
+    }
+  ],
+  "deviations": {
+    "no_heldout": "HBStanTrainer fits the population only, so this run logs no heldout/* metrics and is NOT an HB rung on the scaling curve.",
+    "threading_claim_retracted": "An earlier version of this record said reduce_sum runs serially because httpstan does not define STAN_THREADS. That was wrong: httpstan/models.py defines it, and what decides threading is STAN_NUM_THREADS, read once at pool start. For THIS launch the effective thread count was not recorded and is not known. The launcher and trainer did not set STAN_NUM_THREADS (the trainer began deriving it afterwards), so Stan's documented default of one reduce_sum thread would apply, but that is inference, not observation. Two separate ps samples were taken during the run: one showed four chain processes at roughly 200% CPU each, and another listed python processes with 8 and 10 OS threads (ps nlwp). nlwp counts every thread in the process, not only reduce_sum threads, and the second sample was not tied to a specific chain process, so neither sample establishes the reduce_sum thread count. A chain at about 200% CPU is more than one busy thread would give, which is why the count is left unverified. 'One thread per chain' and 'two' are therefore both unproven for the reported 53,001 s D~29 fit; its wall time is what it was on an 8-CPU allocation.",
+    "numpyro_comparator": "At launch no NumPyro D~99 fit had finished at any setting. One has since (Beaker 01M1MQB0SRRBDDRKP1SX3T55DV, fit 38.82 h, 0 divergences); Stan has no finished D~99 fit.",
+    "models_commit_unreconciled": "foraging_models_commit differs between sources: 57f1842f (read from the HPC env at record time, in launch.revisions) vs 26ce8ebd (the W&B run config of every Stan run, including later launches that ran after the branch moved). Not reconciled; do not treat either as authoritative until the HPC env's recorded install source for that launch is read back.",
+    "record_origin": "Rewritten 2026-10-13 into the current schema. The pre-schema fields are preserved under 'launch' unchanged apart from nodes and cohorts. Slurm facts (state, elapsed, node, CPUs, submit time) come from sacct as read on 2026-10-13; cohort, host and W&B run id come from each run's W&B config. The two agree on node and duration for every job. sacct truncates the cancelling uid, so who issued each scancel is not recoverable from it; the causes below are the reasons stated at the time and are marked where they were later found wrong.",
+    "wandb_diagnostics_wrong": "The hb/max_rhat, hb/min_ess_bulk, hb/min_ess_per_draw and hb/min_ess_per_second that HBStanTrainer logged to W&B for the one finished run (W&B id hlbo30c3) are wrong: the trainer reshaped PyStan's flat draw axis chain-major, but PyStan's axis has the chain innermost, so the four chains were mixed. Logged: lowest bulk ESS 7007, max R-hat 1.0049. Recomputed from the saved draws with the correct axis: 1220 and 1.0030 (analysis/recompute_stan_diagnostics.py in study 08, which reproduces the logged values exactly with the wrong axis). The saved draws and the divergence count (23) are unaffected. The trainer is fixed in the wrapper PR; the W&B values of this run are not rewritten."
+  },
+  "cost": {
+    "progress_discarded": "none from this launch's own task 25579912_1; task 25579912_0 was cancelled later (see tasks)"
+  },
+  "launch": {
+    "launch_id": "20260905-020928",
+    "study": "08-hb-vs-gru-heldout",
+    "variant": "stan-arm",
+    "label": "hb-stan-d29-d100",
+    "note": "Stan arm of the HB baseline (issue 129): joint three-level model in pystan at 2000/2000/4 on the same D~29 and D~100 cohorts as the NumPyro rungs",
+    "surface": "hpc",
+    "launcher_cmd": "code/launch_hpc.py --sweep-yaml studies/08-hb-vs-gru-heldout/variants/stan-arm/sweep_hpc.yaml --mode cpu --agent-count 1 --sbatch-extra='--array=0-1 --cpus-per-task=8 --mem=128G --time=72:00:00'",
+    "sweep_yaml": "studies/08-hb-vs-gru-heldout/variants/stan-arm/sweep_hpc.yaml",
+    "wandb": {
+      "entity": "AIND-disRNN",
+      "project": "mice_data_scaling",
+      "sweep_id": "4i17yn5r",
+      "sweep_url": "https://wandb.ai/AIND-disRNN/mice_data_scaling/sweeps/4i17yn5r",
+      "group": "stan-arm@20260905-020928"
+    },
+    "slurm": {
+      "array_job_id": "25579912",
+      "autostop_job_id": "25579913",
+      "array": "0-1",
+      "cpus_per_task": 8,
+      "mem": "128G",
+      "time": "72:00:00",
+      "partition": "aind (wandb_sweep_cpu.slurm default)",
+      "nodes": {
+        "25579912_0": "n238",
+        "25579912_1": "n243"
+      },
+      "task_cohorts": {
+        "25579912_0 (raw 25579916)": "subject_ratio 0.163, D~99",
+        "25579912_1 (raw 25579912)": "subject_ratio 0.049, D~29"
+      }
+    },
+    "grid": {
+      "data.subject_ratio": [
+        0.049,
+        0.163
+      ]
+    },
+    "sampler": {
+      "num_warmup": 2000,
+      "num_samples": 2000,
+      "num_chains": 4,
+      "seed": 0
+    },
+    "config_hash": "176a0901",
+    "revisions": {
+      "dispatcher_commit": "f2845843b817622ddd98ccd91b7cc639d9dc36ba",
+      "wrapper_commit": "6d35281ec465ca834f33c99d10d960efeaa7a957",
+      "foraging_models_commit": "57f1842f998a3bdd7adeff56a071325517805798",
+      "foraging_models_version": "0.15.2",
+      "foraging_models_source": "git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-models.git@feat/stan-three-level"
+    },
+    "environment": {
+      "conda_env": "dynamic-foraging-bfm-cpu",
+      "pystan": "3.10.1",
+      "httpstan": "4.13.0",
+      "compiler": "gcc/14-rocky9 module, loaded by wandb_sweep_cpu.slurm"
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "produced_by": "manual backfill 2026-10-13 via launch_record.write_intervention",
+    "produced_at_pt": "2026-10-13T16:59:52-07:00",
+    "dispatcher_git_sha": "535e646f3ebaf4aea45a01f90a442d6f500fafb3",
+    "wrapper_git_sha": null,
+    "wandb_groups": [
+      "stan-arm@20260905-174213"
+    ]
+  },
+  "kind": "probe",
+  "platform": "hpc",
+  "wandb_group": "stan-arm@20260905-174213",
+  "job_refs": [
+    {
+      "type": "wandb_sweep",
+      "id": "nswlcwu0"
+    },
+    {
+      "type": "slurm_array_job",
+      "id": "25581032"
+    }
+  ],
+  "supersedes": [
+    "ylhj6s4b"
+  ],
+  "trigger": {
+    "symptom": "Threading alone gave no speed-up at D~99 (hpc_stan_exclusive_node.json).",
+    "cause": "Hypothesis (since retracted as unsupported): reduce_sum deep-copies shared arguments that contain parameters, so slicing the parameters and sharing only data would remove the bottleneck. Launched threaded.",
+    "evidence": {
+      "wandb_commits": "dispatcher be6886e6, wrapper 8d0f1eda, models 26ce8ebd (W&B config)"
+    }
+  },
+  "tasks": [
+    {
+      "slurm_task": "25581032_0",
+      "slurm_raw_job": null,
+      "subject_ratio": 0.049,
+      "node": "n238",
+      "cpus": 88,
+      "elapsed": "00:20:43",
+      "slurm_state": "CANCELLED",
+      "wandb_run_id": "zahkoc2c",
+      "wandb_state": "crashed"
+    },
+    {
+      "slurm_task": "25581032_1",
+      "slurm_raw_job": null,
+      "subject_ratio": 0.163,
+      "node": "n279",
+      "cpus": 112,
+      "elapsed": "00:20:43",
+      "slurm_state": "CANCELLED",
+      "wandb_run_id": "z8joh3a5",
+      "wandb_state": "crashed"
+    }
+  ],
+  "deviations": {
+    "two_variables_changed": "This launch changed BOTH the reduce_sum slicing and the thread count, so its negative signal could not be attributed to either. Relaunched with one variable in hpc_stan_reslice_serial.json.",
+    "cancel_cause_as_stated_at_the_time": "The resliced threaded D~29 run had not reached about 100 iterations in 18 minutes while the pre-reslice run reached about 103 in about 5 minutes.",
+    "source": "Slurm facts (state, elapsed, node, CPUs, submit time) come from sacct as read on 2026-10-13; cohort, host and W&B run id come from each run's W&B config. The two agree on node and duration for every job. sacct truncates the cancelling uid, so who issued each scancel is not recoverable from it; the causes below are the reasons stated at the time and are marked where they were later found wrong."
+  },
+  "cost": {
+    "progress_discarded": "about 21 minutes of two large allocations"
+  }
+}

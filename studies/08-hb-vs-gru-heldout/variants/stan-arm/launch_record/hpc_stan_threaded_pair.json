@@ -1,0 +1,68 @@
+{
+  "_meta": {
+    "produced_by": "manual backfill 2026-10-13 via launch_record.write_intervention",
+    "produced_at_pt": "2026-10-13T16:59:51-07:00",
+    "dispatcher_git_sha": "535e646f3ebaf4aea45a01f90a442d6f500fafb3",
+    "wrapper_git_sha": null,
+    "wandb_groups": [
+      "stan-arm@20260905-115323"
+    ]
+  },
+  "kind": "probe",
+  "platform": "hpc",
+  "wandb_group": "stan-arm@20260905-115323",
+  "job_refs": [
+    {
+      "type": "wandb_sweep",
+      "id": "inspj29s"
+    },
+    {
+      "type": "slurm_array_job",
+      "id": "25580829"
+    }
+  ],
+  "supersedes": [
+    "5i6iofof"
+  ],
+  "trigger": {
+    "symptom": "The D~99 run launched without STAN_NUM_THREADS (expected one thread; effective count unrecorded) projected beyond ~250 h at 600 iterations in 9h41m (linear extrapolation).",
+    "cause": "Hypothesis: with reduce_sum threading enabled, D~99 (and D~29) would speed up. Prompted by finding that the earlier claim that threading was impossible was false.",
+    "evidence": {
+      "wandb_commits": "dispatcher bc8451ab, wrapper 8d0f1eda, models 26ce8ebd (W&B config)"
+    }
+  },
+  "tasks": [
+    {
+      "slurm_task": "25580829 (array index not identified)",
+      "slurm_raw_job": null,
+      "subject_ratio": 0.163,
+      "node": "n238",
+      "cpus": 32,
+      "elapsed": "00:18:55",
+      "slurm_state": "CANCELLED",
+      "wandb_run_id": "rl6jm43v",
+      "wandb_state": "crashed",
+      "note": "Both tasks of this array are identical in sacct (n238, 32 CPUs, 18m55s), so which array index ran which cohort is not determinable from it. Cohort and run id are from the W&B config."
+    },
+    {
+      "slurm_task": "25580829 (array index not identified)",
+      "slurm_raw_job": null,
+      "subject_ratio": 0.049,
+      "node": "n238",
+      "cpus": 32,
+      "elapsed": "00:18:55",
+      "slurm_state": "CANCELLED",
+      "wandb_run_id": "4cwya08w",
+      "wandb_state": "crashed",
+      "note": "See the note on the other task."
+    }
+  ],
+  "deviations": {
+    "cancel_cause_as_stated_at_the_time": "Three jobs shared one node (load about 149 with 32 TBB threads per chain process), per my message at the time; both threaded tasks ran on n238 and the third job is not identified here. Cancelled to protect the serial run I needed to finish. UNINFORMATIVE as a threading test: the node was oversubscribed.",
+    "note": "Both tasks ran on the same node, so this cannot say anything about threaded throughput.",
+    "source": "Slurm facts (state, elapsed, node, CPUs, submit time) come from sacct as read on 2026-10-13; cohort, host and W&B run id come from each run's W&B config. The two agree on node and duration for every job. sacct truncates the cancelling uid, so who issued each scancel is not recoverable from it; the causes below are the reasons stated at the time and are marked where they were later found wrong."
+  },
+  "cost": {
+    "progress_discarded": "none worth counting (cancelled at 19 min). The superseded D~99 serial run (5i6iofof) had reached 600/16000 in 9h41m."
+  }
+}

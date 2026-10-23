@@ -1,0 +1,73 @@
+# STATUS (2026-10-13): LAUNCHED AND CANCELLED, NOT A RECOMMENDED CONFIGURATION. The comments below
+# are the rationale as written at launch and are kept for the record. Threaded runs were cancelled
+# before finishing and gave no measurable gain in the one clean test; see launch_record/ and
+# notes.md. Do not re-run without a new hypothesis.
+#
+# HB Stan arm, threaded — the relaunch of sweep_hpc.yaml with reduce_sum actually using cores.
+#
+#     python code/launch_hpc.py \
+#       --sweep-yaml studies/08-hb-vs-gru-heldout/variants/stan-arm/sweep_hpc_threaded.yaml \
+#       --mode cpu --agent-count 1 \
+#       --sbatch-extra='--array=0-1 --cpus-per-task=32 --mem=128G --time=72:00:00'
+#
+# THE COMMAND ABOVE IS THE FIRST THREADED ATTEMPT EXACTLY AS LAUNCHED (Slurm array 25580829: 32 CPUs
+# per task, no --exclusive). Both tasks landed on one node and were cancelled at 18 m 55 s. It is
+# neither a safe nor a reproducible configuration. Later launches changed the Slurm request each time;
+# what was actually asked for, node and outcome are in launch_record/hpc_stan_threaded_pair.json,
+# hpc_stan_exclusive_node.json (D~99 on all 112 CPUs of one node) and hpc_stan_reslice_threaded.json
+# (88 and 112 CPUs).
+#
+# WHY A SECOND SWEEP RATHER THAN AN EDIT: launch 20260905-020928 did not set STAN_NUM_THREADS
+# (so one thread per chain was expected; the effective count was not recorded). Its D≈29 rung is still running and will produce a usable
+# posterior, so keeping that grid intact leaves it identifiable in W&B.
+#
+# BOTH RUNGS, and D≈29 is here on purpose even though it already has a completed fit.
+# That fit (launch 20260905-020928, 53001 s) ran the pre-reslice model, which passes the
+# parameter arrays to reduce_sum as shared arguments. The reslice was proposed on the theory
+# that this makes reduce_sum copy them into every partial sum; that theory was never
+# validated (see launch_record/hpc_stan_reslice_serial.json), and the direction of the
+# reslice's effect is unresolved. The pre-reslice posterior is valid -- same target density --
+# so its saved draws are valid (the R-hat and ESS the trainer logged for it are not; see
+# launch_record/hpc_stan_arm.json, wandb_diagnostics_wrong), and its 53001 s is simply the timing of that implementation on
+# its 8-CPU allocation, neither a lower nor an upper bound. The ESS/second comparison against
+# NumPyro is built on it. Re-running D≈29 here was meant to price the reslice on identical
+# data and seed.
+#
+# --exclusive is not optional: Stan's TBB threads busy-wait, so a threaded job sharing a node
+# inflates load far past its core count and slows every neighbour including itself. The first
+# threaded attempt put both tasks on one node alongside a third job — 8 chain processes, 32
+# threads each, load 149 on an 88-core box. With --exclusive each array task gets its own
+# node, which is what makes running both rungs at once safe.
+#
+# CPUs: the intent at launch was 4 chains x 16 reduce_sum threads (64 CPUs); no launch requested exactly that
+# (see the records above for what was). HBStanTrainer derives the split from
+# SLURM_CPUS_PER_TASK // num_chains, so changing --cpus-per-task changes the threading and
+# nothing else needs editing.
+#
+# Rates this replaces, for reference. Thread count unrecorded (expected one): D≈29 ~1300 iter/h (completed in 14.7 h),
+# D≈99 reached 600 of 16000 iterations in 9 h 41 m. Threaded but pre-reslice: D≈99 managed under
+# 160 iterations in 3 h on 92 busy cores, no better than the unthreaded rate. The cause was
+# hypothesised to be reduce_sum copying the shared parameter arguments; that was never
+# validated, and this sweep was to test the reslice proposed on that theory.
+
+entity: AIND-disRNN
+project: mice_data_scaling
+
+method: grid
+metric:
+  name: hb/min_ess_per_second
+  goal: maximize
+
+command:
+  - python
+  - -m
+  - run_hpc
+  - data=mice_snapshot_scaling
+  - model=hb_hattori_stan
+  - seed=0
+  - "wandb.tags=[hb,stan,issue-129,threaded]"
+  - ${args_no_hyphens}
+
+parameters:
+  data.subject_ratio:
+    values: [0.049, 0.163]     # D≈29 (reslice rerun) and D≈99

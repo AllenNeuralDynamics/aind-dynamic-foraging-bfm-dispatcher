@@ -1,0 +1,68 @@
+# Stan arm of the hierarchical Bayesian Hattori2019 baseline: the SAME joint three-level
+# model as `hb_hattori`, fit with pystan instead of NumPyro.
+#
+#   python -m run_hpc data=mice_snapshot_scaling model=hb_hattori_stan data.subject_ratio=0.049
+#
+# ── Why this config exists ───────────────────────────────────────────────
+# `benchmarks/RESULTS.md` in aind-dynamic-foraging-models prices the two frameworks per
+# subject, where Stan wins on every MEASURED axis (3.7x faster, ESS/draw ~1.0 against our
+# ~0.62, and it loops to each session's true length while JAX pads every lane to the cohort
+# maximum). It then argues NumPyro wins at cohort scale from a row labelled "inferred, not
+# measured". Dispatcher #129 exists to replace that inference with a measurement, and the
+# measurement only counts if the Stan fit comes through the same pipeline as the NumPyro
+# rungs -- same loader, same cohort selection, same provenance -- rather than a side script.
+#
+# A claim that used to justify skipping this has been withdrawn: the joint estimator is NOT
+# inexpressible in Stan. RESULTS.md says so one line after the sentence that was quoted for
+# it ("possible in principle -- it is an ordinary hierarchical model"); nobody having written
+# the file is not an architecture property.
+#
+# ── What it does NOT do ──────────────────────────────────────────────────
+# No held-out scoring, hence no `heldout/*` metrics and no `few_shot_k`. The question is
+# sampler efficiency on the joint fit; held-out adaptation is a separate NumPyro-side machine
+# (`heldout.py`) whose port would double the work and measure something this comparison does
+# not turn on. So an HB-Stan run is NOT a substitute for an HB rung on the scaling curve, and
+# must not be plotted as one.
+type: hb
+
+_target_: model_trainers.hb_stan_trainer.HBStanTrainer
+
+architecture:
+  multisubject: true          # the hierarchy is over subjects; single-subject is not a mode
+output_dir: ${oc.env:BFM_OUTPUT_DIR,${oc.env:DISRNN_OUTPUT_DIR,/results}}
+
+# ── Sampler ──────────────────────────────────────────────────────────────
+# These MUST track the NumPyro rung being compared against, or the comparison measures the
+# settings rather than the framework. 2000/2000/4 matches the draws-2000 probe
+# (Beaker 01M1PGEPRYGY542Y5JBQB17EED), which is the NumPyro run with a completed D~29
+# posterior at these settings. Note this differs from `hb_hattori`'s num_samples: 500 --
+# that default predates the draws increase and the probe overrode it on the command line.
+num_warmup: 2000
+num_samples: 2000
+num_chains: 4
+
+# No target_accept_prob / max_tree_depth keys here, deliberately. Stan's equivalents
+# (adapt_delta, max_treedepth) default to 0.8 and 10, numerically identical to the NumPyro
+# defaults the ladder runs at, so the two arms already agree on integrator geometry. Exposing
+# knobs nothing sets would invite them to drift apart.
+#
+# Threading: httpstan DOES compile with STAN_THREADS defined, so the model's reduce_sum can
+# thread across subjects within a chain. Stan reads STAN_NUM_THREADS at runtime and falls back
+# to one thread when it is unset, which is how the first D~29/D~99 pair ran -- HBStanTrainer
+# now derives it from SLURM_CPUS_PER_TASK // num_chains, so the CPU request sets the thread
+# count. Threading showed no measurable gain in the one clean test (D~99, exclusive node, 16
+# threads per chain; see variants/stan-arm/notes.md), and chains run as separate processes, so
+# there is no established reason to request more than a few CPUs per chain.
+
+beta_max: 10.0                # upper bound of softmax_inverse_temperature, per the paper
+
+# Same reasoning as hb_hattori: without this the trainer gets seed=None and ModelTrainer
+# falls back to int(time.time()), so the rung cannot be reproduced from its own config.
+seed: ${seed}
+
+# Population draws plus diagnostics and provenance. A cohort fit costs hours. Every run of a
+# sweep gets this same path, so HBStanTrainer writes into a subdirectory named for the W&B run
+# (artifact_dir/<run id>/); without that, a later rung would overwrite an earlier rung's posterior.
+artifact_dir: ${oc.env:BFM_OUTPUT_DIR,${oc.env:DISRNN_OUTPUT_DIR,/results}}/hb_stan_artifacts
+
+run_name_component: hb_stan
