@@ -1,0 +1,158 @@
+{
+  "_meta": {
+    "produced_by": "analysis/recompute_stan_diagnostics.py",
+    "produced_at_pt": "2026-10-14T14:49:47-07:00",
+    "dispatcher_git_sha": "67c4d439be227f2973352bb0e9861d13ddbb8e58",
+    "wrapper_git_sha": "5eaf328024c87ba7d24c75d0f9f2354150ca4c70",
+    "wandb_groups": [
+      "stan-arm@20260905-020928"
+    ]
+  },
+  "wandb_run_id": "hlbo30c3",
+  "n_chains": 4,
+  "draws_per_chain": 2000,
+  "n_draws": 8000,
+  "arviz_version": "1.3.0",
+  "chain_axis": "PyStan layout: flat axis is draw-major with the chain innermost; reshaped (draw, chain) then transposed",
+  "per_site": {
+    "population_mean": {
+      "rows": [
+        {
+          "param": "learn_rate_rew",
+          "ess_bulk": 1893.8193981079598,
+          "rhat": 1.0026715447962815
+        },
+        {
+          "param": "learn_rate_unrew",
+          "ess_bulk": 1378.3446691064828,
+          "rhat": 1.0012703007279995
+        },
+        {
+          "param": "forget_rate_unchosen",
+          "ess_bulk": 2659.350996777023,
+          "rhat": 1.001710040858364
+        },
+        {
+          "param": "softmax_inverse_temperature",
+          "ess_bulk": 1220.0903079605232,
+          "rhat": 1.001888013735778
+        },
+        {
+          "param": "bias_l",
+          "ess_bulk": 1433.2144086402552,
+          "rhat": 1.0030059345701872
+        }
+      ],
+      "min_ess_bulk": 1220.0903079605232,
+      "max_rhat": 1.0030059345701872
+    },
+    "population_scale": {
+      "rows": [
+        {
+          "param": "learn_rate_rew",
+          "ess_bulk": 1273.3703366244085,
+          "rhat": 1.0011652086903595
+        },
+        {
+          "param": "learn_rate_unrew",
+          "ess_bulk": 1935.9097837230913,
+          "rhat": 1.0007867757259672
+        },
+        {
+          "param": "forget_rate_unchosen",
+          "ess_bulk": 2276.6153999500434,
+          "rhat": 1.0008480740748231
+        },
+        {
+          "param": "softmax_inverse_temperature",
+          "ess_bulk": 2169.7341203958567,
+          "rhat": 1.0017200422770631
+        },
+        {
+          "param": "bias_l",
+          "ess_bulk": 1685.8895448730257,
+          "rhat": 1.0019590763153308
+        }
+      ],
+      "min_ess_bulk": 1273.3703366244085,
+      "max_rhat": 1.0019590763153308
+    },
+    "log_sigma_mean": {
+      "rows": [
+        {
+          "param": "learn_rate_rew",
+          "ess_bulk": 1926.778458137642,
+          "rhat": 1.000806931568205
+        },
+        {
+          "param": "learn_rate_unrew",
+          "ess_bulk": 2944.3500551933266,
+          "rhat": 1.0013951282970348
+        },
+        {
+          "param": "forget_rate_unchosen",
+          "ess_bulk": 1909.0529081865905,
+          "rhat": 1.0014837081748666
+        },
+        {
+          "param": "softmax_inverse_temperature",
+          "ess_bulk": 1689.8122896990385,
+          "rhat": 1.002101802821613
+        },
+        {
+          "param": "bias_l",
+          "ess_bulk": 1989.053207397001,
+          "rhat": 1.001992270919031
+        }
+      ],
+      "min_ess_bulk": 1689.8122896990385,
+      "max_rhat": 1.002101802821613
+    },
+    "log_sigma_spread": {
+      "rows": [
+        {
+          "param": "learn_rate_rew",
+          "ess_bulk": 1683.3598564439296,
+          "rhat": 1.0026596558975969
+        },
+        {
+          "param": "learn_rate_unrew",
+          "ess_bulk": 1959.507324717793,
+          "rhat": 1.0004988193161635
+        },
+        {
+          "param": "forget_rate_unchosen",
+          "ess_bulk": 1036.3586479148714,
+          "rhat": 1.0062647140208547
+        },
+        {
+          "param": "softmax_inverse_temperature",
+          "ess_bulk": 1328.848740791969,
+          "rhat": 1.0022430128970383
+        },
+        {
+          "param": "bias_l",
+          "ess_bulk": 2406.098782732709,
+          "rhat": 1.0026468647476494
+        }
+      ],
+      "min_ess_bulk": 1036.3586479148714,
+      "max_rhat": 1.0062647140208547
+    }
+  },
+  "population_mean": {
+    "max_rhat": 1.0030059345701872,
+    "min_ess_bulk": 1220.0903079605232
+  },
+  "as_logged_to_wandb_WRONG": {
+    "why": "chain-major reshape of a draw-major axis mixes the chains",
+    "logged_in_hb_runs_json": {
+      "max_rhat": 1.0048933621036606,
+      "min_ess_bulk": 7007.143552050102
+    },
+    "reproduced_here_from_the_same_draws": {
+      "max_rhat": 1.0048933621036606,
+      "min_ess_bulk": 7007.143552050102
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# Analysis environment for studies/08-hb-vs-gru-heldout/ (per the posthoc-reporting contract).
+# Not a full `pip freeze`: it pins the packages the producers import, in the two environments they ran in, on 2026-10-14 PT.
+#
+# Reporting producers (three_arm, per_mouse, shrinkage, convergence, update_reports, extract_hb_runs):
+#   Python 3.11.x
+numpy==2.4.6
+pandas==2.3.3
+scipy==1.17.1
+matplotlib==3.11.0
+PyYAML==6.0.3
+requests==2.34.2
+#
+# Posterior producers (summarize_hb_posteriors, freeze_hb_subjects) read the saved NumPyro posteriors (netCDF/HDF5), and
+# recompute_stan_diagnostics reads the saved Stan draws (npz) with arviz:
+#   Python 3.12.14, a separate environment ("hb-arviz1"); arviz 1.x is the line the container image uses.
+#   numpy==2.5.2  scipy==1.18.0  pandas==3.0.5  xarray==2026.7.0  arviz==1.3.0  netCDF4==1.7.4  h5netcdf==1.8.1  h5py==3.16.0
+#
+# Wrapper commit whose HBTrainer / HBStanTrainer wrote the W&B summary keys read here. It is the wrapper commit
+# the container actually checked out for the headline ladder, warmup-4000 and D=614 runs (read back from those jobs'
+# launch records); the 2000-draw probe ran a later wrapper commit, 610519e, with the same keys.
+-e git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper.git@5eaf328024c87ba7d24c75d0f9f2354150ca4c70#egg=aind_dynamic_foraging_bfm_wrapper

@@ -1,0 +1,61 @@
+{
+  "description": "Per-mouse maximum-likelihood fits of the three classical RL baselines (one differential-evolution fit per mouse on its own train sessions), frozen from /allen because W&B table blobs are not reachable from the analysis sandbox. 'train' = the 614-mouse training cohort, 'heldout' = the 149 held-out mice (disjoint). Columns use the RL package's names; biasL is the HB parameter bias_l.",
+  "copied_utc": "2026-10-14T04:52:05+00:00",
+  "copied_by": "cp on the HPC login node via a recorded compute job, then harvested; source and copy sha256 compared and equal",
+  "files": {
+    "ml_bari_heldout.csv": {
+      "model": "bari",
+      "cohort": "heldout",
+      "wandb_run_id": "bg3nzqz9",
+      "wandb_group": "rl-baseline-bari@20260713-005938",
+      "source_path": "/allen/aind/scratch/han.hou/outputs/disrnn/wandb/run-20260713_010346-bg3nzqz9/files/outputs/heldout_test/subject_fit_metrics.csv",
+      "sha256": "d00a812f6169a52a3411476b63f34e79992158f0985259a9a9434a7f07311349",
+      "n_mice": 149
+    },
+    "ml_bari_train.csv": {
+      "model": "bari",
+      "cohort": "train",
+      "wandb_run_id": "bg3nzqz9",
+      "wandb_group": "rl-baseline-bari@20260713-005938",
+      "source_path": "/allen/aind/scratch/han.hou/outputs/disrnn/wandb/run-20260713_010346-bg3nzqz9/files/outputs/subject_fit_metrics.csv",
+      "sha256": "21a970d750aa2e1e4215a1fafc90a462aae59c32385501e0ac67749d3eeb632d",
+      "n_mice": 614
+    },
+    "ml_ctt_heldout.csv": {
+      "model": "ctt",
+      "cohort": "heldout",
+      "wandb_run_id": "lmg1i9yd",
+      "wandb_group": "rl-baseline-ctt@20260713-010000",
+      "source_path": "/allen/aind/scratch/han.hou/outputs/disrnn/wandb/run-20260713_010429-lmg1i9yd/files/outputs/heldout_test/subject_fit_metrics.csv",
+      "sha256": "71243235830e52d0d5c458951bb7d28a2d60c8782148cd1cf01e60fc0b7d1424",
+      "n_mice": 149
+    },
+    "ml_ctt_train.csv": {
+      "model": "ctt",
+      "cohort": "train",
+      "wandb_run_id": "lmg1i9yd",
+      "wandb_group": "rl-baseline-ctt@20260713-010000",
+      "source_path": "/allen/aind/scratch/han.hou/outputs/disrnn/wandb/run-20260713_010429-lmg1i9yd/files/outputs/subject_fit_metrics.csv",
+      "sha256": "f660599b7b4956966291d656aa7c477ced6a88ed3fe3fc361e8630704122261b",
+      "n_mice": 614
+    },
+    "ml_hattori_heldout.csv": {
+      "model": "hattori",
+      "cohort": "heldout",
+      "wandb_run_id": "unhmbrk4",
+      "wandb_group": "rl-baseline-hattori@20260713-005950",
+      "source_path": "/allen/aind/scratch/han.hou/outputs/disrnn/wandb/run-20260713_010353-unhmbrk4/files/outputs/heldout_test/subject_fit_metrics.csv",
+      "sha256": "02190f6a06cc7d84a5d66bafebcef9a7f87196d3339b989c7d89064d3c35bad9",
+      "n_mice": 149
+    },
+    "ml_hattori_train.csv": {
+      "model": "hattori",
+      "cohort": "train",
+      "wandb_run_id": "unhmbrk4",
+      "wandb_group": "rl-baseline-hattori@20260713-005950",
+      "source_path": "/allen/aind/scratch/han.hou/outputs/disrnn/wandb/run-20260713_010353-unhmbrk4/files/outputs/subject_fit_metrics.csv",
+      "sha256": "e4f0b0110045540dc0439bf1b837bf00054950e34e481bcb22e8406885a3f6ae",
+      "n_mice": 614
+    }
+  }
+}
