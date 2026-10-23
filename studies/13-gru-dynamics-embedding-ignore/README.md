@@ -60,6 +60,57 @@ action (two readouts, timesteps vs engaged trials, the 5-symbol input alphabet) 
 | A1 trial table, C3 seed 0 | done 2026-10-23 on CPU — 4.76M eval trials (8.9% ignored), 8,906 sessions, 614 mice; reproduces all three logged likelihoods to <5e-7 ([`analysis/trial_states_C3-s0.json`](analysis/trial_states_C3-s0.json)). Peak 31 GB RAM: run extractions one at a time |
 | Phase B (r1) | next |
 
+## Resuming (state at 2026-10-23 16:07 PT, before a container restart)
+
+**Where the work lives.** Both repos are host mounts, so everything below survives a
+restart. Nothing is pushed (the container has no `ssh`).
+
+- Dispatcher checkout, branch `study/12-gru-dynamics-embedding`: this folder is
+  **untracked** (like Study 12). Branch `study/13-gru-dynamics-embedding-ignore` (`10dbfce`)
+  holds an identical committed copy — a backup, not the working copy.
+- Wrapper checkout, branch `study/12-gru-dynamics-embedding`: the 3-way extractor lives in
+  the **untracked** `code/post_training_analysis/gru_trial_states.py` and
+  `code/tests/test_gru_trial_states.py`. Wrapper branch `study/13-gru-dynamics-embedding-ignore`
+  (`8682fe7`) holds the same content; keep it — `trial_states_C3-s0.json` records it as the
+  code that produced the table.
+- `analysis/_cache/` (gitignored): `models/C3-s0/` (downloaded run), `trial_states_C3-s0.parquet`
+  (3.0 GB A1 table), `extract_C3-s0.log`, `mem_C3-s0.log` (10 s memory samples).
+
+**After a restart, check:**
+
+```bash
+cd /workspace/aind-dynamic-foraging-bfm-dispatcher/studies/13-gru-dynamics-embedding-ignore
+ls -la analysis/_cache/trial_states_C3-s0.parquet          # 3,051,917,969 bytes
+python -c "import pandas as pd; t = pd.read_parquet('analysis/_cache/trial_states_C3-s0.parquet', columns=['action']); print(len(t), t.action.value_counts().to_dict())"
+# expect 4761751 {1: 2189963, 0: 2148764, 2: 423024}
+pip install pytest   # optional; container-local, lost on restart
+cd ../../../aind-dynamic-foraging-bfm-wrapper/code
+JAX_PLATFORMS=cpu PYTHONPATH=$PWD python -m unittest tests.test_gru_trial_states   # 11 tests OK
+```
+
+**If the cache is gone**, rebuild it (W&B credentials are in the mounted `~/.netrc`; ~35 min
+on CPU, 31 GB peak RAM — run alone):
+
+```bash
+JAX_PLATFORMS=cpu make extract MODEL=C3-s0
+```
+
+**Environment notes.**
+- No GPU is visible to JAX here; set `JAX_PLATFORMS=cpu` for anything that imports JAX.
+- Run the wrapper tests with `python -m unittest` from `code/`; pytest's rootdir handling
+  breaks on the `code/` directory name.
+- `.claude/settings.local.json` (gitignored, both repos) sets `worktree.bgIsolation: none`,
+  so background Claude sessions edit these checkouts directly instead of a worktree.
+
+**Next steps, in order.**
+1. Trace the C vs C3 eval-split difference below.
+2. Phase B on C3-s0 (`analysis/PLAN.md`): B1 example sessions with ignores marked, B3 PCA
+   with a P(ignore) colouring, B8 ignore-bout entry/exit. Producers follow Study 12's
+   (`../12-gru-dynamics-embedding/analysis/b*.py`); a shared `_study13.py` helper with
+   `engage_logit` and P(R | engaged) is the first thing to write.
+3. A2: 3-way `gru_step` (ignore input `(2, 0)`) before phase D; `gru_counterfactual` still
+   rejects `ignore_policy=include` and is needed for C1.
+
 **Open check before same-trial comparisons with C.** C3's eval split has 8,906 sessions and
 4,338,727 engaged trials; C's has 8,903 and 4,339,402. The splits are drawn the same way,
 so the gap is presumably in which sessions/trials survive filtering when ignored trials are
