@@ -7,7 +7,7 @@ held-out cohort with matched conditioning.
 |---|---|
 | **W&B project** | `mice_data_scaling` — **study 01's project, not a new one** (see deviation below) |
 | **Launch surface** | Beaker (`sweep_beaker.yaml` + `experiment_beaker.yaml`); `production.sbatch` still carries pre-rename paths |
-| **Status** | All five rungs (D≈10/30/100/300/614) have run on the current code and finished. **No HB rung passes the convergence gates**, and the D≈99, 300 and 614 chains did not mix, so their held-out numbers are not results; see the rung table and study-08 report r4 ([PR #168](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/pull/168)) |
+| **Status** | All five rungs (D≈10/30/100/300/614) have run on the current code and finished. **No HB rung passes the convergence gates**, and the D≈99, 300 and 614 chains did not mix, so their held-out numbers are not results; see the rung table and study-08 report [r4](../../analysis/reports/r4-convergence-and-sampler-cost.md) |
 
 ### Rung state, 2026-10-14
 

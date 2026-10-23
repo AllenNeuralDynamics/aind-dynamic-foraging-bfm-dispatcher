@@ -2,6 +2,11 @@
 
 One entry per merged PR (or coherent unreleased batch).
 
+## 2026-10-23: status records that the study is closing
+
+- README `## Status` now states the study-level position: all compute done, the negative verdict, the merged PRs, and the two items left (`results.md` stubs, the verdict on #72). The Variants index and Status tables list `stan-arm`.
+- `stan-arm/notes.md` gives the variant's end state instead of pointing at the launch records; `one-stage-ladder/notes.md` links r4 in place rather than the merged PR.
+
 ## 2026-10-14 (third round): Stan diagnostics corrected, freezer inputs pinned
 
 - **Stan R-hat and ESS were wrong, and r4's Stan comparison is redone.** The Stan trainer reshaped PyStan's flat draw axis chain-major; PyStan's axis is draw-major with the chain innermost, so the four chains were mixed. The one finished Stan run (D=29) logged lowest bulk ESS 7007 and R-hat 1.0049 to W&B; from its saved draws with the correct axis they are 1220 and 1.0030. `analysis/recompute_stan_diagnostics.py` recomputes them from `analysis/stan_inputs/` (pinned by sha256; the file's recorded fit time equals the W&B run's), and the wrong-axis computation reproduces the logged values exactly from the same draws. `convergence.py` reads the recomputed values; `hb_runs.json` keeps the logged ones as recorded. Stan against NumPyro at D = 29 is now 1.36x ESS per draw (was 7.8x), 2.3x wall time, 0.59x ESS per second (was 3.4x). Stan's 23 divergences are unchanged. The earlier 7.8x and 3.4x are retracted.
