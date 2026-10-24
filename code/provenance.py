@@ -128,6 +128,21 @@ def dirty_paths(root: Path | str, subdir: Path | str) -> tuple[list[str] | None,
     return [entry[3:] for entry in status.split("\0") if len(entry) > 3], None
 
 
+def is_tracked(root: Path | str, path: Path | str) -> bool | None:
+    """Whether ``path`` is tracked by the repository at ``root``; None if git failed.
+
+    ``git status`` says nothing about ignored files, so an empty status does not prove the
+    sweep itself is committed: a sweep under an ignored directory (``results/``) would pass
+    as clean while no commit could reproduce it.
+    """
+    out, err = _git(Path(root), "ls-files", "--error-unmatch", "--", str(path))
+    if out is not None:
+        return True
+    if err and "did not match any file" in err:
+        return False
+    return None
+
+
 def runtime_shas_from_pins(resolved: dict[tuple[str, str], str]) -> dict[str, str | list[str]]:
     """``{repo_name: sha}`` from ``beaker_client.pin_runtime_refs``'s ``{(repo, ref): sha}``.
 
@@ -182,10 +197,15 @@ def launch_provenance(
     warnings = [f"{label}: {state['error']}"
                 for label, state in (("studies", studies), ("dispatcher", dispatcher))
                 if state.get("error")]
+    tracked = None
     if studies["root"]:
         paths, err = dirty_paths(studies["root"], study)
         if err:
             warnings.append(f"studies: {err}")
+        tracked = is_tracked(studies["root"], sweep_path)
+        if tracked is False:
+            warnings.append(f"studies: {Path(sweep_path).resolve()} is not tracked by git "
+                            "(untracked or ignored), so no commit reproduces it")
     else:
         paths = None   # no repository: cleanliness cannot be verified either
     out = {
@@ -194,6 +214,7 @@ def launch_provenance(
         "studies_git_branch": studies["branch"],
         "studies_git_dirty": studies["dirty"],
         "studies_dirty_paths": paths,
+        "studies_sweep_tracked": tracked,
         "dispatcher_git_commit": dispatcher["commit"],
         "dispatcher_git_branch": dispatcher["branch"],
         "dispatcher_git_dirty": dispatcher["dirty"],
@@ -231,6 +252,14 @@ def check_studies_clean(provenance: dict, override_reason: str | None) -> dict |
     refused too, because an unverified study is not a clean one.
     """
     paths = provenance.get("studies_dirty_paths")
+    if paths == [] and provenance.get("studies_sweep_tracked") is False:
+        if override_reason:
+            return {"reason": override_reason, "paths": [], "untracked_sweep": True}
+        raise DirtyStudiesError(
+            "the sweep file is not tracked by git (untracked or ignored), so no commit "
+            "reproduces this launch. Commit it, or pass --diagnostic-dirty-ok '<reason>' for "
+            "a diagnostic run; the reason is written into the launch record."
+        )
     if paths == []:
         return None
     if paths is None:

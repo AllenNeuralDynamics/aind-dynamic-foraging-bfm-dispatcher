@@ -775,6 +775,14 @@ def main() -> None:
         )
 
     print(f"Parsed SWEEP_ID: {sweep_id}")
+    # The sweep now exists in W&B: persist its id before sbatch, so a failed submission
+    # still leaves a record with the durable handle to reconcile against.
+    _save_record(
+        output_dir, sweep_file=sweep_yaml, sweep_path=sweep_id, group=group,
+        array_jobid=None, autostop_jobid=None, n_array_tasks=num_array_tasks,
+        agent_count=computed_agent_count, mode=args.mode,
+        provenance=provenance, dirty_override=dirty_override,
+    )
 
     sbatch_cmd: list[str] = ["sbatch"]
     sbatch_cmd.extend(

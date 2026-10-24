@@ -161,6 +161,24 @@ class TestLaunchProvenance(unittest.TestCase):
         self.assertEqual(got, {"commit": "8" * 40, "version": "0.15.2", "requested_revision": "feat/x"})
         self.assertEqual(provenance.installed_vcs_commit([sp], "other")["version"], None)
 
+    def test_an_ignored_or_untracked_sweep_is_refused_even_though_status_is_clean(self):
+        (self.root / ".gitignore").write_text("results/\n")
+        _git(self.root, "add", ".gitignore")
+        _git(self.root, "commit", "-q", "-m", "ignore results")
+        ignored = self.root / "studies" / "08-hb-vs-gru-heldout" / "results" / "sweep.yaml"
+        ignored.parent.mkdir()
+        ignored.write_text(SWEEP)
+        prov = provenance.launch_provenance(ignored, DISPATCHER_ROOT)
+        self.assertEqual(prov["studies_dirty_paths"], [])        # git status says nothing ...
+        self.assertIs(prov["studies_sweep_tracked"], False)      # ... but the sweep is not committed
+        self.assertTrue(any("not tracked" in w for w in prov["provenance_warnings"]))
+        with self.assertRaises(provenance.DirtyStudiesError):
+            provenance.check_studies_clean(prov, None)
+        override = provenance.check_studies_clean(prov, "scratch sweep")
+        self.assertTrue(override["untracked_sweep"])
+        # the committed sweep is tracked and passes
+        self.assertIs(provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)["studies_sweep_tracked"], True)
+
     def test_a_failed_status_query_is_unknown_not_clean(self):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)
         self.assertEqual(prov["studies_dirty_paths"], [])
