@@ -59,9 +59,17 @@ tasks:
 """
 
 
-def _git(cwd: Path, *args: str) -> str:
+def _git(cwd: Path, *args: str, ambient: bool = False) -> str:
+    """git in ``cwd``. Fixture commands run with git's discovery variables cleared, so a
+    sandbox ``GIT_DIR``/``GIT_WORK_TREE`` exported for the dispatcher can never make a
+    temp-repo ``init``/``add``/``commit`` touch the dispatcher; ``ambient=True`` keeps the
+    env, for the dispatcher's own HEAD (which needs it in the sandbox)."""
+    env = dict(os.environ)
+    if not ambient:
+        for var in provenance._GIT_DISCOVERY_VARS:
+            env.pop(var, None)
     return subprocess.run(["git", "-C", str(cwd), *args], check=True, capture_output=True,
-                          text=True).stdout.strip()
+                          text=True, env=env).stdout.strip()
 
 
 def make_studies_repo(tmp: Path) -> tuple[Path, Path, str]:
@@ -84,7 +92,7 @@ class TestLaunchProvenance(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="prov_"))
         self.root, self.sweep, self.head = make_studies_repo(self.tmp)
-        self.dispatcher_head = _git(DISPATCHER_ROOT, "rev-parse", "HEAD")
+        self.dispatcher_head = _git(DISPATCHER_ROOT, "rev-parse", "HEAD", ambient=True)
 
     def test_studies_and_dispatcher_shas_are_distinct_and_correct(self):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)
@@ -171,7 +179,7 @@ class TestBeakerLaunchersCarryBothRoots(unittest.TestCase):
         self.root, self.sweep, self.head = make_studies_repo(self.tmp)
         self.exp = self.tmp / "experiment.yaml"
         self.exp.write_text(EXPERIMENT)
-        self.dispatcher_head = _git(DISPATCHER_ROOT, "rev-parse", "HEAD")
+        self.dispatcher_head = _git(DISPATCHER_ROOT, "rev-parse", "HEAD", ambient=True)
 
     def test_resumable_spec_passes_the_studies_commit_to_the_wrapper(self):
         spec = resumable.build_spec(str(self.sweep), str(self.exp))
@@ -236,6 +244,15 @@ class TestHpcLauncherCarriesBothRoots(unittest.TestCase):
         self.tmp = Path(tempfile.mkdtemp(prefix="prov_hpc_"))
         self.root, self.sweep, self.head = make_studies_repo(self.tmp)
 
+    def test_git_info_resolves_the_target_worktree_under_the_sandbox_env(self):
+        # The wrapper lineage must describe the wrapper even when the dispatcher's
+        # GIT_DIR/GIT_WORK_TREE are exported.
+        env = {"GIT_DIR": str(DISPATCHER_ROOT / ".git"), "GIT_WORK_TREE": str(DISPATCHER_ROOT)}
+        with mock.patch.dict(os.environ, env):
+            info = launch_hpc._git_info(self.root)
+        self.assertEqual(info["commit"], self.head)
+        self.assertEqual(info["dirty"], "no")
+
     def test_lineage_and_meta_injection_name_the_studies_commit(self):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)
         lineage = launch_hpc._studies_lineage(prov)
@@ -255,6 +272,11 @@ class TestHpcLauncherCarriesBothRoots(unittest.TestCase):
         script.write_text("source $CONDA_SH\nconda activate dynamic-foraging-bfm-cpu 2>/dev/null || conda activate disrnn-cpu\n")
         self.assertEqual(launch_hpc._runtime_env_site_packages(str(conda_sh), script), [sp.resolve()])
         self.assertEqual(launch_hpc._runtime_env_site_packages(None, script), [])
+        # the scripts fall back to the pre-rename env name; follow the same order they do
+        legacy = prefix / "envs" / "disrnn-cpu" / "lib" / "python3.12" / "site-packages"
+        legacy.mkdir(parents=True)
+        (sp.parent.parent.parent).rename(prefix / "envs" / "gone")
+        self.assertEqual(launch_hpc._runtime_env_site_packages(str(conda_sh), script), [legacy.resolve()])
 
     def test_hpc_record_is_a_launcher_record_the_validator_reads(self):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT, {
@@ -320,6 +342,14 @@ class TestAnalysisMetaNamesTheStudiesCheckout(unittest.TestCase):
                          ["no launch record found for W&B group(s): stan-arm@none"])
         full = build_meta("analysis/x.py", ["stan-arm@1"], study_root=self.study_root)
         self.assertEqual(full["provenance_findings"], [])   # every repo's SHA present
+
+    def test_meta_git_env_is_ambient_only_inside_the_exported_work_tree(self):
+        import _meta
+        env = {"GIT_DIR": "/elsewhere/store", "GIT_WORK_TREE": str(self.root)}
+        with mock.patch.dict(os.environ, env):
+            self.assertIn("GIT_DIR", _meta._git_env(self.root / "studies"))      # inside: kept
+            self.assertNotIn("GIT_DIR", _meta._git_env(DISPATCHER_ROOT / "studies" / "util"))
+            self.assertNotIn("GIT_WORK_TREE", _meta._git_env(DISPATCHER_ROOT))  # outside: stripped
 
     def test_without_a_study_root_the_arrays_are_empty_with_a_finding(self):
         meta = build_meta("analysis/x.py", ["g@1"])

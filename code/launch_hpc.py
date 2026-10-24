@@ -82,8 +82,8 @@ from zoneinfo import ZoneInfo
 import yaml
 
 from provenance import (
-    DirtyStudiesError, check_studies_clean, installed_vcs_commit, launch_provenance,
-    print_warnings, record_fields,
+    DirtyStudiesError, check_studies_clean, git_state, installed_vcs_commit,
+    launch_provenance, print_warnings, record_fields,
 )
 
 
@@ -203,26 +203,17 @@ def _git_info(repo_root: Path) -> dict[str, str]:
     """Capture lineage info from the git repo at repo_root.
 
     Returns commit sha, branch, and a 'dirty' flag (yes/no) so each run in
-    the sweep records the exact code state that launched it.
+    the sweep records the exact code state that launched it. Resolved per
+    target worktree by ``provenance.git_state``, so a sandbox ``GIT_DIR`` /
+    ``GIT_WORK_TREE`` exported for the dispatcher cannot make the wrapper
+    query describe the dispatcher.
     """
-    def _run(args: list[str]) -> str:
-        try:
-            out = subprocess.run(
-                args,
-                cwd=str(repo_root),
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-            return out.stdout.strip()
-        except Exception:
-            return "unknown"
-
-    commit = _run(["git", "rev-parse", "HEAD"])
-    branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"])
-    status = _run(["git", "status", "--porcelain"])
-    dirty = "yes" if status and status != "unknown" else "no"
-    return {"commit": commit, "branch": branch, "dirty": dirty}
+    state = git_state(repo_root)
+    return {
+        "commit": state["commit"] or "unknown",
+        "branch": state["branch"] or "unknown",
+        "dirty": "yes" if state["dirty"] else "no",
+    }
 
 
 def _seattle_launch_id() -> str:
@@ -233,19 +224,23 @@ def _seattle_launch_id() -> str:
 def _runtime_env_site_packages(conda_sh: str | None, slurm_script: Path) -> list[Path]:
     """``site-packages`` dirs of the conda env the SLURM script activates.
 
-    ``CONDA_SH`` (user.env) is ``<prefix>/etc/profile.d/conda.sh``; the script's first
-    ``conda activate <name>`` names the env. Empty when either is unknown.
+    ``CONDA_SH`` (user.env) is ``<prefix>/etc/profile.d/conda.sh``. The script activates
+    the renamed env and falls back to the pre-rename one (``conda activate a || conda
+    activate b``); the first that exists under the prefix is the one the job will run in.
+    Empty when nothing is known.
     """
     if not conda_sh:
         return []
     try:
-        match = re.search(r"conda activate\s+(\S+)", slurm_script.read_text())
+        names = re.findall(r"conda activate\s+(\S+)", slurm_script.read_text())
     except OSError:
         return []
-    if not match:
-        return []
     prefix = Path(conda_sh).resolve().parents[2]  # strip etc/profile.d/conda.sh
-    return sorted((prefix / "envs" / match.group(1)).glob("lib/python3.*/site-packages"))
+    for name in names:
+        env_dir = prefix / "envs" / name
+        if env_dir.is_dir():
+            return sorted(env_dir.glob("lib/python3.*/site-packages"))
+    return []
 
 
 def _studies_lineage(provenance: dict) -> dict[str, str]:

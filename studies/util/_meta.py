@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import datetime
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -39,17 +40,43 @@ _SOURCE_SHA_KEYS = {
 }
 
 
+# Variables that redirect git's repository discovery away from cwd. The sandbox exports
+# GIT_DIR/GIT_WORK_TREE for the dispatcher checkout (git-session-isolation); after the split
+# a producer here runs in a different checkout, and must not be described as the dispatcher.
+_GIT_DISCOVERY_VARS = (
+    "GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY",
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_COMMON_DIR",
+)
+
+
+def _git_env(cwd: Path) -> dict[str, str]:
+    """Ambient git env only when ``cwd`` is inside the exported ``GIT_WORK_TREE``."""
+    env = dict(os.environ)
+    work_tree = env.get("GIT_WORK_TREE")
+    if work_tree:
+        try:
+            Path(cwd).resolve().relative_to(Path(work_tree).resolve())
+            return env
+        except ValueError:
+            pass
+    for var in _GIT_DISCOVERY_VARS:
+        env.pop(var, None)
+    return env
+
+
 def _git(*args: str) -> str | None:
     """Best-effort git query from this file's directory; None outside a checkout.
 
     `git` walks up to the repo root, so running it from studies/util (or any subdir)
     describes the checkout that holds the studies -- the dispatcher before the split
     (#124), the studies repository after it. It is therefore recorded as `studies_git_sha`,
-    never as the dispatcher's.
+    never as the dispatcher's. Same per-worktree env rule as ``code/provenance.py``
+    (duplicated: studies/util must not import from code/).
     """
+    cwd = Path(__file__).parent
     try:
         out = subprocess.run(
-            ["git", *args], capture_output=True, text=True, cwd=Path(__file__).parent, timeout=10,
+            ["git", *args], capture_output=True, text=True, cwd=cwd, timeout=10, env=_git_env(cwd),
         )
     except Exception:
         return None
