@@ -16,10 +16,19 @@ what was launched, and pre-split the whole checkout is the dispatcher, where unc
 work is routine. The whole-root flag is still recorded. Decided 2026-10-23; see the plan's
 "Resolved decisions".
 
+Git environment. The Claude Science sandbox checks out the dispatcher through an external
+git dir (``GIT_DIR``/``GIT_WORK_TREE`` exported, see the git-session-isolation skill; #109).
+Those variables override repository discovery for *every* ``git`` call, so a query aimed at
+a different checkout (the studies repo) would silently describe the dispatcher. ``_git``
+therefore keeps the ambient variables only for a query inside ``GIT_WORK_TREE`` and strips
+them otherwise, and every failed query is reported as a warning rather than swallowed.
+
 Only the stdlib and ``git`` on PATH; importable from any launcher without network access.
 """
 from __future__ import annotations
 
+import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -33,20 +42,44 @@ RUNTIME_SHA_FIELDS = {
 }
 
 
+# Variables that redirect git's repository discovery away from `-C cwd`.
+_GIT_DISCOVERY_VARS = (
+    "GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY",
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_COMMON_DIR",
+)
+
+
 class DirtyStudiesError(RuntimeError):
     """The study directory holding the sweep has uncommitted changes."""
 
 
-def _git(cwd: Path, *args: str, strip: bool = True) -> str | None:
+def _git_env(cwd: Path) -> dict[str, str]:
+    """The environment for a git query at ``cwd``: ambient only inside ``GIT_WORK_TREE``."""
+    env = dict(os.environ)
+    work_tree = env.get("GIT_WORK_TREE")
+    if work_tree:
+        try:
+            Path(cwd).resolve().relative_to(Path(work_tree).resolve())
+            return env
+        except ValueError:
+            pass
+    for var in _GIT_DISCOVERY_VARS:
+        env.pop(var, None)
+    return env
+
+
+def _git(cwd: Path, *args: str, strip: bool = True) -> tuple[str | None, str | None]:
+    """``(stdout, None)`` on success, ``(None, error)`` on any failure."""
     try:
         out = subprocess.run(
             ["git", "-C", str(cwd), *args], capture_output=True, text=True, timeout=10,
+            env=_git_env(Path(cwd)),
         )
-    except Exception:
-        return None
+    except Exception as exc:  # git missing, timeout
+        return None, f"{type(exc).__name__}: {exc}"
     if out.returncode != 0:
-        return None
-    return out.stdout.strip() if strip else out.stdout
+        return None, (out.stderr.strip() or f"git exited {out.returncode}")
+    return (out.stdout.strip() if strip else out.stdout), None
 
 
 def git_state(path: Path | str) -> dict:
@@ -56,16 +89,20 @@ def git_state(path: Path | str) -> dict:
     is a bool (whole working tree) when known.
     """
     p = Path(path).resolve()
-    top = _git(p if p.is_dir() else p.parent, "rev-parse", "--show-toplevel")
+    top, err = _git(p if p.is_dir() else p.parent, "rev-parse", "--show-toplevel")
     if not top:
-        return {"root": None, "commit": None, "branch": None, "dirty": None}
+        return {"root": None, "commit": None, "branch": None, "dirty": None,
+                "error": f"{p}: {err or 'no git repository found'}"}
     root = Path(top)
-    status = _git(root, "status", "--porcelain")
+    commit, err = _git(root, "rev-parse", "HEAD")
+    branch, _ = _git(root, "rev-parse", "--abbrev-ref", "HEAD")
+    status, _ = _git(root, "status", "--porcelain")
     return {
         "root": str(root),
-        "commit": _git(root, "rev-parse", "HEAD"),
-        "branch": _git(root, "rev-parse", "--abbrev-ref", "HEAD"),
+        "commit": commit,
+        "branch": branch,
         "dirty": None if status is None else bool(status),
+        "error": None if commit else f"{root}: {err or 'HEAD did not resolve'}",
     }
 
 
@@ -81,7 +118,7 @@ def study_dir(sweep_path: Path | str) -> Path:
 def dirty_paths(root: Path | str, subdir: Path | str) -> list[str]:
     """Paths under ``subdir`` with uncommitted changes (``git status --porcelain -- subdir``)."""
     # -z: NUL-separated `XY path` entries; not stripped, because XY may start with a space.
-    status = _git(Path(root), "status", "--porcelain", "-z", "--", str(subdir), strip=False)
+    status, _ = _git(Path(root), "status", "--porcelain", "-z", "--", str(subdir), strip=False)
     if not status:
         return []
     return [entry[3:] for entry in status.split("\0") if len(entry) > 3]
@@ -99,6 +136,29 @@ def runtime_shas_from_pins(resolved: dict[tuple[str, str], str]) -> dict[str, st
     return {repo: (next(iter(s)) if len(s) == 1 else sorted(s)) for repo, s in by_repo.items()}
 
 
+def installed_vcs_commit(site_packages: list[Path] | tuple[Path, ...], dist_prefix: str) -> dict:
+    """Commit and version of a pip-installed distribution, from its ``direct_url.json``.
+
+    pip writes ``vcs_info.commit_id`` for ``git+https://...@ref`` installs, which is how the
+    HPC conda envs carry ``aind-dynamic-foraging-models`` when a branch is needed. A release
+    install has no VCS info; then only the version is known and ``commit`` is None.
+    """
+    for sp in site_packages:
+        for info in sorted(Path(sp).glob(f"{dist_prefix}-*.dist-info")):
+            version = info.name[len(dist_prefix) + 1:-len(".dist-info")]
+            commit = requested = None
+            try:
+                direct = json.loads((info / "direct_url.json").read_text())
+                vcs = direct.get("vcs_info") or {}
+                requested = vcs.get("requested_revision")
+                if _FULL_SHA.fullmatch(str(vcs.get("commit_id", ""))):
+                    commit = vcs["commit_id"]
+            except (OSError, json.JSONDecodeError, AttributeError):
+                pass
+            return {"commit": commit, "version": version, "requested_revision": requested}
+    return {"commit": None, "version": None, "requested_revision": None}
+
+
 def launch_provenance(
     sweep_path: Path | str,
     dispatcher_root: Path | str,
@@ -109,10 +169,15 @@ def launch_provenance(
     ``runtime_shas`` maps repo name (``aind-dynamic-foraging-bfm-wrapper``,
     ``aind-dynamic-foraging-models``) to the full SHA the launcher resolved for the job; a
     value that is not a full SHA is recorded as None rather than as a branch name.
+    ``provenance_warnings`` lists every git query that failed, with its path and git's
+    message, so a None commit is never silent (#109); launchers print them.
     """
     studies = git_state(sweep_path)
     dispatcher = git_state(dispatcher_root)
     study = study_dir(sweep_path)
+    warnings = [f"{label}: {state['error']}"
+                for label, state in (("studies", studies), ("dispatcher", dispatcher))
+                if state.get("error")]
     out = {
         "studies_git_root": studies["root"],
         "studies_git_commit": studies["commit"],
@@ -122,6 +187,7 @@ def launch_provenance(
         "dispatcher_git_commit": dispatcher["commit"],
         "dispatcher_git_branch": dispatcher["branch"],
         "dispatcher_git_dirty": dispatcher["dirty"],
+        "provenance_warnings": warnings,
     }
     for repo, field in RUNTIME_SHA_FIELDS.items():
         value = (runtime_shas or {}).get(repo)
@@ -171,3 +237,10 @@ def record_fields(provenance: dict, dirty_override: dict | None) -> dict:
     out = {k: v for k, v in provenance.items() if k != "studies_git_root"}
     out["studies_dirty_override"] = dirty_override
     return out
+
+
+def print_warnings(provenance: dict, prefix: str = "") -> None:
+    """Surface failed git queries on stderr; a null commit in a record must not be silent."""
+    import sys
+    for w in provenance.get("provenance_warnings") or []:
+        print(f"{prefix}WARNING: provenance: {w}", file=sys.stderr)

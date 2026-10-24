@@ -47,8 +47,8 @@ from launch_beaker_resumable import _seattle_launch_id, _study_variant
 # CLI dependency; see code/beaker_client.py docstring for why.
 from beaker_client import create_wandb_sweep, pin_runtime_refs, submit_beaker_experiment
 from provenance import (
-    DirtyStudiesError, check_studies_clean, launch_provenance, record_fields,
-    runtime_shas_from_pins, with_runtime_shas,
+    DirtyStudiesError, check_studies_clean, launch_provenance, print_warnings,
+    record_fields, runtime_shas_from_pins, with_runtime_shas,
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent  # the dispatcher capsule root (a git repo)
@@ -128,7 +128,7 @@ def submit_experiment(
 def save_record(
     sweep_file: str, sweep_id: str, experiment_id: str | None, output_dir: Path = RESULTS,
     provenance: dict | None = None, runtime_shas: dict | None = None,
-    dirty_override: dict | None = None,
+    dirty_override: dict | None = None, wandb_group: str | None = None,
 ) -> None:
     """Persist the sweep YAML + IDs + commits to output_dir for reproducibility.
 
@@ -143,6 +143,7 @@ def save_record(
     provenance = with_runtime_shas(provenance, runtime_shas)
     record = {
         "sweep_id": sweep_id,
+        "wandb_group": wandb_group,
         "wandb_sweep_id": sweep_short,
         "sweep_url": f"https://wandb.ai/{entity_project}/sweeps/{sweep_short}",
         "experiment_id": experiment_id,
@@ -179,6 +180,7 @@ def main() -> None:
 
     output_dir = Path(args.output_dir)
     provenance = launch_provenance(Path(args.sweep), REPO_ROOT)
+    print_warnings(provenance, "[launch_beaker] ")
     try:
         dirty_override = check_studies_clean(provenance, args.diagnostic_dirty_ok)
     except DirtyStudiesError as exc:
@@ -234,7 +236,7 @@ def main() -> None:
 
     provenance = with_runtime_shas(provenance, runtime_shas_from_pins(ref_cache))
     save_record(args.sweep, sweep_id, experiment_id, output_dir,
-                provenance=provenance, dirty_override=dirty_override)
+                provenance=provenance, dirty_override=dirty_override, wandb_group=group)
     print("[launch_beaker] done")
 
 

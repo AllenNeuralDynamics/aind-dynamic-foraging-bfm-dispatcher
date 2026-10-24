@@ -82,7 +82,8 @@ from zoneinfo import ZoneInfo
 import yaml
 
 from provenance import (
-    DirtyStudiesError, check_studies_clean, launch_provenance, record_fields,
+    DirtyStudiesError, check_studies_clean, installed_vcs_commit, launch_provenance,
+    print_warnings, record_fields,
 )
 
 
@@ -227,6 +228,24 @@ def _git_info(repo_root: Path) -> dict[str, str]:
 def _seattle_launch_id() -> str:
     """Readable, unique-per-launch id = Seattle local timestamp."""
     return _dt.datetime.now(ZoneInfo("America/Los_Angeles")).strftime("%Y%m%d-%H%M%S")
+
+
+def _runtime_env_site_packages(conda_sh: str | None, slurm_script: Path) -> list[Path]:
+    """``site-packages`` dirs of the conda env the SLURM script activates.
+
+    ``CONDA_SH`` (user.env) is ``<prefix>/etc/profile.d/conda.sh``; the script's first
+    ``conda activate <name>`` names the env. Empty when either is unknown.
+    """
+    if not conda_sh:
+        return []
+    try:
+        match = re.search(r"conda activate\s+(\S+)", slurm_script.read_text())
+    except OSError:
+        return []
+    if not match:
+        return []
+    prefix = Path(conda_sh).resolve().parents[2]  # strip etc/profile.d/conda.sh
+    return sorted((prefix / "envs" / match.group(1)).glob("lib/python3.*/site-packages"))
 
 
 def _studies_lineage(provenance: dict) -> dict[str, str]:
@@ -626,10 +645,26 @@ def main() -> None:
     # Two-root provenance (#172): the checkout holding the sweep and the one running this
     # launcher are recorded separately, because after the studies split (#124) they differ.
     wrapper_git = _git_info(wrapper_root)
+    # The models package is pip-installed into the runtime env (sometimes from a branch, via
+    # git+https); its commit lives in the env's direct_url.json, not in any checkout here.
+    models = installed_vcs_commit(
+        _runtime_env_site_packages(launch_env.get("CONDA_SH"), slurm_script),
+        "aind_dynamic_foraging_models",
+    )
     provenance = launch_provenance(
         sweep_yaml, repo_root,
-        {"aind-dynamic-foraging-bfm-wrapper": wrapper_git["commit"]},
+        {"aind-dynamic-foraging-bfm-wrapper": wrapper_git["commit"],
+         "aind-dynamic-foraging-models": models["commit"]},
     )
+    provenance["foraging_models_version"] = models["version"]
+    if models["version"] and not models["commit"]:
+        provenance["provenance_warnings"].append(
+            f"foraging-models: version {models['version']} in the runtime env was not "
+            "installed from git, so no commit is recorded")
+    elif not models["version"]:
+        provenance["provenance_warnings"].append(
+            "foraging-models: not found in the runtime env's site-packages")
+    print_warnings(provenance)
     try:
         dirty_override = check_studies_clean(provenance, args.diagnostic_dirty_ok)
     except DirtyStudiesError as exc:

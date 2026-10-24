@@ -15,6 +15,7 @@ import tempfile
 import types
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "code"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "studies" / "util"))
@@ -111,13 +112,40 @@ class TestLaunchProvenance(unittest.TestCase):
         self.assertEqual(shas["aind-dynamic-foraging-bfm-wrapper"], "a" * 40)
         self.assertEqual(shas["aind-dynamic-foraging-models"], ["b" * 40, "c" * 40])
 
-    def test_outside_a_repo_everything_is_none(self):
+    def test_outside_a_repo_everything_is_none_and_the_failure_is_a_warning(self):
         loose = self.tmp / "loose" / "sweep.yaml"
         loose.parent.mkdir()
         loose.write_text(SWEEP)
         prov = provenance.launch_provenance(loose, DISPATCHER_ROOT)
         self.assertIsNone(prov["studies_git_commit"])
         self.assertEqual(prov["studies_dirty_paths"], [])
+        # #109: a None commit is never silent -- the path and git's message are reported
+        self.assertEqual(len(prov["provenance_warnings"]), 1)
+        self.assertIn(str(loose.parent.resolve()), prov["provenance_warnings"][0])
+        self.assertIn("not a git repository", prov["provenance_warnings"][0])
+
+    def test_sandbox_git_env_for_the_dispatcher_does_not_hijack_the_studies_query(self):
+        # The sandbox exports GIT_DIR/GIT_WORK_TREE for the dispatcher tree (#109). They must
+        # keep working for the dispatcher and be ignored for a query inside another checkout.
+        env = {"GIT_DIR": str(DISPATCHER_ROOT / ".git"), "GIT_WORK_TREE": str(DISPATCHER_ROOT)}
+        with mock.patch.dict(os.environ, env):
+            prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)
+        self.assertEqual(prov["studies_git_commit"], self.head)
+        self.assertEqual(prov["dispatcher_git_commit"], self.dispatcher_head)
+        self.assertEqual(prov["provenance_warnings"], [])
+
+    def test_installed_vcs_commit_reads_pips_direct_url(self):
+        sp = self.tmp / "env" / "lib" / "python3.12" / "site-packages"
+        info = sp / "aind_dynamic_foraging_models-0.15.2.dist-info"
+        info.mkdir(parents=True)
+        self.assertEqual(provenance.installed_vcs_commit([sp], "aind_dynamic_foraging_models"),
+                         {"commit": None, "version": "0.15.2", "requested_revision": None})
+        (info / "direct_url.json").write_text(json.dumps({
+            "url": "https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-models.git",
+            "vcs_info": {"commit_id": "8" * 40, "requested_revision": "feat/x", "vcs": "git"}}))
+        got = provenance.installed_vcs_commit([sp], "aind_dynamic_foraging_models")
+        self.assertEqual(got, {"commit": "8" * 40, "version": "0.15.2", "requested_revision": "feat/x"})
+        self.assertEqual(provenance.installed_vcs_commit([sp], "other")["version"], None)
 
     def test_dirty_study_dir_is_refused_and_an_unrelated_edit_is_not(self):
         (self.root / "README.md").write_text("edited elsewhere\n")
@@ -156,10 +184,15 @@ class TestBeakerLaunchersCarryBothRoots(unittest.TestCase):
     def test_resumable_record_carries_the_contract_fields(self):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)
         out = self.tmp / "out"
+        spec = resumable.build_spec(str(self.sweep), str(self.exp), provenance=prov)
         resumable.save_record(str(self.sweep), "exp-1", 1, out, provenance=prov,
                               runtime_shas={"aind-dynamic-foraging-bfm-wrapper": "a" * 40,
-                                            "aind-dynamic-foraging-models": "b" * 40})
+                                            "aind-dynamic-foraging-models": "b" * 40},
+                              wandb_group=resumable.spec_group(spec))
         rec = json.loads((out / "beaker_resumable.json").read_text())
+        # the exact rendered group, so _meta can find this record for the groups a report reads
+        self.assertRegex(rec["wandb_group"], r"^stan-arm@\d{8}-\d{6}$")
+        self.assertEqual(rec["wandb_group"], resumable.spec_group(spec))
         self.assertEqual(rec["studies_git_commit"], self.head)
         self.assertEqual(rec["dispatcher_git_commit"], self.dispatcher_head)
         self.assertEqual(rec["dispatcher_commit"], self.dispatcher_head)  # legacy key kept
@@ -175,8 +208,10 @@ class TestBeakerLaunchersCarryBothRoots(unittest.TestCase):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)
         out = self.tmp / "out_native"
         launch_beaker.save_record(str(self.sweep), "ent/proj/abc123", None, out, provenance=prov,
-                                  runtime_shas={"aind-dynamic-foraging-bfm-wrapper": "a" * 40})
+                                  runtime_shas={"aind-dynamic-foraging-bfm-wrapper": "a" * 40},
+                                  wandb_group="stan-arm@20261023-000000")
         rec = json.loads((out / "beaker_sweep.json").read_text())
+        self.assertEqual(rec["wandb_group"], "stan-arm@20261023-000000")
         self.assertEqual(rec["studies_git_commit"], self.head)
         self.assertEqual(rec["dispatcher_git_commit"], self.dispatcher_head)
         self.assertEqual(rec["wrapper_git_commit"], "a" * 40)
@@ -208,6 +243,18 @@ class TestHpcLauncherCarriesBothRoots(unittest.TestCase):
         self.assertEqual(lineage["studies_git_dirty"], "no")
         cfg = launch_hpc._inject_lineage_into_command({"command": ["python"]}, lineage)
         self.assertTrue(any(c.startswith("+meta.studies_commit=") for c in cfg["command"]))
+
+    def test_runtime_env_site_packages_follows_conda_sh_and_the_slurm_script(self):
+        prefix = self.tmp / "miniforge3"
+        sp = prefix / "envs" / "dynamic-foraging-bfm-cpu" / "lib" / "python3.12" / "site-packages"
+        sp.mkdir(parents=True)
+        conda_sh = prefix / "etc" / "profile.d" / "conda.sh"
+        conda_sh.parent.mkdir(parents=True)
+        conda_sh.write_text("")
+        script = self.tmp / "wandb_sweep_cpu.slurm"
+        script.write_text("source $CONDA_SH\nconda activate dynamic-foraging-bfm-cpu 2>/dev/null || conda activate disrnn-cpu\n")
+        self.assertEqual(launch_hpc._runtime_env_site_packages(str(conda_sh), script), [sp.resolve()])
+        self.assertEqual(launch_hpc._runtime_env_site_packages(None, script), [])
 
     def test_hpc_record_is_a_launcher_record_the_validator_reads(self):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT, {
@@ -256,7 +303,12 @@ class TestAnalysisMetaNamesTheStudiesCheckout(unittest.TestCase):
         self.assertEqual(meta["source_wrapper_git_shas"], ["2" * 40])
         self.assertEqual(meta["source_foraging_models_git_shas"], ["f" * 40])
         self.assertEqual(meta["source_studies_git_shas"], ["1" * 40])
-        self.assertEqual(meta["provenance_findings"], [])
+        # stan-arm@2's record names the group but carries no studies / models SHA: a gap, not
+        # silence, even though every array above is non-empty
+        self.assertEqual(meta["provenance_findings"], [
+            "no studies SHA in the launch record(s) of W&B group(s): stan-arm@2",
+            "no foraging_models SHA in the launch record(s) of W&B group(s): stan-arm@2",
+        ])
         self.assertNotIn("dispatcher_git_sha", meta)   # never its own HEAD under that name
         self.assertRegex(meta["studies_git_sha"], r"^[0-9a-f]{40}$")
         self.assertIn(meta["studies_git_dirty"], (True, False))
@@ -266,6 +318,8 @@ class TestAnalysisMetaNamesTheStudiesCheckout(unittest.TestCase):
         self.assertEqual(meta["source_dispatcher_git_shas"], ["d" * 40])
         self.assertEqual(meta["provenance_findings"],
                          ["no launch record found for W&B group(s): stan-arm@none"])
+        full = build_meta("analysis/x.py", ["stan-arm@1"], study_root=self.study_root)
+        self.assertEqual(full["provenance_findings"], [])   # every repo's SHA present
 
     def test_without_a_study_root_the_arrays_are_empty_with_a_finding(self):
         meta = build_meta("analysis/x.py", ["g@1"])

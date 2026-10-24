@@ -84,7 +84,8 @@ def _source_shas(study_root: Path | None, wandb_groups: list[str]) -> tuple[dict
     no guessed value -- it is listed in the findings so the gap is visible in the artifact.
     """
     found = {key: set() for key in _SOURCE_SHA_KEYS}
-    covered: set[str] = set()
+    covered: set[str] = set()                                   # groups with any record
+    covered_by_key = {key: set() for key in _SOURCE_SHA_KEYS}   # groups with that repo's SHA
     wanted = set(wandb_groups)
     findings: list[str] = []
     if study_root is None:
@@ -110,9 +111,18 @@ def _source_shas(study_root: Path | None, wandb_groups: list[str]) -> tuple[dict
                         for v in (values if isinstance(values, list) else [values]):
                             if isinstance(v, str) and _FULL_SHA.fullmatch(v):
                                 found[key].add(v)
-    missing = sorted(wanted - covered)
-    if missing and study_root is not None:
-        findings.append("no launch record found for W&B group(s): " + ", ".join(missing))
+                                covered_by_key[key] |= groups
+    if study_root is not None:
+        missing = sorted(wanted - covered)
+        if missing:
+            findings.append("no launch record found for W&B group(s): " + ", ".join(missing))
+        for key in _SOURCE_SHA_KEYS:
+            # a record that names the group but carries no SHA for this repo is a gap too
+            gap = sorted((wanted & covered) - covered_by_key[key])
+            if gap:
+                repo = key[len("source_"):-len("_git_shas")]
+                findings.append(f"no {repo} SHA in the launch record(s) of W&B group(s): "
+                                + ", ".join(gap))
     return {key: sorted(v) for key, v in found.items()}, findings
 
 

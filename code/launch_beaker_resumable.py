@@ -54,8 +54,8 @@ import yaml
 # code/beaker_client.py docstring for why.
 from beaker_client import pin_runtime_refs, submit_beaker_experiment
 from provenance import (
-    DirtyStudiesError, check_studies_clean, launch_provenance, record_fields,
-    runtime_shas_from_pins, with_runtime_shas,
+    DirtyStudiesError, check_studies_clean, launch_provenance, print_warnings,
+    record_fields, runtime_shas_from_pins, with_runtime_shas,
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -272,9 +272,18 @@ def submit(spec: dict, workspace: str, output_dir: Path) -> str | None:
     return experiment_id
 
 
+def spec_group(spec: dict) -> str | None:
+    """The W&B group the rendered spec's tasks carry (``WANDB_RUN_GROUP``)."""
+    for task in spec.get("tasks", []):
+        for e in task.get("envVars", []):
+            if e.get("name") == "WANDB_RUN_GROUP" and e.get("value"):
+                return e["value"]
+    return None
+
+
 def save_record(sweep_file: str, experiment_id: str | None, n_tasks: int, output_dir: Path,
                 provenance: dict | None = None, runtime_shas: dict | None = None,
-                dirty_override: dict | None = None) -> None:
+                dirty_override: dict | None = None, wandb_group: str | None = None) -> None:
     """Write ``beaker_resumable.json`` (+ a copy of the sweep) to ``output_dir``.
 
     Carries the two-root provenance block (studies / dispatcher / wrapper / foraging-models
@@ -288,6 +297,7 @@ def save_record(sweep_file: str, experiment_id: str | None, n_tasks: int, output
     provenance = with_runtime_shas(provenance, runtime_shas)
     record = {
         "mode": "resumable-grid",
+        "wandb_group": wandb_group,
         "n_tasks": n_tasks,
         "experiment_id": experiment_id,
         "experiment_url": f"https://beaker.org/ex/{experiment_id}" if experiment_id else None,
@@ -322,6 +332,7 @@ def main() -> None:
 
     output_dir = Path(args.output_dir)
     provenance = launch_provenance(Path(args.sweep), REPO_ROOT)
+    print_warnings(provenance, "[resumable] ")
     try:
         dirty_override = check_studies_clean(provenance, args.diagnostic_dirty_ok)
     except DirtyStudiesError as exc:
@@ -346,7 +357,8 @@ def main() -> None:
         experiment_id = submit(spec, args.workspace, output_dir)
 
     save_record(args.sweep, experiment_id, n_tasks, output_dir,
-                provenance=provenance, dirty_override=dirty_override)
+                provenance=provenance, dirty_override=dirty_override,
+                wandb_group=spec_group(spec))
     print("[resumable] done")
 
 
