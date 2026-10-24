@@ -98,6 +98,25 @@ Put `Closes #<n>` in the PR body so the merge closes the issue, move the board i
 issue, write `Refs #<n>` instead and leave the issue open — an auto-closed issue with
 unfinished "Done when" boxes is worse than an open one.
 
+## Requesting a Copilot review (and re-requesting after a push)
+
+Copilot is not an org user or team, so `gh pr edit --add-reviewer <anything>` fails with
+`'...' not found` (gh 2.x resolves reviewers against the org's users and teams). Use the
+REST endpoint with the bot login — it works for the first request **and** for a re-request
+after a review has been posted:
+
+```bash
+gh api -X POST repos/AllenNeuralDynamics/<repo>/pulls/<n>/requested_reviewers \
+    --input <(echo '{"reviewers":["copilot-pull-request-reviewer[bot]"]}')
+```
+
+The response's `requested_reviewers` is empty for the bot even on success; confirm with
+the issue timeline (`.../issues/<n>/timeline`, a new `review_requested` event) or wait for
+the review (`.../pulls/<n>/reviews`, author `copilot-pull-request-reviewer[bot]`). The
+reviewer login `Copilot` also works for a first request but was not seen to register a
+re-request; GraphQL `requestReviews` rejects the bot's node id. Verified 2026-10-23 on
+dispatcher #176 (four rounds).
+
 ## Closing the loop — tick the boxes
 
 **The "Done when" list is live state, not a plan you wrote once.** Update it whenever work
