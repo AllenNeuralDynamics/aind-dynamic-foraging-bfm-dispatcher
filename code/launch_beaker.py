@@ -46,6 +46,10 @@ from launch_beaker_resumable import _seattle_launch_id, _study_variant
 # Library-only clients (GraphQL for W&B, beaker-py for Beaker) -- no `wandb`/`beaker`
 # CLI dependency; see code/beaker_client.py docstring for why.
 from beaker_client import create_wandb_sweep, pin_runtime_refs, submit_beaker_experiment
+from provenance import (
+    DirtyStudiesError, check_studies_clean, launch_provenance, print_warnings,
+    record_fields, runtime_shas_from_pins, with_runtime_shas,
+)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent  # the dispatcher capsule root (a git repo)
 RESULTS = Path("/results")
@@ -92,7 +96,7 @@ def _render_experiment(experiment_file: str, sweep_id: str, group: str, meta_env
     managed = {
         "WANDB_RUN_GROUP", "BFM_META_STUDY", "BFM_META_VARIANT",
         "BFM_META_LAUNCH_ID", "BFM_META_CONFIG_HASH", "BFM_META_LABEL",
-        "BFM_META_NOTE",
+        "BFM_META_NOTE", "BFM_META_STUDIES_COMMIT",
     }
     for task in spec.get("tasks", []):
         env = [e for e in task.get("envVars", []) if e.get("name") not in managed]
@@ -122,20 +126,32 @@ def submit_experiment(
 
 
 def save_record(
-    sweep_file: str, sweep_id: str, experiment_id: str | None, output_dir: Path = RESULTS
+    sweep_file: str, sweep_id: str, experiment_id: str | None, output_dir: Path = RESULTS,
+    provenance: dict | None = None, runtime_shas: dict | None = None,
+    dirty_override: dict | None = None, wandb_group: str | None = None,
 ) -> None:
-    """Persist the sweep YAML + IDs + commit to output_dir for reproducibility."""
+    """Persist the sweep YAML + IDs + commits to output_dir for reproducibility.
+
+    Same two-root provenance block as the resumable launcher (``provenance.py``);
+    ``dispatcher_commit`` is kept because the validator and older readers key on it.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(sweep_file, output_dir / Path(sweep_file).name)
     entity_project, _, sweep_short = sweep_id.rpartition("/")
+    if provenance is None:
+        provenance = launch_provenance(Path(sweep_file), REPO_ROOT)
+    provenance = with_runtime_shas(provenance, runtime_shas)
     record = {
         "sweep_id": sweep_id,
+        "wandb_group": wandb_group,
+        "wandb_sweep_id": sweep_short,
         "sweep_url": f"https://wandb.ai/{entity_project}/sweeps/{sweep_short}",
         "experiment_id": experiment_id,
         "experiment_url": (
             f"https://beaker.org/ex/{experiment_id}" if experiment_id else None
         ),
-        "dispatcher_commit": _git_sha(REPO_ROOT),
+        "dispatcher_commit": provenance.get("dispatcher_git_commit") or _git_sha(REPO_ROOT),
+        **record_fields(provenance, dirty_override),
         "sweep_file": str(sweep_file),
         "created_utc": datetime.now(timezone.utc).isoformat(),
     }
@@ -157,9 +173,18 @@ def main() -> None:
                    help="optional human label for this launch (stamped to W&B meta.label)")
     p.add_argument("--note", default=None,
                    help="free-text background + what we want to learn (stamped to W&B meta.note)")
+    p.add_argument("--diagnostic-dirty-ok", default=None, metavar="REASON",
+                   help="launch even though studies/<study>/ has uncommitted changes; REASON is "
+                        "written into the launch record (diagnostic runs only, never a result)")
     args = p.parse_args()
 
     output_dir = Path(args.output_dir)
+    provenance = launch_provenance(Path(args.sweep), REPO_ROOT)
+    print_warnings(provenance, "[launch_beaker] ")
+    try:
+        dirty_override = check_studies_clean(provenance, args.diagnostic_dirty_ok)
+    except DirtyStudiesError as exc:
+        sys.exit(f"[launch_beaker] refusing to launch: {exc}")
 
     # Provenance (consistent with the resumable route — see AGENTS §8): one launch ==
     # one pseudo-sweep. Here the native W&B sweep is the platform-native launch id; we
@@ -174,6 +199,8 @@ def main() -> None:
         {"name": "BFM_META_LAUNCH_ID", "value": launch_id},
         {"name": "BFM_META_CONFIG_HASH", "value": config_hash},
     ]
+    if provenance.get("studies_git_commit"):
+        meta_env.append({"name": "BFM_META_STUDIES_COMMIT", "value": provenance["studies_git_commit"]})
     if args.label:
         meta_env.append({"name": "BFM_META_LABEL", "value": args.label})
     if args.note:
@@ -207,7 +234,9 @@ def main() -> None:
             ref_cache, output_dir,
         )
 
-    save_record(args.sweep, sweep_id, experiment_id, output_dir)
+    provenance = with_runtime_shas(provenance, runtime_shas_from_pins(ref_cache))
+    save_record(args.sweep, sweep_id, experiment_id, output_dir,
+                provenance=provenance, dirty_override=dirty_override, wandb_group=group)
     print("[launch_beaker] done")
 
 
