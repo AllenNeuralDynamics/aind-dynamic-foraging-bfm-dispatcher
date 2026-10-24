@@ -89,10 +89,26 @@ python code/launch_hpc.py --mode gpu --gpu-type a100
 python code/launch_hpc.py --mode gpu --wrapper-root /path/to/aind-dynamic-foraging-bfm-wrapper
 ```
 
-`code/launch_hpc.py` creates the W&B sweep, injects dispatcher and wrapper git
-lineage into every run as Hydra `+meta.*` overrides, computes `AGENT_COUNT` for
+`code/launch_hpc.py` creates the W&B sweep, injects dispatcher, wrapper and studies
+git lineage into every run as Hydra `+meta.*` overrides, computes `AGENT_COUNT` for
 grid sweeps, submits the SLURM array, and submits a small cleanup job that marks
 the W&B sweep finished after the array drains.
+
+### Launch record and the dirty-checkout rule
+
+Every launch writes `hpc_sweep.json` plus a copy of the sweep YAML to `--output-dir`
+(default `results/hpc_<launch_id>/` under the dispatcher root). It carries the W&B
+sweep id (the durable handle), the SLURM array and auto-stop job ids, and the two-root
+provenance block from `code/provenance.py`: `studies_git_commit` (the checkout that
+held the sweep -- the studies repo after the split, dispatcher #124), `dispatcher_git_commit`
+(the checkout that ran this launcher), `wrapper_git_commit`, and the branch / dirty flags.
+Copy the directory into the variant's `launch_record/` like a Beaker record;
+`validate_provenance.py --wandb` reconciles its sweep id against W&B.
+
+A sweep whose `studies/<study>/` directory has uncommitted changes is **refused**: no
+commit could reproduce it. Commit first, or for a diagnostic run pass
+`--diagnostic-dirty-ok "<reason>"`; the reason and the dirty paths are written into the
+record. `--dry-run` prints the provenance block without creating anything.
 
 ## Manual SLURM Use
 

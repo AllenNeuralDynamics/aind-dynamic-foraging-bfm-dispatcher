@@ -65,6 +65,25 @@ beaker experiment create -w "$WS" code/beaker/experiment_mvp.yaml
 
 Monitor at `https://beaker.org/ex/<id>`; runs also appear in W&B `AIND-disRNN/ai_hub_test`.
 
+## Launch record (provenance)
+
+Both launchers write a record next to the rendered spec in `--output-dir`
+(`beaker_resumable.json` for the resumable route, `beaker_sweep.json` for the native
+one), which the study then keeps under `variants/<variant>/launch_record/<label>/`.
+Since dispatcher #172 it carries the two-root provenance block from `code/provenance.py`:
+
+| field | what |
+|---|---|
+| `studies_git_commit` / `_branch` / `_dirty` | the checkout that held the sweep YAML -- the studies repo after the split (#124), the dispatcher before it |
+| `dispatcher_git_commit` / `_branch` / `_dirty` | the checkout that ran the launcher (`dispatcher_commit` is kept for older readers) |
+| `wrapper_git_commit`, `foraging_models_git_commit` | the full SHAs the launcher pinned the runtime refs to |
+| `studies_dirty_override` | `null`, or the `--diagnostic-dirty-ok` reason and the dirty paths |
+
+The same studies commit reaches the job as `BFM_META_STUDIES_COMMIT`, which the wrapper
+stamps into the run config as `meta.studies_commit`. A launch whose `studies/<study>/`
+directory has uncommitted changes is refused unless `--diagnostic-dirty-ok "<reason>"` is
+given; `--no-submit` renders the spec and the record without submitting.
+
 ## Clusters
 
 **Rule: only use AI Hub _hub_ clusters** — those with `hub` in the name. The

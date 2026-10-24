@@ -52,9 +52,9 @@ list of typed refs rather than a Beaker-shaped `experiment_ids`:
                 {"type": "slurm_job",          "id": "12345_7"}
 
 For HPC prefer the **W&B sweep id**: SLURM job ids are recycled and drop out of `sacct`
-history, so a sweep id is the only ref that stays resolvable months later. (`launch_hpc.py`
-currently writes no launch record at all — an HPC intervention must call this helper by hand
-until that launcher is taught to do it.)
+history, so a sweep id is the only ref that stays resolvable months later. `launch_hpc.py`
+writes `hpc_sweep.json` for the first launch (since #172); interventions after it still use
+this helper.
 
 Times are Seattle per AGENTS.md section 7.
 """
@@ -222,7 +222,7 @@ def load_records(launch_record_dir: Path | str) -> list[dict]:
             continue
         if "_meta" in d and "kind" in d:
             schema = "current"
-        elif d.get("mode") == "resumable-grid":
+        elif d.get("mode") in ("resumable-grid", "hpc-sweep") or "sweep_id" in d:
             schema = "launcher"
         else:
             schema = "legacy"
@@ -244,6 +244,13 @@ def refs_in(records: list[dict], ref_type: str) -> set[str]:
         for ref in r.get("job_refs", []) or []:
             if isinstance(ref, dict) and ref.get("type") == ref_type and ref.get("id"):
                 ids.add(str(ref["id"]))
+        if ref_type == "wandb_sweep":
+            # launcher records: `hpc_sweep.json` (short id) and `beaker_sweep.json`
+            # (entity/project/id); the validator compares short ids.
+            for key in ("wandb_sweep_id", "sweep_id"):
+                v = r.get(key)
+                if isinstance(v, str) and v:
+                    ids.add(v.rpartition("/")[2])
         if ref_type != "beaker_experiment":
             continue
         # legacy Beaker shapes

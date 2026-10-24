@@ -741,6 +741,18 @@ before creating a study, producing a report, or submitting work.
 7. **Visibility — execution-time user decision:** match the source repository
    unless the user explicitly chooses otherwise. Public creation is never an
    inferred default.
+8. **Dirty-checkout refusal scope — decided 2026-10-23 (#172):** the launchers
+   refuse a launch only when files under the sweep's `studies/<study>/` directory
+   are uncommitted; the whole-root `studies_git_dirty` flag is still recorded.
+   Pre-split the "studies root" is the dispatcher itself, where uncommitted
+   launcher work is routine, and an unrelated edit does not change what was
+   launched. `--diagnostic-dirty-ok "<reason>"` overrides and is written into the
+   record as `studies_dirty_override`.
+9. **HPC launch record — decided 2026-10-23 (#172):** `launch_hpc.py` writes
+   `hpc_sweep.json` (+ sweep copy) to `--output-dir`, mirroring the Beaker
+   launchers, so the contract's HPC fields have a file to live in. Analysis
+   `_meta` additionally carries `source_studies_git_shas`, the same mechanism
+   as the three arrays in the contract table.
 
 ## Code Ocean: launch surface and archive, not a home (decided 2026-07-16)
 
