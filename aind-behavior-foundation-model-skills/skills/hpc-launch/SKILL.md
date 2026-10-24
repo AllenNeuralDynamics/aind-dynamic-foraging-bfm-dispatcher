@@ -126,11 +126,12 @@ detail: wrapper `../aind-dynamic-foraging-bfm-wrapper/code/TRAINING.md` §1.5):
 
 ## Recording an intervention (resubmit / rescue / probe / backfill)
 
-`launch_hpc.py` writes **no launch-record JSON** — unlike the Beaker launchers, it leaves
-nothing behind describing what was submitted. So every post-sweep action (resubmitting dead
-array tasks, rescuing a wedged job, a diagnostic rerun, recovering a metric post-hoc) must
-be recorded by hand with `studies/util/launch_record.py::write_intervention(...,
-platform="hpc")` or it is lost. **Schema, required fields, and the full example live in the
+`launch_hpc.py` writes the **first** launch's record (`hpc_sweep.json` + a copy of the
+sweep in `--output-dir`, default `results/hpc_<launch_id>/`; dispatcher #176) — copy it
+into the variant's `launch_record/` like a Beaker record. Every post-sweep action
+(resubmitting dead array tasks, rescuing a wedged job, a diagnostic rerun, recovering a
+metric post-hoc) must still be recorded by hand with
+`studies/util/launch_record.py::write_intervention(..., platform="hpc")` or it is lost. **Schema, required fields, and the full example live in the
 `study-conventions` skill** — it owns the contract; don't re-derive it here.
 
 Two HPC-specific points:

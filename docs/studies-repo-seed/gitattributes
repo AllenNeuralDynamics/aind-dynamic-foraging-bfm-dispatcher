@@ -1,0 +1,22 @@
+# git-LFS for the objects that make this repository heavy.
+#
+# Measured at the split (2026-10-23): studies/ tracked 151 PNGs (51 MB) and 229 JSONs
+# (34 MB), with ~257 MB of packed history. Attributes apply to objects added or modified
+# after this file lands; history is NOT rewritten (git lfs migrate would break the
+# byte-identical tree-manifest check of the extraction, docs/repo-split-plan.md Step 2).
+#
+# Small CSV / JSON stay in plain git on purpose: their diffs are a review signal
+# (posthoc-reporting), and LFS objects show no diff in a PR.
+
+# Rendered figures: every report embeds them, none is diffed by eye.
+*.png filter=lfs diff=lfs merge=lfs -text
+*.svg filter=lfs diff=lfs merge=lfs -text
+*.pdf filter=lfs diff=lfs merge=lfs -text
+*.npz filter=lfs diff=lfs merge=lfs -text
+
+# Result JSONs above ~1.5 MB (frozen per-trial / per-subject tables, study 09).
+studies/09-gru-cross-species-transfer/analysis/matched_half_results.json filter=lfs diff=lfs merge=lfs -text
+studies/09-gru-cross-species-transfer/analysis/example_behavior_sessions.json filter=lfs diff=lfs merge=lfs -text
+studies/09-gru-cross-species-transfer/analysis/embedding_dimension_results.json filter=lfs diff=lfs merge=lfs -text
+studies/09-gru-cross-species-transfer/analysis/embedding_dimension_expansion_results.json filter=lfs diff=lfs merge=lfs -text
+studies/09-gru-cross-species-transfer/analysis/embedding_space_results_e8.json filter=lfs diff=lfs merge=lfs -text

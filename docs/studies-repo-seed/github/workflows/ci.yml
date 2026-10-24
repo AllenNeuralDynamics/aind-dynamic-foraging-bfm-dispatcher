@@ -1,0 +1,38 @@
+name: CI
+
+# Offline regeneration check (posthoc-reporting: reports are code). Every study's
+# `make all` must reproduce the committed artifacts from the committed frozen inputs,
+# with no W&B, Beaker or cluster access; `_meta` blocks, float noise and image bytes are
+# allowed to differ, anything else fails. Credentialed producers (`freeze-*`, `pull-*`)
+# are never CI prerequisites.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true   # figures and large result JSONs are LFS objects (.gitattributes)
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Regenerate every study and compare with HEAD
+        env:
+          WANDB_MODE: disabled
+          MPLBACKEND: Agg
+        run: python scripts/check_regeneration.py

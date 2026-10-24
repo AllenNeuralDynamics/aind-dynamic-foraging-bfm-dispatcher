@@ -60,15 +60,27 @@ Every JSON written by an analysis script opens with `_meta` — build it via
   "_meta": {
     "produced_by": "analysis/nxd_scaling.py",
     "produced_at_pt": "2026-06-24T23:30:00-07:00",
-    "dispatcher_git_sha": "<sha>",
-    "wandb_groups": ["nxd-grid@20260624-141106"]
+    "studies_git_sha": "<sha of the checkout the producer ran in>",
+    "studies_git_dirty": false,
+    "wrapper_git_sha": "<from environment.lock, or null>",
+    "wandb_groups": ["nxd-grid@20260624-141106"],
+    "source_studies_git_shas": ["<sha>"],
+    "source_dispatcher_git_shas": ["<sha>"],
+    "source_wrapper_git_shas": ["<sha>"],
+    "source_foraging_models_git_shas": [],
+    "provenance_findings": ["no foraging_models SHA in the launch record(s) of W&B group(s): nxd-grid@20260624-141106"]
   },
   "...": "actual data"
 }
 ```
 
 Times stamped in `America/Los_Angeles` (AGENTS.md §7). `_meta.produced_by` must be
-a real path in the repo.
+a real path in the repo. The `source_*_git_shas` arrays come from the launch records
+under `variants/*/launch_record*/` whose group is in `wandb_groups`; a group with no
+record, or a record without that repository's SHA, is listed in `provenance_findings`
+rather than guessed. `studies_git_sha` is the checkout holding the studies (the
+dispatcher before the split, #124; the studies repository after it) and is never
+written under a dispatcher name.
 
 ## `launch_record_<label>/results.md` contract
 

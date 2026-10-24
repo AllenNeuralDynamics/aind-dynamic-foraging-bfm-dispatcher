@@ -46,10 +46,19 @@ in `AGENTS.md` §8).
 - **Always pass `--note`** ("why this run exists + what we want to learn") so the
   scientific intent is readable straight from the W&B record.
 - Platform-native ids are stamped alongside: `BEAKER_EXPERIMENT_ID`, `BEAKER_JOB_ID`,
-  `CO_COMPUTATION_ID`, plus `wrapper_commit`, `dispatcher_commit`, and
-  `foraging_models_commit`. Both Beaker launchers (`launch_beaker_resumable.py`
-  and `launch_beaker.py`) implement the portable launch metadata identically;
-  the wrapper records the resolved source commits.
+  `CO_COMPUTATION_ID`, plus `wrapper_commit`, `dispatcher_commit`,
+  `foraging_models_commit` and `meta.studies_commit` (the commit of the checkout that
+  held the sweep; equal to the dispatcher commit until the studies split, #124). Both
+  Beaker launchers (`launch_beaker_resumable.py` and `launch_beaker.py`) implement the
+  portable launch metadata identically; the wrapper records the resolved source commits.
+- **The launch record carries the same four repositories** (`code/provenance.py`,
+  dispatcher #176): `studies_git_commit/branch/dirty`, `dispatcher_git_commit/branch/dirty`,
+  `wrapper_git_commit`, `foraging_models_git_commit`, plus `wandb_group`,
+  `studies_dirty_override` and `provenance_warnings`. A launch whose
+  `studies/<study>/` directory has uncommitted changes is **refused**; commit first, or
+  pass `--diagnostic-dirty-ok "<reason>"` for a diagnostic run (the reason is recorded).
+  `launch_hpc.py` writes `hpc_sweep.json` to `--output-dir` the same way the Beaker
+  launchers write `beaker_resumable.json` / `beaker_sweep.json`.
 
 ## Interventions after the first launch (resubmit / rescue / probe / tier change / backfill)
 

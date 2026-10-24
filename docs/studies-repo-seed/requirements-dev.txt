@@ -1,0 +1,19 @@
+# What the OFFLINE report producers need: `make -C studies/<study> all` reads committed
+# frozen inputs and rewrites reports, JSON/CSV summaries and figures. This is what CI
+# installs (scripts/check_regeneration.py).
+#
+# Not here on purpose: `wandb`, `beaker-py`, the wrapper and `aind-dynamic-foraging-models`.
+# They belong to the credentialed freeze/pull producers and to launches, which run on a
+# compute node or in the sandbox with the sibling repos present, never in CI.
+numpy>=1.26,<3
+pandas>=2.2,<3
+scipy>=1.13,<2
+scikit-learn>=1.4,<2
+matplotlib>=3.8,<4
+seaborn>=0.13,<1
+statsmodels>=0.14,<1
+PyYAML>=6,<7
+requests>=2.31,<3
+# study 08 reads saved NumPyro / Stan posteriors (InferenceData) when recomputing diagnostics
+arviz>=0.18,<1
+xarray>=2024.1
