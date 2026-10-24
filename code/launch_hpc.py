@@ -704,6 +704,16 @@ def main() -> None:
         print("Dry-run mode enabled; skipping sweep creation and sbatch submit.")
         return
 
+    # Write the launch record before anything is submitted, so an unwritable --output-dir
+    # fails here and not after the sweep and the array exist; the final write below fills
+    # in the ids.
+    _save_record(
+        output_dir, sweep_file=sweep_yaml, sweep_path=None, group=group,
+        array_jobid=None, autostop_jobid=None, n_array_tasks=num_array_tasks,
+        agent_count=computed_agent_count, mode=args.mode,
+        provenance=provenance, dirty_override=dirty_override,
+    )
+
     # --- Lineage injection ---
     # Build a temp sweep YAML that appends Hydra +meta.* overrides to the
     # command list, so every run in this sweep carries lineage in its W&B

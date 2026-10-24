@@ -115,13 +115,17 @@ def study_dir(sweep_path: Path | str) -> Path:
     return p.parent
 
 
-def dirty_paths(root: Path | str, subdir: Path | str) -> list[str]:
-    """Paths under ``subdir`` with uncommitted changes (``git status --porcelain -- subdir``)."""
+def dirty_paths(root: Path | str, subdir: Path | str) -> tuple[list[str] | None, str | None]:
+    """``(paths, None)`` under ``subdir`` with uncommitted changes, or ``(None, error)``.
+
+    ``None`` means the status query failed, which is *unknown*, not clean: callers must not
+    treat it as a verified clean study (``check_studies_clean`` refuses it).
+    """
     # -z: NUL-separated `XY path` entries; not stripped, because XY may start with a space.
-    status, _ = _git(Path(root), "status", "--porcelain", "-z", "--", str(subdir), strip=False)
-    if not status:
-        return []
-    return [entry[3:] for entry in status.split("\0") if len(entry) > 3]
+    status, err = _git(Path(root), "status", "--porcelain", "-z", "--", str(subdir), strip=False)
+    if status is None:
+        return None, f"{root}: git status failed: {err}"
+    return [entry[3:] for entry in status.split("\0") if len(entry) > 3], None
 
 
 def runtime_shas_from_pins(resolved: dict[tuple[str, str], str]) -> dict[str, str | list[str]]:
@@ -178,12 +182,18 @@ def launch_provenance(
     warnings = [f"{label}: {state['error']}"
                 for label, state in (("studies", studies), ("dispatcher", dispatcher))
                 if state.get("error")]
+    if studies["root"]:
+        paths, err = dirty_paths(studies["root"], study)
+        if err:
+            warnings.append(f"studies: {err}")
+    else:
+        paths = None   # no repository: cleanliness cannot be verified either
     out = {
         "studies_git_root": studies["root"],
         "studies_git_commit": studies["commit"],
         "studies_git_branch": studies["branch"],
         "studies_git_dirty": studies["dirty"],
-        "studies_dirty_paths": dirty_paths(studies["root"], study) if studies["root"] else [],
+        "studies_dirty_paths": paths,
         "dispatcher_git_commit": dispatcher["commit"],
         "dispatcher_git_branch": dispatcher["branch"],
         "dispatcher_git_dirty": dispatcher["dirty"],
@@ -215,12 +225,24 @@ def with_runtime_shas(provenance: dict, runtime_shas: dict | None) -> dict:
 def check_studies_clean(provenance: dict, override_reason: str | None) -> dict | None:
     """Refuse a launch whose study directory is dirty, unless ``override_reason`` is given.
 
-    Returns the override block to write into the record (``None`` when nothing was dirty), or
-    raises :class:`DirtyStudiesError`.
+    Returns the override block to write into the record (``None`` when the study directory
+    was verified clean), or raises :class:`DirtyStudiesError`. ``studies_dirty_paths`` of
+    ``None`` means the check could not run (no repository, or ``git status`` failed); that is
+    refused too, because an unverified study is not a clean one.
     """
-    paths = provenance.get("studies_dirty_paths") or []
-    if not paths:
+    paths = provenance.get("studies_dirty_paths")
+    if paths == []:
         return None
+    if paths is None:
+        why = "; ".join(provenance.get("provenance_warnings") or []) or "no git repository found"
+        if override_reason:
+            return {"reason": override_reason, "paths": None, "unverified": why}
+        raise DirtyStudiesError(
+            "could not verify that the study directory is clean (" + why + "), so this "
+            "launch could not be tied to a commit. Fix the checkout, or pass "
+            "--diagnostic-dirty-ok '<reason>' for a diagnostic run; the reason is written "
+            "into the launch record."
+        )
     if override_reason:
         return {"reason": override_reason, "paths": list(paths)}
     shown = "\n  ".join(paths[:20]) + ("\n  ..." if len(paths) > 20 else "")

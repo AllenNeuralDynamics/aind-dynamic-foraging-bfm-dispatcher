@@ -126,7 +126,13 @@ class TestLaunchProvenance(unittest.TestCase):
         loose.write_text(SWEEP)
         prov = provenance.launch_provenance(loose, DISPATCHER_ROOT)
         self.assertIsNone(prov["studies_git_commit"])
-        self.assertEqual(prov["studies_dirty_paths"], [])
+        # not a repository: cleanliness is unknown (None), never "clean" ([]), and refused
+        self.assertIsNone(prov["studies_dirty_paths"])
+        with self.assertRaises(provenance.DirtyStudiesError):
+            provenance.check_studies_clean(prov, None)
+        override = provenance.check_studies_clean(prov, "ad-hoc sweep outside any repo")
+        self.assertIsNone(override["paths"])
+        self.assertIn("not a git repository", override["unverified"])
         # #109: a None commit is never silent -- the path and git's message are reported
         self.assertEqual(len(prov["provenance_warnings"]), 1)
         self.assertIn(str(loose.parent.resolve()), prov["provenance_warnings"][0])
@@ -154,6 +160,19 @@ class TestLaunchProvenance(unittest.TestCase):
         got = provenance.installed_vcs_commit([sp], "aind_dynamic_foraging_models")
         self.assertEqual(got, {"commit": "8" * 40, "version": "0.15.2", "requested_revision": "feat/x"})
         self.assertEqual(provenance.installed_vcs_commit([sp], "other")["version"], None)
+
+    def test_a_failed_status_query_is_unknown_not_clean(self):
+        prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)
+        self.assertEqual(prov["studies_dirty_paths"], [])
+        with mock.patch.object(provenance, "_git", return_value=(None, "fatal: index locked")):
+            paths, err = provenance.dirty_paths(self.root, self.root / "studies")
+        self.assertIsNone(paths)
+        self.assertIn("fatal: index locked", err)
+        broken = {**prov, "studies_dirty_paths": None,
+                  "provenance_warnings": ["studies: " + err]}
+        with self.assertRaises(provenance.DirtyStudiesError) as ctx:
+            provenance.check_studies_clean(broken, None)
+        self.assertIn("could not verify", str(ctx.exception))
 
     def test_dirty_study_dir_is_refused_and_an_unrelated_edit_is_not(self):
         (self.root / "README.md").write_text("edited elsewhere\n")
@@ -277,6 +296,23 @@ class TestHpcLauncherCarriesBothRoots(unittest.TestCase):
         legacy.mkdir(parents=True)
         (sp.parent.parent.parent).rename(prefix / "envs" / "gone")
         self.assertEqual(launch_hpc._runtime_env_site_packages(str(conda_sh), script), [legacy.resolve()])
+
+    def test_hpc_record_can_be_written_before_submission_and_filled_in_after(self):
+        prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)
+        out = self.tmp / "out_hpc_early"
+        kw = dict(sweep_file=self.sweep, group="stan-arm@1", n_array_tasks=2, agent_count=1,
+                  mode="cpu", provenance=prov, dirty_override=None)
+        early = launch_hpc._save_record(out, sweep_path=None, array_jobid=None, autostop_jobid=None, **kw)
+        self.assertIsNone(early["wandb_sweep_id"])
+        final = launch_hpc._save_record(out, sweep_path="e/p/xyz", array_jobid="7", autostop_jobid="8", **kw)
+        rec = json.loads((out / "hpc_sweep.json").read_text())
+        self.assertEqual((rec["wandb_sweep_id"], rec["slurm_array_job_id"]), ("xyz", "7"))
+        self.assertEqual(rec["wandb_sweep_id"], final["wandb_sweep_id"])
+        # an unwritable destination fails at the early write, before anything is submitted
+        blocker = self.tmp / "a_file"
+        blocker.write_text("")
+        with self.assertRaises(OSError):
+            launch_hpc._save_record(blocker, sweep_path=None, array_jobid=None, autostop_jobid=None, **kw)
 
     def test_hpc_record_is_a_launcher_record_the_validator_reads(self):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT, {
