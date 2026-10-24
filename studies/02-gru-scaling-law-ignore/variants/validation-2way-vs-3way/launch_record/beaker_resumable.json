@@ -1,9 +1,0 @@
-{
-  "mode": "resumable-grid",
-  "n_tasks": 2,
-  "experiment_id": "01KWMCHPQ803BCBR0AKP4VZWDW",
-  "experiment_url": "https://beaker.org/ex/01KWMCHPQ803BCBR0AKP4VZWDW",
-  "dispatcher_commit": "ad9fb6ef20fe8a1112dbcd98d39835288a53afb2",
-  "sweep_file": "studies/ignore-trials-scaling/variants/validation-2way-vs-3way/sweep.yaml",
-  "created_utc": "2026-07-03T16:21:20.098043+00:00"
-}

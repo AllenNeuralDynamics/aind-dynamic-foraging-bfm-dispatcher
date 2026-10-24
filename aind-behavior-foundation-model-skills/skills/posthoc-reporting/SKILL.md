@@ -10,6 +10,10 @@ rule lives in `AGENTS.md` §12). Full artifact contracts: `references/` here. Wh
 in doubt, mirror a normalized study (e.g. `studies/01-gru-scaling-law/`) rather
 than inventing layout.
 
+Studies live in **`aind-dynamic-foraging-bfm-studies`**, a sibling checkout of the
+dispatcher (split out at tag `studies-split-v1`, dispatcher #124). Every `studies/...` path
+below is relative to that repo's root; the launchers stay in the dispatcher.
+
 ## Principles
 
 1. **Reports are code** — committed, regenerable, diffable; changed only via their

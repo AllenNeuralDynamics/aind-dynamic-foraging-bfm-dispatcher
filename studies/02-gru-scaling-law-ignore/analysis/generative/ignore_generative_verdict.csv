@@ -1,6 +1,0 @@
-run_seed,n_sessions,n_trials,model_ignore_rate,real_ignore_rate,ignore_rate_diff,model_mean_run_length,real_mean_run_length,model_p_ig_given_prev_ig,real_p_ig_given_prev_ig,p_ig_given_prev_ig_diff,position_curve_L1,transition_matrix_frobenius
-8s29y3nc,3034,1618305,0.14791,0.09398,0.05394,3.4883,2.2907,0.71631,0.56768,0.14864,0.05449,0.18836
-xjbfj6f5,3129,1620766,0.16105,0.10113,0.05992,3.8713,2.3805,0.74471,0.58464,0.16007,0.05997,0.19948
-hmv4eabh,2966,1586573,0.14289,0.09403,0.04886,3.2809,2.3157,0.69819,0.57281,0.12537,0.04921,0.15793
-
-MEAN across seeds,,,0.15062,0.09638,0.05424,3.54683,2.32897,0.71974,0.57504,0.14469,0.05456,0.18192

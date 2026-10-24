@@ -138,9 +138,10 @@ grid point (no sweep controller; grid-only):
 ```bash
 conda activate dynamic-foraging-bfm-cpu
 WS=ai1/aind-dynamic-foraging-foundation-model
+S=../aind-dynamic-foraging-bfm-studies/studies/<study>/variants/<variant>   # the studies repo
 python code/launch_beaker_resumable.py \
-  --sweep studies/<study>/variants/<variant>/sweep.yaml \
-  --experiment studies/<study>/variants/<variant>/experiment.yaml \
+  --sweep "$S/sweep.yaml" \
+  --experiment "$S/experiment.yaml" \
   --workspace "$WS" \
   --label <short-label> \
   --note "why this run exists + what we want to learn"

@@ -1,7 +1,7 @@
 {
   "name": "aind-behavior-foundation-model-skills",
   "description": "Agent Skills for the AIND behavior foundation model stack: codebase orientation for the dynamic-foraging-bfm dispatcher/wrapper repos, launching jobs on Beaker (AI Hub) and Allen on-prem SLURM HPC, the training/analysis runtime, study/variant organization, post-hoc analysis reporting, git session isolation and provenance, and issue/project-board tracking.",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "author": {
     "name": "Han Hou",
     "email": "houhan@gmail.com"

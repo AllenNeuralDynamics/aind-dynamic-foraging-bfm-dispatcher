@@ -15,6 +15,10 @@ description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-d
   Beaker image, `run_hpc`. Job containers refresh the wrapper, dispatcher, and
   `aind-dynamic-foraging-models` sources at startup, so code edits need **no image
   rebuild** (pin via `WRAPPER_REF`, `DISPATCHER_REF`, and `FORAGING_MODELS_REF`).
+- **`aind-dynamic-foraging-bfm-studies`** (sibling checkout at
+  `../aind-dynamic-foraging-bfm-studies`) holds every study: sweeps, launch records, analysis,
+  reports. Split out of this repo at tag `studies-split-v1` (#124). Launches run from the
+  dispatcher and point at a sweep there; no job runtime reads it.
 - W&B (`entity: AIND-disRNN`) is the experiment tracker across all backends.
 - **Claude Science layer** (AGENTS.md §13): the agent's persistent brain runs on the
   user's Mac; GitHub is the source of truth, tracked by the Mac authoring clone
@@ -35,8 +39,8 @@ description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-d
 | `code/launch_CO_wrapper.py` | Code Ocean route |
 | `code/check_gpu_availability.py` | Schedulable-GPU probe (Beaker + HPC) — mandatory before large launches (AGENTS.md §10) |
 | `code/beaker_client.py` | Sandbox-safe Beaker/W&B client helpers used by the launchers |
-| `studies/<study>/` | One folder per scientific question (`NN-{model}-{purpose}`); variants + analysis (see study-conventions skill) |
-| `studies/util/` | Shared helpers: `_meta.py` (provenance block), `plot_style.py`, `launch_record.py` (intervention records), `validate_provenance.py` (wrap-up reconciler), `watch_runs.py` (poll Beaker+W&B, append timestamped snapshots so transitions between check-ins aren't lost) |
+| `../aind-dynamic-foraging-bfm-studies/studies/<study>/` | **Sibling repo** (split out of this one, #124): one folder per scientific question (`NN-{model}-{purpose}`); variants + analysis (see study-conventions skill). The launchers here take its sweep paths and record its commit as `studies_git_commit` |
+| `../aind-dynamic-foraging-bfm-studies/studies/util/` | Shared helpers: `_meta.py` (provenance block), `plot_style.py`, `launch_record.py` (intervention records), `validate_provenance.py` (wrap-up reconciler), `watch_runs.py` (poll Beaker+W&B, append timestamped snapshots so transitions between check-ins aren't lost) |
 | `docs/` | Design records + pointer stubs (index below) |
 | `AGENTS.md` | Behavioral guardrails — the terse rules; this pack and the code-adjacent docs hold the detail |
 

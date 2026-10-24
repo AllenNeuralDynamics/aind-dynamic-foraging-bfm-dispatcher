@@ -135,14 +135,17 @@ directories — is `code/launch_CO_wrapper.py`, which is what the examples above
 
 ## Studies
 
-Scientific work is organised one folder per question under [`studies/`](studies/), named
+Scientific work lives in its own repository,
+[`aind-dynamic-foraging-bfm-studies`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies), cloned as a sibling of this one
+(`../aind-dynamic-foraging-bfm-studies`); it was split out of this repo at tag
+`studies-split-v1` (#124). It is organised one folder per question under `studies/`, named
 `NN-{model}-{purpose}`:
 
 ```text
 studies/01-gru-scaling-law/          # a question, one W&B project
   variants/<variant>/                # one W&B group each
     sweep.yaml  experiment.yaml      # what was launched
-    launch_record/                   # SHA-pinned specs + provenance, written by the launcher
+    launch_record/                   # SHA-pinned specs + provenance, written by this repo's launchers
   analysis/                          # producers, curated JSON/CSV, figures, reports
   Makefile                           # regenerates every artifact
 ```

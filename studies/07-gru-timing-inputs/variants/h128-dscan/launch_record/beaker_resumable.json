@@ -1,9 +1,0 @@
-{
-  "mode": "resumable-grid",
-  "n_tasks": 15,
-  "experiment_id": "01M0M1KQQCSYZMRE9S9F5SSZV5",
-  "experiment_url": "https://beaker.org/ex/01M0M1KQQCSYZMRE9S9F5SSZV5",
-  "dispatcher_commit": null,
-  "sweep_file": "studies/07-gru-timing-inputs/variants/h128-dscan/sweep.yaml",
-  "created_utc": "2026-08-22T06:13:01.207666+00:00"
-}

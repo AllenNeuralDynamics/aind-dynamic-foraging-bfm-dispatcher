@@ -1,12 +1,16 @@
 ---
 name: study-conventions
-description: Organize studies, variants, and launch provenance in this repo — studies/<study>/variants/<variant>/ layout, study naming (NN-{model}-{purpose}), one W&B project per study, group naming <variant>@<launch_id>, the meta.* provenance block, and study wrap-up housekeeping. Use when creating a new study or variant, deciding where a launch's configs live, naming/interpreting W&B groups, or closing out a finished study.
+description: Organize studies, variants, and launch provenance in the studies repo (aind-dynamic-foraging-bfm-studies) — studies/<study>/variants/<variant>/ layout, study naming (NN-{model}-{purpose}), one W&B project per study, group naming <variant>@<launch_id>, the meta.* provenance block, and study wrap-up housekeeping. Use when creating a new study or variant, deciding where a launch's configs live, naming/interpreting W&B groups, or closing out a finished study.
 ---
 
 # Study & experiment organization
 
 This skill is the source of truth for study organization (the one-line rule lives
 in `AGENTS.md` §8).
+
+Studies live in **`aind-dynamic-foraging-bfm-studies`**, a sibling checkout of the
+dispatcher (split out at tag `studies-split-v1`, dispatcher #124). Every `studies/...` path
+below is relative to that repo's root; the launchers stay in the dispatcher.
 
 ## Core scheme
 
