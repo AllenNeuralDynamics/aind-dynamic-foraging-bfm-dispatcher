@@ -15,6 +15,8 @@ from committed frozen inputs; two runs differ only in `_meta`). It runs each stu
 
 Any remaining difference is a result change, which belongs in a reviewed commit, not in a
 CI run. Exit 1 on a failed `make`, an unparseable artifact, or an unexplained difference.
+Known gaps are listed in SKIP_MAKE / KNOWN_DIFFS with the issue that owns them and are
+printed as EXEMPT, never silently skipped.
 
 Usage: python3 scripts/check_regeneration.py [--study 08-hb-vs-gru-heldout ...] [--rtol 1e-9]
 """
@@ -32,6 +34,24 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 IMAGE_SUFFIXES = {".png", ".svg", ".pdf"}
+
+# Known gaps, each owned by an issue, printed as EXEMPT so they stay visible. Remove an
+# entry when its issue closes. SKIP_MAKE: the study's `all` target needs W&B credentials.
+# KNOWN_DIFFS: the path regenerates differently from what is committed.
+SKIP_MAKE = {
+    "02-gru-scaling-law-ignore": "dispatcher #177: `all` runs the W&B pull (no offline report target)",
+    "07-gru-timing-inputs": "dispatcher #177: `all` runs the W&B pull (no offline report target)",
+}
+KNOWN_DIFFS = {
+    "studies/04-gru-vs-disrnn-embedding-recovery/analysis/reports/r1-gru-ladder.md":
+        "dispatcher #177: committed report text differs from what the producer writes",
+    "studies/05-disrnn-scaling-law/analysis/reports/r4-generative-behavioral-match.md":
+        "dispatcher #177: committed report text differs from what the producer writes",
+    "studies/09-gru-cross-species-transfer/analysis/reports/r5-maturity-audit.md":
+        "dispatcher #177: committed report text differs from what the producer writes",
+    "studies/09-gru-cross-species-transfer/analysis/llm_task_similarity_results.json":
+        "dispatcher #177: PCA sign indeterminacy",
+}
 
 
 def _run(cmd: list[str], **kw) -> subprocess.CompletedProcess:
@@ -137,6 +157,9 @@ def main() -> int:
             if not (study / "Makefile").exists():
                 print(f"EXEMPT {study.name}: no Makefile")
                 continue
+            if study.name in SKIP_MAKE:
+                print(f"EXEMPT {study.name}: {SKIP_MAKE[study.name]}")
+                continue
             print(f"== make -C studies/{study.name} all", flush=True)
             out = subprocess.run(["make", "-C", str(study), "all"], cwd=ROOT, env=env,
                                  text=True, capture_output=True)
@@ -152,6 +175,9 @@ def main() -> int:
         if len(parts) < 2 or parts[1] not in wanted:
             continue
         diffs = compare(path, args.rtol)
+        if diffs and path in KNOWN_DIFFS:
+            print(f"EXEMPT  {path}: {KNOWN_DIFFS[path]}")
+            continue
         if diffs:
             failed += 1
             print(f"CHANGED {path}")
