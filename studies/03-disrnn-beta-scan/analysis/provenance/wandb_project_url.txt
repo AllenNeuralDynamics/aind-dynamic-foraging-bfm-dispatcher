@@ -1,1 +1,0 @@
-https://wandb.ai/AIND-disRNN/disrnn_updnet_bottleneck_ratio_100mice

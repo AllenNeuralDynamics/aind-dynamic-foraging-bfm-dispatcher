@@ -1,4 +1,0 @@
-# Caches: anything pulled from W&B and re-derivable from a committed producer.
-# Per docs/posthoc-analysis.md "gitignore policy".
-analysis/_cache_*.json
-analysis/gru_per_subject.json

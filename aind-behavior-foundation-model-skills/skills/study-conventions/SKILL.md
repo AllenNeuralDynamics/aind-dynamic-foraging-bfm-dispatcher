@@ -1,12 +1,16 @@
 ---
 name: study-conventions
-description: Organize studies, variants, and launch provenance in this repo — studies/<study>/variants/<variant>/ layout, study naming (NN-{model}-{purpose}), one W&B project per study, group naming <variant>@<launch_id>, the meta.* provenance block, and study wrap-up housekeeping. Use when creating a new study or variant, deciding where a launch's configs live, naming/interpreting W&B groups, or closing out a finished study.
+description: Organize studies, variants, and launch provenance in the studies repo (aind-dynamic-foraging-bfm-studies) — studies/<study>/variants/<variant>/ layout, study naming (NN-{model}-{purpose}), one W&B project per study, group naming <variant>@<launch_id>, the meta.* provenance block, and study wrap-up housekeeping. Use when creating a new study or variant, deciding where a launch's configs live, naming/interpreting W&B groups, or closing out a finished study.
 ---
 
 # Study & experiment organization
 
 This skill is the source of truth for study organization (the one-line rule lives
 in `AGENTS.md` §8).
+
+Studies live in **`aind-dynamic-foraging-bfm-studies`**, a sibling checkout of the
+dispatcher (split out at tag `studies-split-v1`, dispatcher #124). Every `studies/...` path
+below is relative to that repo's root; the launchers stay in the dispatcher.
 
 ## Core scheme
 
@@ -99,10 +103,13 @@ SLURM). They differ only in what identifies a submitted unit:
 | `hpc` | `{"type": "slurm_array_job" \| "slurm_job", "id": "…"}` | recycled, ages out of `sacct` |
 | `none` | *(omit)* | only for `kind="backfill"` |
 
-`launch_hpc.py` currently writes **no** launch record at all, so an HPC intervention must call
-this helper by hand until that launcher is taught to do it.
+`launch_hpc.py` writes the *first* launch's record (`hpc_sweep.json`, dispatcher #176), like the
+Beaker launchers; anything after that, and any hand-run `sbatch` array, is recorded with this
+helper. A hand-run array also needs a record naming its runtime SHAs (`studies_git_commit`,
+`dispatcher_git_commit`, `wrapper_git_commit`, `foraging_models_git_commit` plus `wandb_group`),
+since an intervention record's `_meta` describes the writer, not the job's checkouts.
 
-It wraps `_meta.build_meta()`, so timestamp + dispatcher/wrapper SHAs come for free, and it
+It wraps `_meta.build_meta()`, so timestamp + studies/wrapper SHAs come for free, and it
 **refuses** a record with no `trigger.cause`, an unknown platform/ref type, or a work-submitting
 kind with no `job_refs`.
 

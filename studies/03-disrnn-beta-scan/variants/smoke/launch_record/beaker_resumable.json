@@ -1,9 +1,0 @@
-{
-  "mode": "resumable-grid",
-  "n_tasks": 1,
-  "experiment_id": null,
-  "experiment_url": null,
-  "dispatcher_commit": "88f652f70d036a32390ba3c8dcd920ed0042c5c1",
-  "sweep_file": "studies/beta-scan/variants/smoke/sweep.yaml",
-  "created_utc": "2026-07-04T02:10:03.917568+00:00"
-}

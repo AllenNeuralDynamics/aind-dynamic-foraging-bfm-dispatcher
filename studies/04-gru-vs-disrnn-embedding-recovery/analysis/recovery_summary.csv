@@ -1,8 +1,0 @@
-stage,generator,model_rel_LL,baseline_rel_LL,recovery,recovery_value,baseline_role
-1,static (no drift),~0.993,~0.993,subject param R² (D=4),0.91–0.96,at ceiling (stationary)
-2,mild monotonic drift,0.9962,0.9929,subject R² (scalar) / session-frac R²,0.96 / up to 0.94,at ceiling (interpolable)
-2b,"strong + non-monotonic drift, tail held-out",0.9924,0.9394,session-position R² (non-monotonic),0.47 (was 0.94),FLIPS: drops under extrapolation
-3,QL-variant mixture (Bari/Hattori/RW),0.986–0.990,0.749–0.752,preset classification,97.5–99.5%,model-selection 47%
-4a,family mixture (QL/CTT/LC),0.988–0.991,0.718–0.743,family decoding (GRU),100%,model-selection 70%
-4b,per-session family switching (Dirichlet 0.5),0.984–0.988,~0.706 (CTT),mix-weight R² @D16 / per-session family,0.55 / 0.62,reference
-4a-disRNN,family mixture (disRNN replication),0.926–0.948,0.718–0.743,family decoding (scalar / none),0.95–0.98 / 0.75–0.90,model-selection 70%

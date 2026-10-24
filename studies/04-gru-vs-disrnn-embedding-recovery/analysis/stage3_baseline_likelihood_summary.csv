@@ -1,5 +1,0 @@
-cond,lik_rel,n_subjects
-baseline_rl_best_of_3,0.962193220724019,200
-baseline_rl_best_of_4,0.9629409861488056,200
-baseline_rl_matched_3way_n134,0.9577136589897695,134
-baseline_rl_matched_4way_n200,0.9196546054192304,200

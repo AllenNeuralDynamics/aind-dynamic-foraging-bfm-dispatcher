@@ -130,7 +130,8 @@ the W&B run, plus the Beaker experiment id when relevant.
 
 ## 8. Study & Experiment Organization
 
-One folder per study under `studies/<name>/`; variants as self-contained subfolders; one W&B
+Studies live in the sibling repo `aind-dynamic-foraging-bfm-studies` (split out, #124): one
+folder per study under its `studies/<name>/`; variants as self-contained subfolders; one W&B
 project per study, one group per variant. A study answers one scientific question — variants
 are not separate studies. Layout, naming, group scheme, provenance `meta.*`, interventions:
 **study-conventions**.
@@ -169,7 +170,7 @@ Reports are code: committed, regenerable, one producer per artifact, provenance 
 artifact. Numbers are frozen in a committed file and keyed by an immutable digest — never
 read live from W&B on the reproducible path. File contracts, marker syntax, `_meta` schema,
 Makefile and `.gitignore` policy, multi-agent rules: **posthoc-reporting**; mirror a
-normalized study (e.g. `studies/01-gru-scaling-law/`).
+normalized study (e.g. the studies repo's `studies/01-gru-scaling-law/`).
 
 ## 13. Claude Science Workflow
 

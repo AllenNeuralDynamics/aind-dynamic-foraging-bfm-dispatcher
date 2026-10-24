@@ -1,7 +1,0 @@
-run,model,enc,embed,rel_LL,family_acc_subject
-45ubyjeq,disRNN,none,4,0.9482723855224652,0.845
-u7sm8vx3,disRNN,none,8,0.947707027222412,0.895
-0x2628l9,disRNN,none,16,0.9445638998155308,0.755
-5m1i8f8h,disRNN,scalar,4,0.9263744347639172,0.98
-4hldlw3d,disRNN,scalar,8,0.9410463738962558,0.95
-0ac6yrdy,disRNN,scalar,16,0.9392565113414244,0.98

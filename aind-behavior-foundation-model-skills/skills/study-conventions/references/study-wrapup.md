@@ -44,13 +44,13 @@ deleting. (GraphQL `deleteRun` payload has `clientMutationId` + `numDeleted`, no
 
 ## 4. PR to `main` (BOTH repos)
 
-A study is a **two-repo deliverable**: the dispatcher carries `studies/<study>/`
-(control plane), and the **wrapper** carries the study's *training payload* — the
+A study is a **two-repo deliverable**: the studies repo (`aind-dynamic-foraging-bfm-studies`)
+carries `studies/<study>/`, and the **wrapper** carries the study's *training payload* — the
 data loader, its tests, and any model-agnostic analysis script the study added
 (e.g. `code/data_loaders/<gen>.py`, `code/analysis/<study>_recovery.py`, plus any
 `run_hpc.py` change). **Both need a PR to `main`**, and the
-dispatcher's `environment.lock` pins a wrapper commit, so the wrapper payload must
-land too — don't stop at the dispatcher.
+study's `environment.lock` pins a wrapper commit, so the wrapper payload must
+land too — don't stop at the studies repo.
 
 **Never squash — preserve the stage-by-stage history.** To bring a diverged study
 branch up to base and open a history-preserving PR:

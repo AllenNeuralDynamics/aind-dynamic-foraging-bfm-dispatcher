@@ -77,6 +77,11 @@ discriminate generalization.
 
 ## Post-training analysis (no retraining)
 
+Separately, `python -m external_transfer.gru_transfer` (wrapper #104/#105) transfers a pinned
+trained GRU to an external bandit dataset by fine-tuning only a new-subject embedding, with an
+optional adaptation budget `--adapt-sessions-per-subject K` (K=0 is zero-shot). It is study 09's
+Beaker runner; `code/POST_TRAINING_ANALYSIS.md` documents it.
+
 `run_analysis.py` is the unified CLI — **12 sub-commands**, all taking a saved run dir via
 `resolve_model_run(model_dir, split=…, checkpoint_policy=best_eval|best_heldout|final)`:
 

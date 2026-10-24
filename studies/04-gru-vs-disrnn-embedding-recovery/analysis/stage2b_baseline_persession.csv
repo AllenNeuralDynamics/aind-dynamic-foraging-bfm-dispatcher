@@ -1,2 +1,0 @@
-stage,cond,num_subjects,n_session_rows,wandb_run_id,r2_biasL,spearman_biasL,r2_learn_rate,spearman_learn_rate,r2_softmax_temp,r2_softmax_temp_raw,softmax_spearman,n_softmax_winsorized_rows,r2_mean,softmax_winsor_threshold
-S2b,baseline_rl,200,8000,6arrg250,0.8016189948152237,0.9173912283790564,0.4430701274851442,0.76946029583042,0.3238968053499114,0.2473554358844258,0.7556939208970049,120,0.5228619758834264,20.0

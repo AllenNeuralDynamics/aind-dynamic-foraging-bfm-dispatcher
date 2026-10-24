@@ -1,9 +1,0 @@
-{
-  "mode": "resumable-grid",
-  "n_tasks": 12,
-  "experiment_id": "01KXD6DCD9VGY3G6D3M0JWPB7X",
-  "experiment_url": "https://beaker.org/ex/01KXD6DCD9VGY3G6D3M0JWPB7X",
-  "dispatcher_commit": "a06e61f2b2139dcdadbd977b6cc681112649f16a",
-  "sweep_file": "studies/05-disrnn-scaling-law/variants/mult-beta-d614/sweep.yaml",
-  "created_utc": "2026-07-13T07:35:09.386147+00:00"
-}

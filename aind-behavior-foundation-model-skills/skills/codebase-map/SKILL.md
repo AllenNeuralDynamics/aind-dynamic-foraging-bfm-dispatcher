@@ -1,11 +1,11 @@
 ---
 name: codebase-map
-description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-disrnn-dispatcher) codebase — the two-repo architecture (dispatcher = control plane, wrapper = training payload), Hydra config layout, where launchers/configs/docs/studies live, and which skill or doc to read next. Use when starting work in this repo, answering "where does X live", or deciding how to run/launch anything.
+description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-disrnn-dispatcher) codebase — the repo architecture (dispatcher = control plane, wrapper = training payload, studies = sweeps/records/analysis), Hydra config layout, where launchers/configs/docs/studies live, and which skill or doc to read next. Use when starting work in this repo, answering "where does X live", or deciding how to run/launch anything.
 ---
 
 # Codebase map — aind-dynamic-foraging-bfm-dispatcher
 
-## Big picture (two-repo architecture)
+## Big picture (dispatcher, wrapper, studies)
 
 - **This repo (dispatcher)** is the *control plane* for the dynamic-foraging-bfm MLOps stack.
   It composes Hydra configs into job specs and submits them to one of three backends:
@@ -15,6 +15,10 @@ description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-d
   Beaker image, `run_hpc`. Job containers refresh the wrapper, dispatcher, and
   `aind-dynamic-foraging-models` sources at startup, so code edits need **no image
   rebuild** (pin via `WRAPPER_REF`, `DISPATCHER_REF`, and `FORAGING_MODELS_REF`).
+- **`aind-dynamic-foraging-bfm-studies`** (sibling checkout at
+  `../aind-dynamic-foraging-bfm-studies`) holds every study: sweeps, launch records, analysis,
+  reports. Split out of this repo at tag `studies-split-v1` (#124). Launches run from the
+  dispatcher and point at a sweep there; no job runtime reads it.
 - W&B (`entity: AIND-disRNN`) is the experiment tracker across all backends.
 - **Claude Science layer** (AGENTS.md §13): the agent's persistent brain runs on the
   user's Mac; GitHub is the source of truth, tracked by the Mac authoring clone
@@ -35,14 +39,14 @@ description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-d
 | `code/launch_CO_wrapper.py` | Code Ocean route |
 | `code/check_gpu_availability.py` | Schedulable-GPU probe (Beaker + HPC) — mandatory before large launches (AGENTS.md §10) |
 | `code/beaker_client.py` | Sandbox-safe Beaker/W&B client helpers used by the launchers |
-| `studies/<study>/` | One folder per scientific question (`NN-{model}-{purpose}`); variants + analysis (see study-conventions skill) |
-| `studies/util/` | Shared helpers: `_meta.py` (provenance block), `plot_style.py`, `launch_record.py` (intervention records), `validate_provenance.py` (wrap-up reconciler), `watch_runs.py` (poll Beaker+W&B, append timestamped snapshots so transitions between check-ins aren't lost) |
+| `../aind-dynamic-foraging-bfm-studies/studies/<study>/` | **Sibling repo** (split out of this one, #124): one folder per scientific question (`NN-{model}-{purpose}`); variants + analysis (see study-conventions skill). The launchers here take its sweep paths and record its commit as `studies_git_commit` |
+| `../aind-dynamic-foraging-bfm-studies/studies/util/` | Shared helpers: `_meta.py` (provenance block), `plot_style.py`, `launch_record.py` (intervention records), `validate_provenance.py` (wrap-up reconciler), `watch_runs.py` (poll Beaker+W&B, append timestamped snapshots so transitions between check-ins aren't lost) |
 | `docs/` | Design records + pointer stubs (index below) |
 | `AGENTS.md` | Behavioral guardrails — the terse rules; this pack and the code-adjacent docs hold the detail |
 
 ## Where knowledge lives (one canonical home per topic)
 
-- **AGENTS.md** — always-loaded terse guardrails (both repos).
+- **AGENTS.md** — always-loaded terse guardrails (dispatcher, wrapper and studies repos each carry one).
 - **This skills pack** — canonical for cross-cutting *operational* knowledge:
   launching (beaker-launch, hpc-launch), study conventions (study-conventions),
   reporting (posthoc-reporting), git/provenance (git-session-isolation), the Claude

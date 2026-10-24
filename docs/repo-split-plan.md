@@ -7,12 +7,21 @@ tags:
   - planning
   - migration
   - one-shot
-status: approved
+status: executed
 ---
 
 # Repo-split plan: extract `studies/` into `aind-dynamic-foraging-bfm-studies`
 
-> **Status:** approved 2026-07-16, not yet executed. Re-reviewed 2026-09-03:
+> **Executed 2026-10-24** (#124). The studies repository is
+> [`AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies)
+> (public). It was extracted from dispatcher `818cc6e`, assembled in `76ed77a`, and tagged
+> `studies-split-v1` at `0882226`. The dispatcher's `studies/` was removed in #175 with an
+> ordinary deletion commit, so dispatcher history is not rewritten. The pre-split tree stays
+> reachable at `818cc6e`. Study 09's Beaker runner moved into the wrapper
+> (`external_transfer.gru_transfer`, wrapper #104; #179). The plan below is kept as the
+> record of how the split was done.
+
+> **History:** approved 2026-07-16. Re-reviewed 2026-09-03:
 > the architectural decision still stands, but execution is blocked on the
 > pre-split hardening and branch freeze below. Originally written 2026-06-30 after the
 > `posthoc-analysis` standard-structure migration (ending at commit `122abfd`,
@@ -493,8 +502,8 @@ including study 01's `analysis/rl_baseline.py` back through `1e30716`.
 
 The root files below (except `MIGRATION.md` and `migration/`, which the extraction
 itself produces) are drafted and reviewed ahead of time in
-[`docs/studies-repo-seed/`](studies-repo-seed/SEED.md) (#173) and copied verbatim into
-the assembly commit.
+`docs/studies-repo-seed/` (#173; removed in #175, its files now live at the root of the
+studies repo, see `818cc6e` for the drafts) and copied verbatim into the assembly commit.
 
 Before any push, add:
 

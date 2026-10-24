@@ -9,6 +9,9 @@ compute runs the **wrapper** image, built and maintained in
 > specs, clusters, submission). The **compute / image plane** — building the image,
 > the runtime code-pull, and how the job runs — lives in the wrapper:
 > [`aind-dynamic-foraging-bfm-wrapper/beaker/README.md`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/blob/ai_hub/beaker/README.md).
+> Study sweeps, experiment templates and launch records live in the studies repo,
+> [`aind-dynamic-foraging-bfm-studies`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies)
+> (dispatcher #124); the job runtime has no checkout of it.
 > Migration progress & benchmark results live there too:
 > [Migration status](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/blob/ai_hub/beaker/README.md#migration-status)
 > · [Benchmark figure](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/blob/ai_hub/beaker/README.md#benchmark-figure)

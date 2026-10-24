@@ -156,17 +156,6 @@ dmypy.json
 
 src/
 .codeocean/
-# offline-rerun launch artifacts (provenance in studies/.../analysis/)
-studies/data-scaling-law/heldout_rerun_*.yaml
-
-# per-launch offline-analysis records (provenance is in analysis/ markers + W&B groups)
-studies/data-scaling-law/heldout-*_20*.json
-studies/data-scaling-law/heldout-*_20*.yaml
-studies/data-scaling-law/heldout_rerun_*_20*.json
-studies/data-scaling-law/generative-*_20*.json
-studies/data-scaling-law/generative-*_20*.yaml
-studies/data-scaling-law/variants/*/launch_record*/watch_*.pid
-
 # Local W&B scratch from running analysis scripts (run logs + downloaded artifact
 # tables); fully reproducible from W&B, never committed.
 wandb/
@@ -174,7 +163,3 @@ artifacts/
 
 # Claude Code per-user/per-machine settings (shared settings.json stays tracked)
 .claude/settings.local.json
-
-# Study 08: local run outputs and figures artifacts
-studies/08-hb-vs-gru-heldout/smoke_*.json
-studies/08-hb-vs-gru-heldout/artifacts/

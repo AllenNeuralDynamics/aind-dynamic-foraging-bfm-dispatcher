@@ -1,9 +1,0 @@
-{
-  "mode": "resumable-grid",
-  "n_tasks": 18,
-  "experiment_id": null,
-  "experiment_url": null,
-  "dispatcher_commit": "cc095c8666101b54fb2128974fe7d8bcd5f683c5",
-  "sweep_file": "studies/05-disrnn-scaling-law/variants/subject-capacity/sweep.yaml",
-  "created_utc": "2026-07-14T05:58:31.960349+00:00"
-}

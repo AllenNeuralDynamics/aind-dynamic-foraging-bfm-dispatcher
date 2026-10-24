@@ -138,9 +138,10 @@ grid point (no sweep controller; grid-only):
 ```bash
 conda activate dynamic-foraging-bfm-cpu
 WS=ai1/aind-dynamic-foraging-foundation-model
+S=../aind-dynamic-foraging-bfm-studies/studies/<study>/variants/<variant>   # the studies repo
 python code/launch_beaker_resumable.py \
-  --sweep studies/<study>/variants/<variant>/sweep.yaml \
-  --experiment studies/<study>/variants/<variant>/experiment.yaml \
+  --sweep "$S/sweep.yaml" \
+  --experiment "$S/experiment.yaml" \
   --workspace "$WS" \
   --label <short-label> \
   --note "why this run exists + what we want to learn"
@@ -148,7 +149,15 @@ python code/launch_beaker_resumable.py \
 ```
 
 It sets the W&B group to `<variant>@<launch_id>` and injects `BFM_META_*`
-provenance (see the study-conventions skill). Requires
+provenance (see the study-conventions skill), including `BFM_META_STUDIES_COMMIT`, the studies
+repo commit that held the sweep; the wrapper stamps it as `meta.studies_commit`.
+
+**A Beaker job has no studies checkout.** `beaker/entrypoint.sh` refreshes the wrapper,
+dispatcher and models repos only, so a sweep `command:` must not run a script out of
+`studies/`. A study-specific runner moves into the wrapper and is called as
+`python -m <module>`, with anything it reads from the study passed on the command line (study
+09's `external_transfer.gru_transfer`, dispatcher #179). HPC jobs may run study code from a
+`STUDIES_ROOT` checkout. Requires
 `training.checkpoint_every_n_steps > 0` for resume to work.
 
 Three things silently go wrong with this launcher. Each is a one-line rule here;

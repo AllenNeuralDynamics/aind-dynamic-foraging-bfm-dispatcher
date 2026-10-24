@@ -5,6 +5,9 @@ sweep and the dispatcher commit that ran the launcher as two separate fields, an
 differ when the sweep lives in another repository. Every test builds that second repository
 with ``git init`` in a temp dir, so nothing here depends on the checkout state of this repo
 beyond it being a git repo.
+
+Whether the studies repo's validator reads these records is tested in that repo, against
+fixture records these launchers wrote (``tests/fixtures/launcher_records/``, #175).
 """
 
 import json
@@ -18,7 +21,6 @@ from pathlib import Path
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "code"))
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "studies" / "util"))
 
 for _name in ("requests", "beaker"):
     if _name not in sys.modules:
@@ -31,9 +33,6 @@ import provenance  # noqa: E402
 import launch_beaker  # noqa: E402
 import launch_beaker_resumable as resumable  # noqa: E402
 import launch_hpc  # noqa: E402
-from _meta import build_meta  # noqa: E402
-from launch_record import load_records, refs_in  # noqa: E402
-from validate_provenance import check_records_parse  # noqa: E402
 
 DISPATCHER_ROOT = Path(__file__).resolve().parents[1]
 SWEEP = """\
@@ -270,10 +269,6 @@ class TestBeakerLaunchersCarryBothRoots(unittest.TestCase):
         self.assertEqual(rec["wrapper_git_commit"], "a" * 40)
         self.assertEqual(rec["foraging_models_git_commit"], "b" * 40)
         self.assertIsNone(rec["studies_dirty_override"])
-        # and the validator accepts it as a launcher record
-        findings = []
-        check_records_parse(load_records(out), findings)
-        self.assertEqual(findings, [])
 
     def test_native_record_carries_the_contract_fields(self):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT)
@@ -287,7 +282,7 @@ class TestBeakerLaunchersCarryBothRoots(unittest.TestCase):
         self.assertEqual(rec["dispatcher_git_commit"], self.dispatcher_head)
         self.assertEqual(rec["wrapper_git_commit"], "a" * 40)
         self.assertIsNone(rec["foraging_models_git_commit"])
-        self.assertEqual(refs_in(load_records(out), "wandb_sweep"), {"abc123"})
+        self.assertEqual(rec["wandb_sweep_id"], "abc123")
 
     def test_native_render_manages_the_studies_commit_env(self):
         # A template that already carries the key is replaced, not doubled.
@@ -358,7 +353,7 @@ class TestHpcLauncherCarriesBothRoots(unittest.TestCase):
         with self.assertRaises(OSError):
             launch_hpc._save_record(blocker, sweep_path=None, array_jobid=None, autostop_jobid=None, **kw)
 
-    def test_hpc_record_is_a_launcher_record_the_validator_reads(self):
+    def test_hpc_record_carries_the_contract_fields(self):
         prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT, {
             "aind-dynamic-foraging-bfm-wrapper": "a" * 40})
         out = self.tmp / "out_hpc"
@@ -373,68 +368,6 @@ class TestHpcLauncherCarriesBothRoots(unittest.TestCase):
         self.assertEqual(rec["studies_git_commit"], self.head)
         self.assertEqual(rec["wrapper_git_commit"], "a" * 40)
         self.assertTrue((out / "sweep.yaml").exists())
-        records = load_records(out)
-        self.assertEqual(records[0]["_schema"], "launcher")
-        self.assertEqual(refs_in(records, "wandb_sweep"), {"xyz789"})
-        findings = []
-        check_records_parse(records, findings)
-        self.assertEqual(findings, [])
-
-
-class TestAnalysisMetaNamesTheStudiesCheckout(unittest.TestCase):
-    def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix="prov_meta_"))
-        self.root, self.sweep, self.head = make_studies_repo(self.tmp)
-        self.study_root = self.root / "studies" / "08-hb-vs-gru-heldout"
-        rec_dir = self.study_root / "variants" / "stan-arm" / "launch_record" / "beaker_x"
-        rec_dir.mkdir(parents=True)
-        (rec_dir / "beaker_resumable.json").write_text(json.dumps({
-            "mode": "resumable-grid", "wandb_group": "stan-arm@1",
-            "dispatcher_git_commit": "d" * 40, "dispatcher_commit": "d" * 40,
-            "studies_git_commit": "1" * 40,
-            "wrapper_git_commit": "2" * 40, "foraging_models_git_commit": "f" * 40,
-        }))
-        (self.study_root / "variants" / "stan-arm" / "launch_record" / "hpc_stan.json").write_text(
-            json.dumps({"_meta": {"wandb_groups": ["stan-arm@2"]}, "kind": "resubmit",
-                        "launch": {"revisions": {"dispatcher_commit": "e" * 40,
-                                                 "wrapper_commit": "2" * 40}}}))
-
-    def test_source_shas_come_from_the_launch_records_of_the_groups_read(self):
-        meta = build_meta("analysis/x.py", ["stan-arm@1", "stan-arm@2"], study_root=self.study_root)
-        self.assertEqual(meta["source_dispatcher_git_shas"], ["d" * 40, "e" * 40])
-        self.assertEqual(meta["source_wrapper_git_shas"], ["2" * 40])
-        self.assertEqual(meta["source_foraging_models_git_shas"], ["f" * 40])
-        self.assertEqual(meta["source_studies_git_shas"], ["1" * 40])
-        # stan-arm@2's record names the group but carries no studies / models SHA: a gap, not
-        # silence, even though every array above is non-empty
-        self.assertEqual(meta["provenance_findings"], [
-            "no studies SHA in the launch record(s) of W&B group(s): stan-arm@2",
-            "no foraging_models SHA in the launch record(s) of W&B group(s): stan-arm@2",
-        ])
-        self.assertNotIn("dispatcher_git_sha", meta)   # never its own HEAD under that name
-        self.assertRegex(meta["studies_git_sha"], r"^[0-9a-f]{40}$")
-        self.assertIn(meta["studies_git_dirty"], (True, False))
-
-    def test_a_group_without_a_record_is_an_explicit_finding_not_a_guess(self):
-        meta = build_meta("analysis/x.py", ["stan-arm@1", "stan-arm@none"], study_root=self.study_root)
-        self.assertEqual(meta["source_dispatcher_git_shas"], ["d" * 40])
-        self.assertEqual(meta["provenance_findings"],
-                         ["no launch record found for W&B group(s): stan-arm@none"])
-        full = build_meta("analysis/x.py", ["stan-arm@1"], study_root=self.study_root)
-        self.assertEqual(full["provenance_findings"], [])   # every repo's SHA present
-
-    def test_meta_git_env_is_ambient_only_inside_the_exported_work_tree(self):
-        import _meta
-        env = {"GIT_DIR": "/elsewhere/store", "GIT_WORK_TREE": str(self.root)}
-        with mock.patch.dict(os.environ, env):
-            self.assertIn("GIT_DIR", _meta._git_env(self.root / "studies"))      # inside: kept
-            self.assertNotIn("GIT_DIR", _meta._git_env(DISPATCHER_ROOT / "studies" / "util"))
-            self.assertNotIn("GIT_WORK_TREE", _meta._git_env(DISPATCHER_ROOT))  # outside: stripped
-
-    def test_without_a_study_root_the_arrays_are_empty_with_a_finding(self):
-        meta = build_meta("analysis/x.py", ["g@1"])
-        self.assertEqual(meta["source_dispatcher_git_shas"], [])
-        self.assertTrue(meta["provenance_findings"])
 
 
 if __name__ == "__main__":

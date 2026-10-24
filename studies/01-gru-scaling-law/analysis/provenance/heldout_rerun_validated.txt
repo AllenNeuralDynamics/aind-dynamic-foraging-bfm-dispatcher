@@ -1,5 +1,0 @@
-Offline held-out re-run pipeline VALIDATED 2026-06-23 ~00:54 PT.
-- Validation exp 01KVSQ2ZKXYAW26QH5YVXKKNAZ (v1 ratio=0.016 seed=0), exitCode 0.
-- model_dir=/prior/run is correct (training run lives under run/ in the result dataset).
-- per_subject_likelihood.json produced; aggregate 0.72016108 == source heldout/eval_likelihood 0.7201611 (7 dp). Faithful.
-- Launcher: studies/data-scaling-law/launch_heldout_rerun.py ; WRAPPER_REF=4f296807f4ea06f9a58afa4eeb0553c220db4726.

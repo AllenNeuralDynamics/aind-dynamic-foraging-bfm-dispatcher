@@ -14,10 +14,15 @@ Default assignee is **`hanhou`** — assign at creation rather than later, so th
 never briefly ownerless. Override with `--assignee` when the work belongs to someone else.
 
 Board: <https://github.com/orgs/AllenNeuralDynamics/projects/184/> ("AIND-behavior-fm").
-Issues live on the repo the work touches — usually `aind-dynamic-foraging-bfm-dispatcher`, or
-`aind-dynamic-foraging-bfm-wrapper` when the change is to the training/analysis payload. A two-repo
-change gets one issue on the repo that owns the *decision*, with the second repo's PR
-cross-linked from it.
+Issues live on the repo the work touches: `aind-dynamic-foraging-bfm-studies` for a study,
+variant, report or `studies/util` helper; `aind-dynamic-foraging-bfm-dispatcher` for launchers,
+configs and the skills pack; `aind-dynamic-foraging-bfm-wrapper` for the training/analysis
+payload. A cross-repo change gets one issue on the repo that owns the *decision*, with the
+other repos' PRs cross-linked from it.
+
+**Reference other repos' items in full.** A bare `#N` resolves against the repo it is written
+in (and, in a chat, against the session's checkout), so `#7` written about the studies repo
+opens dispatcher #7. On GitHub write `AllenNeuralDynamics/<repo>#N`; to a person, give the URL.
 
 ## The four steps
 
