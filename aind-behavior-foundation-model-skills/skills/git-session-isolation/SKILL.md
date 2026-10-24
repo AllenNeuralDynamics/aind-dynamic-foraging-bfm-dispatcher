@@ -1,6 +1,6 @@
 ---
 name: git-session-isolation
-description: Commit, branch, push, and provenance-stamp work in the dynamic-foraging-bfm (disRNN) repos from a sandboxed Mac session. Covers the private external-git-dir checkout that lets concurrent sessions share one local repo without colliding, the workaround for git init/clone/worktree-add failing on the sandbox's .git rule, and the origin-is-truth provenance rules pairing dispatcher+wrapper SHAs. Load whenever git init/clone/worktree fails, when isolating parallel sessions, or before launching a deliverable.
+description: Commit, branch, push, and provenance-stamp work in the dynamic-foraging-bfm (disRNN) repos from a sandboxed Mac session. Covers the private external-git-dir checkout that lets concurrent sessions share one local repo without colliding, the workaround for git init/clone/worktree-add failing on the sandbox's .git rule, and the origin-is-truth provenance rules recording the studies/dispatcher/wrapper SHAs. Load whenever git init/clone/worktree fails, when isolating parallel sessions, or before launching a deliverable.
 ---
 
 # git-session-isolation
@@ -118,14 +118,16 @@ Env knobs: `ISO_WS` (workspace root for checkouts, default `./iso-sessions`),
   API survives as the no-checkout fallback in rule 4 below; the *Contents*-API
   patch-staging flow is gone.)
 
-## Dual-repo provenance (dispatcher + wrapper) and the origin-is-truth rule
+## Multi-repo provenance (studies + dispatcher + wrapper) and the origin-is-truth rule
 
 The concurrency pattern above keeps sessions from colliding. This section covers
 the *other* failure mode learned the hard way: a run whose recorded provenance
-cannot reconstruct the code that produced it. It applies to the two-repo dynamic-foraging-bfm
-setup (`aind-dynamic-foraging-bfm-dispatcher` = launchers/sweeps/slurm, runs on the login
-node; `aind-dynamic-foraging-bfm-wrapper` = models/trainers, runs on the compute node) but the
-principles generalize to any Mac-orchestrates-HPC workflow.
+cannot reconstruct the code that produced it. It applies to the dynamic-foraging-bfm repos
+(`aind-dynamic-foraging-bfm-studies` = sweeps, launch records, analysis;
+`aind-dynamic-foraging-bfm-dispatcher` = launchers/slurm, runs on the login node;
+`aind-dynamic-foraging-bfm-wrapper` = models/trainers, runs on the compute node; plus
+`aind-dynamic-foraging-models`), but the principles generalize to any Mac-orchestrates-HPC
+workflow.
 
 ### The one invariant
 
@@ -151,8 +153,11 @@ commit, work that lived only in a working tree.
    land a quick fix on `main`, push it in the same breath; otherwise branch.
    Symptom: `git rev-parse main` differs across Mac / origin / login node.
 
-3. **Two repos = two SHAs, always paired and both pushed.** A run's identity is
-   `(dispatcher_sha, wrapper_sha)`. A wrapper code fix takes effect only after it
+3. **Every repo's SHA, always recorded together and all pushed.** A run's identity is
+   `(studies_sha, dispatcher_sha, wrapper_sha, foraging_models_sha)`; the launchers record
+   them as `studies_git_commit` / `dispatcher_git_commit` / `wrapper_git_commit` /
+   `foraging_models_git_commit` (dispatcher #176). The studies SHA is the commit holding the
+   sweep, distinct from the dispatcher's since the split (#124). A wrapper code fix takes effect only after it
    is committed, pushed, and checked out on the LOGIN-NODE wrapper checkout —
    compute nodes import wrapper from there, so pushing to the Mac clone alone
    does nothing to a job.
@@ -200,7 +205,7 @@ commit, work that lived only in a working tree.
 
 `origin` is truth. Branch off `origin/main` for every workstream; never commit
 to local `main`; never launch a deliverable from a dirty or unpushed commit;
-pair the two repo SHAs; reset local checkouts after merge.
+record every repo's SHA; reset local checkouts after merge.
 
 ## Where this skill lives
 

@@ -22,8 +22,11 @@ README wins.**
 2. Invoke the launcher from the `dynamic-foraging-bfm-cpu` conda env
    (`/allen/aind/scratch/han.hou/miniforge3/envs/dynamic-foraging-bfm-cpu`). The SLURM script
    activates `dynamic-foraging-bfm-cpu` or `dynamic-foraging-bfm-gpu` on the compute node per `--mode`.
-3. Two-repo layout: the wrapper repo is expected as a sibling
-   (`../aind-dynamic-foraging-bfm-wrapper`); override with `--wrapper-root`.
+3. Sibling layout: the wrapper repo is expected at `../aind-dynamic-foraging-bfm-wrapper`
+   (override with `--wrapper-root`), and study sweeps live in the studies repo at
+   `../aind-dynamic-foraging-bfm-studies/studies/<study>/variants/<variant>/` (dispatcher #124).
+   A hand-written SLURM script that runs study code takes it from `STUDIES_ROOT`, never from
+   `DISPATCHER_ROOT/studies` (see study 09's `variants/*/*.slurm`).
 4. One-time setup per user: `cp code/hpc/slurm/user.env.example code/hpc/slurm/user.env`
    and edit (`SBATCH_*` vars for sbatch, `CONDA_SH` for env activation).
 5. Credentials on HPC live in files, not the env: W&B in `~/.netrc` (the SDK reads it;
@@ -67,8 +70,8 @@ python code/launch_hpc.py \
   --note "why this run exists + what we want to learn"
 ```
 
-`launch_hpc.py` creates the W&B sweep, injects dispatcher+wrapper git lineage as Hydra
-`+meta.*` overrides, computes `AGENT_COUNT` for grid sweeps, submits the SLURM array,
+`launch_hpc.py` creates the W&B sweep, injects studies + dispatcher + wrapper git lineage as
+Hydra `+meta.*` overrides (`+meta.studies_commit` among them), computes `AGENT_COUNT` for grid sweeps, submits the SLURM array,
 and submits a cleanup job that stops the sweep after the array drains
 (`--no-autostop` to keep it open for more agents).
 

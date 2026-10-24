@@ -29,7 +29,7 @@ below is relative to that repo's root; the launchers stay in the dispatcher.
 
 A producer MUST read runs from a **declared allowlist** of W&B groups
 (`WANDB_GROUPS = [...]` at module level, queried per group, as in
-`studies/01-gru-scaling-law/analysis/nxd_scaling.py`). It must NOT query the whole
+`studies/01-gru-scaling-law/analysis/nxd_scaling.py` / `freeze_nxd.py`). It must NOT query the whole
 project and keep whatever matches its grid.
 
 Why: a project-wide query silently absorbs **any** new run that happens to fit the
@@ -116,15 +116,24 @@ grep -lE 'wandb\.Api\(|^\s*import wandb|from wandb|/allen/|BEAKER_TOKEN' analysi
 ```
 
 - **The `wandb` Python SDK** — `wandb.Api()` cannot start in the sandbox (it spawns a
-  `wandb-core` helper the sandbox blocks). `nxd_scaling.py`, `bootstrap_scaling.py`,
-  `build_report.py`, `generative_match.py`, `mature_fewshot_curve.py`.
-- **The `/allen` mount** — HPC-only. `rl_baseline.py` (needs both).
+  `wandb-core` helper the sandbox blocks). Study 01's `freeze_per_subject.py`,
+  `freeze_rl_baseline.py` (also `/allen`), `freeze_nxd.py`, `freeze_generative.py`;
+  `mature_fewshot_curve.py`.
+- **The `/allen` mount** — HPC-only (`freeze_rl_baseline.py`'s fallback).
 - **Large artifact streaming** — `fetch_gru_history_patterns.py` (`BEAKER_TOKEN`, ~3.1 GB).
+
+**Since dispatcher #177 every study's `make all` is offline, and CI enforces it**
+(`scripts/check_regeneration.py` in the studies repo, no credentials). The live reads above
+live only in `freeze-*` Makefile targets that write a committed frozen JSON — one row per kept
+run, keyed by W&B run id plus the artifact digest (or the `/allen` file's sha256) where a
+table was read — and the producers read only that file. A new producer that needs W&B
+follows the same split: freeze script + offline producer.
 
 Everything else is local, **including W&B reads over GraphQL.** `api.wandb.ai` + `requests`
 works fine in the sandbox and only needs `WANDB_API_KEY` exported — that is what
 `references/wandb-graphql-sandbox.md` is for. Study-02's `scaling.py` pulls W&B this way and
-runs locally; study-01's `nxd_scaling.py` pulls the same data through the SDK and cannot.
+runs locally; study-01's `freeze_nxd.py` pulls the same kind of data through the SDK and
+cannot.
 **Same data, different route, different answer** — so read the import, don't assume from the
 fact that a producer mentions W&B.
 
@@ -132,9 +141,9 @@ Pure formatters are the clear-cut local case: they read the frozen file and rewr
 markers or redraw a figure (`update_final_report_nxd.py`, `update_r8.py`,
 `pswitch_history_patterns.py`, `embedding_param_decode.py`; study-02's `update_reports.py`).
 
-A single `make r<n>` target can span both classes — study-01's `r7` runs `nxd_scaling.py`
-(node) then `rl_baseline.py` (node) then `update_final_report_nxd.py` (local) — so the rule
-is per script, not per target. Run the extraction where it has to run, commit the frozen
+A refresh spans both classes — study-01's `make freeze` (node) rewrites the frozen JSONs,
+then `make r7` (local) runs `nxd_scaling.py`, `rl_baseline.py` and
+`update_final_report_nxd.py` offline — so the rule is per script, not per target. Run the extraction where it has to run, commit the frozen
 file, and do the report step locally off that commit. That split is also what lets someone
 without cluster access reproduce the report half.
 

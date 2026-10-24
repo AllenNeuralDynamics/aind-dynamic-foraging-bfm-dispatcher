@@ -103,10 +103,13 @@ SLURM). They differ only in what identifies a submitted unit:
 | `hpc` | `{"type": "slurm_array_job" \| "slurm_job", "id": "…"}` | recycled, ages out of `sacct` |
 | `none` | *(omit)* | only for `kind="backfill"` |
 
-`launch_hpc.py` currently writes **no** launch record at all, so an HPC intervention must call
-this helper by hand until that launcher is taught to do it.
+`launch_hpc.py` writes the *first* launch's record (`hpc_sweep.json`, dispatcher #176), like the
+Beaker launchers; anything after that, and any hand-run `sbatch` array, is recorded with this
+helper. A hand-run array also needs a record naming its runtime SHAs (`studies_git_commit`,
+`dispatcher_git_commit`, `wrapper_git_commit`, `foraging_models_git_commit` plus `wandb_group`),
+since an intervention record's `_meta` describes the writer, not the job's checkouts.
 
-It wraps `_meta.build_meta()`, so timestamp + dispatcher/wrapper SHAs come for free, and it
+It wraps `_meta.build_meta()`, so timestamp + studies/wrapper SHAs come for free, and it
 **refuses** a record with no `trigger.cause`, an unknown platform/ref type, or a work-submitting
 kind with no `job_refs`.
 

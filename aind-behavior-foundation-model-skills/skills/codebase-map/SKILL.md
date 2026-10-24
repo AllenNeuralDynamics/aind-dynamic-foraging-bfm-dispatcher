@@ -1,11 +1,11 @@
 ---
 name: codebase-map
-description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-disrnn-dispatcher) codebase — the two-repo architecture (dispatcher = control plane, wrapper = training payload), Hydra config layout, where launchers/configs/docs/studies live, and which skill or doc to read next. Use when starting work in this repo, answering "where does X live", or deciding how to run/launch anything.
+description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-disrnn-dispatcher) codebase — the repo architecture (dispatcher = control plane, wrapper = training payload, studies = sweeps/records/analysis), Hydra config layout, where launchers/configs/docs/studies live, and which skill or doc to read next. Use when starting work in this repo, answering "where does X live", or deciding how to run/launch anything.
 ---
 
 # Codebase map — aind-dynamic-foraging-bfm-dispatcher
 
-## Big picture (two-repo architecture)
+## Big picture (dispatcher, wrapper, studies)
 
 - **This repo (dispatcher)** is the *control plane* for the dynamic-foraging-bfm MLOps stack.
   It composes Hydra configs into job specs and submits them to one of three backends:
@@ -46,7 +46,7 @@ description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-d
 
 ## Where knowledge lives (one canonical home per topic)
 
-- **AGENTS.md** — always-loaded terse guardrails (both repos).
+- **AGENTS.md** — always-loaded terse guardrails (dispatcher, wrapper and studies repos each carry one).
 - **This skills pack** — canonical for cross-cutting *operational* knowledge:
   launching (beaker-launch, hpc-launch), study conventions (study-conventions),
   reporting (posthoc-reporting), git/provenance (git-session-isolation), the Claude
