@@ -106,8 +106,10 @@ Merged: models [#77](https://github.com/AllenNeuralDynamics/aind-dynamic-foragin
 wrapper [#100](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/pull/100),
 dispatcher #170 (Stan arm) and #168 (reports r1–r4).
 
-Every launch with a finished run has a `results.md` beside its launch record. Left before the
-study is closed: record the verdict on #72 and close it.
+Every launch with a finished run has a `results.md` beside its launch record, and the verdict is
+recorded on [#72](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/72#issuecomment-6378130737).
+Wrap-up checks, 2026-10-23: `validate_provenance.py --strict` is clean for all 19 launch groups
+of both variants, and `make all` regenerates every report byte-identically (see CHANGELOG).
 
 Per-variant state, in the variant's own notes — this README would only rot as a second copy:
 
