@@ -36,6 +36,7 @@ yardstick for whether a difference means anything.
 | variant | what differs | status |
 |---|---|---|
 | [`one-stage-ladder`](variants/one-stage-ladder/notes.md) | `subject_ratio` 0.016/0.049/0.163/0.489/1.0 → D≈10/30/100/300/614, one-stage estimator | see notes |
+| [`stan-arm`](variants/stan-arm/notes.md) | same model and sampler settings, fit with pystan on HPC CPUs; population-only, no held-out scoring, so not a rung | see notes |
 
 The status and W&B-group columns used to be filled in here as well as in the variant's
 notes, and duplication did exactly what the Status section below predicts: this table read
@@ -93,10 +94,28 @@ a fallback for scales where the joint fit will not converge. Override with
 
 ## Status
 
-Per-variant, in the variant's own notes — this README would only rot as a second copy:
+**Study level, 2026-10-23: all compute is done, the code and reports are merged, and the
+study is closing; nothing is running or planned.** The result is negative: no HB rung passes
+the convergence gates, and the D≈99, 300 and 614 chains did not mix, so the HB ladder does
+not yield a usable scaling curve with this sampler. The Stan arm measured the D≈29 cost
+(#129, closed); no Stan D≈99 fit completed. Numbers are in the reports
+([`analysis/reports/`](analysis/reports/INDEX.md), r4 for convergence and sampler cost), not
+here.
+
+Merged: models [#77](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-models/pull/77),
+wrapper [#100](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper/pull/100),
+dispatcher #170 (Stan arm) and #168 (reports r1–r4).
+
+Every launch with a finished run has a `results.md` beside its launch record, and the verdict is
+recorded on [#72](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/issues/72#issuecomment-6378130737).
+Wrap-up checks, 2026-10-23: `validate_provenance.py --strict` is clean for all 19 launch groups
+of both variants, and `make all` regenerates every report byte-identically (see CHANGELOG).
+
+Per-variant state, in the variant's own notes — this README would only rot as a second copy:
 
 | variant | status |
 |---|---|
 | [`one-stage-ladder`](variants/one-stage-ladder/notes.md) | see notes |
+| [`stan-arm`](variants/stan-arm/notes.md) | see notes |
 
 Live plan and open items: dispatcher issue #72.

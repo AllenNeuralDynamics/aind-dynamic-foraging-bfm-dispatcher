@@ -2,6 +2,16 @@
 
 One entry per merged PR (or coherent unreleased batch).
 
+## 2026-10-23: status records that the study is closing
+
+- Wrap-up checks, run on a compute node (`srun`, env `dynamic-foraging-bfm-cpu`) from a clean worktree of this branch:
+  - `validate_provenance.py --strict` passes for every launch group: 13 Beaker groups with `--beaker`, 4 of them in W&B project `test`; the 2026-08-29 SLURM relaunch group, offline only; and the 5 Stan groups with `--wandb`. Every Beaker experiment and W&B sweep found for a group is recorded.
+  - `make all` twice: the two runs differ only in `_meta`, and the four reports are byte-identical to the committed ones. Against the committed data files, `per_mouse.json`, `shrinkage.json` and `shrinkage.csv` differ only in the 15th–16th significant digit (cross-machine floating-point noise), so they are not recommitted.
+- Not done, on purpose: crashed W&B runs are kept, because `wandb_keys.py` keeps the crashed groups for the crash history. The variant-root `sweep_*.yaml` are the templates the README's commands use, and each launch's copy is already in its launch-record folder, so nothing is moved under `_sweeps/`.
+- README `## Status` now states the study-level position: all compute done, the negative verdict, the merged PRs, and what is left (the verdict on #72). The Variants index and Status tables list `stan-arm`.
+- `stan-arm/notes.md` gives the variant's end state instead of pointing at the launch records; `one-stage-ladder/notes.md` links r4 in place rather than the merged PR.
+- `results.md` stubs for every launch with a finished run: the six counted `one-stage-ladder` Beaker launches, the smoke and the three seed-0 repro launches (W&B project `test`), and the counted Stan group. Times are from Beaker and `sacct`; numbers are from `analysis/hb_runs.json` and `analysis/convergence.json`, except the smoke and repro likelihoods, which were read from W&B on 2026-10-23. The three repro runs give the same matched held-out likelihood to every digit.
+
 ## 2026-10-14 (third round): Stan diagnostics corrected, freezer inputs pinned
 
 - **Stan R-hat and ESS were wrong, and r4's Stan comparison is redone.** The Stan trainer reshaped PyStan's flat draw axis chain-major; PyStan's axis is draw-major with the chain innermost, so the four chains were mixed. The one finished Stan run (D=29) logged lowest bulk ESS 7007 and R-hat 1.0049 to W&B; from its saved draws with the correct axis they are 1220 and 1.0030. `analysis/recompute_stan_diagnostics.py` recomputes them from `analysis/stan_inputs/` (pinned by sha256; the file's recorded fit time equals the W&B run's), and the wrong-axis computation reproduces the logged values exactly from the same draws. `convergence.py` reads the recomputed values; `hb_runs.json` keeps the logged ones as recorded. Stan against NumPyro at D = 29 is now 1.36x ESS per draw (was 7.8x), 2.3x wall time, 0.59x ESS per second (was 3.4x). Stan's 23 divergences are unchanged. The earlier 7.8x and 3.4x are retracted.
