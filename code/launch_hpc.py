@@ -21,6 +21,10 @@ This launcher does three things:
        +meta.wrapper_git_commit       wrapper SHA used by run_hpc
        +meta.wrapper_git_branch       wrapper branch used by run_hpc
        +meta.wrapper_git_dirty        wrapper dirty flag
+       +meta.studies_commit           SHA of the repo holding the sweep (the studies
+                                      repo after #124; the dispatcher before it)
+       +meta.studies_git_branch       its branch
+       +meta.studies_git_dirty        its dirty flag (whole checkout)
        +meta.sweep_yaml               sweep YAML path, relative to dispatcher root
        +meta.owner                    Unix user who launched the sweep
        +meta.launcher_cmd             exact argv used to invoke this launcher
@@ -34,6 +38,14 @@ This launcher does three things:
 
 3. Creates the sweep via ``wandb sweep`` (using a temp YAML patched with the
    lineage fields) and submits a SLURM array job of agents.
+4. Writes ``hpc_sweep.json`` (+ a copy of the sweep YAML) to ``--output-dir``
+   (default ``results/hpc_<launch_id>/`` under the dispatcher root) with the W&B
+   sweep id, the SLURM ids and the two-root provenance block from
+   ``code/provenance.py`` -- the HPC counterpart of ``beaker_resumable.json``.
+   Copy it into the variant's ``launch_record/`` like the Beaker one.
+
+A sweep whose ``studies/<study>/`` directory has uncommitted changes is refused
+(``--diagnostic-dirty-ok REASON`` overrides, and records the reason).
 
 Notes on W&B sweep behavior:
     - When running under a sweep, W&B ignores per-run ``wandb.entity`` and
@@ -55,10 +67,12 @@ import argparse
 import datetime as _dt
 import getpass
 import hashlib
+import json
 import math
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -66,6 +80,10 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import yaml
+
+from provenance import (
+    DirtyStudiesError, check_studies_clean, launch_provenance, record_fields,
+)
 
 
 def _parse_sweep_id(stdout: str, stderr: str) -> str | None:
@@ -209,6 +227,57 @@ def _git_info(repo_root: Path) -> dict[str, str]:
 def _seattle_launch_id() -> str:
     """Readable, unique-per-launch id = Seattle local timestamp."""
     return _dt.datetime.now(ZoneInfo("America/Los_Angeles")).strftime("%Y%m%d-%H%M%S")
+
+
+def _studies_lineage(provenance: dict) -> dict[str, str]:
+    """The ``+meta.*`` fields naming the checkout that held the sweep (see ``provenance.py``).
+
+    ``studies_commit`` is the key the wrapper also fills from ``BFM_META_STUDIES_COMMIT`` on
+    Beaker, so both routes land on one name; branch/dirty follow this launcher's existing
+    ``*_git_branch`` / ``*_git_dirty`` convention.
+    """
+    return {
+        "studies_commit": provenance.get("studies_git_commit") or "unknown",
+        "studies_git_branch": provenance.get("studies_git_branch") or "unknown",
+        "studies_git_dirty": "yes" if provenance.get("studies_git_dirty") else "no",
+    }
+
+
+def _save_record(
+    output_dir: Path, *, sweep_file: Path, sweep_path: str | None, group: str,
+    array_jobid: str | None, autostop_jobid: str | None, n_array_tasks: int,
+    agent_count: int, mode: str, provenance: dict, dirty_override: dict | None,
+) -> dict:
+    """Write ``hpc_sweep.json`` + a copy of the sweep YAML; the HPC launch record.
+
+    ``wandb_sweep_id`` (the short id) is the durable handle the provenance validator
+    reconciles against W&B; SLURM ids are recycled and age out of ``sacct``.
+    ``dispatcher_commit`` is kept alongside ``dispatcher_git_commit`` because the validator
+    and older readers key on it.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(sweep_file, output_dir / Path(sweep_file).name)
+    entity_project, _, sweep_short = (sweep_path or "").rpartition("/")
+    record = {
+        "mode": "hpc-sweep",
+        "wandb_group": group,
+        "wandb_sweep_id": sweep_short or None,
+        "wandb_sweep_path": sweep_path,
+        "sweep_url": (f"https://wandb.ai/{entity_project}/sweeps/{sweep_short}"
+                      if sweep_path else None),
+        "slurm_array_job_id": array_jobid,
+        "slurm_autostop_job_id": autostop_jobid,
+        "n_array_tasks": n_array_tasks,
+        "agent_count": agent_count,
+        "slurm_mode": mode,
+        "dispatcher_commit": provenance.get("dispatcher_git_commit"),
+        **record_fields(provenance, dirty_override),
+        "sweep_file": str(sweep_file),
+        "created_utc": _dt.datetime.now(_dt.timezone.utc).isoformat(),
+    }
+    (output_dir / "hpc_sweep.json").write_text(json.dumps(record, indent=2) + "\n")
+    print(f"Saved launch record: {output_dir / 'hpc_sweep.json'}")
+    return record
 
 
 def _study_variant(sweep_path: Path) -> tuple[str, str]:
@@ -449,6 +518,23 @@ def main() -> None:
         default=None,
         help="Free-text background + intent (stamped to W&B meta.note).",
     )
+    parser.add_argument(
+        "--output-dir",
+        default=None,
+        help=(
+            "Directory for hpc_sweep.json and the sweep copy (the launch record). "
+            "Defaults to results/hpc_<launch_id>/ under the dispatcher root."
+        ),
+    )
+    parser.add_argument(
+        "--diagnostic-dirty-ok",
+        default=None,
+        metavar="REASON",
+        help=(
+            "Launch even though studies/<study>/ has uncommitted changes; REASON is "
+            "written into the launch record (diagnostic runs only, never a result)."
+        ),
+    )
     args = parser.parse_args()
 
     repo_root = Path(__file__).resolve().parents[1]
@@ -537,6 +623,24 @@ def main() -> None:
         "BFM_META_LAUNCH_ID": launch_id,
         "BFM_META_CONFIG_HASH": config_hash,
     }
+    # Two-root provenance (#172): the checkout holding the sweep and the one running this
+    # launcher are recorded separately, because after the studies split (#124) they differ.
+    wrapper_git = _git_info(wrapper_root)
+    provenance = launch_provenance(
+        sweep_yaml, repo_root,
+        {"aind-dynamic-foraging-bfm-wrapper": wrapper_git["commit"]},
+    )
+    try:
+        dirty_override = check_studies_clean(provenance, args.diagnostic_dirty_ok)
+    except DirtyStudiesError as exc:
+        raise SystemExit(f"Refusing to launch: {exc}")
+    if provenance.get("studies_git_commit"):
+        provenance_env["BFM_META_STUDIES_COMMIT"] = provenance["studies_git_commit"]
+    output_dir = (
+        Path(args.output_dir).expanduser().resolve()
+        if args.output_dir
+        else repo_root / "results" / f"hpc_{launch_id}"
+    )
 
     print(
         f"Study provenance: study={study} variant={variant} "
@@ -565,6 +669,8 @@ def main() -> None:
             dry_sbatch_cmd.extend(shlex.split(args.sbatch_extra))
         dry_sbatch_cmd.extend([str(slurm_script), "<SWEEP_ID>"])
         print("Running:", " ".join(shlex.quote(x) for x in dry_sbatch_cmd))
+        print("Launch record provenance (what hpc_sweep.json would carry):")
+        print(json.dumps(record_fields(provenance, dirty_override), indent=2))
         print("Dry-run mode enabled; skipping sweep creation and sbatch submit.")
         return
 
@@ -573,7 +679,6 @@ def main() -> None:
     # command list, so every run in this sweep carries lineage in its W&B
     # config (filterable in the Sweeps/Runs view).
     dispatcher_git = _git_info(repo_root)
-    wrapper_git = _git_info(wrapper_root)
     launcher_cmd = " ".join(shlex.quote(a) for a in sys.argv)
     lineage = {
         "study": study,
@@ -586,6 +691,7 @@ def main() -> None:
         "wrapper_git_commit": wrapper_git["commit"],
         "wrapper_git_branch": wrapper_git["branch"],
         "wrapper_git_dirty": wrapper_git["dirty"],
+        **_studies_lineage(provenance),
         "sweep_yaml": _path_for_meta(sweep_yaml, repo_root),
         "owner": getpass.getuser(),
         "launcher_cmd": launcher_cmd,
@@ -665,22 +771,22 @@ def main() -> None:
     if sbatch_result.returncode != 0:
         raise RuntimeError("sbatch command failed")
 
+    array_jobid_match = re.search(r"Submitted batch job\s+(\d+)", sbatch_result.stdout)
+    array_jobid = array_jobid_match.group(1) if array_jobid_match else None
+    autostop_jobid = None
+
     # Submit the auto-stop cleanup job: a tiny task that calls
     # `wandb sweep --stop <id>` once every agent-array task has reached a
     # terminal state. Uses --dependency=afterany so a partially-failed sweep
     # still gets marked Finished (no further agents will claim work either way).
     if not args.no_autostop:
-        array_jobid_match = re.search(
-            r"Submitted batch job\s+(\d+)", sbatch_result.stdout
-        )
-        if not array_jobid_match:
+        if not array_jobid:
             print(
                 "WARNING: could not parse array job ID from sbatch output; "
                 "skipping auto-stop. Run `wandb sweep --stop "
                 f"{sweep_id}` manually after the sweep drains."
             )
         else:
-            array_jobid = array_jobid_match.group(1)
             stop_script = repo_root / "code" / "hpc" / "slurm" / "wandb_sweep_stop.slurm"
             stop_cmd = [
                 "sbatch",
@@ -706,6 +812,16 @@ def main() -> None:
                     "WARNING: cleanup sbatch failed; run "
                     f"`wandb sweep --stop {sweep_id}` manually after the sweep drains."
                 )
+            else:
+                stop_match = re.search(r"Submitted batch job\s+(\d+)", stop_result.stdout)
+                autostop_jobid = stop_match.group(1) if stop_match else None
+
+    _save_record(
+        output_dir, sweep_file=sweep_yaml, sweep_path=sweep_id, group=group,
+        array_jobid=array_jobid, autostop_jobid=autostop_jobid,
+        n_array_tasks=num_array_tasks, agent_count=computed_agent_count, mode=args.mode,
+        provenance=provenance, dirty_override=dirty_override,
+    )
 
     # If the user opted out of auto-stop, remind them how to mark the sweep
     # finished manually after their bounded runs complete.

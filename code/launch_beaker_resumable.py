@@ -53,6 +53,10 @@ import yaml
 # Library-only Beaker client (beaker-py) -- no `beaker` CLI dependency; see
 # code/beaker_client.py docstring for why.
 from beaker_client import pin_runtime_refs, submit_beaker_experiment
+from provenance import (
+    DirtyStudiesError, check_studies_clean, launch_provenance, record_fields,
+    runtime_shas_from_pins, with_runtime_shas,
+)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 # Where the launch record is written. /results is the Code Ocean capsule path; it does not
@@ -140,8 +144,13 @@ def _study_variant(sweep_path: Path) -> tuple[str, str]:
 
 
 def build_spec(sweep_file: str, experiment_file: str, label: str | None = None,
-               note: str | None = None) -> dict:
-    """Expand a grid sweep + experiment template into a multi-task Beaker spec."""
+               note: str | None = None, provenance: dict | None = None) -> dict:
+    """Expand a grid sweep + experiment template into a multi-task Beaker spec.
+
+    ``provenance`` is the ``launch_provenance`` block for this sweep; computed here when not
+    given, so the studies commit reaches the wrapper (``BFM_META_STUDIES_COMMIT``) on every
+    route through this function.
+    """
     sweep = yaml.safe_load(Path(sweep_file).read_text())
     if sweep.get("method") != "grid":
         sys.exit(f"[resumable] only method: grid is supported, got {sweep.get('method')!r}")
@@ -175,12 +184,17 @@ def build_spec(sweep_file: str, experiment_file: str, label: str | None = None,
     config_hash = hashlib.sha1(sweep_path.read_bytes()).hexdigest()[:8]
     group = f"{variant}@{launch_id}"            # W&B group = this launch (pseudo-sweep)
     id_base = _slug(f"{variant}-{launch_id}")    # slug-safe base for task names + run ids
+    provenance = provenance or launch_provenance(sweep_path, REPO_ROOT)
     meta_env = [
         {"name": "BFM_META_STUDY", "value": study},
         {"name": "BFM_META_VARIANT", "value": variant},
         {"name": "BFM_META_LAUNCH_ID", "value": launch_id},
         {"name": "BFM_META_CONFIG_HASH", "value": config_hash},
     ]
+    if provenance.get("studies_git_commit"):
+        # Which studies commit held this sweep -- distinct from DISPATCHER_REF (the
+        # launcher) once studies/ lives in its own repository (#124).
+        meta_env.append({"name": "BFM_META_STUDIES_COMMIT", "value": provenance["studies_git_commit"]})
     if label:
         meta_env.append({"name": "BFM_META_LABEL", "value": label})
     if note:
@@ -227,6 +241,7 @@ def build_spec(sweep_file: str, experiment_file: str, label: str | None = None,
             "BFM_RESUMABLE_OUTPUT_DIR", "WANDB_RUN_ID", "WANDB_RESUME", "WANDB_RUN_GROUP",
             "BFM_META_STUDY", "BFM_META_VARIANT", "BFM_META_LAUNCH_ID",
             "BFM_META_CONFIG_HASH", "BFM_META_LABEL", "BFM_META_NOTE",
+            "BFM_META_STUDIES_COMMIT",
         }
         env = [e for e in task.get("envVars", []) if e.get("name") not in managed]
         env.extend([
@@ -257,15 +272,27 @@ def submit(spec: dict, workspace: str, output_dir: Path) -> str | None:
     return experiment_id
 
 
-def save_record(sweep_file: str, experiment_id: str | None, n_tasks: int, output_dir: Path) -> None:
+def save_record(sweep_file: str, experiment_id: str | None, n_tasks: int, output_dir: Path,
+                provenance: dict | None = None, runtime_shas: dict | None = None,
+                dirty_override: dict | None = None) -> None:
+    """Write ``beaker_resumable.json`` (+ a copy of the sweep) to ``output_dir``.
+
+    Carries the two-root provenance block (studies / dispatcher / wrapper / foraging-models
+    SHAs, see ``provenance.py``). ``dispatcher_commit`` is kept alongside
+    ``dispatcher_git_commit`` because the provenance validator and older readers key on it.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(sweep_file, output_dir / Path(sweep_file).name)
+    if provenance is None:
+        provenance = launch_provenance(Path(sweep_file), REPO_ROOT)
+    provenance = with_runtime_shas(provenance, runtime_shas)
     record = {
         "mode": "resumable-grid",
         "n_tasks": n_tasks,
         "experiment_id": experiment_id,
         "experiment_url": f"https://beaker.org/ex/{experiment_id}" if experiment_id else None,
-        "dispatcher_commit": _git_sha(REPO_ROOT),
+        "dispatcher_commit": provenance.get("dispatcher_git_commit") or _git_sha(REPO_ROOT),
+        **record_fields(provenance, dirty_override),
         "sweep_file": str(sweep_file),
         "created_utc": datetime.now(timezone.utc).isoformat(),
     }
@@ -288,14 +315,24 @@ def main() -> None:
                    help="optional human label for this launch (stamped to W&B meta.label)")
     p.add_argument("--note", default=None,
                    help="free-text background + what we want to learn (stamped to W&B meta.note)")
+    p.add_argument("--diagnostic-dirty-ok", default=None, metavar="REASON",
+                   help="launch even though studies/<study>/ has uncommitted changes; REASON is "
+                        "written into the launch record (diagnostic runs only, never a result)")
     args = p.parse_args()
 
     output_dir = Path(args.output_dir)
-    spec = build_spec(args.sweep, args.experiment, label=args.label, note=args.note)
+    provenance = launch_provenance(Path(args.sweep), REPO_ROOT)
     try:
-        pin_runtime_refs(spec)
+        dirty_override = check_studies_clean(provenance, args.diagnostic_dirty_ok)
+    except DirtyStudiesError as exc:
+        sys.exit(f"[resumable] refusing to launch: {exc}")
+    spec = build_spec(args.sweep, args.experiment, label=args.label, note=args.note,
+                      provenance=provenance)
+    try:
+        pins = pin_runtime_refs(spec)
     except (RuntimeError, ValueError) as exc:
         sys.exit(f"[resumable] runtime ref resolution failed: {exc}")
+    provenance = with_runtime_shas(provenance, runtime_shas_from_pins(pins))
     n_tasks = len(spec["tasks"])
     print(f"[resumable] expanded grid into {n_tasks} tasks")
 
@@ -308,7 +345,8 @@ def main() -> None:
     else:
         experiment_id = submit(spec, args.workspace, output_dir)
 
-    save_record(args.sweep, experiment_id, n_tasks, output_dir)
+    save_record(args.sweep, experiment_id, n_tasks, output_dir,
+                provenance=provenance, dirty_override=dirty_override)
     print("[resumable] done")
 
 

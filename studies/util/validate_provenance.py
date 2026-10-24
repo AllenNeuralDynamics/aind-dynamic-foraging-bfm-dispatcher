@@ -64,7 +64,12 @@ def check_records_parse(records: list[dict], findings: list) -> None:
     # only to the ones reached while reporting legacy files.
     for r in records:
         if r.get("_schema") == "launcher":
-            required = ("experiment_id", "created_utc", "sweep_file", "n_tasks")
+            if r.get("mode") == "hpc-sweep":
+                required = ("wandb_sweep_id", "created_utc", "sweep_file")
+            elif "sweep_id" in r and "mode" not in r:        # launch_beaker.py (native route)
+                required = ("sweep_id", "created_utc", "sweep_file")
+            else:
+                required = ("experiment_id", "created_utc", "sweep_file", "n_tasks")
             missing = [key for key in required if not r.get(key)]
             if missing or not re.fullmatch(r"[0-9a-f]{40}", r.get("dispatcher_commit") or ""):
                 _finding(findings, "ERROR", "records",

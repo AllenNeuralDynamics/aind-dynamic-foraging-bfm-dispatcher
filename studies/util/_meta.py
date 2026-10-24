@@ -21,28 +21,99 @@ Times stamped in America/Los_Angeles per AGENTS.md section 7.
 from __future__ import annotations
 
 import datetime
+import json
 import re
 import subprocess
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+_FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
-def _git_sha() -> str | None:
-    """Best-effort `git rev-parse HEAD`; returns None outside a git checkout.
+# _meta key -> the launch-record keys that hold that repo's SHA, newest schema first, then
+# the legacy launcher key, then the `launch.revisions` block hand-written records carry.
+_SOURCE_SHA_KEYS = {
+    "source_studies_git_shas": ("studies_git_commit",),
+    "source_dispatcher_git_shas": ("dispatcher_git_commit", "dispatcher_commit"),
+    "source_wrapper_git_shas": ("wrapper_git_commit", "wrapper_commit"),
+    "source_foraging_models_git_shas": ("foraging_models_git_commit", "foraging_models_commit"),
+}
 
-    `git rev-parse` walks up to the repo root, so running it from studies/util
-    (or any subdir) returns the same dispatcher HEAD.
+
+def _git(*args: str) -> str | None:
+    """Best-effort git query from this file's directory; None outside a checkout.
+
+    `git` walks up to the repo root, so running it from studies/util (or any subdir)
+    describes the checkout that holds the studies -- the dispatcher before the split
+    (#124), the studies repository after it. It is therefore recorded as `studies_git_sha`,
+    never as the dispatcher's.
     """
     try:
-        sha = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"],
-            stderr=subprocess.DEVNULL,
-            text=True,
-            cwd=Path(__file__).parent,
-        ).strip()
-        return sha or None
+        out = subprocess.run(
+            ["git", *args], capture_output=True, text=True, cwd=Path(__file__).parent, timeout=10,
+        )
     except Exception:
         return None
+    return out.stdout.strip() if out.returncode == 0 else None
+
+
+def _studies_state() -> tuple[str | None, bool | None]:
+    sha = _git("rev-parse", "HEAD")
+    status = _git("status", "--porcelain")
+    return (sha or None), (None if status is None else bool(status))
+
+
+def _record_groups(record: dict) -> set[str]:
+    groups = set()
+    for key in ("wandb_group", "group"):
+        if isinstance(record.get(key), str):
+            groups.add(record[key])
+    groups.update((record.get("_meta") or {}).get("wandb_groups") or [])
+    launch = record.get("launch") or {}
+    if isinstance(launch, dict):
+        g = (launch.get("wandb") or {}).get("group") if isinstance(launch.get("wandb"), dict) else None
+        if isinstance(g, str):
+            groups.add(g)
+    return groups
+
+
+def _source_shas(study_root: Path | None, wandb_groups: list[str]) -> tuple[dict, list[str]]:
+    """Per-repo SHAs of the launches that produced ``wandb_groups``, from their launch records.
+
+    The arrays are what makes an analysis traceable to the exact code that produced the runs
+    it reads, once that code lives in two or three repositories. A group with no record gets
+    no guessed value -- it is listed in the findings so the gap is visible in the artifact.
+    """
+    found = {key: set() for key in _SOURCE_SHA_KEYS}
+    covered: set[str] = set()
+    wanted = set(wandb_groups)
+    findings: list[str] = []
+    if study_root is None:
+        findings.append("no study_root given, so source launch records were not read")
+    else:
+        for path in sorted(Path(study_root).glob("variants/*/launch_record*/**/*.json")):
+            try:
+                rec = json.loads(path.read_text())
+            except (OSError, json.JSONDecodeError):
+                continue
+            if not isinstance(rec, dict):
+                continue
+            groups = _record_groups(rec) & wanted
+            if not groups:
+                continue
+            covered |= groups
+            revisions = (rec.get("launch") or {}).get("revisions") if isinstance(rec.get("launch"), dict) else None
+            sources = [rec] + ([revisions] if isinstance(revisions, dict) else [])
+            for key, aliases in _SOURCE_SHA_KEYS.items():
+                for src in sources:
+                    for alias in aliases:
+                        values = src.get(alias)
+                        for v in (values if isinstance(values, list) else [values]):
+                            if isinstance(v, str) and _FULL_SHA.fullmatch(v):
+                                found[key].add(v)
+    missing = sorted(wanted - covered)
+    if missing and study_root is not None:
+        findings.append("no launch record found for W&B group(s): " + ", ".join(missing))
+    return {key: sorted(v) for key, v in found.items()}, findings
 
 
 def _wrapper_sha(study_root: Path) -> str | None:
@@ -70,14 +141,23 @@ def build_meta(produced_by: str, wandb_groups: list[str], study_root: Path | str
         produced_by: path to the producer script, relative to the study root
             (e.g. ``"analysis/scaling.py"``).
         wandb_groups: W&B group names this run pulled data from.
-        study_root: path to ``studies/<study>/`` (where environment.lock lives).
-            If None, the wrapper sha is omitted (best-effort).
+        study_root: path to ``studies/<study>/`` (where environment.lock and the variants'
+            launch records live). If None, the wrapper sha and the ``source_*_git_shas``
+            arrays are omitted, and ``provenance_findings`` says so.
     """
     now_pt = datetime.datetime.now(ZoneInfo("America/Los_Angeles"))
+    studies_sha, studies_dirty = _studies_state()
+    root = Path(study_root) if study_root else None
+    sources, findings = _source_shas(root, list(wandb_groups))
     return {
         "produced_by": produced_by,
         "produced_at_pt": now_pt.isoformat(timespec="seconds"),
-        "dispatcher_git_sha": _git_sha(),
+        # The checkout this producer ran from (studies repo after #124). Pre-split outputs
+        # carried this value as `dispatcher_git_sha`; new outputs name what it is.
+        "studies_git_sha": studies_sha,
+        "studies_git_dirty": studies_dirty,
         "wrapper_git_sha": _wrapper_sha(study_root) if study_root else None,
         "wandb_groups": list(wandb_groups),
+        **sources,
+        "provenance_findings": findings,
     }

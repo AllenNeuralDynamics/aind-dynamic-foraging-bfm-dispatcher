@@ -1,0 +1,173 @@
+"""Launch-time git provenance shared by the dispatcher launchers (dispatcher #172).
+
+Why two roots. Until the studies split (#124) the sweep YAML and the launcher lived in one
+repository, so one SHA located both. After it, a launch record has to answer two questions
+separately: which *studies* commit held the sweep that was launched, and which *dispatcher*
+commit ran the launcher. Field names follow ``docs/repo-split-plan.md`` § "Cross-repo
+provenance contract". Pre-split both roots resolve to the same repository and every new
+field equals the old ``dispatcher_commit``; the values only diverge once the sweep lives
+elsewhere, which is the point.
+
+Dirty checkouts. A launch from an uncommitted sweep cannot be reproduced from any SHA, so
+:func:`check_studies_clean` refuses it unless a diagnostic-only override is given, and the
+override is written into the record. The scope is the *study directory*
+(``studies/<study>/``), not the whole checkout: an unrelated edit elsewhere does not change
+what was launched, and pre-split the whole checkout is the dispatcher, where uncommitted
+work is routine. The whole-root flag is still recorded. Decided 2026-10-23; see the plan's
+"Resolved decisions".
+
+Only the stdlib and ``git`` on PATH; importable from any launcher without network access.
+"""
+from __future__ import annotations
+
+import re
+import subprocess
+from pathlib import Path
+
+_FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
+
+# repo name as used in beaker_client.RUNTIME_REF_REPOSITORIES -> record field
+RUNTIME_SHA_FIELDS = {
+    "aind-dynamic-foraging-bfm-wrapper": "wrapper_git_commit",
+    "aind-dynamic-foraging-models": "foraging_models_git_commit",
+}
+
+
+class DirtyStudiesError(RuntimeError):
+    """The study directory holding the sweep has uncommitted changes."""
+
+
+def _git(cwd: Path, *args: str, strip: bool = True) -> str | None:
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(cwd), *args], capture_output=True, text=True, timeout=10,
+        )
+    except Exception:
+        return None
+    if out.returncode != 0:
+        return None
+    return out.stdout.strip() if strip else out.stdout
+
+
+def git_state(path: Path | str) -> dict:
+    """``root``/``commit``/``branch``/``dirty`` of the repository containing ``path``.
+
+    ``path`` may be a file or a directory. Outside a checkout every value is None; ``dirty``
+    is a bool (whole working tree) when known.
+    """
+    p = Path(path).resolve()
+    top = _git(p if p.is_dir() else p.parent, "rev-parse", "--show-toplevel")
+    if not top:
+        return {"root": None, "commit": None, "branch": None, "dirty": None}
+    root = Path(top)
+    status = _git(root, "status", "--porcelain")
+    return {
+        "root": str(root),
+        "commit": _git(root, "rev-parse", "HEAD"),
+        "branch": _git(root, "rev-parse", "--abbrev-ref", "HEAD"),
+        "dirty": None if status is None else bool(status),
+    }
+
+
+def study_dir(sweep_path: Path | str) -> Path:
+    """``studies/<study>/`` containing the sweep, or the sweep's own directory off that layout."""
+    p = Path(sweep_path).resolve()
+    parts = p.parts
+    if "studies" in parts and parts.index("studies") + 1 < len(parts):
+        return Path(*parts[: parts.index("studies") + 2])
+    return p.parent
+
+
+def dirty_paths(root: Path | str, subdir: Path | str) -> list[str]:
+    """Paths under ``subdir`` with uncommitted changes (``git status --porcelain -- subdir``)."""
+    # -z: NUL-separated `XY path` entries; not stripped, because XY may start with a space.
+    status = _git(Path(root), "status", "--porcelain", "-z", "--", str(subdir), strip=False)
+    if not status:
+        return []
+    return [entry[3:] for entry in status.split("\0") if len(entry) > 3]
+
+
+def runtime_shas_from_pins(resolved: dict[tuple[str, str], str]) -> dict[str, str | list[str]]:
+    """``{repo_name: sha}`` from ``beaker_client.pin_runtime_refs``'s ``{(repo, ref): sha}``.
+
+    A repo pinned at two different refs within one spec is recorded as a sorted list rather
+    than silently picking one.
+    """
+    by_repo: dict[str, set[str]] = {}
+    for (repo, _ref), sha in resolved.items():
+        by_repo.setdefault(repo, set()).add(sha)
+    return {repo: (next(iter(s)) if len(s) == 1 else sorted(s)) for repo, s in by_repo.items()}
+
+
+def launch_provenance(
+    sweep_path: Path | str,
+    dispatcher_root: Path | str,
+    runtime_shas: dict[str, str | list[str] | None] | None = None,
+) -> dict:
+    """The contract's launch-record fields for one launch.
+
+    ``runtime_shas`` maps repo name (``aind-dynamic-foraging-bfm-wrapper``,
+    ``aind-dynamic-foraging-models``) to the full SHA the launcher resolved for the job; a
+    value that is not a full SHA is recorded as None rather than as a branch name.
+    """
+    studies = git_state(sweep_path)
+    dispatcher = git_state(dispatcher_root)
+    study = study_dir(sweep_path)
+    out = {
+        "studies_git_root": studies["root"],
+        "studies_git_commit": studies["commit"],
+        "studies_git_branch": studies["branch"],
+        "studies_git_dirty": studies["dirty"],
+        "studies_dirty_paths": dirty_paths(studies["root"], study) if studies["root"] else [],
+        "dispatcher_git_commit": dispatcher["commit"],
+        "dispatcher_git_branch": dispatcher["branch"],
+        "dispatcher_git_dirty": dispatcher["dirty"],
+    }
+    for repo, field in RUNTIME_SHA_FIELDS.items():
+        value = (runtime_shas or {}).get(repo)
+        if isinstance(value, list):
+            out[field] = [v for v in value if _FULL_SHA.fullmatch(str(v))] or None
+        else:
+            out[field] = value if value and _FULL_SHA.fullmatch(str(value)) else None
+    return out
+
+
+def with_runtime_shas(provenance: dict, runtime_shas: dict | None) -> dict:
+    """``provenance`` with the wrapper / foraging-models fields filled from ``runtime_shas``."""
+    if not runtime_shas:
+        return dict(provenance)
+    out = dict(provenance)
+    for repo, field in RUNTIME_SHA_FIELDS.items():
+        value = runtime_shas.get(repo)
+        if isinstance(value, list):
+            out[field] = [v for v in value if _FULL_SHA.fullmatch(str(v))] or None
+        elif value and _FULL_SHA.fullmatch(str(value)):
+            out[field] = value
+    return out
+
+
+def check_studies_clean(provenance: dict, override_reason: str | None) -> dict | None:
+    """Refuse a launch whose study directory is dirty, unless ``override_reason`` is given.
+
+    Returns the override block to write into the record (``None`` when nothing was dirty), or
+    raises :class:`DirtyStudiesError`.
+    """
+    paths = provenance.get("studies_dirty_paths") or []
+    if not paths:
+        return None
+    if override_reason:
+        return {"reason": override_reason, "paths": list(paths)}
+    shown = "\n  ".join(paths[:20]) + ("\n  ..." if len(paths) > 20 else "")
+    raise DirtyStudiesError(
+        "the study directory has uncommitted changes, so this launch could not be "
+        "reproduced from any commit:\n  " + shown + "\nCommit (or stash) them, or pass "
+        "--diagnostic-dirty-ok '<reason>' for a diagnostic run; the reason is written "
+        "into the launch record."
+    )
+
+
+def record_fields(provenance: dict, dirty_override: dict | None) -> dict:
+    """The provenance block as written into a launch record."""
+    out = {k: v for k, v in provenance.items() if k != "studies_git_root"}
+    out["studies_dirty_override"] = dirty_override
+    return out
