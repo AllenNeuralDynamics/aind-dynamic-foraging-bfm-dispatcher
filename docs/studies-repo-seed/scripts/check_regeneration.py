@@ -8,8 +8,11 @@ from committed frozen inputs; two runs differ only in `_meta`). It runs each stu
   * `_meta` blocks in JSON are ignored (timestamps, checkout SHA, dirty flag);
   * numbers in JSON and CSV are compared with a relative tolerance, because the same
     producer on another machine can differ in the 15th significant digit;
-  * rendered images (PNG / SVG / PDF) are ignored: their bytes depend on the plotting
-    stack, and the numbers behind them are checked through the JSON / CSV;
+  * rendered images (PNG / SVG / PDF) must exist in both HEAD and the regenerated tree,
+    but their bytes are ignored: they depend on the plotting stack, and the numbers behind
+    them are checked through the JSON / CSV;
+  * HEAD's side is read through git's checkout filters, so LFS-tracked JSON is compared
+    as content, not as its pointer;
   * everything else (report text inside the BEGIN/END markers, CSV rows, JSON keys) must
     match exactly.
 
@@ -36,10 +39,13 @@ ROOT = Path(__file__).resolve().parents[1]
 IMAGE_SUFFIXES = {".png", ".svg", ".pdf"}
 
 # Known gaps, each owned by an issue, printed as EXEMPT so they stay visible. Remove an
-# entry when its issue closes. SKIP_MAKE: the study's `all` target needs W&B credentials.
+# entry when its issue closes. SKIP_MAKE: the study's `all` target needs W&B credentials or
+# the /allen mount (measured 2026-10-23 with an empty HOME: no ~/.netrc, no WANDB_API_KEY).
 # KNOWN_DIFFS: the path regenerates differently from what is committed.
 SKIP_MAKE = {
+    "01-gru-scaling-law": "dispatcher #177: `all` calls wandb.Api() (build_report, bootstrap_scaling, nxd_scaling) and reads /allen (rl_baseline)",
     "02-gru-scaling-law-ignore": "dispatcher #177: `all` runs the W&B pull (no offline report target)",
+    "05-disrnn-scaling-law": "dispatcher #177: `all` -> r4 calls wandb.Api() (generative_match)",
     "07-gru-timing-inputs": "dispatcher #177: `all` runs the W&B pull (no offline report target)",
 }
 KNOWN_DIFFS = {
@@ -59,8 +65,14 @@ def _run(cmd: list[str], **kw) -> subprocess.CompletedProcess:
 
 
 def _head(path: str) -> str | None:
-    out = _run(["git", "show", f"HEAD:{path}"])
+    """HEAD's version of ``path`` through git's checkout filters, so an LFS-tracked file
+    yields its content, not its pointer; None when HEAD has no such path."""
+    out = _run(["git", "cat-file", "--filters", f"HEAD:{path}"])
     return out.stdout if out.returncode == 0 else None
+
+
+def _in_head(path: str) -> bool:
+    return _run(["git", "cat-file", "-e", f"HEAD:{path}"]).returncode == 0
 
 
 def _close(a, b, rtol: float) -> bool:
@@ -123,8 +135,15 @@ def compare(path: str, rtol: float) -> list[str]:
     """Differences between HEAD and the working tree for one path; [] when equivalent."""
     suffix = Path(path).suffix.lower()
     if suffix in IMAGE_SUFFIXES:
-        return []
+        # rendering bytes may differ; presence may not: a deleted figure breaks a report
+        # link, and a new untracked one is missing from every clean checkout
+        in_head, in_tree = _in_head(path), (ROOT / path).exists()
+        if in_head and in_tree:
+            return []
+        return ["image deleted by regeneration" if in_head else "new image not in HEAD"]
     old = _head(path)
+    if not (ROOT / path).exists():
+        return ["deleted by regeneration"]
     if old is None:
         return ["not in HEAD (new file)"]
     new = (ROOT / path).read_text()
