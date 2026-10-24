@@ -1,0 +1,35 @@
+# aind-dynamic-foraging-bfm-studies
+#
+# Curated analysis outputs (JSON / CSV / PNG / reports) are COMMITTED: they are the
+# study's answer and reports embed them. Only re-derivable caches are ignored.
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+
+# W&B pull caches and downloaded artifact tables: fully reproducible from W&B, never
+# committed (posthoc-reporting). Curated summary JSON is not a cache.
+wandb/
+artifacts/
+studies/*/analysis/_cache_*.json
+studies/*/analysis/_cache_*/
+
+# Launch-time scratch: the launcher's --output-dir default and run-watch pid files.
+results/
+studies/*/variants/*/launch_record*/watch_*.pid
+
+# Study 08: local run outputs and figure artifacts
+studies/08-hb-vs-gru-heldout/smoke_*.json
+studies/08-hb-vs-gru-heldout/artifacts/
+
+# Editors / OS
+.idea/
+.vscode/
+**/.DS_Store
+
+# Claude Code per-user settings (a shared settings.json stays tracked)
+.claude/settings.local.json

@@ -491,6 +491,11 @@ including study 01's `analysis/rl_baseline.py` back through `1e30716`.
 
 ### Step 3 — Assemble a complete studies repository locally
 
+The root files below (except `MIGRATION.md` and `migration/`, which the extraction
+itself produces) are drafted and reviewed ahead of time in
+[`docs/studies-repo-seed/`](studies-repo-seed/SEED.md) (#173) and copied verbatim into
+the assembly commit.
+
 Before any push, add:
 
 - `MIGRATION.md` containing the source repo URL, `SOURCE_DISPATCHER_COMMIT`,

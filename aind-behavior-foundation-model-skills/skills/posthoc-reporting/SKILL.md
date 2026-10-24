@@ -86,8 +86,8 @@ committed file** — the git diff is the audit trail. The offline producer never
 
 - **Data (curated JSON/CSV) is exactly reproducible** — a re-run changes nothing but
   `_meta`. This is the thing to check: `git diff` the JSON, ignore `_meta`, expect zero.
-- **`_meta.produced_at_pt` (and `dispatcher_git_sha`) change every run**, so
-  regeneration always dirties the tree. A CI check cannot be a bare
+- **`_meta.produced_at_pt` (and `studies_git_sha` / `studies_git_dirty`) change every
+  run**, so regeneration always dirties the tree. A CI check cannot be a bare
   `git diff --exit-code` — it must ignore `_meta`.
 - **Figure PNGs are bit-identical only on the same machine.** Across machines the
   bytes (and ~6% of pixels — text/AA rendering) differ, because the *plotting* env
@@ -162,7 +162,11 @@ never copy per-study. Commit derived outputs (JSON/CSV/PNG); gitignore only cach
   script-owned `<!-- BEGIN result-N -->` / `<!-- END result-N -->` regions —
   anything inside is overwritten on regen; producers match marker pairs only.
 - **JSON**: opens with `_meta` (`produced_by`, `produced_at_pt` in Seattle time,
-  `dispatcher_git_sha`, `wandb_groups`).
+  `studies_git_sha` + `studies_git_dirty` for the checkout the producer ran in,
+  `wandb_groups`, the `source_{studies,dispatcher,wrapper,foraging_models}_git_shas`
+  arrays read from the launch records of those groups, and `provenance_findings`
+  naming any group whose records lack a SHA). Outputs committed before dispatcher
+  #176 carry the older `dispatcher_git_sha` instead; leave them as they are.
 - **`launch_record_<label>/results.md`**: written once after the group settles —
   W&B group + project URL, Beaker exp id + resources, timestamps, status, headline
   metric, which reports it feeds.
