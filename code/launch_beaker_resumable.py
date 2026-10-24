@@ -55,7 +55,7 @@ import yaml
 from beaker_client import pin_runtime_refs, submit_beaker_experiment
 from provenance import (
     DirtyStudiesError, check_studies_clean, launch_provenance, print_warnings,
-    record_fields, runtime_shas_from_pins, with_runtime_shas,
+    record_fields, runtime_shas_from_pins, study_and_variant, with_runtime_shas,
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -134,12 +134,7 @@ def _study_variant(sweep_path: Path) -> tuple[str, str]:
     Falls back to the file stem when the path isn't under that layout, so the launcher
     still works for ad-hoc sweeps.
     """
-    parts = sweep_path.resolve().parts
-    study = variant = None
-    if "studies" in parts and parts.index("studies") + 1 < len(parts):
-        study = parts[parts.index("studies") + 1]
-    if "variants" in parts and parts.index("variants") + 1 < len(parts):
-        variant = parts[parts.index("variants") + 1]
+    study, variant = study_and_variant(sweep_path)
     return study or "adhoc", variant or _slug(sweep_path.stem)
 
 
