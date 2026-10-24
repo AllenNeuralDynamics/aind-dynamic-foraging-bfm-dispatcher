@@ -209,6 +209,32 @@ class TestLaunchProvenance(unittest.TestCase):
                          override)
 
 
+class TestStudyPathAnchor(unittest.TestCase):
+    """#182: a checkout whose own path contains `studies` must not become the study."""
+
+    NESTED = Path("/scratch/wt166/studies/studies/09-gru-cross-species-transfer/variants/"
+                  "gru-adaptation-budget/sweep_k_chen.yaml")
+
+    def test_a_studies_named_checkout_still_resolves_the_study_and_variant(self):
+        self.assertEqual(provenance.study_and_variant(self.NESTED),
+                         ("09-gru-cross-species-transfer", "gru-adaptation-budget"))
+        self.assertEqual(resumable._study_variant(self.NESTED),
+                         ("09-gru-cross-species-transfer", "gru-adaptation-budget"))
+        self.assertEqual(launch_hpc._study_variant(self.NESTED),
+                         ("09-gru-cross-species-transfer", "gru-adaptation-budget"))
+        self.assertEqual(provenance.study_dir(self.NESTED),
+                         Path("/scratch/wt166/studies/studies/09-gru-cross-species-transfer"))
+
+    def test_the_plain_layout_and_off_layout_paths_are_unchanged(self):
+        plain = Path("/repo/studies/01-gru-scaling-law/variants/nxd-grid/sweep.yaml")
+        self.assertEqual(provenance.study_and_variant(plain), ("01-gru-scaling-law", "nxd-grid"))
+        self.assertEqual(provenance.study_and_variant(Path("/repo/studies/08/sweep.yaml")),
+                         ("08", None))
+        self.assertEqual(resumable._study_variant(Path("/tmp/adhoc_sweep.yaml")),
+                         ("adhoc", "adhoc-sweep"))
+        self.assertEqual(provenance.study_dir(Path("/tmp/x/sweep.yaml")), Path("/tmp/x"))
+
+
 class TestBeakerLaunchersCarryBothRoots(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="prov_beaker_"))

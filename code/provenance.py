@@ -106,13 +106,34 @@ def git_state(path: Path | str) -> dict:
     }
 
 
+def _studies_index(parts: tuple[str, ...]) -> int | None:
+    """Index of the ``studies`` component that roots ``studies/<study>/...``.
+
+    Prefer the last ``studies`` with ``variants`` two components below it, so a checkout
+    whose own path contains ``studies`` (``.../studies/studies/<study>/variants/...``, a
+    worktree named ``studies``) still resolves to the study (#182); else the last
+    ``studies`` with a component after it.
+    """
+    hits = [i for i, part in enumerate(parts[:-1]) if part == "studies"]
+    anchored = [i for i in hits if i + 2 < len(parts) and parts[i + 2] == "variants"]
+    return (anchored or hits or [None])[-1]
+
+
+def study_and_variant(sweep_path: Path | str) -> tuple[str | None, str | None]:
+    """``(study, variant)`` of a ``studies/<study>/variants/<variant>/`` path; None off the layout."""
+    parts = Path(sweep_path).resolve().parts
+    i = _studies_index(parts)
+    if i is None:
+        return None, None
+    variant = parts[i + 3] if i + 3 < len(parts) and parts[i + 2] == "variants" else None
+    return parts[i + 1], variant
+
+
 def study_dir(sweep_path: Path | str) -> Path:
     """``studies/<study>/`` containing the sweep, or the sweep's own directory off that layout."""
     p = Path(sweep_path).resolve()
-    parts = p.parts
-    if "studies" in parts and parts.index("studies") + 1 < len(parts):
-        return Path(*parts[: parts.index("studies") + 2])
-    return p.parent
+    i = _studies_index(p.parts)
+    return Path(*p.parts[: i + 2]) if i is not None else p.parent
 
 
 def dirty_paths(root: Path | str, subdir: Path | str) -> tuple[list[str] | None, str | None]:
