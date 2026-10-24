@@ -83,7 +83,7 @@ import yaml
 
 from provenance import (
     DirtyStudiesError, check_studies_clean, git_state, installed_vcs_commit,
-    launch_provenance, print_warnings, record_fields,
+    launch_provenance, print_warnings, record_fields, study_and_variant,
 )
 
 
@@ -296,12 +296,7 @@ def _save_record(
 
 def _study_variant(sweep_path: Path) -> tuple[str, str]:
     """Derive (study, variant) from studies/<study>/variants/<variant>/sweep.yaml."""
-    parts = sweep_path.resolve().parts
-    study = variant = None
-    if "studies" in parts and parts.index("studies") + 1 < len(parts):
-        study = parts[parts.index("studies") + 1]
-    if "variants" in parts and parts.index("variants") + 1 < len(parts):
-        variant = parts[parts.index("variants") + 1]
+    study, variant = study_and_variant(sweep_path)
     return study or "adhoc", variant or sweep_path.stem
 
 
