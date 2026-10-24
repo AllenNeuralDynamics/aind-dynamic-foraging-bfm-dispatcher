@@ -77,7 +77,7 @@ def _in_head(path: str) -> bool:
 
 def _close(a, b, rtol: float) -> bool:
     if isinstance(a, bool) or isinstance(b, bool):
-        return a == b
+        return type(a) is type(b) and a == b
     if isinstance(a, (int, float)) and isinstance(b, (int, float)):
         if isinstance(a, float) and isinstance(b, float) and math.isnan(a) and math.isnan(b):
             return True
@@ -102,6 +102,9 @@ def _json_equal(a, b, rtol: float, path: str = "$") -> list[str]:
         for i, (x, y) in enumerate(zip(a, b)):
             out += _json_equal(x, y, rtol, f"{path}[{i}]")
         return out
+    if isinstance(a, bool) != isinstance(b, bool):
+        # Python's True == 1 and False == 0.0: a type change is not float noise
+        return [f"{path}: {a!r} != {b!r} (type changed)"]
     if a == b or _close(a, b, rtol):
         return []
     return [f"{path}: {a!r} != {b!r}"]
