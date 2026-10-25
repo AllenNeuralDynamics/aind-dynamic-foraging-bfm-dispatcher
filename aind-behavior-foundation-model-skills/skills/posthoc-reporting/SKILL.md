@@ -182,10 +182,11 @@ make new-report STUDY=<study> SLUG=heldout-curve TITLE="Held-out vs D" [AUTHOR=h
 ```
 
 From the studies repo root. It takes the next free `r<n>` (counting Makefile targets too, so
-a deleted draft's number is never reused) and writes `reports/r<n>-<slug>.md` (draft
-frontmatter, a `result-1` block), a producer stub `analysis/r<n>_<slug>.py` that already
-calls `build_meta(..., code=[__file__])` + `write_artifact()`, the `r<n>` Makefile target,
-and the INDEX row. Fill in the TODOs; add `r<n>` to `all` once the producer runs offline.
+a deleted draft's number is never reused) and writes `analysis/reports/r<n>-<slug>.md`
+(draft frontmatter, a `result-1` block), a producer stub `analysis/r<n>_<slug_>.py` (the
+slug with `-` turned into `_`, e.g. `r3_heldout_curve.py`; it writes `r3_heldout_curve.json`
+and already calls `build_meta(..., code=[__file__])` + `write_artifact()`), the `r<n>`
+Makefile target, and the INDEX row. Fill in the TODOs; add `r<n>` to `all` once the producer runs offline.
 Never copy an old report: its frontmatter may predate the schema.
 
 ## Contracts in brief (full templates: `references/report-contracts.md`)
