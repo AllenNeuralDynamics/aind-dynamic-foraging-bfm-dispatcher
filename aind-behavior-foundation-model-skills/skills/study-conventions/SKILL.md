@@ -27,6 +27,20 @@ predate a rule:
 new finding, and is the required `provenance` CI check. Fix the study; never loosen a schema
 or add to `schemas/provenance-baseline.json` to get green.
 
+**Start from the scaffolder, never from a copy of an old study** (studies repo root; a copy
+carries whatever rules that study predates). Each writes files that pass `make validate`
+from the first commit, plus TODO prompts, and never overwrites anything:
+
+```bash
+make new-study   NAME=12-gru-foo QUESTION="Does ...?" PROJECT=gru_foo VARIANT=base [ISSUE=...]
+make new-variant STUDY=12-gru-foo NAME=wider
+```
+
+`new-study` refuses a used accession number and writes the README frontmatter, CHANGELOG,
+Makefile, `.gitignore`, reports INDEX and the first variant's `notes.md`. `new-variant`
+writes `notes.md` only; add `sweep.yaml` / `experiment.yaml` next to it before launching.
+Reports: `make new-report` (posthoc-reporting skill).
+
 ## Core scheme
 
 - A **study answers one scientific question**; its conditions are **variants**, not new
@@ -145,10 +159,9 @@ while W&B's counter does not rewind.
 
 ## Checklist for a new variant launch
 
-1. Create `studies/<study>/variants/<variant>/` with `sweep.yaml` + `experiment.yaml`
-   (`make new-variant` scaffolds it once studies#14's scaffolder lands; until then copy the
-   closest existing variant).
-2. Write `notes.md`: what differs from the sibling variants and what you expect.
+1. `make new-variant STUDY=<study> NAME=<variant>`, then add `sweep.yaml` +
+   `experiment.yaml` next to the generated `notes.md`.
+2. Fill in `notes.md`: what differs from the sibling variants and what you expect.
 3. Include `WRAPPER_REF`, `DISPATCHER_REF`, and `FORAGING_MODELS_REF` in the Beaker
    YAML. Branch names may remain for readability; the launcher resolves all three
    to full SHAs in the submitted launch record.
