@@ -151,7 +151,10 @@ python code/launch_beaker_resumable.py \
 For a sweep under `studies/<study>/variants/<variant>/`, `--label` and `--note` are
 **required**: the launcher refuses the launch (before submitting) without them, or if the
 group would not be `<variant>@<launch_id>` (study-conventions; studies ADR 0001). The record
-it writes is launch-record v2 — copy it into the variant's `launch_record/`.
+it writes is launch-record v2 — copy it into the variant's `launch_record/`. It records the data
+snapshot (refusing an unpinned, live-database config unless `--allow-live-data`) and resolves
+the template's Beaker image name to its immutable id, which needs `BEAKER_TOKEN`; without it
+the id is left empty and the launcher warns.
 
 It sets the W&B group to `<variant>@<launch_id>` and injects `BFM_META_*`
 provenance (see the study-conventions skill), including `BFM_META_STUDIES_COMMIT`, the studies

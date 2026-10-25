@@ -32,10 +32,13 @@ carries whatever rules that study predates). Each writes files that pass `make v
 from the first commit, plus TODO prompts, and never overwrites anything:
 
 ```bash
-make new-study   NAME=12-gru-foo QUESTION="Does ...?" PROJECT=gru_foo VARIANT=base [ISSUE=...]
+make new-study   NAME=12-gru-foo QUESTION="Does ...?" PROJECT=gru_foo VARIANT=base MOTIVATED_BY=06/r2 [ISSUE=...]
 make new-variant STUDY=12-gru-foo NAME=wider
 ```
 
+`MOTIVATED_BY` is required: the earlier results this study follows up (`05/r1,03/r2`, a study
+`05`, an issue `#23`), or `none` for a root study. It fills `motivated_by` in the frontmatter
+(why the study exists; studies ADR 0002), each entry with a note to complete.
 `new-study` refuses a used accession number and writes the README frontmatter, CHANGELOG,
 Makefile, `.gitignore`, reports INDEX and the first variant's `notes.md`. `new-variant`
 writes `notes.md` only; add `sweep.yaml` / `experiment.yaml` next to it before launching.
@@ -91,11 +94,17 @@ Reports: `make new-report` (posthoc-reporting skill).
 - **The launch record is launch-record v2** (studies `schemas/launch-record.v2.schema.json`):
   the launchers fill `kind: initial`, `platform`, `label`, `note`, `job_refs`, `revisions`
   (studies / dispatcher / wrapper / foraging-models full SHAs; an unresolved one is left
-  out so the checker reports it), `manifests`, `n_tasks`, and keep the legacy launcher keys
+  out so the checker reports it), `manifests`, `n_tasks`, `data` (the data config, its
+  snapshot, and the sha256 of the snapshot's manifest) and `image` (the Beaker image name
+  and the immutable id it resolved to, or the HPC conda env and a digest of its packages),
+  and keep the legacy launcher keys
   (`studies_git_commit`, `dispatcher_commit`, `studies_dirty_override`,
   `provenance_warnings`, ...) for older readers. A launch whose
   `studies/<study>/` directory has uncommitted changes is **refused**; commit first, or
   pass `--diagnostic-dirty-ok "<reason>"` for a diagnostic run (the reason is recorded).
+  A launch whose data config reads the live database (no `snapshot` pinned) is also
+  **refused**: its results could never be regenerated. Pin `data.snapshot`, or pass
+  `--allow-live-data` for a smoke test.
   `launch_hpc.py` writes `hpc_sweep.json` to `--output-dir` the same way the Beaker
   launchers write `beaker_resumable.json` / `beaker_sweep.json`.
 

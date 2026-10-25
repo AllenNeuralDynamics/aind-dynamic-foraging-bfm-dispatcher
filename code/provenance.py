@@ -402,4 +402,6 @@ def v2_record_fields(provenance: dict, *, sweep_path: Path | str, platform: str,
         "revisions": revisions,
         "manifests": list(manifests),
         "n_tasks": n_tasks,
+        # what the runs trained on and ran in (launch_inputs.py; studies#25)
+        **{k: provenance[k] for k in ("data", "image") if provenance.get(k)},
     }
