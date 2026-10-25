@@ -31,8 +31,43 @@ class DataConfigError(ValueError):
     """The sweep's data cannot be pinned to one record (e.g. it sweeps data.snapshot)."""
 
 
-NULLS = {"null", "None", "~", ""}
+# wrapper entry points that compose the dispatcher's Hydra config; any other runner (e.g. study
+# 09's external_transfer.gru_transfer) reads its own data, recorded as `external`
+HYDRA_RUNNERS = {"run_hpc"}
 ARGS_MACROS = {"${args}", "${args_no_hyphens}", "${args_no_boolean_flags}", "${args_json}", "${args_json_file}"}
+
+
+def _decode(value) -> str | None:
+    """An override value with Hydra's scalar semantics: quoted is a literal string, null is None."""
+    if value is None:
+        return None
+    s = str(value).strip()
+    if len(s) >= 2 and s[0] == s[-1] and s[0] in "'\"":
+        return s[1:-1]
+    if s.lower() == "null" or s in ("", "~"):
+        return None
+    if "${" in s:
+        raise DataConfigError(f"the data override {s!r} is an interpolation resolved only at run time; "
+                              "pin a literal value so the launch record can name it")
+    return s
+
+
+def _runner(sweep: dict) -> str | None:
+    """The module or script the sweep runs (`python -m run_hpc ...` -> run_hpc)."""
+    cmd = [x for x in sweep.get("command") or [] if isinstance(x, str)]
+    if "-m" in cmd and cmd.index("-m") + 1 < len(cmd):
+        return cmd[cmd.index("-m") + 1]
+    prog = sweep.get("program") or next((x for x in cmd[1:] if x.endswith(".py")), None)
+    return Path(prog).stem if prog else None
+
+
+def runtime_dispatcher_sha(runtime_shas: dict) -> str | None:
+    """The one dispatcher commit the tasks run; several mean several possible data configs."""
+    sha = runtime_shas.get("aind-dynamic-foraging-bfm-dispatcher")
+    if isinstance(sha, list):
+        raise DataConfigError(f"the tasks pin different DISPATCHER_REFs {sha}; launch one dispatcher commit "
+                              "per launch so one data config describes it")
+    return sha
 
 
 def _key(k: str) -> str:
@@ -52,7 +87,7 @@ def _effective(sweep: dict, key: str) -> set[str | None] | None:
     def from_params():
         spec = params[key]
         values = [spec["value"]] if "value" in spec else list(spec.get("values") or [])
-        return {None if str(v) in NULLS else str(v) for v in values}
+        return {_decode(v) for v in values}
 
     current, expanded = None, False
     for item in sweep.get("command") or []:
@@ -65,8 +100,7 @@ def _effective(sweep: dict, key: str) -> set[str | None] | None:
         elif item.startswith("~") and _key(item.split("=", 1)[0]) == key:
             current = {None}
         elif "=" in item and not item.startswith("$") and _key(item.split("=", 1)[0]) == key:
-            value = item.split("=", 1)[1]
-            current = {None if value in NULLS else value}
+            current = {_decode(item.split("=", 1)[1])}
     if not expanded and key in params:
         current = from_params()
     return current
@@ -128,6 +162,11 @@ def data_record(sweep: dict, config_root: Path | str | Callable[[str], str | Non
     ``runtime_config_reader`` (the configs at the run's pinned dispatcher ref).
     """
     read = config_root if callable(config_root) else file_reader(config_root)
+    runner = _runner(sweep)
+    if runner and runner not in HYDRA_RUNNERS:
+        datasets = _effective(sweep, "--dataset") or set()
+        dataset = next(iter(datasets)) if len(datasets) == 1 else None
+        return {"source": "external", "config": runner + (f" --dataset={dataset}" if dataset else ""), "type": None}
     names = _effective(sweep, "data")
     if names is not None and len(names) > 1:
         raise DataConfigError(f"the sweep varies the data config over {sorted(map(str, names))}; launch one per launch")
@@ -137,8 +176,7 @@ def data_record(sweep: dict, config_root: Path | str | Callable[[str], str | Non
     snaps = _effective(sweep, "data.snapshot")
     if snaps is not None and len(snaps) > 1:
         raise DataConfigError(f"the sweep varies data.snapshot over {sorted(map(str, snaps))}; launch one snapshot per launch")
-    snapshot = next(iter(snaps)) if snaps is not None else cfg.get("snapshot")
-    snapshot = None if snapshot is None or str(snapshot) in NULLS else str(snapshot)
+    snapshot = next(iter(snaps)) if snaps is not None else _decode(cfg.get("snapshot"))
     rec = {"config": name, "type": dtype}
     if dtype in DATABASE_TYPES:
         if not snapshot:

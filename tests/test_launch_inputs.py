@@ -96,6 +96,24 @@ class DataRecordTest(unittest.TestCase):
         reader = li.runtime_config_reader(self.root, "f" * 40, warnings)          # not a git checkout
         self.assertTrue(warnings and reader("config.yaml") is None)              # falls back, and says so
 
+    def test_hydra_scalars_quotes_and_interpolations(self):
+        self.assertEqual(self.record(["data=mice_snapshot", "data.snapshot=NULL"])["source"], "live")
+        self.assertEqual(self.record(["data=mice_snapshot", "data.snapshot='20260701'"])["snapshot"], "20260701")
+        self.assertEqual(self.record(["data=mice_snapshot", "data.snapshot='null'"])["snapshot"], "null")  # a quoted literal
+        with self.assertRaises(li.DataConfigError):
+            self.record(["data=mice_snapshot", "data.snapshot=${oc.env:SNAPSHOT,null}"])
+
+    def test_a_non_hydra_runner_reads_external_data(self):
+        sweep = {"command": ["python", "-m", "external_transfer.gru_transfer", "--dataset=zid", "${args_no_hyphens}"]}
+        d = li.data_record(sweep, self.root, fetch=fetch)
+        self.assertEqual(d, {"source": "external", "config": "external_transfer.gru_transfer --dataset=zid", "type": None})
+        self.assertIsNone(li.live_data_refusal(d))
+
+    def test_tasks_on_different_dispatcher_commits_are_refused(self):
+        self.assertEqual(li.runtime_dispatcher_sha({"aind-dynamic-foraging-bfm-dispatcher": "a" * 40}), "a" * 40)
+        with self.assertRaises(li.DataConfigError):
+            li.runtime_dispatcher_sha({"aind-dynamic-foraging-bfm-dispatcher": ["a" * 40, "b" * 40]})
+
     def test_unreadable_manifest_keeps_the_snapshot(self):
         d = li.data_record({"command": ["data=mice_snapshot"]}, self.root, fetch=lambda s: (None, {}))
         self.assertEqual((d["source"], d["snapshot"], d["manifest_sha256"]), ("snapshot", "20260603", None))
