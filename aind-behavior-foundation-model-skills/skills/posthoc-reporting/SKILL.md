@@ -32,6 +32,20 @@ same checker and fails on any new finding.
 5. **Idempotent regeneration** — `make r<n>` twice produces identical files
    (see the caveats below: `_meta` timestamps and cross-machine figure bytes).
 
+## Never retype another study's number (hard rule)
+
+A comparison against another study (the GRU ceiling, the best RL baseline, another study's
+curve) reads the number from that study's **committed JSON**: the shared references are in
+the studies repo's `studies/util/cross_study.py`. List that file in
+`build_meta(..., inputs=[...])` and name the source in the report's `upstream`:
+`{study, report}` for a result, `{study, wandb_group}` for raw data. The checker then warns
+when that source is corrected, superseded or retracted (`report-upstream-stale`), or when the
+declaration is missing (`report-upstream-undeclared`). Under the baseline ratchet that
+warning fails CI, so a correction PR also regenerates or re-points the reports that depend on
+it. A retyped constant (`GRU = {614: 0.7268}`) is invisible to every check; it is how two GRU
+comparators (H128 0.7268, H256 0.7290) came to be quoted interchangeably until study 11
+untangled them.
+
 ## Pin the W&B groups — never discover them live (hard rule)
 
 A producer MUST read runs from a **declared allowlist** of W&B groups
