@@ -67,6 +67,35 @@ class DataRecordTest(unittest.TestCase):
         with self.assertRaises(li.DataConfigError):
             self.record(parameters={"data.snapshot": {"values": ["20260603", "20260701"]}})
 
+    def test_hydra_prefixes_and_nulls_clear_the_snapshot(self):
+        for params in ({"++data.snapshot": {"value": "null"}}, {"+data.snapshot": {"value": None}}):
+            d = self.record(["data=mice_snapshot", "${args_no_hyphens}"], params)
+            self.assertEqual(d["source"], "live")
+        self.assertEqual(self.record(["data=mice_snapshot", "~data.snapshot"])["source"], "live")
+
+    def test_overrides_apply_in_command_order(self):
+        params = {"data.snapshot": {"value": "20260701"}}
+        # the swept parameter expands at ${args...}, so it wins over an earlier command item ...
+        self.assertEqual(self.record(["data.snapshot=20260603", "${args_no_hyphens}"], params)["snapshot"], "20260701")
+        # ... and loses to a later one
+        self.assertEqual(self.record(["${args_no_hyphens}", "data.snapshot=20260603"], params)["snapshot"], "20260603")
+
+    def test_several_data_configs_are_refused(self):
+        with self.assertRaises(li.DataConfigError):
+            self.record(["${args_no_hyphens}"], {"data": {"values": ["mice", "mice_snapshot"]}})
+        # a sweep of one value is fine
+        self.assertEqual(self.record(["${args_no_hyphens}"], {"data": {"values": ["mice_snapshot"]}})["config"], "mice_snapshot")
+
+    def test_configs_are_read_through_the_given_reader(self):
+        """The Beaker launchers pass the configs at the run's pinned dispatcher ref."""
+        at_ref = {"config.yaml": "defaults:\n  - data: mice_snapshot\n",
+                  "data/mice_snapshot.yaml": "type: mice_snapshot\nsnapshot: '20260801'\n"}
+        d = li.data_record({"command": []}, at_ref.get, fetch=fetch)
+        self.assertEqual(d["snapshot"], "20260801")
+        warnings = []
+        reader = li.runtime_config_reader(self.root, "f" * 40, warnings)          # not a git checkout
+        self.assertTrue(warnings and reader("config.yaml") is None)              # falls back, and says so
+
     def test_unreadable_manifest_keeps_the_snapshot(self):
         d = li.data_record({"command": ["data=mice_snapshot"]}, self.root, fetch=lambda s: (None, {}))
         self.assertEqual((d["source"], d["snapshot"], d["manifest_sha256"]), ("snapshot", "20260603", None))

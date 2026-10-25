@@ -45,7 +45,8 @@ from launch_beaker_resumable import _seattle_launch_id, _study_variant
 
 # Library-only clients (GraphQL for W&B, beaker-py for Beaker) -- no `wandb`/`beaker`
 # CLI dependency; see code/beaker_client.py docstring for why.
-from launch_inputs import DataConfigError, data_record, image_record_beaker, live_data_refusal
+from launch_inputs import (DataConfigError, data_record, image_record_beaker, live_data_refusal,
+                           runtime_config_reader)
 from beaker_client import create_wandb_sweep, pin_runtime_refs, submit_beaker_experiment
 from provenance import (
     DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
@@ -204,15 +205,6 @@ def main() -> None:
         dirty_override = check_studies_clean(provenance, args.diagnostic_dirty_ok)
     except DirtyStudiesError as exc:
         sys.exit(f"[launch_beaker] refusing to launch: {exc}")
-    # what the runs train on and run in, recorded in the launch record (studies#25)
-    try:
-        data = data_record(yaml.safe_load(Path(args.sweep).read_text()), REPO_ROOT / "code" / "config")
-    except DataConfigError as exc:
-        sys.exit(f"[launch_beaker] refusing to launch: {exc}")
-    if (why := live_data_refusal(data)) and not args.allow_live_data:
-        sys.exit(f"[launch_beaker] refusing to launch: {why}")
-    provenance = {**provenance, "data": data,
-                  "image": image_record_beaker(yaml.safe_load(Path(args.experiment).read_text()), args.workspace)}
 
     # Provenance (consistent with the resumable route — see AGENTS §8): one launch ==
     # one pseudo-sweep. Here the native W&B sweep is the platform-native launch id; we
@@ -248,6 +240,19 @@ def main() -> None:
         pin_runtime_refs(preflight, cache=ref_cache)
     except (RuntimeError, ValueError) as exc:
         sys.exit(f"[launch_beaker] runtime ref resolution failed: {exc}")
+    # what the runs train on and run in, recorded in the launch record (studies#25). The data
+    # config is read at the pinned DISPATCHER_REF: that is what the runs will load.
+    runtime_dispatcher = runtime_shas_from_pins(ref_cache).get("aind-dynamic-foraging-bfm-dispatcher")
+    reader = runtime_config_reader(REPO_ROOT, runtime_dispatcher if isinstance(runtime_dispatcher, str) else None,
+                                   provenance.setdefault("provenance_warnings", []))
+    try:
+        data = data_record(yaml.safe_load(Path(args.sweep).read_text()), reader)
+    except DataConfigError as exc:
+        sys.exit(f"[launch_beaker] refusing to launch: {exc}")
+    if (why := live_data_refusal(data)) and not args.allow_live_data:
+        sys.exit(f"[launch_beaker] refusing to launch: {why}")
+    provenance = {**provenance, "data": data,
+                  "image": image_record_beaker(yaml.safe_load(Path(args.experiment).read_text()), args.workspace)}
 
     sweep_id = create_sweep(args.sweep)
     print(f"[launch_beaker] SWEEP_ID = {sweep_id}")

@@ -31,24 +31,77 @@ class DataConfigError(ValueError):
     """The sweep's data cannot be pinned to one record (e.g. it sweeps data.snapshot)."""
 
 
-def _overrides(sweep: dict) -> dict[str, list[str]]:
-    """key -> values the sweep sets, from its command list (key=value) and parameters."""
-    out: dict[str, list[str]] = {}
+NULLS = {"null", "None", "~", ""}
+ARGS_MACROS = {"${args}", "${args_no_hyphens}", "${args_no_boolean_flags}", "${args_json}", "${args_json_file}"}
+
+
+def _key(k: str) -> str:
+    """A Hydra override key without its +, ++ or ~ prefix."""
+    return str(k).lstrip("+~")
+
+
+def _effective(sweep: dict, key: str) -> set[str | None] | None:
+    """The values ``key`` takes across the sweep's runs, in Hydra's override order.
+
+    The command list is applied in order; W&B expands ``parameters`` where its ``${args...}``
+    macro sits (at the end when there is none), so a later override wins. ``~key`` and a null
+    value clear it (None). Returns None when the sweep never sets the key (the config default).
+    """
+    params = {_key(k): spec for k, spec in (sweep.get("parameters") or {}).items() if isinstance(spec, dict)}
+
+    def from_params():
+        spec = params[key]
+        values = [spec["value"]] if "value" in spec else list(spec.get("values") or [])
+        return {None if str(v) in NULLS else str(v) for v in values}
+
+    current, expanded = None, False
     for item in sweep.get("command") or []:
-        if isinstance(item, str) and "=" in item and not item.startswith("$"):
-            key, value = item.lstrip("+~").split("=", 1)
-            out.setdefault(key, []).append(value)
-    for key, spec in (sweep.get("parameters") or {}).items():
-        if isinstance(spec, dict) and "value" in spec:
-            out.setdefault(key, []).append(str(spec["value"]))
-        elif isinstance(spec, dict) and "values" in spec:
-            out.setdefault(key, []).extend(str(v) for v in spec["values"])
-    return out
+        if not isinstance(item, str):
+            continue
+        if item.strip() in ARGS_MACROS:
+            expanded = True
+            if key in params:
+                current = from_params()
+        elif item.startswith("~") and _key(item.split("=", 1)[0]) == key:
+            current = {None}
+        elif "=" in item and not item.startswith("$") and _key(item.split("=", 1)[0]) == key:
+            value = item.split("=", 1)[1]
+            current = {None if value in NULLS else value}
+    if not expanded and key in params:
+        current = from_params()
+    return current
 
 
-def _default_data_config(config_root: Path) -> str | None:
+def file_reader(config_root: Path | str) -> Callable[[str], str | None]:
+    """Read ``<config_root>/<rel>`` from the working tree."""
+    root = Path(config_root)
+    return lambda rel: (root / rel).read_text() if (root / rel).exists() else None
+
+
+def git_reader(repo_root: Path | str, sha: str) -> Callable[[str], str | None]:
+    """Read ``code/config/<rel>`` at commit ``sha`` of the dispatcher checkout (the runtime ref)."""
+    from provenance import _git
+    return lambda rel: _git(Path(repo_root), "show", f"{sha}:code/config/{rel}", strip=False)[0]
+
+
+def runtime_config_reader(repo_root: Path | str, runtime_sha: str | None, warnings: list) -> Callable[[str], str | None]:
+    """The configs a Beaker run will actually load: the pinned DISPATCHER_REF, else the local tree."""
+    local = file_reader(Path(repo_root) / "code" / "config")
+    if not runtime_sha:
+        return local
+    at_ref = git_reader(repo_root, runtime_sha)
+    if at_ref("config.yaml") is None:
+        msg = (f"data: runtime dispatcher {runtime_sha[:12]} is not in this checkout; "
+               "read the data config from the local tree instead (git fetch to check it)")
+        warnings.append(msg)
+        print(f"[launch_inputs] WARNING: {msg}")
+        return local
+    return at_ref
+
+
+def _default_data_config(read: Callable[[str], str | None]) -> str | None:
     """The `data` entry of the root config's Hydra defaults list."""
-    root = yaml.safe_load((config_root / "config.yaml").read_text()) or {}
+    root = yaml.safe_load(read("config.yaml") or "") or {}
     for entry in root.get("defaults") or []:
         if isinstance(entry, dict) and "data" in entry:
             return str(entry["data"])
@@ -67,20 +120,25 @@ def fetch_manifest(snapshot: str, timeout: float = 15.0) -> tuple[str | None, di
         return None, {}
 
 
-def data_record(sweep: dict, config_root: Path | str,
+def data_record(sweep: dict, config_root: Path | str | Callable[[str], str | None],
                 fetch: Callable[[str], tuple[str | None, dict]] = fetch_manifest) -> dict:
-    """The launch record's `data`: snapshot (pinned), live (database, unpinned) or generated."""
-    config_root = Path(config_root)
-    ov = _overrides(sweep)
-    name = (ov.get("data") or [None])[-1] or _default_data_config(config_root)
-    path = config_root / "data" / f"{name}.yaml"
-    cfg = (yaml.safe_load(path.read_text()) or {}) if path.exists() else {}
+    """The launch record's `data`: snapshot (pinned), live (database, unpinned) or generated.
+
+    ``config_root`` is the dispatcher's ``code/config`` directory, or a reader from
+    ``runtime_config_reader`` (the configs at the run's pinned dispatcher ref).
+    """
+    read = config_root if callable(config_root) else file_reader(config_root)
+    names = _effective(sweep, "data")
+    if names is not None and len(names) > 1:
+        raise DataConfigError(f"the sweep varies the data config over {sorted(map(str, names))}; launch one per launch")
+    name = (next(iter(names)) if names else None) or _default_data_config(read)
+    cfg = yaml.safe_load(read(f"data/{name}.yaml") or "") or {}
     dtype = cfg.get("type")
-    swept = set(ov.get("data.snapshot") or [])
-    if len(swept) > 1:
-        raise DataConfigError(f"the sweep varies data.snapshot over {sorted(swept)}; launch one snapshot per launch")
-    snapshot = next(iter(swept)) if swept else cfg.get("snapshot")
-    snapshot = None if snapshot in (None, "", "null", "None") else str(snapshot)
+    snaps = _effective(sweep, "data.snapshot")
+    if snaps is not None and len(snaps) > 1:
+        raise DataConfigError(f"the sweep varies data.snapshot over {sorted(map(str, snaps))}; launch one snapshot per launch")
+    snapshot = next(iter(snaps)) if snaps is not None else cfg.get("snapshot")
+    snapshot = None if snapshot is None or str(snapshot) in NULLS else str(snapshot)
     rec = {"config": name, "type": dtype}
     if dtype in DATABASE_TYPES:
         if not snapshot:

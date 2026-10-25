@@ -52,7 +52,8 @@ import yaml
 
 # Library-only Beaker client (beaker-py) -- no `beaker` CLI dependency; see
 # code/beaker_client.py docstring for why.
-from launch_inputs import DataConfigError, data_record, image_record_beaker, live_data_refusal
+from launch_inputs import (DataConfigError, data_record, image_record_beaker, live_data_refusal,
+                           runtime_config_reader)
 from beaker_client import pin_runtime_refs, submit_beaker_experiment
 from provenance import (
     DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
@@ -344,15 +345,6 @@ def main() -> None:
         dirty_override = check_studies_clean(provenance, args.diagnostic_dirty_ok)
     except DirtyStudiesError as exc:
         sys.exit(f"[resumable] refusing to launch: {exc}")
-    # what the runs train on and run in, recorded in the launch record (studies#25)
-    try:
-        data = data_record(yaml.safe_load(Path(args.sweep).read_text()), REPO_ROOT / "code" / "config")
-    except DataConfigError as exc:
-        sys.exit(f"[resumable] refusing to launch: {exc}")
-    if (why := live_data_refusal(data)) and not args.allow_live_data:
-        sys.exit(f"[resumable] refusing to launch: {why}")
-    provenance = {**provenance, "data": data,
-                  "image": image_record_beaker(yaml.safe_load(Path(args.experiment).read_text()), args.workspace)}
     spec = build_spec(args.sweep, args.experiment, label=args.label, note=args.note,
                       provenance=provenance)
     try:
@@ -364,6 +356,19 @@ def main() -> None:
     except (RuntimeError, ValueError) as exc:
         sys.exit(f"[resumable] runtime ref resolution failed: {exc}")
     provenance = with_runtime_shas(provenance, runtime_shas_from_pins(pins))
+    # what the runs train on and run in, recorded in the launch record (studies#25). The data
+    # config is read at the pinned DISPATCHER_REF: that is what the runs will load.
+    runtime_dispatcher = runtime_shas_from_pins(pins).get("aind-dynamic-foraging-bfm-dispatcher")
+    reader = runtime_config_reader(REPO_ROOT, runtime_dispatcher if isinstance(runtime_dispatcher, str) else None,
+                                   provenance.setdefault("provenance_warnings", []))
+    try:
+        data = data_record(yaml.safe_load(Path(args.sweep).read_text()), reader)
+    except DataConfigError as exc:
+        sys.exit(f"[resumable] refusing to launch: {exc}")
+    if (why := live_data_refusal(data)) and not args.allow_live_data:
+        sys.exit(f"[resumable] refusing to launch: {why}")
+    provenance = {**provenance, "data": data,
+                  "image": image_record_beaker(yaml.safe_load(Path(args.experiment).read_text()), args.workspace)}
     n_tasks = len(spec["tasks"])
     print(f"[resumable] expanded grid into {n_tasks} tasks")
 
