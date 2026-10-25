@@ -1,6 +1,6 @@
 ---
 name: issue-tracking
-description: File GitHub issues for the AIND behavior foundation model repos and put them on the AIND-behavior-fm org project board (project 184) with Status, Priority, and Size set. Covers the always-file-an-issue-first rule, the cached board field/option IDs, the REST+GraphQL calls (no gh CLI in the sandbox), how to pick P0/P1/P2 and XS-XL, and linking the PR back. Use before starting any tracked work in aind-dynamic-foraging-bfm-dispatcher or aind-dynamic-foraging-bfm-wrapper, whenever opening an issue or PR, or when a board field needs updating.
+description: "File GitHub issues for the AIND behavior foundation model repos and put them on the AIND-behavior-fm org project board (project 184) with Status, Priority, and Size set. Covers the always-file-an-issue-first rule, the cached board field/option IDs, the REST+GraphQL calls (no gh CLI in the sandbox), how to pick P0/P1/P2 and XS-XL, linking the PR back, and the Copilot review loop (scripts/copilot.py: request, read, reply, resolve, re-request; at most 4 rounds). Use before starting any tracked work in aind-dynamic-foraging-bfm-dispatcher or aind-dynamic-foraging-bfm-wrapper, whenever opening an issue or PR, or when a board field needs updating."
 ---
 
 # Issue & project-board tracking
@@ -103,25 +103,6 @@ Put `Closes #<n>` in the PR body so the merge closes the issue, move the board i
 issue, write `Refs #<n>` instead and leave the issue open — an auto-closed issue with
 unfinished "Done when" boxes is worse than an open one.
 
-## Requesting a Copilot review (and re-requesting after a push)
-
-Copilot is not an org user or team, so `gh pr edit --add-reviewer <anything>` fails with
-`'...' not found` (gh 2.x resolves reviewers against the org's users and teams). Use the
-REST endpoint with the bot login — it works for the first request **and** for a re-request
-after a review has been posted:
-
-```bash
-gh api -X POST repos/AllenNeuralDynamics/<repo>/pulls/<n>/requested_reviewers \
-    --input <(echo '{"reviewers":["copilot-pull-request-reviewer[bot]"]}')
-```
-
-The response's `requested_reviewers` is empty for the bot even on success; confirm with
-the issue timeline (`.../issues/<n>/timeline`, a new `review_requested` event) or wait for
-the review (`.../pulls/<n>/reviews`, author `copilot-pull-request-reviewer[bot]`). The
-reviewer login `Copilot` also works for a first request but was not seen to register a
-re-request; GraphQL `requestReviews` rejects the bot's node id. Verified 2026-10-23 on
-dispatcher #176 (four rounds).
-
 ## Closing the loop — tick the boxes
 
 **The "Done when" list is live state, not a plan you wrote once.** Update it whenever work
@@ -161,69 +142,61 @@ Labels available on the dispatcher: `bug`, `documentation`, `enhancement`, `eval
 label duplicates the board field on purpose — the label is visible in issue lists where
 board fields are not.
 
-## Copilot review — request it, and resolve every thread
+## Copilot review — the loop, with `scripts/copilot.py`
 
-**Every PR gets a Copilot review, and every Copilot comment gets resolved before merge.**
-An unresolved Copilot thread is an unanswered reviewer. Automatic review is currently
-enabled on these repos, so a new PR is reviewed without asking — the API below is for a
-deliberate **re**-review after a fix push, which does not happen automatically.
+**Every PR gets a Copilot review, and every Copilot thread is answered and resolved before
+merge.** An unresolved thread is an unanswered reviewer. Drive the loop with the script
+(urllib + `GITHUB_TOKEN`, like `board.py`; JSON output):
 
-Requesting a review is GraphQL-only. **REST fails**: `POST
-/repos/{owner}/{repo}/pulls/{n}/requested_reviewers` with the Copilot bot returns
-`422 Reviews may only be requested from collaborators`.
-
-```python
-# bot id in AllenNeuralDynamics: BOT_kgDOCnlnWA
-gql("""mutation($pr:ID!,$b:[ID!]!){ requestReviews(input:{
-  pullRequestId:$pr, botIds:$b, union:true}){
-  pullRequest{ reviewRequests(first:5){ nodes{ requestedReviewer{
-    __typename ... on Bot { login } } } } } } }""", pr=pr_node_id, b=["BOT_kgDOCnlnWA"])
+```bash
+python scripts/copilot.py request <repo> <pr>      # first request, and every re-request
+python scripts/copilot.py status  <repo> <pr>      # Copilot reviews so far (count = rounds)
+python scripts/copilot.py threads <repo> <pr>      # unresolved threads: thread id, comment id, body
+python scripts/copilot.py reply   <repo> <pr> <comment_id> reply.md   # footer appended
+python scripts/copilot.py resolve <thread_id> ADDRESSED
 ```
 
-`union: true` adds to the existing reviewers instead of replacing them.
-`RequestReviewsInput` takes `pullRequestId`, `userIds`, `botIds`, `teamIds`, `union`. If the
-bot id ever changes, read it off any PR that Copilot has touched — the `Bot` node in
-`reviewRequests` or `latestReviews`:
+**The loop.** Request → wait (a review lands ~4–5 minutes later; poll `status | jq length`
+from a background monitor, not a foreground sleep) → for each thread, fix or decide not to,
+then `reply` saying what shipped (or why not) and `resolve` it → push → `request` again.
+Nothing re-requests after a push, and auto-review is not reliably on (studies PRs #15–#18
+got none without a request), so always request explicitly.
 
-```python
-gql("""query($o:String!,$r:String!,$n:Int!){ repository(owner:$o,name:$r){
-  pullRequest(number:$n){ id
-    latestReviews(first:10){ nodes{ author{ __typename login
-      ... on Bot { id } } } } } } }""", o=..., r=..., n=...)
-```
+**Round limit.** At most **4 review rounds** per PR unless a round finds a *critical new*
+bug. If round 4 still raises a non-critical point, fix it if cheap, say on the PR that the
+round limit is reached, and merge on green CI rather than starting round 5.
 
-Resolve with a reason — `resolveReviewThread` takes
-`resolutionReason: ADDRESSED | WONT_FIX | INVALID | OUTDATED` (`INVALID` is the UI's "Incorrect"; `OUTDATED` is "Outdated"):
-```python
-gql("""mutation($id:ID!){ resolveReviewThread(input:{
-  threadId:$id, resolutionReason:ADDRESSED}){ thread{ isResolved } } }""", id=thread_id)
-```
+**Reading a round.** The summary review opens with 🟢 *Approval recommended*, 🟡 *Changes
+recommended* or 🔵 *Needs a closer look*. A 🔵 with "No open issues" can still carry a
+*previously missed issue* in the body with **no inline thread**: read the full `status`
+body, not just `threads`, and fix it like any finding (there is nothing to resolve).
 
-Thread ids come from `repository.pullRequest(number: <n>).reviewThreads`.
-
-| Reason | When |
+| Resolve reason | When |
 |---|---|
-| `ADDRESSED` | you changed the code — including when you fixed it *differently* than suggested |
+| `ADDRESSED` | you changed the code, including when you fixed it *differently* than suggested |
 | `WONT_FIX` | the finding is valid but you are deliberately not acting on it |
 | `INVALID` | the finding is wrong |
+| `OUTDATED` | the code it refers to is gone |
 
-For `WONT_FIX` and `INVALID`, reply in-thread with why before resolving
-(`POST /repos/{owner}/{repo}/pulls/{n}/comments` with `in_reply_to: <comment_id>`). A
-resolve with no explanation reads as dismissal.
+Reply on **every** thread before resolving it, not only `WONT_FIX`/`INVALID`; a bare
+resolve reads as dismissal. Copilot does not read replies (they are for the human reviewer
+and the record).
 
-Three things that cost time when learned the hard way:
+Facts learned the hard way (verified 2026-10-25 on studies #16–#18 and dispatcher #188
+unless noted):
 
-- The REST `user.login` on a Copilot comment is **`Copilot`** — not
-  `copilot-pull-request-reviewer`, which is the GraphQL `Bot` login. Filtering on the wrong
-  one returns zero comments and looks like "no review".
-- `PullRequestReviewThread` exposes **no readable `resolutionReason`**, so the reason cannot
-  be read back; the mutation accepting the enum is the only confirmation.
-- **Do not bulk-resolve.** Copilot re-reviews after a push and may add comments while you
-  work; a blanket resolve marks those `ADDRESSED` when they are not. Resolve per finding
-  you actually handled, and re-check for new comments after each push.
-
-Copilot does not read replies — per GitHub's docs, comments on its review are visible to
-humans but not to Copilot. The reply is for the human reviewer and for the record.
+- **Requesting is GraphQL `requestReviews` with `botIds`** (bot node id in
+  AllenNeuralDynamics: `BOT_kgDOCnlnWA`, `union: true`). `gh pr edit --add-reviewer`
+  fails (Copilot is not an org user or team). REST `requested_reviewers` never lists the bot,
+  so confirm a request through GraphQL `reviewRequests`, where it appears as
+  `copilot-pull-request-reviewer`; `request` prints that check. If the bot id changes, read
+  it from the `Bot` node in any touched PR's `reviewRequests` or `latestReviews`.
+- The REST `user.login` on a Copilot review/comment is **`Copilot`**; the GraphQL `Bot` login
+  is `copilot-pull-request-reviewer`. Filtering on the wrong one looks like "no review".
+- `PullRequestReviewThread` exposes **no readable `resolutionReason`**; the mutation
+  accepting the enum is the only confirmation.
+- **Do not bulk-resolve.** A re-review can add threads while you work; resolve per finding
+  you actually handled, and re-run `threads` after each push.
 
 ## Sandbox / auth notes
 
