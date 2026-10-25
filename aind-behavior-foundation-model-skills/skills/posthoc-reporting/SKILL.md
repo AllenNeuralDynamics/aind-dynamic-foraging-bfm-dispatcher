@@ -35,9 +35,10 @@ same checker and fails on any new finding.
 ## Never retype another study's number (hard rule)
 
 A comparison against another study (the GRU ceiling, the best RL baseline, another study's
-curve) reads the number from that study's **committed JSON**: the shared references are in
-the studies repo's `studies/util/cross_study.py`. List that file in
-`build_meta(..., inputs=[...])` and name the source in the report's `upstream`:
+curve) reads the number from that study's **committed JSON**; the shared references have
+readers in the studies repo's `studies/util/cross_study.py`. Pass the **source JSON** (the
+helper's matching `*_SOURCE` path, not the helper module) in `build_meta(..., inputs=[...])`,
+so a change to the number makes the artifact stale, and name the source in the report's `upstream`:
 `{study, report}` for a result, `{study, wandb_group}` for raw data. The checker then warns
 when that source is corrected, superseded or retracted (`report-upstream-stale`), or when the
 declaration is missing (`report-upstream-undeclared`). Under the baseline ratchet that
