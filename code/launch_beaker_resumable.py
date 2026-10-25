@@ -54,8 +54,9 @@ import yaml
 # code/beaker_client.py docstring for why.
 from beaker_client import pin_runtime_refs, submit_beaker_experiment
 from provenance import (
-    DirtyStudiesError, check_studies_clean, launch_provenance, print_warnings,
-    record_fields, runtime_shas_from_pins, study_and_variant, with_runtime_shas,
+    DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
+    launch_provenance, print_warnings, record_fields, runtime_shas_from_pins,
+    study_and_variant, v2_record_fields, with_runtime_shas,
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -278,12 +279,14 @@ def spec_group(spec: dict) -> str | None:
 
 def save_record(sweep_file: str, experiment_id: str | None, n_tasks: int, output_dir: Path,
                 provenance: dict | None = None, runtime_shas: dict | None = None,
-                dirty_override: dict | None = None, wandb_group: str | None = None) -> None:
+                dirty_override: dict | None = None, wandb_group: str | None = None,
+                label: str | None = None, note: str | None = None) -> None:
     """Write ``beaker_resumable.json`` (+ a copy of the sweep) to ``output_dir``.
 
-    Carries the two-root provenance block (studies / dispatcher / wrapper / foraging-models
-    SHAs, see ``provenance.py``). ``dispatcher_commit`` is kept alongside
-    ``dispatcher_git_commit`` because the provenance validator and older readers key on it.
+    A launch-record v2 (``provenance.v2_record_fields``) plus the legacy launcher keys: the
+    two-root provenance block (studies / dispatcher / wrapper / foraging-models SHAs, see
+    ``provenance.py``) and ``dispatcher_commit``, which the provenance validator and older
+    readers key on.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(sweep_file, output_dir / Path(sweep_file).name)
@@ -291,6 +294,11 @@ def save_record(sweep_file: str, experiment_id: str | None, n_tasks: int, output
         provenance = launch_provenance(Path(sweep_file), REPO_ROOT)
     provenance = with_runtime_shas(provenance, runtime_shas)
     record = {
+        **v2_record_fields(
+            provenance, sweep_path=sweep_file, platform="beaker", wandb_group=wandb_group, label=label, note=note,
+            job_refs=[{"type": "beaker_experiment", "id": experiment_id}],
+            manifests=[Path(sweep_file).name, "experiment_resumable_submitted.yaml"],
+            n_tasks=n_tasks, produced_by="launch_beaker_resumable.py"),
         "mode": "resumable-grid",
         "wandb_group": wandb_group,
         "n_tasks": n_tasks,
@@ -335,6 +343,10 @@ def main() -> None:
     spec = build_spec(args.sweep, args.experiment, label=args.label, note=args.note,
                       provenance=provenance)
     try:
+        check_launch_identity(args.sweep, spec_group(spec), args.label, args.note)
+    except LaunchIdentityError as exc:
+        sys.exit(f"[resumable] refusing to launch: {exc}")
+    try:
         pins = pin_runtime_refs(spec)
     except (RuntimeError, ValueError) as exc:
         sys.exit(f"[resumable] runtime ref resolution failed: {exc}")
@@ -353,7 +365,7 @@ def main() -> None:
 
     save_record(args.sweep, experiment_id, n_tasks, output_dir,
                 provenance=provenance, dirty_override=dirty_override,
-                wandb_group=spec_group(spec))
+                wandb_group=spec_group(spec), label=args.label, note=args.note)
     print("[resumable] done")
 
 

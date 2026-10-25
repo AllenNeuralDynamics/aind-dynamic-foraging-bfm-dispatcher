@@ -47,8 +47,9 @@ from launch_beaker_resumable import _seattle_launch_id, _study_variant
 # CLI dependency; see code/beaker_client.py docstring for why.
 from beaker_client import create_wandb_sweep, pin_runtime_refs, submit_beaker_experiment
 from provenance import (
-    DirtyStudiesError, check_studies_clean, launch_provenance, print_warnings,
-    record_fields, runtime_shas_from_pins, with_runtime_shas,
+    DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
+    launch_provenance, print_warnings, record_fields, runtime_shas_from_pins,
+    v2_record_fields, with_runtime_shas,
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent  # the dispatcher capsule root (a git repo)
@@ -105,6 +106,12 @@ def _render_experiment(experiment_file: str, sweep_id: str, group: str, meta_env
     return spec
 
 
+def _task_count(experiment_file: str) -> int:
+    """W&B agents the experiment template submits: each task's ``replicas`` (default 1)."""
+    tasks = yaml.safe_load(Path(experiment_file).read_text()).get("tasks") or []
+    return sum(int(t.get("replicas") or 1) for t in tasks)
+
+
 def submit_experiment(
     experiment_file: str, sweep_id: str, workspace: str,
     group: str, meta_env: list, ref_cache: dict,
@@ -129,11 +136,13 @@ def save_record(
     sweep_file: str, sweep_id: str, experiment_id: str | None, output_dir: Path = RESULTS,
     provenance: dict | None = None, runtime_shas: dict | None = None,
     dirty_override: dict | None = None, wandb_group: str | None = None,
+    label: str | None = None, note: str | None = None, n_tasks: int | None = None,
 ) -> None:
     """Persist the sweep YAML + IDs + commits to output_dir for reproducibility.
 
-    Same two-root provenance block as the resumable launcher (``provenance.py``);
-    ``dispatcher_commit`` is kept because the validator and older readers key on it.
+    A launch-record v2 plus the same legacy keys as the resumable launcher
+    (``provenance.py``); ``dispatcher_commit`` is kept because the validator and older
+    readers key on it.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(sweep_file, output_dir / Path(sweep_file).name)
@@ -142,6 +151,12 @@ def save_record(
         provenance = launch_provenance(Path(sweep_file), REPO_ROOT)
     provenance = with_runtime_shas(provenance, runtime_shas)
     record = {
+        **v2_record_fields(
+            provenance, sweep_path=sweep_file, platform="beaker", wandb_group=wandb_group, label=label, note=note,
+            job_refs=[{"type": "wandb_sweep", "id": sweep_short},
+                      {"type": "beaker_experiment", "id": experiment_id}],
+            manifests=[Path(sweep_file).name, "experiment_submitted.yaml"],
+            n_tasks=n_tasks, produced_by="launch_beaker.py"),
         "sweep_id": sweep_id,
         "wandb_group": wandb_group,
         "wandb_sweep_id": sweep_short,
@@ -207,6 +222,10 @@ def main() -> None:
         meta_env.append({"name": "BFM_META_NOTE", "value": args.note})
     print(f"[launch_beaker] study={study} variant={variant} launch_id={launch_id} "
           f"group={group} config_hash={config_hash}")
+    try:
+        check_launch_identity(args.sweep, group, args.label, args.note)
+    except LaunchIdentityError as exc:
+        sys.exit(f"[launch_beaker] refusing to launch: {exc}")
 
     ref_cache: dict[tuple[str, str], str] = {}
     try:
@@ -236,7 +255,9 @@ def main() -> None:
 
     provenance = with_runtime_shas(provenance, runtime_shas_from_pins(ref_cache))
     save_record(args.sweep, sweep_id, experiment_id, output_dir,
-                provenance=provenance, dirty_override=dirty_override, wandb_group=group)
+                provenance=provenance, dirty_override=dirty_override, wandb_group=group,
+                label=args.label, note=args.note,
+                n_tasks=_task_count(args.experiment))
     print("[launch_beaker] done")
 
 

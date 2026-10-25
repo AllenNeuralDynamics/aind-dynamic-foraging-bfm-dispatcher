@@ -14,6 +14,13 @@ Studies live in **`aind-dynamic-foraging-bfm-studies`**, a sibling checkout of t
 dispatcher (split out at tag `studies-split-v1`, dispatcher #124). Every `studies/...` path
 below is relative to that repo's root; the launchers stay in the dispatcher.
 
+**Field definitions live in the studies repo** — report frontmatter
+([`schemas/report-frontmatter.v1.schema.json`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies/blob/main/schemas/report-frontmatter.v1.schema.json)),
+analysis `_meta` ([`schemas/meta.v2.schema.json`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies/blob/main/schemas/meta.v2.schema.json)) and the
+vocabulary ([`CONTEXT.md`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies/blob/main/CONTEXT.md)). This skill keeps the rules and the why. Run
+`make validate` at the studies root before a PR; CI's required `provenance` check runs the
+same checker and fails on any new finding.
+
 ## Principles
 
 1. **Reports are code** — committed, regenerable, diffable; changed only via their
@@ -170,17 +177,25 @@ never copy per-study. Commit derived outputs (JSON/CSV/PNG); gitignore only cach
 
 ## Contracts in brief (full templates: `references/report-contracts.md`)
 
-- **Report** `r<n>-<slug>.md`: required frontmatter (`id`, `slug`, `status`
-  draft→live→superseded, `authors`, `wandb_groups`, `inputs`, `reproduce`);
-  script-owned `<!-- BEGIN result-N -->` / `<!-- END result-N -->` regions —
-  anything inside is overwritten on regen; producers match marker pairs only.
-- **JSON**: opens with `_meta` (`produced_by`, `produced_at_pt` in Seattle time,
-  `studies_git_sha` + `studies_git_dirty` for the checkout the producer ran in,
-  `wandb_groups`, the `source_{studies,dispatcher,wrapper,foraging_models}_git_shas`
-  arrays read from the launch records of those groups, and `provenance_findings`
-  naming any group whose records lack a SHA). Outputs committed before dispatcher
-  #176 carry the older `dispatcher_git_sha` instead; leave them as they are.
-- **`launch_record_<label>/results.md`**: written once after the group settles —
+- **Report** `r<n>-<slug>.md`: frontmatter per the schema — `status` is
+  `draft | live | superseded | retracted`; `wandb_groups` are exact names, never globs;
+  `inputs` are study-relative paths that exist, and commands or other studies' reports go
+  in `upstream`; a report that amends an earlier one declares `corrects:` (the corrected
+  report is never edited); `reproduce` is `make -C studies/<study> r<n>`. Script-owned
+  `<!-- BEGIN result-N -->` / `<!-- END result-N -->` regions — anything inside is
+  overwritten on regen; producers match marker pairs only.
+- **JSON** (`_meta` v2): write it with
+  `build_meta(produced_by, WANDB_GROUPS, study_root=STUDY, code=[__file__], inputs=[...])`
+  and `write_artifact(path, obj, outputs=[fig, "<report>.md#result-N", ...])` from
+  `studies/util/_meta.py`. That records digests of the producer and the `studies/util`
+  modules it imports (`_meta.py` itself is excluded: it shapes only `_meta`), of every
+  committed input (a gitignored cache is never an input), and of every output — so the
+  checker catches a stale figure, a hand-edited result block, or an input changed since
+  the run. A freeze passes `kind="freeze"` and the external `sources` it read. Reproducible
+  means *committed code + input bytes*; the whole-checkout `studies_git_dirty` flag is
+  informational. Without `code=`, `build_meta` returns the v1 shape unchanged — leave
+  frozen v1 outputs as they are and migrate a producer when you next touch it.
+- **`launch_record/results.md`**: written once after the group settles —
   W&B group + project URL, Beaker exp id + resources, timestamps, status, headline
   metric, which reports it feeds.
 

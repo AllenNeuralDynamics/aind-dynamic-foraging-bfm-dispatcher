@@ -6,22 +6,26 @@ formerly `data-scaling-law`) rather than inventing layout.
 
 ## Report file contract (`reports/r<n>-<slug>.md`)
 
-Header: YAML frontmatter (required keys below). Body: prose + markers around any
-region a script will regenerate.
+Fields: [`schemas/report-frontmatter.v1.schema.json`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies/blob/main/schemas/report-frontmatter.v1.schema.json)
+in the studies repo — the schema, not this example, is authoritative.
 
 ```markdown
 ---
+schema_version: 1
 id: r7
 slug: nxd-joint-scaling-grid
-status: live              # draft | live | superseded
+status: live              # draft | live | superseded | retracted
 authors: [han, pck]
-wandb_groups:
+wandb_groups:             # exact group names; never a glob
   - nxd-grid@20260623-102649
-  - v2-sc-active@20260622-144622
-inputs:
+inputs:                   # study-relative paths that exist; no commands
   script: analysis/nxd_scaling.py
   data: analysis/nxd_scaling.json
   figure: analysis/fig_nxd_scaling.png
+upstream:                 # what this report uses from elsewhere, or can't express as a path
+  - {study: 01-gru-scaling-law, report: r1}
+corrects:                 # optional: earlier reports this one amends (never edit those)
+  - {study: 05-disrnn-scaling-law, report: r1, note: "<which claim changes, and why>"}
 reproduce: make -C studies/<study> r7
 ---
 
@@ -40,54 +44,56 @@ reproduce: make -C studies/<study> r7
 
 Rules:
 
-- Frontmatter is required; missing keys fail the check script.
-- `status` transitions: `draft` -> `live` -> `superseded`. Superseded reports stay
-  in the tree (history) but link forward to their replacement in the body.
+- `status`: `draft` -> `live`; `superseded` needs `superseded_by: {study, report}`;
+  `retracted` means the conclusion is wrong and nothing replaces it. A report that is
+  only partly amended stays `live` — the amending report declares `corrects:`.
 - Everything between `<!-- BEGIN result-N -->` and `<!-- END result-N -->` is owned
   by the producer script. Manual edits inside the markers are overwritten without
-  warning.
+  warning — and, for a v2 producer, flagged by the checker (the block's digest is in
+  the producer's `_meta.outputs`).
 - Producer scripts MUST match on marker pairs, never on adjacent prose (that
   fragility deleted a report section once already) or line numbers.
 - Figures referenced by relative path so the file is portable.
 
-## JSON output contract (`_meta` block)
+## JSON output contract (`_meta` v2)
 
-Every JSON written by an analysis script opens with `_meta` — build it via
-`studies/util/_meta.py` (pass `study_root=`), don't hand-roll:
+Fields: [`schemas/meta.v2.schema.json`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies/blob/main/schemas/meta.v2.schema.json). Build it with
+`studies/util/_meta.py`, never by hand:
 
-```json
-{
-  "_meta": {
-    "produced_by": "analysis/nxd_scaling.py",
-    "produced_at_pt": "2026-06-24T23:30:00-07:00",
-    "studies_git_sha": "<sha of the checkout the producer ran in>",
-    "studies_git_dirty": false,
-    "wrapper_git_sha": "<from environment.lock, or null>",
-    "wandb_groups": ["nxd-grid@20260624-141106"],
-    "source_studies_git_shas": ["<sha>"],
-    "source_dispatcher_git_shas": ["<sha>"],
-    "source_wrapper_git_shas": ["<sha>"],
-    "source_foraging_models_git_shas": [],
-    "provenance_findings": ["no foraging_models SHA in the launch record(s) of W&B group(s): nxd-grid@20260624-141106"]
-  },
-  "...": "actual data"
-}
+```python
+from _meta import build_meta, write_artifact
+
+meta = build_meta("analysis/nxd_scaling.py", WANDB_GROUPS, study_root=STUDY,
+                  code=[__file__], inputs=[STUDY / "analysis/nxd_frozen.json"])
+fig.savefig(FIG)                                   # outputs are written first ...
+rewrite_block(REPORT, "result-7", table)        # your marker-pair rewriter
+write_artifact(OUT, {"_meta": meta, **data},       # ... then recorded with their digests
+               outputs=[FIG, f"{REPORT}#result-7"])
 ```
 
-Times stamped in `America/Los_Angeles` (AGENTS.md §7). `_meta.produced_by` must be
-a real path in the repo. The `source_*_git_shas` arrays come from the launch records
-under `variants/*/launch_record*/` whose group is in `wandb_groups`; a group with no
-record, or a record without that repository's SHA, is listed in `provenance_findings`
-rather than guessed. `studies_git_sha` is the checkout holding the studies (the
-dispatcher before the split, #124; the studies repository after it) and is never
-written under a dispatcher name.
+- `code`: the producer plus every imported `studies/util` module (added automatically;
+  `_meta.py` itself is excluded because it shapes only `_meta`).
+- `inputs`: committed files only. A gitignored cache is never an input — freeze it first.
+- `outputs`: every file the run wrote. The JSON's own entry is the digest of its body
+  without `_meta` (sorted keys, compact separators; int keys hash as their JSON strings);
+  a result block (`<report>.md#<name>`) is hashed with trailing whitespace stripped.
+- A freeze (`freeze_*.py`, reads W&B / Beaker / a URL) passes `kind="freeze"` and
+  `sources=[{"type": "wandb_run", "id": "<entity>/<project>/<run>", "step": 90000}, ...]`,
+  and every row of the frozen file carries its run id, group and step.
+- `studies_git_dirty` is informational: reproducible means committed code + input bytes.
+- Without `code=` the v1 shape is returned unchanged; frozen v1 outputs stay as they are.
 
-## `launch_record_<label>/results.md` contract
+The `source_*_git_shas` arrays still come from the launch records whose group is in
+`wandb_groups`; a gap is listed in `provenance_findings`, never guessed.
 
-Written **once** after the launch group settles — a stub a human reads in 30 s:
+## `launch_record/results.md` contract
+
+Written **once** after the launch group settles — a stub a human reads in 30 s. One
+`launch_record/` per variant; a later launch of the same variant puts its record and stub
+in a subdirectory (`launch_record/<label>/results.md`).
 
 ```markdown
-# launch_record_<label>
+# <variant>@<launch_id>
 
 - W&B group: <variant>@<launch_id>
 - W&B project: <project URL>
@@ -99,8 +105,6 @@ Written **once** after the launch group settles — a stub a human reads in 30 s
 - Feeds reports: r7
 - Notes: <anything non-obvious — preemption count, retries, oddities>
 ```
-
-Required in any `launch_record*/` whose W&B group has at least one finished run.
 
 ## Makefile convention
 
@@ -125,10 +129,10 @@ Cache files (anything pulled from W&B and re-derivable) MUST be `.gitignore`'d:
 `analysis/_cache_*.json`, per-subject pulls, `analysis/__pycache__/`. Curated
 summary JSON and reports/figures are NOT caches — they are committed.
 
-## Enforcement (target)
+## Enforcement
 
-`scripts/check_analysis_artifacts.py` (pre-commit + CI; not yet implemented)
-validates: report frontmatter keys, matched BEGIN/END marker pairs, `_meta`
-presence + real `produced_by` path, `results.md` presence for settled launch
-records, no two scripts writing the same figure path, cache patterns in
-`.gitignore`.
+`scripts/check_provenance.py` in the studies repo (`make validate`; the required
+`provenance` CI check) is the one implementation: layout, study and report frontmatter,
+`_meta` v2 digests, launch records. Each finding prints its fix. Findings that predate a
+rule sit in `schemas/provenance-baseline.json`, which may only shrink — fix the study,
+never baseline a new finding. See [`schemas/README.md`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies/blob/main/schemas/README.md).

@@ -53,6 +53,19 @@ class DirtyStudiesError(RuntimeError):
     """The study directory holding the sweep has uncommitted changes."""
 
 
+class LaunchIdentityError(RuntimeError):
+    """A study launch would mint a W&B group, label or note the studies schema rejects."""
+
+
+# Launch-record v2: AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies
+# schemas/launch-record.v2.schema.json. The field definitions live there; this module only
+# fills them. Rules for the group: that repo's docs/adr/0001-one-launch-one-wandb-group.md.
+RECORD_SCHEMA_VERSION = 2
+_VARIANT_NAME = re.compile(r"^[a-z0-9]+([._-][a-z0-9]+)*$")       # schemas/layout.yaml
+_WANDB_GROUP = re.compile(r"^[A-Za-z0-9][\w.-]*@[0-9]{8}-[0-9]{6}$")
+_MIN_NOTE = 10
+
+
 def _git_env(cwd: Path) -> dict[str, str]:
     """The environment for a git query at ``cwd``: ambient only inside ``GIT_WORK_TREE``."""
     env = dict(os.environ)
@@ -316,3 +329,77 @@ def print_warnings(provenance: dict, prefix: str = "") -> None:
     import sys
     for w in provenance.get("provenance_warnings") or []:
         print(f"{prefix}WARNING: provenance: {w}", file=sys.stderr)
+
+
+def check_launch_identity(sweep_path: Path | str, group: str, label: str | None,
+                          note: str | None) -> None:
+    """Refuse, before anything is submitted, a study launch the studies schema would reject.
+
+    A W&B group cannot be renamed once runs exist, so this is the only point where a wrong
+    one is cheap. For a sweep under ``studies/<study>/variants/<variant>/`` (ADR 0001):
+    the variant directory name is valid, the group is exactly ``<variant>@<launch_id>``, and
+    ``--label`` / ``--note`` are given (the record needs both). An ad-hoc sweep off that
+    layout is not a study launch and is not checked.
+    """
+    study, variant = study_and_variant(sweep_path)
+    if not (study and variant):
+        return
+    problems = []
+    if not _VARIANT_NAME.fullmatch(variant):
+        problems.append(f"variant directory {variant!r} is not lowercase words joined by - _ or .")
+    if not _WANDB_GROUP.fullmatch(group or "") or group.split("@")[0] != variant:
+        problems.append(f"W&B group {group!r} is not {variant}@<YYYYMMDD-HHMMSS>")
+    if not (label or "").strip():
+        problems.append("--label is required for a study launch")
+    if len((note or "").strip()) < _MIN_NOTE:
+        problems.append(f"--note is required for a study launch (why the run exists and what it "
+                        f"should teach us; at least {_MIN_NOTE} characters)")
+    if problems:
+        raise LaunchIdentityError("; ".join(problems))
+
+
+def v2_record_fields(provenance: dict, *, sweep_path: Path | str, platform: str,
+                     wandb_group: str | None, label: str | None, note: str | None,
+                     job_refs: list[dict], manifests: list[str], n_tasks: int | None,
+                     produced_by: str) -> dict:
+    """The launch-record v2 fields for a submitted study launch; ``{}`` otherwise.
+
+    Launchers merge these with their legacy keys, which older readers (the studies
+    ``validate_provenance.py``, ``launch_record.load_records``) still use. An ad-hoc sweep
+    off the ``studies/<study>/variants/<variant>/`` layout may omit ``--label``/``--note``
+    and lands in no study, so it keeps the legacy shape rather than a v2 record the schema
+    would reject. So does a record written before anything was submitted (``--no-submit``
+    previews, the HPC launcher's pre-submit write): v2 requires a job reference, and the
+    record becomes v2 on the write that has one. ``revisions`` holds only full SHAs; a repo
+    whose SHA did not resolve is left out, so the studies checker reports the gap instead
+    of the record hiding it.
+    """
+    study, variant = study_and_variant(sweep_path)
+    job_refs = [r for r in job_refs if r.get("id")]
+    if not (study and variant and job_refs):
+        return {}
+    import datetime
+    from zoneinfo import ZoneInfo
+
+    revisions = {}
+    for repo, field in (("studies", "studies_git_commit"), ("dispatcher", "dispatcher_git_commit"),
+                        ("wrapper", "wrapper_git_commit"),
+                        ("foraging_models", "foraging_models_git_commit")):
+        value = provenance.get(field)
+        value = value[0] if isinstance(value, list) and len(value) == 1 else value
+        if isinstance(value, str) and _FULL_SHA.fullmatch(value):
+            revisions[repo] = value
+    now = datetime.datetime.now(ZoneInfo("America/Los_Angeles")).isoformat(timespec="seconds")
+    return {
+        "_meta": {"schema_version": RECORD_SCHEMA_VERSION, "produced_by": produced_by,
+                  "produced_at_pt": now},
+        "kind": "initial",
+        "platform": platform,
+        "wandb_group": wandb_group,
+        "label": label,
+        "note": note,
+        "job_refs": job_refs,
+        "revisions": revisions,
+        "manifests": list(manifests),
+        "n_tasks": n_tasks,
+    }

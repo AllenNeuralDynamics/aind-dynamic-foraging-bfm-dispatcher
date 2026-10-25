@@ -370,5 +370,132 @@ class TestHpcLauncherCarriesBothRoots(unittest.TestCase):
         self.assertTrue((out / "sweep.yaml").exists())
 
 
+class TestLaunchRecordV2(unittest.TestCase):
+    """Records match the studies repo's schemas/launch-record.v2.schema.json and the launchers
+    refuse, before submitting, a launch that schema or ADR 0001 would reject
+    (AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies#14)."""
+
+    NOTE = "baseline launch: does the example converge?"
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="prov_v2_"))
+        self.root, self.sweep, self.head = make_studies_repo(self.tmp)
+        self.exp = self.tmp / "experiment.yaml"
+        self.exp.write_text(EXPERIMENT)
+        self.prov = provenance.launch_provenance(self.sweep, DISPATCHER_ROOT, {
+            "aind-dynamic-foraging-bfm-wrapper": "a" * 40})
+
+    def assert_v2(self, rec: dict, platform: str, manifests: list[str], out: Path) -> None:
+        self.assertEqual(rec["_meta"]["schema_version"], 2)
+        self.assertEqual(rec["kind"], "initial")
+        self.assertEqual(rec["platform"], platform)
+        self.assertEqual((rec["label"], rec["note"]), ("arm", self.NOTE))
+        self.assertTrue(rec["job_refs"])
+        self.assertTrue(all(r["id"] for r in rec["job_refs"]))
+        self.assertEqual(rec["revisions"]["studies"], self.head)
+        self.assertRegex(rec["revisions"]["dispatcher"], r"^[0-9a-f]{40}$")
+        self.assertEqual(rec["revisions"]["wrapper"], "a" * 40)
+        self.assertNotIn("foraging_models", rec["revisions"])   # unresolved: left out, not null
+        self.assertEqual(rec["manifests"], manifests)
+        self.assertTrue((out / manifests[0]).exists())
+        # legacy keys stay for older readers (validate_provenance.py, load_records)
+        self.assertRegex(rec["dispatcher_commit"], r"^[0-9a-f]{40}$")
+        self.assertIn("created_utc", rec)
+
+    def test_resumable_record_is_v2(self):
+        out = self.tmp / "out"
+        spec = resumable.build_spec(str(self.sweep), str(self.exp), provenance=self.prov)
+        resumable.save_record(str(self.sweep), "01KEXP", 1, out, provenance=self.prov,
+                              wandb_group=resumable.spec_group(spec), label="arm", note=self.NOTE)
+        rec = json.loads((out / "beaker_resumable.json").read_text())
+        self.assert_v2(rec, "beaker", ["sweep.yaml", "experiment_resumable_submitted.yaml"], out)
+        self.assertEqual(rec["job_refs"], [{"type": "beaker_experiment", "id": "01KEXP"}])
+        self.assertEqual(rec["n_tasks"], 1)
+
+    def test_native_record_is_v2(self):
+        out = self.tmp / "out_native"
+        launch_beaker.save_record(str(self.sweep), "ent/proj/abc123", "01KEXP", out,
+                                  provenance=self.prov, wandb_group="stan-arm@20261023-000000",
+                                  label="arm", note=self.NOTE, n_tasks=4)
+        rec = json.loads((out / "beaker_sweep.json").read_text())
+        self.assert_v2(rec, "beaker", ["sweep.yaml", "experiment_submitted.yaml"], out)
+        self.assertEqual({r["type"] for r in rec["job_refs"]}, {"wandb_sweep", "beaker_experiment"})
+
+    def test_hpc_record_is_v2_and_drops_refs_not_yet_known(self):
+        out = self.tmp / "out_hpc"
+        kw = dict(sweep_file=self.sweep, group="stan-arm@20261023-000000", n_array_tasks=2,
+                  agent_count=1, mode="cpu", provenance=self.prov, dirty_override=None,
+                  label="arm", note=self.NOTE)
+        early = launch_hpc._save_record(out, sweep_path=None, array_jobid=None, autostop_jobid=None, **kw)
+        self.assertNotIn("kind", early)          # nothing submitted yet: legacy shape
+        launch_hpc._save_record(out, sweep_path="e/p/xyz", array_jobid="7", autostop_jobid="8", **kw)
+        rec = json.loads((out / "hpc_sweep.json").read_text())
+        self.assert_v2(rec, "hpc", ["sweep.yaml"], out)
+        self.assertEqual(rec["job_refs"], [{"type": "wandb_sweep", "id": "xyz"},
+                                           {"type": "slurm_array_job", "id": "7"}])
+
+    def test_study_launch_identity_is_checked_before_submitting(self):
+        ok = "stan-arm@20261023-000000"
+        provenance.check_launch_identity(self.sweep, ok, "arm", self.NOTE)        # no raise
+        cases = {
+            "other@20261023-000000": "is not stan-arm@",
+            "stan-arm@2026": "is not stan-arm@",
+        }
+        for group, msg in cases.items():
+            with self.assertRaisesRegex(provenance.LaunchIdentityError, msg):
+                provenance.check_launch_identity(self.sweep, group, "arm", self.NOTE)
+        with self.assertRaisesRegex(provenance.LaunchIdentityError, "--label"):
+            provenance.check_launch_identity(self.sweep, ok, None, self.NOTE)
+        with self.assertRaisesRegex(provenance.LaunchIdentityError, "--note"):
+            provenance.check_launch_identity(self.sweep, ok, "arm", "short")
+
+    def test_bad_variant_directory_name_is_refused(self):
+        bad = self.sweep.parent.parent / "Stan_Arm!" / "sweep.yaml"
+        bad.parent.mkdir()
+        bad.write_text(SWEEP)
+        with self.assertRaisesRegex(provenance.LaunchIdentityError, "variant directory"):
+            provenance.check_launch_identity(bad, "Stan_Arm!@20261023-000000", "arm", self.NOTE)
+
+    def test_adhoc_record_keeps_the_legacy_shape(self):
+        adhoc = self.tmp / "sweep_mvp.yaml"
+        adhoc.write_text(SWEEP)
+        out = self.tmp / "out_adhoc"
+        resumable.save_record(str(adhoc), "01KEXP", 1, out, provenance=self.prov,
+                              wandb_group="sweep-mvp@20261023-000000")
+        rec = json.loads((out / "beaker_resumable.json").read_text())
+        self.assertNotIn("_meta", rec)
+        self.assertNotIn("kind", rec)
+        self.assertEqual(rec["mode"], "resumable-grid")
+
+    def test_no_submit_preview_keeps_the_legacy_shape(self):
+        out = self.tmp / "out_preview"
+        resumable.save_record(str(self.sweep), None, 1, out, provenance=self.prov,
+                              wandb_group="stan-arm@20261023-000000", label="arm", note=self.NOTE)
+        rec = json.loads((out / "beaker_resumable.json").read_text())
+        self.assertNotIn("_meta", rec)
+        self.assertEqual(rec["mode"], "resumable-grid")
+
+    def test_native_task_count_sums_replicas(self):
+        exp = self.tmp / "replicas.yaml"
+        exp.write_text("tasks:\n  - name: a\n    replicas: 4\n  - name: b\n")
+        self.assertEqual(launch_beaker._task_count(str(exp)), 5)
+
+    def test_hpc_record_lists_the_submitted_sweep_once_archived(self):
+        out = self.tmp / "out_hpc_sub"
+        kw = dict(sweep_file=self.sweep, group="stan-arm@20261023-000000", n_array_tasks=2,
+                  agent_count=1, mode="cpu", provenance=self.prov, dirty_override=None,
+                  label="arm", note=self.NOTE, sweep_path="e/p/xyz", array_jobid="7",
+                  autostop_jobid=None)
+        self.assertEqual(launch_hpc._save_record(out, **kw)["manifests"], ["sweep.yaml"])
+        (out / launch_hpc.SUBMITTED_SWEEP).write_text("name: patched\n")
+        self.assertEqual(launch_hpc._save_record(out, **kw)["manifests"],
+                         ["sweep.yaml", launch_hpc.SUBMITTED_SWEEP])
+
+    def test_adhoc_sweep_off_the_studies_layout_is_not_checked(self):
+        adhoc = self.tmp / "sweep_mvp.yaml"
+        adhoc.write_text(SWEEP)
+        provenance.check_launch_identity(adhoc, "sweep_mvp@20261023-000000", None, None)
+
+
 if __name__ == "__main__":
     unittest.main()
