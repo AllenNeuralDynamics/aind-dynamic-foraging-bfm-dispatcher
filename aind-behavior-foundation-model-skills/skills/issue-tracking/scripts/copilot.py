@@ -81,7 +81,13 @@ def request(repo, number):
 
 
 def status(repo, number):
-    reviews = rest(f"repos/{ORG}/{repo}/pulls/{number}/reviews?per_page=100")
+    reviews, page = [], 1
+    while True:                       # every page: later Copilot rounds must not be dropped
+        batch = rest(f"repos/{ORG}/{repo}/pulls/{number}/reviews?per_page=100&page={page}")
+        reviews += batch
+        if len(batch) < 100:
+            break
+        page += 1
     # REST login is "Copilot"; GraphQL's is "copilot-pull-request-reviewer"
     return [{"id": r["id"], "commit": r["commit_id"], "state": r["state"],
              "submitted_at": r["submitted_at"], "body": r["body"]}
@@ -89,10 +95,16 @@ def status(repo, number):
 
 
 def threads(repo, number):
-    q = """query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){pullRequest(number:$n){
-      reviewThreads(first:100){nodes{id isResolved isOutdated path line
+    q = """query($o:String!,$r:String!,$n:Int!,$c:String){repository(owner:$o,name:$r){pullRequest(number:$n){
+      reviewThreads(first:100,after:$c){pageInfo{hasNextPage endCursor} nodes{id isResolved isOutdated path line
         comments(first:50){nodes{databaseId author{login} body}}}}}}}"""
-    nodes = gql(q, {"o": ORG, "r": repo, "n": number})["repository"]["pullRequest"]["reviewThreads"]["nodes"]
+    nodes, cursor = [], None
+    while True:                       # every page: an unresolved thread may sit past the first 100
+        page = gql(q, {"o": ORG, "r": repo, "n": number, "c": cursor})["repository"]["pullRequest"]["reviewThreads"]
+        nodes += page["nodes"]
+        if not page["pageInfo"]["hasNextPage"]:
+            break
+        cursor = page["pageInfo"]["endCursor"]
     return [{"thread": t["id"], "path": t["path"], "line": t["line"], "outdated": t["isOutdated"],
              "comments": [{"id": c["databaseId"], "author": (c["author"] or {}).get("login"),
                            "body": c["body"]} for c in t["comments"]["nodes"]]}

@@ -1,6 +1,6 @@
 ---
 name: issue-tracking
-description: File GitHub issues for the AIND behavior foundation model repos and put them on the AIND-behavior-fm org project board (project 184) with Status, Priority, and Size set. Covers the always-file-an-issue-first rule, the cached board field/option IDs, the REST+GraphQL calls (no gh CLI in the sandbox), how to pick P0/P1/P2 and XS-XL, linking the PR back, and the Copilot review loop (scripts/copilot.py: request, read, reply, resolve, re-request; at most 4 rounds). Use before starting any tracked work in aind-dynamic-foraging-bfm-dispatcher or aind-dynamic-foraging-bfm-wrapper, whenever opening an issue or PR, or when a board field needs updating.
+description: "File GitHub issues for the AIND behavior foundation model repos and put them on the AIND-behavior-fm org project board (project 184) with Status, Priority, and Size set. Covers the always-file-an-issue-first rule, the cached board field/option IDs, the REST+GraphQL calls (no gh CLI in the sandbox), how to pick P0/P1/P2 and XS-XL, linking the PR back, and the Copilot review loop (scripts/copilot.py: request, read, reply, resolve, re-request; at most 4 rounds). Use before starting any tracked work in aind-dynamic-foraging-bfm-dispatcher or aind-dynamic-foraging-bfm-wrapper, whenever opening an issue or PR, or when a board field needs updating."
 ---
 
 # Issue & project-board tracking
