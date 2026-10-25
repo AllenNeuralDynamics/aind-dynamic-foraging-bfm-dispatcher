@@ -427,7 +427,7 @@ class TestLaunchRecordV2(unittest.TestCase):
                   agent_count=1, mode="cpu", provenance=self.prov, dirty_override=None,
                   label="arm", note=self.NOTE)
         early = launch_hpc._save_record(out, sweep_path=None, array_jobid=None, autostop_jobid=None, **kw)
-        self.assertEqual(early["job_refs"], [])
+        self.assertNotIn("kind", early)          # nothing submitted yet: legacy shape
         launch_hpc._save_record(out, sweep_path="e/p/xyz", array_jobid="7", autostop_jobid="8", **kw)
         rec = json.loads((out / "hpc_sweep.json").read_text())
         self.assert_v2(rec, "hpc", ["sweep.yaml"], out)
@@ -465,6 +465,14 @@ class TestLaunchRecordV2(unittest.TestCase):
         rec = json.loads((out / "beaker_resumable.json").read_text())
         self.assertNotIn("_meta", rec)
         self.assertNotIn("kind", rec)
+        self.assertEqual(rec["mode"], "resumable-grid")
+
+    def test_no_submit_preview_keeps_the_legacy_shape(self):
+        out = self.tmp / "out_preview"
+        resumable.save_record(str(self.sweep), None, 1, out, provenance=self.prov,
+                              wandb_group="stan-arm@20261023-000000", label="arm", note=self.NOTE)
+        rec = json.loads((out / "beaker_resumable.json").read_text())
+        self.assertNotIn("_meta", rec)
         self.assertEqual(rec["mode"], "resumable-grid")
 
     def test_native_task_count_sums_replicas(self):

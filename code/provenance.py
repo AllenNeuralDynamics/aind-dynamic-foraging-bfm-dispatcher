@@ -362,17 +362,21 @@ def v2_record_fields(provenance: dict, *, sweep_path: Path | str, platform: str,
                      wandb_group: str | None, label: str | None, note: str | None,
                      job_refs: list[dict], manifests: list[str], n_tasks: int | None,
                      produced_by: str) -> dict:
-    """The launch-record v2 fields for an initial study launch; ``{}`` for an ad-hoc one.
+    """The launch-record v2 fields for a submitted study launch; ``{}`` otherwise.
 
     Launchers merge these with their legacy keys, which older readers (the studies
     ``validate_provenance.py``, ``launch_record.load_records``) still use. An ad-hoc sweep
     off the ``studies/<study>/variants/<variant>/`` layout may omit ``--label``/``--note``
     and lands in no study, so it keeps the legacy shape rather than a v2 record the schema
-    would reject. ``revisions`` holds only full SHAs; a repo whose SHA did not resolve is
-    left out, so the studies checker reports the gap instead of the record hiding it.
+    would reject. So does a record written before anything was submitted (``--no-submit``
+    previews, the HPC launcher's pre-submit write): v2 requires a job reference, and the
+    record becomes v2 on the write that has one. ``revisions`` holds only full SHAs; a repo
+    whose SHA did not resolve is left out, so the studies checker reports the gap instead
+    of the record hiding it.
     """
     study, variant = study_and_variant(sweep_path)
-    if not (study and variant):
+    job_refs = [r for r in job_refs if r.get("id")]
+    if not (study and variant and job_refs):
         return {}
     import datetime
     from zoneinfo import ZoneInfo
@@ -394,7 +398,7 @@ def v2_record_fields(provenance: dict, *, sweep_path: Path | str, platform: str,
         "wandb_group": wandb_group,
         "label": label,
         "note": note,
-        "job_refs": [r for r in job_refs if r.get("id")],
+        "job_refs": job_refs,
         "revisions": revisions,
         "manifests": list(manifests),
         "n_tasks": n_tasks,
