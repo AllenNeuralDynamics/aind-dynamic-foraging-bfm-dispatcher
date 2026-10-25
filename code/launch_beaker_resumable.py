@@ -295,7 +295,7 @@ def save_record(sweep_file: str, experiment_id: str | None, n_tasks: int, output
     provenance = with_runtime_shas(provenance, runtime_shas)
     record = {
         **v2_record_fields(
-            provenance, platform="beaker", wandb_group=wandb_group, label=label, note=note,
+            provenance, sweep_path=sweep_file, platform="beaker", wandb_group=wandb_group, label=label, note=note,
             job_refs=[{"type": "beaker_experiment", "id": experiment_id}],
             manifests=[Path(sweep_file).name, "experiment_resumable_submitted.yaml"],
             n_tasks=n_tasks, produced_by="launch_beaker_resumable.py"),

@@ -456,6 +456,33 @@ class TestLaunchRecordV2(unittest.TestCase):
         with self.assertRaisesRegex(provenance.LaunchIdentityError, "variant directory"):
             provenance.check_launch_identity(bad, "Stan_Arm!@20261023-000000", "arm", self.NOTE)
 
+    def test_adhoc_record_keeps_the_legacy_shape(self):
+        adhoc = self.tmp / "sweep_mvp.yaml"
+        adhoc.write_text(SWEEP)
+        out = self.tmp / "out_adhoc"
+        resumable.save_record(str(adhoc), "01KEXP", 1, out, provenance=self.prov,
+                              wandb_group="sweep-mvp@20261023-000000")
+        rec = json.loads((out / "beaker_resumable.json").read_text())
+        self.assertNotIn("_meta", rec)
+        self.assertNotIn("kind", rec)
+        self.assertEqual(rec["mode"], "resumable-grid")
+
+    def test_native_task_count_sums_replicas(self):
+        exp = self.tmp / "replicas.yaml"
+        exp.write_text("tasks:\n  - name: a\n    replicas: 4\n  - name: b\n")
+        self.assertEqual(launch_beaker._task_count(str(exp)), 5)
+
+    def test_hpc_record_lists_the_submitted_sweep_once_archived(self):
+        out = self.tmp / "out_hpc_sub"
+        kw = dict(sweep_file=self.sweep, group="stan-arm@20261023-000000", n_array_tasks=2,
+                  agent_count=1, mode="cpu", provenance=self.prov, dirty_override=None,
+                  label="arm", note=self.NOTE, sweep_path="e/p/xyz", array_jobid="7",
+                  autostop_jobid=None)
+        self.assertEqual(launch_hpc._save_record(out, **kw)["manifests"], ["sweep.yaml"])
+        (out / launch_hpc.SUBMITTED_SWEEP).write_text("name: patched\n")
+        self.assertEqual(launch_hpc._save_record(out, **kw)["manifests"],
+                         ["sweep.yaml", launch_hpc.SUBMITTED_SWEEP])
+
     def test_adhoc_sweep_off_the_studies_layout_is_not_checked(self):
         adhoc = self.tmp / "sweep_mvp.yaml"
         adhoc.write_text(SWEEP)

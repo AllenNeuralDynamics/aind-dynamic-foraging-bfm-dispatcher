@@ -258,6 +258,10 @@ def _studies_lineage(provenance: dict) -> dict[str, str]:
     }
 
 
+# The lineage-patched sweep handed to `wandb sweep`, archived beside the launch record.
+SUBMITTED_SWEEP = "sweep_submitted.yaml"
+
+
 def _save_record(
     output_dir: Path, *, sweep_file: Path, sweep_path: str | None, group: str,
     array_jobid: str | None, autostop_jobid: str | None, n_array_tasks: int,
@@ -278,11 +282,13 @@ def _save_record(
     entity_project, _, sweep_short = (sweep_path or "").rpartition("/")
     record = {
         **v2_record_fields(
-            provenance, platform="hpc", wandb_group=group, label=label, note=note,
+            provenance, sweep_path=sweep_file, platform="hpc", wandb_group=group,
+            label=label, note=note,
             job_refs=[{"type": "wandb_sweep", "id": sweep_short or None},
                       {"type": "slurm_array_job", "id": array_jobid}],
-            manifests=[Path(sweep_file).name], n_tasks=n_array_tasks,
-            produced_by="launch_hpc.py"),
+            manifests=[Path(sweep_file).name]
+            + ([SUBMITTED_SWEEP] if (output_dir / SUBMITTED_SWEEP).exists() else []),
+            n_tasks=n_array_tasks, produced_by="launch_hpc.py"),
         "mode": "hpc-sweep",
         "wandb_group": group,
         "wandb_sweep_id": sweep_short or None,
@@ -767,6 +773,9 @@ def main() -> None:
         yaml.safe_dump(sweep_cfg, tmp, sort_keys=False)
         patched_yaml = Path(tmp.name)
     print(f"Patched sweep YAML with lineage at: {patched_yaml}")
+    # What W&B actually receives (group + lineage overrides) is what reproduces the launch;
+    # keep it beside the record, which lists it in `manifests`.
+    shutil.copy2(patched_yaml, output_dir / SUBMITTED_SWEEP)
 
     sweep_cmd = ["wandb", "sweep", str(patched_yaml)]
     sweep_result = _run_command(sweep_cmd, cwd=repo_root)

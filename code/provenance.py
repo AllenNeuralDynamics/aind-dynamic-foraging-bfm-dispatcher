@@ -358,16 +358,22 @@ def check_launch_identity(sweep_path: Path | str, group: str, label: str | None,
         raise LaunchIdentityError("; ".join(problems))
 
 
-def v2_record_fields(provenance: dict, *, platform: str, wandb_group: str | None,
-                     label: str | None, note: str | None, job_refs: list[dict],
-                     manifests: list[str], n_tasks: int | None, produced_by: str) -> dict:
-    """The launch-record v2 fields for an initial launch.
+def v2_record_fields(provenance: dict, *, sweep_path: Path | str, platform: str,
+                     wandb_group: str | None, label: str | None, note: str | None,
+                     job_refs: list[dict], manifests: list[str], n_tasks: int | None,
+                     produced_by: str) -> dict:
+    """The launch-record v2 fields for an initial study launch; ``{}`` for an ad-hoc one.
 
     Launchers merge these with their legacy keys, which older readers (the studies
-    ``validate_provenance.py``, ``launch_record.load_records``) still use. ``revisions``
-    holds only full SHAs; a repo whose SHA did not resolve is left out, so the studies
-    checker reports the gap instead of the record hiding it.
+    ``validate_provenance.py``, ``launch_record.load_records``) still use. An ad-hoc sweep
+    off the ``studies/<study>/variants/<variant>/`` layout may omit ``--label``/``--note``
+    and lands in no study, so it keeps the legacy shape rather than a v2 record the schema
+    would reject. ``revisions`` holds only full SHAs; a repo whose SHA did not resolve is
+    left out, so the studies checker reports the gap instead of the record hiding it.
     """
+    study, variant = study_and_variant(sweep_path)
+    if not (study and variant):
+        return {}
     import datetime
     from zoneinfo import ZoneInfo
 

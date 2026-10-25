@@ -107,8 +107,9 @@ def _render_experiment(experiment_file: str, sweep_id: str, group: str, meta_env
 
 
 def _task_count(experiment_file: str) -> int:
-    """Beaker tasks (W&B agents) the experiment template submits."""
-    return len(yaml.safe_load(Path(experiment_file).read_text()).get("tasks") or [])
+    """W&B agents the experiment template submits: each task's ``replicas`` (default 1)."""
+    tasks = yaml.safe_load(Path(experiment_file).read_text()).get("tasks") or []
+    return sum(int(t.get("replicas") or 1) for t in tasks)
 
 
 def submit_experiment(
@@ -151,7 +152,7 @@ def save_record(
     provenance = with_runtime_shas(provenance, runtime_shas)
     record = {
         **v2_record_fields(
-            provenance, platform="beaker", wandb_group=wandb_group, label=label, note=note,
+            provenance, sweep_path=sweep_file, platform="beaker", wandb_group=wandb_group, label=label, note=note,
             job_refs=[{"type": "wandb_sweep", "id": sweep_short},
                       {"type": "beaker_experiment", "id": experiment_id}],
             manifests=[Path(sweep_file).name, "experiment_submitted.yaml"],
