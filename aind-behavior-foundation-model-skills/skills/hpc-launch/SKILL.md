@@ -70,6 +70,10 @@ python code/launch_hpc.py \
   --note "why this run exists + what we want to learn"
 ```
 
+For a sweep under `studies/<study>/variants/<variant>/`, `--label` and `--note` are
+**required** and the group must be `<variant>@<launch_id>`; the launcher refuses otherwise,
+before creating the sweep (study-conventions; studies ADR 0001).
+
 `launch_hpc.py` creates the W&B sweep, injects studies + dispatcher + wrapper git lineage as
 Hydra `+meta.*` overrides (`+meta.studies_commit` among them), computes `AGENT_COUNT` for grid sweeps, submits the SLURM array,
 and submits a cleanup job that stops the sweep after the array drains

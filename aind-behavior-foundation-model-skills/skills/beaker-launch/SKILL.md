@@ -148,6 +148,11 @@ python code/launch_beaker_resumable.py \
 # --no-submit renders the spec for inspection without launching
 ```
 
+For a sweep under `studies/<study>/variants/<variant>/`, `--label` and `--note` are
+**required**: the launcher refuses the launch (before submitting) without them, or if the
+group would not be `<variant>@<launch_id>` (study-conventions; studies ADR 0001). The record
+it writes is launch-record v2 — copy it into the variant's `launch_record/`.
+
 It sets the W&B group to `<variant>@<launch_id>` and injects `BFM_META_*`
 provenance (see the study-conventions skill), including `BFM_META_STUDIES_COMMIT`, the studies
 repo commit that held the sweep; the wrapper stamps it as `meta.studies_commit`.
@@ -206,7 +211,8 @@ the fan-out. Routine repeats of known-good launches: fan out directly.
   Beaker-finished count against the W&B-finished count and chase any persistent gap
   (`references/scheduling-lessons.md`); recovery is usually free from the surviving
   per-subject table (`references/resume-extend-rescore.md` mechanism 4).
-- After the launch settles, write `launch_record_<label>/results.md`
+- After the launch settles, write `launch_record/results.md` (a later launch of the same
+  variant: `launch_record/<label>/results.md`)
   (see posthoc-reporting skill).
 - **Any post-launch intervention — resubmit, rescue, probe, tier change — must write a
   launch record**, or it is lost: the launchers only record the *first* launch. Use
