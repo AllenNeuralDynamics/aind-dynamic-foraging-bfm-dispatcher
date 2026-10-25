@@ -82,8 +82,9 @@ from zoneinfo import ZoneInfo
 import yaml
 
 from provenance import (
-    DirtyStudiesError, check_studies_clean, git_state, installed_vcs_commit,
-    launch_provenance, print_warnings, record_fields, study_and_variant,
+    DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
+    git_state, installed_vcs_commit, launch_provenance, print_warnings, record_fields,
+    study_and_variant, v2_record_fields,
 )
 
 
@@ -261,8 +262,11 @@ def _save_record(
     output_dir: Path, *, sweep_file: Path, sweep_path: str | None, group: str,
     array_jobid: str | None, autostop_jobid: str | None, n_array_tasks: int,
     agent_count: int, mode: str, provenance: dict, dirty_override: dict | None,
+    label: str | None = None, note: str | None = None,
 ) -> dict:
     """Write ``hpc_sweep.json`` + a copy of the sweep YAML; the HPC launch record.
+
+    A launch-record v2 (``provenance.v2_record_fields``) plus the legacy launcher keys.
 
     ``wandb_sweep_id`` (the short id) is the durable handle the provenance validator
     reconciles against W&B; SLURM ids are recycled and age out of ``sacct``.
@@ -273,6 +277,12 @@ def _save_record(
     shutil.copy2(sweep_file, output_dir / Path(sweep_file).name)
     entity_project, _, sweep_short = (sweep_path or "").rpartition("/")
     record = {
+        **v2_record_fields(
+            provenance, platform="hpc", wandb_group=group, label=label, note=note,
+            job_refs=[{"type": "wandb_sweep", "id": sweep_short or None},
+                      {"type": "slurm_array_job", "id": array_jobid}],
+            manifests=[Path(sweep_file).name], n_tasks=n_array_tasks,
+            produced_by="launch_hpc.py"),
         "mode": "hpc-sweep",
         "wandb_group": group,
         "wandb_sweep_id": sweep_short or None,
@@ -671,6 +681,10 @@ def main() -> None:
         f"Study provenance: study={study} variant={variant} "
         f"launch_id={launch_id} group={group} config_hash={config_hash}"
     )
+    try:
+        check_launch_identity(sweep_yaml, group, args.label, args.note)
+    except LaunchIdentityError as exc:
+        raise SystemExit(f"Refusing to launch: {exc}")
 
     sweep_cmd = ["wandb", "sweep", str(sweep_yaml)]
     print("Running:", " ".join(shlex.quote(x) for x in sweep_cmd))
@@ -707,6 +721,7 @@ def main() -> None:
         array_jobid=None, autostop_jobid=None, n_array_tasks=num_array_tasks,
         agent_count=computed_agent_count, mode=args.mode,
         provenance=provenance, dirty_override=dirty_override,
+        label=args.label, note=args.note,
     )
 
     # --- Lineage injection ---
@@ -777,6 +792,7 @@ def main() -> None:
         array_jobid=None, autostop_jobid=None, n_array_tasks=num_array_tasks,
         agent_count=computed_agent_count, mode=args.mode,
         provenance=provenance, dirty_override=dirty_override,
+        label=args.label, note=args.note,
     )
 
     sbatch_cmd: list[str] = ["sbatch"]
@@ -864,6 +880,7 @@ def main() -> None:
         array_jobid=array_jobid, autostop_jobid=autostop_jobid,
         n_array_tasks=num_array_tasks, agent_count=computed_agent_count, mode=args.mode,
         provenance=provenance, dirty_override=dirty_override,
+        label=args.label, note=args.note,
     )
 
     # If the user opted out of auto-stop, remind them how to mark the sweep
