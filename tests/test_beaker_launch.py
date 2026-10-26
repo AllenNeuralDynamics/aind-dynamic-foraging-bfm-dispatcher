@@ -230,9 +230,6 @@ class TestBuildSpec(unittest.TestCase):
             )
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class TestBeakerToken(unittest.TestCase):
     """BEAKER_TOKEN first, then the CLI config file (dispatcher #196)."""
@@ -268,3 +265,7 @@ class TestBeakerToken(unittest.TestCase):
             with self.assertRaises(KeyError) as err:
                 self.token({"BEAKER_CONFIG": str(self.cfg)})
             self.assertIn(str(self.cfg), str(err.exception))
+
+
+if __name__ == "__main__":
+    unittest.main()
