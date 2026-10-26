@@ -124,15 +124,21 @@ broke study 13's first HPC smoke.
 3. **foraging-models comes from the runtime conda env, and so does its recorded commit.** The
    record reads the commit from the env's `direct_url.json`. A `PYTHONPATH` override would run
    new code under a record naming the old install. Install the exact commit instead, on a
-   compute node, without touching other packages:
+   compute node, without touching other packages. `ENV` is the env the job runs in, which is
+   not the CPU env the launcher runs from:
 
    ```bash
+   ENV=/allen/aind/scratch/han.hou/miniforge3/envs/dynamic-foraging-bfm-gpu   # -cpu for --mode cpu
    srun -p aind --time=00:20:00 --mem=8G -c 2 \
      $ENV/bin/python -m pip install --no-deps \
      "aind-dynamic-foraging-models @ git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-models.git@<full_sha>"
    ```
 
-   This changes the shared `dynamic-foraging-bfm-gpu` env for everyone; say so when you do it.
+   This changes the shared env for everyone, **including jobs already queued**: a task
+   activates the env when it starts, so a queued job would run the new install while its
+   record names the old one. Before installing, check that no queued or running job uses the
+   env (`squeue -u <each user of it>`; ask in the team channel if unsure), and leave it
+   unchanged until your own jobs finish. Say in the launch note that you changed it.
    The dry run's `foraging_models_git_commit` must show the SHA, with no provenance warning.
 4. **Compose the overrides before submitting.** A key absent from the model config needs a
    `+` prefix (`+model.progress_bar=true`). A wrong one fails at Hydra composition in under a
@@ -140,6 +146,7 @@ broke study 13's first HPC smoke.
    the job log, never the state alone. Check on a compute node first:
 
    ```bash
+   # ENV and R as above
    srun -p aind --time=00:10:00 --mem=4G $ENV/bin/python -c "
    from hydra import initialize_config_dir, compose
    with initialize_config_dir(config_dir='$R/aind-dynamic-foraging-bfm-dispatcher/code/config', version_base=None):
