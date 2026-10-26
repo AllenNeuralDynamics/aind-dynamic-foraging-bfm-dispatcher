@@ -32,13 +32,19 @@ carries whatever rules that study predates). Each writes files that pass `make v
 from the first commit, plus TODO prompts, and never overwrites anything:
 
 ```bash
-make new-study   NAME=12-gru-foo QUESTION="Does ...?" PROJECT=gru_foo VARIANT=base MOTIVATED_BY=06/r2 [ISSUE=...]
+make new-study   NAME=12-gru-foo QUESTION="Does ...?" PROJECT=gru_foo VARIANT=base MOTIVATED_BY=06/r2 \
+                 MODEL=gru QUESTION_TYPE=scaling,comparison [ISSUE=...]
 make new-variant STUDY=12-gru-foo NAME=wider
 ```
 
 `MOTIVATED_BY` is required: the earlier results this study follows up (`05/r1,03/r2`, a study
 `05`, an issue `#23`), or `none` for a root study. It fills `motivated_by` in the frontmatter
 (why the study exists; studies ADR 0002), each entry with a note to complete.
+`MODEL` and `QUESTION_TYPE` are required too: comma-separated values from the studies repo's
+`schemas/tags.yaml`, filling the README's `tags` (what the study asks; CONTEXT.md, Tag). Tag
+only models the study trains or fits itself, never numbers it reads from another study. Once
+the study is `complete`, each of its tags must also appear on one of its live or draft
+reports, or `make validate` warns `study-tag-unreported`.
 `new-study` refuses a used accession number and writes the README frontmatter, CHANGELOG,
 Makefile, `.gitignore`, reports INDEX and the first variant's `notes.md`. `new-variant`
 writes `notes.md` only; add `sweep.yaml` / `experiment.yaml` next to it before launching.
