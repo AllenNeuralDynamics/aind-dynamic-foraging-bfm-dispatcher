@@ -295,7 +295,9 @@ front, since there is no sweep controller to ask for the next point.
 The launchers are **sandbox-safe** and replace the two CLI steps above:
 `create_wandb_sweep()` uses the W&B GraphQL API directly (no `wandb-core`
 subprocess), and `get_beaker_client()` builds `beaker.Beaker` from
-`Config(user_token=os.environ["BEAKER_TOKEN"])` directly (no `~/.beaker/config.yml`).
+`Config(user_token=...)` directly. The token is `BEAKER_TOKEN`, else `user_token` from
+`$BEAKER_CONFIG` or `~/.beaker/config.yml` (what `beaker account login` writes); without
+either, the launch record's image has no id and the studies checker warns.
 Creds `BEAKER_TOKEN` + `WANDB_API_KEY` are in the sandbox env; `beaker.org` and
 `api.wandb.ai` each need a one-time `request_network_access` grant.
 

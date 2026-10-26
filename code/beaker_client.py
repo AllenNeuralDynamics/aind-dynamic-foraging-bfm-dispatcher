@@ -185,18 +185,36 @@ def create_wandb_sweep(sweep_file: str, wandb_api_key: str | None = None) -> str
     return f"{entity}/{project}/{sweep_name}"
 
 
+def beaker_token() -> str:
+    """The Beaker user token: `BEAKER_TOKEN`, else `user_token` from the CLI's config file.
+
+    The file is `$BEAKER_CONFIG` or `~/.beaker/config.yml` (what `beaker account login`
+    writes). A missing or unreadable file (sandboxes that block dotfiles under `$HOME`)
+    counts as absent, so the environment variable alone still works everywhere.
+    """
+    token = os.environ.get("BEAKER_TOKEN")
+    if token:
+        return token
+    path = Path(os.environ.get("BEAKER_CONFIG") or Path.home() / ".beaker" / "config.yml")
+    try:
+        token = (yaml.safe_load(path.read_text()) or {}).get("user_token")
+    except (OSError, yaml.YAMLError, AttributeError):
+        token = None
+    if not token:
+        raise KeyError(f"no Beaker token: BEAKER_TOKEN is unset and {path} has no readable user_token")
+    return token
+
+
 def get_beaker_client(workspace: str | None = None):
-    """Build an authenticated `beaker.Beaker` client from `BEAKER_TOKEN`.
+    """Build an authenticated `beaker.Beaker` client from `beaker_token()`.
 
     Uses `beaker.Config(user_token=...)` directly instead of `Beaker.from_env()` /
-    `Beaker.from_config()`, which look for `~/.beaker/config.yml` on disk -- a file
-    that may not exist (fresh environment) or may not be readable (sandboxed
-    environments that restrict access to dotfiles under `$HOME`). The explicit
-    `Config` constructor does no filesystem I/O and works identically everywhere.
+    `Beaker.from_config()`, so a sandbox that blocks `~/.beaker/config.yml` still works
+    from `BEAKER_TOKEN`; the file is only a fallback when the variable is unset.
     """
     from beaker import Beaker, Config
 
-    token = os.environ["BEAKER_TOKEN"]
+    token = beaker_token()
     cfg = Config(user_token=token, default_org="ai1", default_workspace=workspace)
     beaker = Beaker(cfg)
     beaker._timeout = 60  # beaker-py's default is too short for large-payload requests

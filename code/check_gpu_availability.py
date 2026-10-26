@@ -34,7 +34,7 @@ Usage
     # JSON for programmatic use:
     python code/check_gpu_availability.py --json
 
-Beaker auth: reads ``BEAKER_TOKEN`` from the environment (same as beaker_client).
+Beaker auth: ``BEAKER_TOKEN``, else ``~/.beaker/config.yml`` (``beaker_client.beaker_token``).
 HPC: must be run from a host on the Allen network (login node, or the Claude
 Science sandbox with VPN up); shells out to ``sinfo``/``scontrol``.
 """
@@ -68,9 +68,12 @@ def beaker_schedulable() -> dict:
     """Return {cluster: {schedulable, cordoned_free, total, queued, gpu_type}}."""
     from beaker import Beaker, Config  # lazy import
 
-    token = os.environ.get("BEAKER_TOKEN")
-    if not token:
-        return {"_error": "BEAKER_TOKEN not set"}
+    from beaker_client import beaker_token  # lazy: same token lookup as the launchers
+
+    try:
+        token = beaker_token()
+    except KeyError as exc:
+        return {"_error": str(exc).strip("'\"")}
     cfg = Config(user_token=token, default_org="ai1",
                  default_workspace="ai1/aind-dynamic-foraging-foundation-model")
     b = Beaker(cfg)

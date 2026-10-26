@@ -19,6 +19,7 @@ Two things are deliberately avoided:
 both are stubbed here rather than installed -- CI needs PyYAML alone.
 """
 
+import os
 import sys
 import tempfile
 import types
@@ -231,3 +232,39 @@ class TestBuildSpec(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestBeakerToken(unittest.TestCase):
+    """BEAKER_TOKEN first, then the CLI config file (dispatcher #196)."""
+
+    def setUp(self):
+        import beaker_client
+        self.bc = beaker_client
+        self.tmp = Path(tempfile.mkdtemp(prefix="beaker_token_"))
+        self.cfg = self.tmp / "config.yml"
+
+    def token(self, env):
+        from unittest import mock
+        with mock.patch.dict(os.environ, env, clear=True):
+            return self.bc.beaker_token()
+
+    def test_the_environment_wins(self):
+        self.cfg.write_text("user_token: from-file\n")
+        self.assertEqual(self.token({"BEAKER_TOKEN": "from-env", "BEAKER_CONFIG": str(self.cfg)}), "from-env")
+
+    def test_the_config_file_is_the_fallback(self):
+        self.cfg.write_text("agent_address: x\nuser_token: from-file\n")
+        self.assertEqual(self.token({"BEAKER_CONFIG": str(self.cfg)}), "from-file")
+
+    def test_the_default_path_is_under_home(self):
+        (self.tmp / ".beaker").mkdir()
+        (self.tmp / ".beaker" / "config.yml").write_text("user_token: home-file\n")
+        self.assertEqual(self.token({"HOME": str(self.tmp)}), "home-file")
+
+    def test_neither_names_where_it_looked(self):
+        for text in (None, "", "agent_address: x\n", "- not a mapping\n"):
+            if text is not None:
+                self.cfg.write_text(text)
+            with self.assertRaises(KeyError) as err:
+                self.token({"BEAKER_CONFIG": str(self.cfg)})
+            self.assertIn(str(self.cfg), str(err.exception))
