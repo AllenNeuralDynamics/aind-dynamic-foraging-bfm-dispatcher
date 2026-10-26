@@ -202,6 +202,11 @@ a deleted draft's number is never reused) and writes `analysis/reports/r<n>-<slu
 slug with `-` turned into `_`, e.g. `r3_heldout_curve.py`; it writes `r3_heldout_curve.json`
 and already calls `build_meta(..., code=[__file__])` + `write_artifact()`), the `r<n>`
 Makefile target, and the INDEX row. Fill in the TODOs; add `r<n>` to `all` once the producer runs offline.
+Add `tags: {model: [...], question: [...]}` for what the report does (values from the studies
+repo's `schemas/tags.yaml`; a model only if this report trains or fits it). The atlas filters a
+study by its own tags plus its reports', so a report doing a generative run or a methods check
+is found even when the study's tags do not name it. A producer that writes the whole report
+must write the tags too, or regeneration drops them.
 Never copy an old report: its frontmatter may predate the schema.
 
 ## Contracts in brief (full templates: `references/report-contracts.md`)
