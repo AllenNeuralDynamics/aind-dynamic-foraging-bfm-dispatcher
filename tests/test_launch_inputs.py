@@ -51,7 +51,9 @@ class DataRecordTest(unittest.TestCase):
     def test_defaults_and_overrides(self):
         self.assertEqual(self.record()["config"], "mice_snapshot")                    # Hydra default
         self.assertEqual(self.record(["data.snapshot=20260701"])["snapshot"], "20260701")
-        self.assertEqual(self.record(parameters={"data.snapshot": {"value": "20260702"}})["snapshot"], "20260702")
+        self.assertEqual(self.record(["${args_no_hyphens}"], {"data.snapshot": {"value": "20260702"}})["snapshot"], "20260702")
+        # a command without an ${args...} macro never receives the parameters
+        self.assertEqual(self.record(parameters={"data.snapshot": {"value": "20260702"}})["snapshot"], "20260603")
 
     def test_live_and_unpinned_data_are_refused(self):
         for d in (self.record(["data=mice_live"]), self.record(["data=mice"])):
@@ -65,7 +67,7 @@ class DataRecordTest(unittest.TestCase):
 
     def test_a_swept_snapshot_is_refused(self):
         with self.assertRaises(li.DataConfigError):
-            self.record(parameters={"data.snapshot": {"values": ["20260603", "20260701"]}})
+            self.record(["${args_no_hyphens}"], {"data.snapshot": {"values": ["20260603", "20260701"]}})
 
     def test_hydra_prefixes_and_nulls_clear_the_snapshot(self):
         for params in ({"++data.snapshot": {"value": "null"}}, {"+data.snapshot": {"value": None}}):
@@ -121,6 +123,33 @@ class DataRecordTest(unittest.TestCase):
     def test_dataset_given_as_a_separate_token(self):
         d = li.data_record({"command": ["python", "-m", "external_transfer.gru_transfer", "--dataset", "zid"]}, self.root)
         self.assertEqual(d["config"], "external_transfer.gru_transfer --dataset=zid")
+
+    def test_hydra_sweep_expressions_are_refused(self):
+        for value in ("20260603,null", "choice(20260603,20260701)"):
+            with self.assertRaises(li.DataConfigError):
+                li.data_record({"command": ["python", "run_hpc.py", "-m", "data=mice_snapshot", f"data.snapshot={value}"]},
+                               self.root, fetch=fetch)
+
+    def test_native_args_macro_maps_parameters_to_flags(self):
+        base = ["python", "-m", "external_transfer.gru_transfer", "--dataset=zid"]
+        params = {"dataset": {"value": "grossman"}}
+        d = li.data_record({"command": [*base, "${args}"], "parameters": params}, self.root)
+        self.assertEqual(d["config"], "external_transfer.gru_transfer --dataset=grossman")    # ${args} -> --dataset
+        d = li.data_record({"command": [*base, "${args_no_hyphens}"], "parameters": params}, self.root)
+        self.assertEqual(d["config"], "external_transfer.gru_transfer --dataset=zid")         # dataset=..., not a flag
+
+    def test_tasks_on_different_images_are_refused(self):
+        spec = {"tasks": [{"image": {"beaker": "a/img-1"}}, {"image": {"beaker": "a/img-2"}}]}
+        with self.assertRaises(li.DataConfigError):
+            li.image_record_beaker(spec, "ws", client_factory=lambda ws: None)
+
+    def test_wrapper_config_root_is_the_dispatcher_beside_the_wrapper(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "aind-disrnn-dispatcher" / "code" / "config").mkdir(parents=True)
+            (root / "aind-dynamic-foraging-bfm-wrapper").mkdir()
+            self.assertEqual(li.wrapper_config_root(root / "aind-dynamic-foraging-bfm-wrapper"),
+                             root.resolve() / "aind-disrnn-dispatcher" / "code" / "config")
 
     def test_tasks_on_different_dispatcher_commits_are_refused(self):
         self.assertEqual(li.runtime_dispatcher_sha({"aind-dynamic-foraging-bfm-dispatcher": "a" * 40}), "a" * 40)

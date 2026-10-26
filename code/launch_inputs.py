@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import urllib.request
 from pathlib import Path
 from typing import Callable
@@ -35,6 +36,10 @@ class DataConfigError(ValueError):
 # 09's external_transfer.gru_transfer) reads its own data, recorded as `external`
 HYDRA_RUNNERS = {"run_hpc"}
 ARGS_MACROS = {"${args}", "${args_no_hyphens}", "${args_no_boolean_flags}", "${args_json}", "${args_json_file}"}
+HYPHEN_MACROS = {"${args}", "${args_no_boolean_flags}"}      # emit --name=value for a parameter `name`
+# the wrapper's run_hpc loads code/config from the first of these beside the wrapper checkout
+DISPATCHER_DIR_NAMES = ("aind-dynamic-foraging-bfm-dispatcher", "aind-disrnn-dispatcher")
+_SWEEP_EXPR = re.compile(r"^(choice|range|interval|glob|tag|sort|shuffle)\(")
 
 
 def _decode(value) -> str | None:
@@ -47,6 +52,9 @@ def _decode(value) -> str | None:
                               "pin a literal value so the launch record can name it")
     if len(s) >= 2 and s[0] == s[-1] and s[0] in "'\"":
         return s[1:-1]
+    if "," in s or _SWEEP_EXPR.match(s):   # Hydra multirun: a,b or choice(...) launches several values
+        raise DataConfigError(f"the data override {s!r} is a Hydra sweep over several values; "
+                              "launch one data config and snapshot per launch")
     if s.lower() == "null" or s in ("", "~"):
         return None
     return s
@@ -87,13 +95,20 @@ def _effective(sweep: dict, key: str) -> set[str | None] | None:
     """The values ``key`` takes across the sweep's runs, in Hydra's override order.
 
     The command list is applied in order; W&B expands ``parameters`` where its ``${args...}``
-    macro sits (at the end when there is none), so a later override wins. ``~key`` and a null
+    macro sits (and only there; a sweep with no command gets W&B's default, ending in ${args}),
+    so a later override wins. ``~key`` and a null
     value clear it (None). Returns None when the sweep never sets the key (the config default).
     """
     params = {_key(k): spec for k, spec in (sweep.get("parameters") or {}).items() if isinstance(spec, dict)}
 
-    def from_params():
-        spec = params[key]
+    def param_key(macro):
+        """The parameter a macro expands into `key`: --name from `name` under ${args}, else `key`."""
+        if macro in HYPHEN_MACROS:
+            return key[2:] if key.startswith("--") else None
+        return None if key.startswith("--") else key
+
+    def from_params(pkey):
+        spec = params[pkey]
         values = [spec["value"]] if "value" in spec else list(spec.get("values") or [])
         return {_decode(v) for v in values}
 
@@ -106,15 +121,26 @@ def _effective(sweep: dict, key: str) -> set[str | None] | None:
             continue
         if item.strip() in ARGS_MACROS:
             expanded = True
-            if key in params:
-                current = from_params()
+            if (pkey := param_key(item.strip())) in params:
+                current = from_params(pkey)
         elif item.startswith("~") and _key(item.split("=", 1)[0]) == key:
             current = {None}
         elif "=" in item and not item.startswith("$") and _key(item.split("=", 1)[0]) == key:
             current = {_decode(item.split("=", 1)[1])}
-    if not expanded and key in params:
-        current = from_params()
+    # without a `command`, W&B runs its default `${env} ${interpreter} ${program} ${args}`; with a
+    # command that has no ${args...} macro, the parameters never reach the run
+    if not sweep.get("command") and (pkey := param_key("${args}")) in params:
+        current = from_params(pkey)
     return current
+
+
+def wrapper_config_root(wrapper_root: Path | str) -> Path:
+    """The code/config directory the wrapper's run_hpc loads (the dispatcher beside the wrapper)."""
+    parent = Path(wrapper_root).resolve().parent
+    for name in DISPATCHER_DIR_NAMES:
+        if (parent / name / "code" / "config").is_dir():
+            return parent / name / "code" / "config"
+    return parent / DISPATCHER_DIR_NAMES[0] / "code" / "config"
 
 
 def file_reader(config_root: Path | str) -> Callable[[str], str | None]:
@@ -211,15 +237,19 @@ def live_data_refusal(data: dict) -> str | None:
             "--allow-live-data for a smoke test.")
 
 
-def image_record_beaker(template: dict, workspace: str | None,
+def image_record_beaker(spec: dict, workspace: str | None,
                         client_factory: Callable | None = None) -> dict | None:
-    """The launch record's Beaker `image`: the template's image name and the id it resolves to."""
-    names = [((t.get("image") or {}).get("beaker")) for t in template.get("tasks") or []]
+    """The launch record's Beaker `image`: the rendered spec's image name and the id it resolves to.
+
+    Pass the rendered spec (every task that will be submitted). Tasks on different images are
+    refused: one record names one image."""
+    names = [((t.get("image") or {}).get("beaker")) for t in spec.get("tasks") or []]
     names = [n for n in names if n]
     if not names:
         return None
     if len(set(names)) > 1:
-        print(f"[launch_inputs] WARNING: tasks name several Beaker images {sorted(set(names))}; recording {names[0]}")
+        raise DataConfigError(f"the tasks run on different Beaker images {sorted(set(names))}; "
+                              "launch one image per launch so the record can name it")
     image_id = None
     try:
         if client_factory is None:

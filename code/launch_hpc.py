@@ -81,7 +81,7 @@ from zoneinfo import ZoneInfo
 
 import yaml
 
-from launch_inputs import DataConfigError, data_record, image_record_hpc, live_data_refusal
+from launch_inputs import DataConfigError, data_record, image_record_hpc, live_data_refusal, wrapper_config_root
 from provenance import (
     DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
     git_state, installed_vcs_commit, launch_provenance, print_warnings, record_fields,
@@ -684,7 +684,8 @@ def main() -> None:
         raise SystemExit(f"Refusing to launch: {exc}")
     # what the runs train on and run in, recorded in the launch record (studies#25)
     try:
-        data = data_record(yaml.safe_load(sweep_yaml.read_text()), repo_root / "code" / "config")
+        # the configs the jobs load: run_hpc reads the dispatcher beside the selected wrapper
+        data = data_record(yaml.safe_load(sweep_yaml.read_text()), wrapper_config_root(wrapper_root))
     except DataConfigError as exc:
         raise SystemExit(f"Refusing to launch: {exc}")
     if (why := live_data_refusal(data)) and not args.allow_live_data:

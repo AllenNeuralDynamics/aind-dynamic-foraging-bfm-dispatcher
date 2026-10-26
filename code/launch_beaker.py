@@ -246,12 +246,13 @@ def main() -> None:
         reader = runtime_config_reader(REPO_ROOT, runtime_dispatcher_sha(runtime_shas_from_pins(ref_cache)),
                                        provenance.setdefault("provenance_warnings", []))
         data = data_record(yaml.safe_load(Path(args.sweep).read_text()), reader)
+        image = image_record_beaker(preflight, args.workspace)
     except DataConfigError as exc:
         sys.exit(f"[launch_beaker] refusing to launch: {exc}")
     if (why := live_data_refusal(data)) and not args.allow_live_data:
         sys.exit(f"[launch_beaker] refusing to launch: {why}")
     provenance = {**provenance, "data": data,
-                  "image": image_record_beaker(yaml.safe_load(Path(args.experiment).read_text()), args.workspace)}
+                  "image": image}
 
     sweep_id = create_sweep(args.sweep)
     print(f"[launch_beaker] SWEEP_ID = {sweep_id}")
