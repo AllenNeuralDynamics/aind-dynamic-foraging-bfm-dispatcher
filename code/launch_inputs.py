@@ -42,23 +42,31 @@ def _decode(value) -> str | None:
     if value is None:
         return None
     s = str(value).strip()
+    if "${" in s:                       # OmegaConf resolves interpolations even inside quotes
+        raise DataConfigError(f"the data override {s!r} is an interpolation resolved only at run time; "
+                              "pin a literal value so the launch record can name it")
     if len(s) >= 2 and s[0] == s[-1] and s[0] in "'\"":
         return s[1:-1]
     if s.lower() == "null" or s in ("", "~"):
         return None
-    if "${" in s:
-        raise DataConfigError(f"the data override {s!r} is an interpolation resolved only at run time; "
-                              "pin a literal value so the launch record can name it")
     return s
 
 
 def _runner(sweep: dict) -> str | None:
-    """The module or script the sweep runs (`python -m run_hpc ...` -> run_hpc)."""
+    """The module or script the sweep runs (`python -m run_hpc ...` -> run_hpc).
+
+    `-m` is Python's module flag only directly after the interpreter; later it is Hydra's
+    multirun flag (`python run_hpc.py -m data=...`)."""
     cmd = [x for x in sweep.get("command") or [] if isinstance(x, str)]
-    if "-m" in cmd and cmd.index("-m") + 1 < len(cmd):
-        return cmd[cmd.index("-m") + 1]
-    prog = sweep.get("program") or next((x for x in cmd[1:] if x.endswith(".py")), None)
-    return Path(prog).stem if prog else None
+    while cmd and cmd[0] == "${env}":
+        cmd = cmd[1:]
+    if cmd and (Path(cmd[0]).name.startswith("python") or cmd[0] == "${interpreter}"):
+        if len(cmd) > 2 and cmd[1] == "-m":
+            return cmd[2]
+        cmd = cmd[1:]
+    # the program is W&B's `${program}` (the sweep's `program:`) or the first `.py` script
+    prog = sweep.get("program") if ("${program}" in cmd or not cmd) else next((x for x in cmd if x.endswith(".py")), None)
+    return Path(prog).stem if prog and not str(prog).startswith("$") else None
 
 
 def runtime_dispatcher_sha(runtime_shas: dict) -> str | None:
@@ -90,8 +98,11 @@ def _effective(sweep: dict, key: str) -> set[str | None] | None:
         return {_decode(v) for v in values}
 
     current, expanded = None, False
-    for item in sweep.get("command") or []:
-        if not isinstance(item, str):
+    cmd = [x for x in sweep.get("command") or [] if isinstance(x, str)]
+    for i, item in enumerate(cmd):
+        # a flag may take its value as the next token (`--dataset zid`)
+        if key.startswith("--") and item == key and i + 1 < len(cmd) and not cmd[i + 1].startswith("-"):
+            current = {_decode(cmd[i + 1])}
             continue
         if item.strip() in ARGS_MACROS:
             expanded = True

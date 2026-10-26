@@ -109,6 +109,19 @@ class DataRecordTest(unittest.TestCase):
         self.assertEqual(d, {"source": "external", "config": "external_transfer.gru_transfer --dataset=zid", "type": None})
         self.assertIsNone(li.live_data_refusal(d))
 
+    def test_quoted_interpolation_and_script_multirun(self):
+        with self.assertRaises(li.DataConfigError):
+            self.record(["data=mice_snapshot", "data.snapshot='${oc.env:SNAPSHOT,null}'"])
+        # `-m` after a script is Hydra multirun, not a module: still a Hydra run, so live data is refused
+        d = li.data_record({"command": ["python", "run_hpc.py", "-m", "data=mice_snapshot", "data.snapshot=null"]},
+                           self.root, fetch=fetch)
+        self.assertEqual((d["source"], d["config"]), ("live", "mice_snapshot"))
+        self.assertEqual(li._runner({"program": "run_hpc.py", "command": ["${env}", "${interpreter}", "${program}", "${args}"]}), "run_hpc")
+
+    def test_dataset_given_as_a_separate_token(self):
+        d = li.data_record({"command": ["python", "-m", "external_transfer.gru_transfer", "--dataset", "zid"]}, self.root)
+        self.assertEqual(d["config"], "external_transfer.gru_transfer --dataset=zid")
+
     def test_tasks_on_different_dispatcher_commits_are_refused(self):
         self.assertEqual(li.runtime_dispatcher_sha({"aind-dynamic-foraging-bfm-dispatcher": "a" * 40}), "a" * 40)
         with self.assertRaises(li.DataConfigError):
