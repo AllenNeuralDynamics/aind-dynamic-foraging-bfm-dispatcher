@@ -81,6 +81,7 @@ from zoneinfo import ZoneInfo
 
 import yaml
 
+from launch_inputs import DataConfigError, data_record, image_record_hpc, live_data_refusal, wrapper_config_root
 from provenance import (
     DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
     git_state, installed_vcs_commit, launch_provenance, print_warnings, record_fields,
@@ -552,6 +553,14 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--allow-live-data",
+        action="store_true",
+        help=(
+            "Launch even though the data config reads the live (unpinned) database; "
+            "for smoke tests only, never a result (studies#25)."
+        ),
+    )
+    parser.add_argument(
         "--diagnostic-dirty-ok",
         default=None,
         metavar="REASON",
@@ -653,10 +662,8 @@ def main() -> None:
     wrapper_git = _git_info(wrapper_root)
     # The models package is pip-installed into the runtime env (sometimes from a branch, via
     # git+https); its commit lives in the env's direct_url.json, not in any checkout here.
-    models = installed_vcs_commit(
-        _runtime_env_site_packages(launch_env.get("CONDA_SH"), slurm_script),
-        "aind_dynamic_foraging_models",
-    )
+    site_packages = _runtime_env_site_packages(launch_env.get("CONDA_SH"), slurm_script)
+    models = installed_vcs_commit(site_packages, "aind_dynamic_foraging_models")
     provenance = launch_provenance(
         sweep_yaml, repo_root,
         {"aind-dynamic-foraging-bfm-wrapper": wrapper_git["commit"],
@@ -675,6 +682,15 @@ def main() -> None:
         dirty_override = check_studies_clean(provenance, args.diagnostic_dirty_ok)
     except DirtyStudiesError as exc:
         raise SystemExit(f"Refusing to launch: {exc}")
+    # what the runs train on and run in, recorded in the launch record (studies#25)
+    try:
+        # the configs the jobs load: run_hpc reads the dispatcher beside the selected wrapper
+        data = data_record(yaml.safe_load(sweep_yaml.read_text()), wrapper_config_root(wrapper_root))
+    except DataConfigError as exc:
+        raise SystemExit(f"Refusing to launch: {exc}")
+    if (why := live_data_refusal(data)) and not args.allow_live_data:
+        raise SystemExit(f"Refusing to launch: {why}")
+    provenance = {**provenance, "data": data, "image": image_record_hpc(site_packages)}
     if provenance.get("studies_git_commit"):
         provenance_env["BFM_META_STUDIES_COMMIT"] = provenance["studies_git_commit"]
     output_dir = (

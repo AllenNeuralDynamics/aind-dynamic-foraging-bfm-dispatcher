@@ -45,6 +45,8 @@ from launch_beaker_resumable import _seattle_launch_id, _study_variant
 
 # Library-only clients (GraphQL for W&B, beaker-py for Beaker) -- no `wandb`/`beaker`
 # CLI dependency; see code/beaker_client.py docstring for why.
+from launch_inputs import (DataConfigError, data_record, image_record_beaker, live_data_refusal,
+                           runtime_config_reader, runtime_dispatcher_sha)
 from beaker_client import create_wandb_sweep, pin_runtime_refs, submit_beaker_experiment
 from provenance import (
     DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
@@ -191,6 +193,9 @@ def main() -> None:
     p.add_argument("--diagnostic-dirty-ok", default=None, metavar="REASON",
                    help="launch even though studies/<study>/ has uncommitted changes; REASON is "
                         "written into the launch record (diagnostic runs only, never a result)")
+    p.add_argument("--allow-live-data", action="store_true",
+                   help="launch even though the data config reads the live (unpinned) database; "
+                        "for smoke tests only, never a result (studies#25)")
     args = p.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -235,6 +240,19 @@ def main() -> None:
         pin_runtime_refs(preflight, cache=ref_cache)
     except (RuntimeError, ValueError) as exc:
         sys.exit(f"[launch_beaker] runtime ref resolution failed: {exc}")
+    # what the runs train on and run in, recorded in the launch record (studies#25). The data
+    # config is read at the pinned DISPATCHER_REF: that is what the runs will load.
+    try:
+        reader = runtime_config_reader(REPO_ROOT, runtime_dispatcher_sha(runtime_shas_from_pins(ref_cache)),
+                                       provenance.setdefault("provenance_warnings", []))
+        data = data_record(yaml.safe_load(Path(args.sweep).read_text()), reader)
+        image = image_record_beaker(preflight, args.workspace)
+    except DataConfigError as exc:
+        sys.exit(f"[launch_beaker] refusing to launch: {exc}")
+    if (why := live_data_refusal(data)) and not args.allow_live_data:
+        sys.exit(f"[launch_beaker] refusing to launch: {why}")
+    provenance = {**provenance, "data": data,
+                  "image": image}
 
     sweep_id = create_sweep(args.sweep)
     print(f"[launch_beaker] SWEEP_ID = {sweep_id}")

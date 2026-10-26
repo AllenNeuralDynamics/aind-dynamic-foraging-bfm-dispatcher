@@ -135,7 +135,9 @@ detail: wrapper `../aind-dynamic-foraging-bfm-wrapper/code/TRAINING.md` §1.5):
 
 `launch_hpc.py` writes the **first** launch's record (`hpc_sweep.json` + a copy of the
 sweep in `--output-dir`, default `results/hpc_<launch_id>/`; dispatcher #176) — copy it
-into the variant's `launch_record/` like a Beaker record. Every post-sweep action
+into the variant's `launch_record/` like a Beaker record. The record names the data snapshot
+(an unpinned, live-database config is refused unless `--allow-live-data`) and, as its `image`,
+the conda env the SLURM script activates with a digest of its packages. Every post-sweep action
 (resubmitting dead array tasks, rescuing a wedged job, a diagnostic rerun, recovering a
 metric post-hoc) must still be recorded by hand with
 `studies/util/launch_record.py::write_intervention(..., platform="hpc")` or it is lost. **Schema, required fields, and the full example live in the
