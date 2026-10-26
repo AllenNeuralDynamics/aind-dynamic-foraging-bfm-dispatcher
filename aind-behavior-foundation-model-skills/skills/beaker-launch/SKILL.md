@@ -32,9 +32,9 @@ corrected skill. Follow whichever side is more restrictive, and fix both in the 
 4. Workspace/budget: `WS=ai1/aind-dynamic-foraging-foundation-model`.
 5. From HPC/sandbox, **pass `--output-dir`** to the launchers (or rely on the
    repo-local `results/` fallback) — `/results` is the Code Ocean path.
-   Credentials on HPC: `BEAKER_TOKEN` is *not* in the env; read it from
-   `~/.beaker/config.yml` (`user_token`). `WANDB_API_KEY` likewise comes from
-   `~/.netrc`.
+   Credentials on HPC: `BEAKER_TOKEN` is *not* in the env; the launchers fall back to
+   `user_token` in `~/.beaker/config.yml` (or `$BEAKER_CONFIG`). `WANDB_API_KEY` comes
+   from `~/.netrc`.
 6. **Scientific submissions use immutable refs.** Templates may retain readable
    branch/tag values and inline comments, but the launchers require all three REF
    variables and resolve them to full SHAs before W&B sweep creation or Beaker
@@ -153,8 +153,9 @@ For a sweep under `studies/<study>/variants/<variant>/`, `--label` and `--note` 
 group would not be `<variant>@<launch_id>` (study-conventions; studies ADR 0001). The record
 it writes is launch-record v2 — copy it into the variant's `launch_record/`. It records the data
 snapshot (refusing an unpinned, live-database config unless `--allow-live-data`) and resolves
-the template's Beaker image name to its immutable id, which needs `BEAKER_TOKEN`; without it
-the id is left empty and the launcher warns.
+the template's Beaker image name to its immutable id, which needs a Beaker token
+(`BEAKER_TOKEN`, else `~/.beaker/config.yml`); without one the id is left empty and the
+launcher warns.
 
 It sets the W&B group to `<variant>@<launch_id>` and injects `BFM_META_*`
 provenance (see the study-conventions skill), including `BFM_META_STUDIES_COMMIT`, the studies
