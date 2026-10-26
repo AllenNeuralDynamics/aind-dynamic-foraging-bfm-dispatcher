@@ -201,6 +201,10 @@ Validate one unit first **only when something is untested** (new cluster, new si
 changed spec); check assigned GPUs/resources on the first scheduled job before trusting
 the fan-out. Routine repeats of known-good launches: fan out directly.
 
+Before any new sweep's first launch, compose its Hydra overrides on a compute node (hpc-launch,
+"Pinned study launches", item 4): a key absent from the config needs `+`, and the mistake
+otherwise surfaces only after the job waits out the queue (study 13's first smoke).
+
 ## Monitoring & debugging
 
 - `https://beaker.org/ex/<id>`; runs appear in the study's W&B project.

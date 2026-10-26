@@ -97,6 +97,58 @@ python code/launch_hpc.py --mode cpu --sbatch-extra=--array=0-0 --agent-count 1
 python code/launch_hpc.py --mode gpu --gpu-type a100
 ```
 
+## Pinned study launches: what the HPC route needs (study 13, 2026-10-25)
+
+On Beaker every job clones the repos at the pinned SHAs when it starts. On HPC nothing is
+cloned: the job runs whatever is in the directories it is pointed at, read when it actually
+starts (possibly hours later) and while it runs. Five things follow; each one broke or nearly
+broke study 13's first HPC smoke.
+
+1. **Launch from detached worktrees, never the shared checkouts.** Several sessions share
+   `~/code/aind-dynamic-foraging-bfm-*` and switch their branches; a pending job would then
+   run code other than what its launch record names, and nothing would notice. Put the wrapper
+   and dispatcher **side by side** (the launcher finds `code/config` beside the wrapper) at the
+   full SHAs you mean to run, and keep them until the jobs finish:
+
+   ```bash
+   R=~/code/wt/<study>-hpc && mkdir -p $R
+   git -C ~/code/aind-dynamic-foraging-bfm-wrapper    worktree add --detach $R/aind-dynamic-foraging-bfm-wrapper    <wrapper_sha>
+   git -C ~/code/aind-dynamic-foraging-bfm-dispatcher worktree add --detach $R/aind-dynamic-foraging-bfm-dispatcher <dispatcher_sha>
+   cp ~/code/aind-dynamic-foraging-bfm-dispatcher/code/hpc/slurm/user.env $R/aind-dynamic-foraging-bfm-dispatcher/code/hpc/slurm/
+   ```
+
+   `user.env` is untracked, so a fresh worktree lacks it.
+2. **Pass the sweep as an absolute path.** `--sweep-yaml` resolves a relative path against the
+   dispatcher root, not your working directory. Run from the studies checkout with
+   `--sweep-yaml $PWD/studies/<study>/variants/<variant>/<sweep>.yaml --wrapper-root $R/aind-dynamic-foraging-bfm-wrapper`.
+3. **foraging-models comes from the runtime conda env, and so does its recorded commit.** The
+   record reads the commit from the env's `direct_url.json`. A `PYTHONPATH` override would run
+   new code under a record naming the old install. Install the exact commit instead, on a
+   compute node, without touching other packages:
+
+   ```bash
+   srun -p aind --time=00:20:00 --mem=8G -c 2 \
+     $ENV/bin/python -m pip install --no-deps \
+     "aind-dynamic-foraging-models @ git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-models.git@<full_sha>"
+   ```
+
+   This changes the shared `dynamic-foraging-bfm-gpu` env for everyone; say so when you do it.
+   The dry run's `foraging_models_git_commit` must show the SHA, with no provenance warning.
+4. **Compose the overrides before submitting.** A key absent from the model config needs a
+   `+` prefix (`+model.progress_bar=true`). A wrong one fails at Hydra composition in under a
+   minute. The W&B agent still exits 0, so **SLURM reports the array task `COMPLETED`**; read
+   the job log, never the state alone. Check on a compute node first:
+
+   ```bash
+   srun -p aind --time=00:10:00 --mem=4G $ENV/bin/python -c "
+   from hydra import initialize_config_dir, compose
+   with initialize_config_dir(config_dir='$R/aind-dynamic-foraging-bfm-dispatcher/code/config', version_base=None):
+       print(compose(config_name='config', overrides=[...the sweep's command overrides...]).model)"
+   ```
+5. **Dry-run, read the record, then submit.** `--dry-run` prints the record: check the full
+   SHAs, `data.source: snapshot` with `manifest_sha256`, `image.conda_env` with `lock_sha256`,
+   and an empty `provenance_warnings`.
+
 ## Manual SLURM routes (skip lineage injection + AGENT_COUNT)
 
 ```bash
