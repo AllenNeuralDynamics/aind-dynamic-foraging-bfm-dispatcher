@@ -216,7 +216,7 @@ python -m unittest discover -s tests -t . -v
 
 Pure-function coverage of the launchers and the dataset adapters — sweep-array parsing, `user.env` loading,
 provenance stamping, launch-record and refusal logic, Beaker spec rendering, grid expansion
-and the external bandit dataset schema. Nothing here talks to SLURM,
+and the external bandit dataset adapters. Nothing here talks to SLURM,
 Beaker or W&B. This is also what CI runs. `code/` is deliberately not packaged as a
 distribution yet; see [`docs/repo-split-plan.md`](docs/repo-split-plan.md).
 
