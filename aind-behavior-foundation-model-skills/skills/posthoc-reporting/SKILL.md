@@ -115,11 +115,12 @@ committed file** — the git diff is the audit trail. The offline producer never
 - **`_meta.produced_at_pt` (and `studies_git_sha` / `studies_git_dirty`) change every
   run**, so regeneration always dirties the tree. A CI check cannot be a bare
   `git diff --exit-code` — it must ignore `_meta`.
-- **Figure PNGs are bit-identical only on the same machine.** Across machines the
-  bytes (and ~6% of pixels — text/AA rendering) differ, because the *plotting* env
-  is not pinned: `environment.lock` pins the wrapper commit that produced the
-  *metrics*, not matplotlib/freetype. A PNG diff after regenerating on a different
-  box is expected and is **not** evidence that results changed — confirm via the JSON.
+- **Figures (SVG) regenerate byte-identically on one plotting stack**: `figure_style`
+  fixes the SVG ids, drops the date and vendors its font. On another matplotlib version
+  the bytes can still differ, and the legacy PNGs of studies 01–11 differ across machines
+  (~6% of pixels): `environment.lock` pins the wrapper commit that produced the *metrics*,
+  not matplotlib. An image diff after regenerating elsewhere is **not** evidence that
+  results changed. CI ignores image bytes; confirm via the JSON.
 
 ## Run report generation LOCALLY, not on HPC
 
@@ -180,15 +181,35 @@ studies/<study>/
     <producer>.py          # one script == one report block or one JSON producer
     <producer>.json        # carries _meta (via studies/util/_meta.py, pass study_root=)
     wandb_keys.py          # comment-only contract naming the exact W&B summary keys read
-    fig_<slug>.png         # style via studies/util/plot_style.py
+    fig_<slug>.svg         # paper style, written by studies/util/figure_style.save_figure
+    slides/                # optional slide versions (style="slide"); reports embed the paper ones
     reports/
       INDEX.md             # one row per report
       r<n>-<slug>.md
     provenance/            # backfill history, metric caveats, etc.
 ```
 
-Shared helpers live in `studies/util/` (`_meta.py`, `plot_style.py`) — reuse them,
-never copy per-study. Commit derived outputs (JSON/CSV/PNG); gitignore only caches.
+Shared helpers live in `studies/util/` (`_meta.py`, `figure_style.py`) — reuse them,
+never copy per-study. Commit derived outputs (JSON/CSV/SVG); gitignore only caches.
+
+## Figures: paper-style SVG (hard rule)
+
+Every figure is drawn with `studies/util/figure_style.py` and saved only through
+`fs.save_figure(fig, HERE / "fig_<slug>.svg")`, which writes SVG (never PNG/PDF) and refuses
+a file that would break in Illustrator. `make validate` and CI run `scripts/check_figures.py`
+on every study except the legacy 01–11 (printed `EXEMPT` until redrawn).
+
+- `fs.apply_paper_style()`: Nature style, 5–7 pt Arial, 8 pt bold panel letters
+  (`fs.panel_label`), Okabe–Ito colours.
+- Draw at print size and **size by content, not by column**: ≈15 mm per bar or violin,
+  35–45 mm per scatter panel, + 18 mm per y axis (`fs.mm(fs.fit_width(groups=4), 55)`).
+  At most 183 mm wide; any height (a prototype grid can be tall).
+- No math text (`$...$`, default log ticks): it splits into one letter per text box. Use
+  Unicode (σ, ρ, ², −, ≈), `fs.plain_log_axis(ax)` and `fs.num(x, "+.3f")` for a true minus.
+- Slide versions: `fs.apply_slide_style()` and `save_figure(..., style="slide")`, in an
+  `analysis/slides/` directory.
+- Leave `plot_style.py` byte-for-byte alone: `build_meta` digests every imported
+  `studies/util` module, so editing it marks the legacy producers' artifacts stale.
 
 ## Start a report from the scaffolder
 

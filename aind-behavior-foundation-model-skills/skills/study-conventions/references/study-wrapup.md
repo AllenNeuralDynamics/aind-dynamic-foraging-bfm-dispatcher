@@ -16,9 +16,10 @@ Mirror an already-normalized reference study (e.g. `studies/01-gru-scaling-law/`
   (pin the wrapper commit that PRODUCED the metrics — `_meta.build_meta` parses it),
   `CHANGELOG.md`, `README.md` with a **Verdict** section (the scientific findings).
 - **Reuse shared helpers in `studies/util/`** — `_meta.py` (provenance `_meta` block;
-  pass `study_root=`) and `plot_style.py` (presentation rcParams + palette). Don't
-  copy them per-study.
-- **Commit derived outputs** (JSON/CSV/PNG) so results render directly in the repo;
+  pass `study_root=`) and `figure_style.py` (paper-style SVG figures via `save_figure`;
+  see posthoc-reporting). Don't copy them per-study. `plot_style.py` is the legacy slide
+  style of studies 01–11; new figures don't use it.
+- **Commit derived outputs** (JSON/CSV/SVG) so results render directly in the repo;
   gitignore only caches + `__pycache__`. Goal: reports human-readable, provenance
   AI-readable but human-auditable.
 - Reports use script-owned `<!-- BEGIN result-N -->` / `<!-- END result-N -->` blocks

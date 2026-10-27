@@ -21,7 +21,7 @@ wandb_groups:             # exact group names; never a glob
 inputs:                   # study-relative paths that exist; no commands
   script: analysis/nxd_scaling.py
   data: analysis/nxd_scaling.json
-  figure: analysis/fig_nxd_scaling.png
+  figure: analysis/fig_nxd_scaling.svg   # written by figure_style.save_figure
 upstream:                 # what this report uses from elsewhere, or can't express as a path
   - {study: 01-gru-scaling-law, report: r1}
 corrects:                 # optional: earlier reports this one amends (never edit those)
