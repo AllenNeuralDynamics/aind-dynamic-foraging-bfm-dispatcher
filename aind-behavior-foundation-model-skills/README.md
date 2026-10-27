@@ -9,7 +9,7 @@ Science, the Claude API/Agent SDK, ...).
 
 | Skill | Use for |
 |---|---|
-| `codebase-map` | Orienting in the dispatcher/wrapper two-repo architecture + the Claude Science workflow |
+| `codebase-map` | Orienting in the four-repo stack (dispatcher, wrapper, studies, atlas) + the Claude Science workflow |
 | `beaker-launch` | Launching jobs on Beaker (AI Hub): cluster allowlist, capacity checks, sizing, resumable runs |
 | `hpc-launch` | Launching on Allen on-prem SLURM via `launch_hpc.py` / sbatch |
 | `wrapper-runtime` | The training/analysis runtime: run lifecycle, held-out switches, checkpoints, `run_analysis.py` |

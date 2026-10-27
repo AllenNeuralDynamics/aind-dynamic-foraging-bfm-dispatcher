@@ -15,7 +15,8 @@ this file is now the canonical home. One-line rule: `AGENTS.md` §13.)
   checkout** at `/home/han.hou/code/aind-dynamic-foraging-bfm-dispatcher`. Synced with
   `git pull`, never edited in place. Reached over SSH (VPN when remote).
 - **Mac clone** (`~/Scripts/aind-dynamic-foraging-bfm-dispatcher`) — the **authoring checkout**,
-  sibling to `aind-dynamic-foraging-bfm-wrapper`. Where the agent edits source and shows diffs.
+  sibling to `aind-dynamic-foraging-bfm-wrapper` and `aind-dynamic-foraging-bfm-studies` (launches
+  run from the studies root). Where the agent edits source and shows diffs.
 
 ## Where each task runs
 
