@@ -27,7 +27,7 @@ to pan, zoom, search and trace a single relationship. The atlas's
 shows the same diagram. Sources and further diagrams: [`docs/diagrams/`](docs/diagrams/).
 
 Read it as a loop. A study variant's sweep and experiment manifests go to a launcher here,
-which writes a launch record back into the study and submits the job. The wrapper composes
+which writes a launch record (kept in the variant's `launch_record/`) and submits the job. The wrapper composes
 this repo's config, loads a pinned snapshot of the foraging database and trains. All four
 model families — GRU, disRNN, baseline RL and the hierarchical Bayes baseline — reach the
 same `ModelTrainer.fit` through a Hydra `_target_`, and report the same held-out likelihood
@@ -214,9 +214,9 @@ pip install -r requirements-dev.txt
 python -m unittest discover -s tests -t . -v
 ```
 
-Pure-function coverage of the launchers only — sweep-array parsing, `user.env` loading,
+Pure-function coverage of the launchers and the dataset adapters — sweep-array parsing, `user.env` loading,
 provenance stamping, launch-record and refusal logic, Beaker spec rendering, grid expansion
-and the external bandit dataset adapters. Nothing here talks to SLURM,
+and the external bandit dataset schema. Nothing here talks to SLURM,
 Beaker or W&B. This is also what CI runs. `code/` is deliberately not packaged as a
 distribution yet; see [`docs/repo-split-plan.md`](docs/repo-split-plan.md).
 
