@@ -40,7 +40,7 @@ description: Orient in the aind-dynamic-foraging-bfm-dispatcher (formerly aind-d
 | `code/check_gpu_availability.py` | Schedulable-GPU probe (Beaker + HPC) — mandatory before large launches (AGENTS.md §10) |
 | `code/beaker_client.py` | Sandbox-safe Beaker/W&B client helpers used by the launchers |
 | `../aind-dynamic-foraging-bfm-studies/studies/<study>/` | **Sibling repo** (split out of this one, #124): one folder per scientific question (`NN-{model}-{purpose}`); variants + analysis (see study-conventions skill). The launchers here take its sweep paths and record its commit as `studies_git_commit` |
-| `../aind-dynamic-foraging-bfm-studies/studies/util/` | Shared helpers: `_meta.py` (provenance block), `plot_style.py`, `launch_record.py` (intervention records), `validate_provenance.py` (wrap-up reconciler), `watch_runs.py` (poll Beaker+W&B, append timestamped snapshots so transitions between check-ins aren't lost) |
+| `../aind-dynamic-foraging-bfm-studies/studies/util/` | Shared helpers: `_meta.py` (provenance block), `figure_style.py` + `figure_audit.py` (paper-style SVG figures, checked by `scripts/check_figures.py`; `plot_style.py` is the legacy style of studies 01–11), `launch_record.py` (intervention records), `validate_provenance.py` (wrap-up reconciler), `watch_runs.py` (poll Beaker+W&B, append timestamped snapshots so transitions between check-ins aren't lost) |
 | `docs/` | Design records + pointer stubs (index below) |
 | `AGENTS.md` | Behavioral guardrails — the terse rules; this pack and the code-adjacent docs hold the detail |
 
