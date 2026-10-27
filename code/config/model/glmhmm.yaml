@@ -15,6 +15,10 @@
 # sessions (heldout/zero_shot/*; not heldout/test_likelihood, which for the GRU covers every
 # held-out session), per-subject MAP refits scored on eval sessions (heldout/eval_likelihood,
 # heldout/final/*), and the K-selection score (glmhmm/select/*).
+#
+# Backend: CPU. The package computes on the CPU even on a GPU host (AIND_GLMHMM_DEVICE, default
+# cpu), so launch HPC with --mode cpu and Beaker without a GPU. On the pinned jax 0.6.1 stack, GPU
+# linear solves fail (cuSOLVER paired with cuBLAS 12.8).
 type: glmhmm
 
 _target_: model_trainers.glmhmm_trainer.GLMHMMTrainer
