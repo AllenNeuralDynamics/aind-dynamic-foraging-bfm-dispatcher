@@ -11,9 +11,10 @@
 #
 # The model lives in aind-dynamic-foraging-models (glm_hmm, [glmhmm] extra) and the
 # trainer in the wrapper (model_trainers/glmhmm_trainer.py), which documents the protocol:
-# global fit on the training cohort's train sessions, zero-shot held-out score
-# (heldout/test_likelihood), per-subject MAP refits scored on eval sessions
-# (heldout/eval_likelihood, heldout/final/*), and the K-selection score (glmhmm/select/*).
+# global fit on the training cohort's train sessions, zero-shot held-out score on the eval
+# sessions (heldout/zero_shot/*; not heldout/test_likelihood, which for the GRU covers every
+# held-out session), per-subject MAP refits scored on eval sessions (heldout/eval_likelihood,
+# heldout/final/*), and the K-selection score (glmhmm/select/*).
 type: glmhmm
 
 _target_: model_trainers.glmhmm_trainer.GLMHMMTrainer
