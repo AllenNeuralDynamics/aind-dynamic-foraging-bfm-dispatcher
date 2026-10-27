@@ -5,163 +5,149 @@
     "title": "Behavioral Foundation Model Stack",
     "quality_profile": "showcase",
     "viewBox": [
-      1120,
+      1310,
       540
     ]
   },
   "components": [
     {
+      "id": "config",
+      "type": "backend",
+      "label": "code/config/",
+      "sublabel": "Hydra groups \u00b7 data= \u00b7 model=",
+      "pos": [
+        370,
+        60
+      ],
+      "size": [
+        240,
+        56
+      ]
+    },
+    {
+      "id": "launchers",
+      "type": "cloud",
+      "label": "code/launch_*.py",
+      "sublabel": "W&B sweep \u2192 Beaker or SLURM",
+      "pos": [
+        370,
+        180
+      ],
+      "size": [
+        240,
+        56
+      ]
+    },
+    {
+      "id": "manifests",
+      "type": "frontend",
+      "label": "variants/<variant>/",
+      "sublabel": "sweep + experiment YAML",
+      "pos": [
+        40,
+        180
+      ],
+      "size": [
+        240,
+        56
+      ]
+    },
+    {
+      "id": "record",
+      "type": "security",
+      "label": "launch_record/",
+      "sublabel": "SHAs \u00b7 data snapshot \u00b7 image",
+      "pos": [
+        40,
+        300
+      ],
+      "size": [
+        240,
+        56
+      ]
+    },
+    {
+      "id": "analysis",
+      "type": "backend",
+      "label": "analysis/ \u00b7 Makefile",
+      "sublabel": "freeze \u2192 producers \u2192 reports",
+      "pos": [
+        40,
+        420
+      ],
+      "size": [
+        240,
+        56
+      ]
+    },
+    {
+      "id": "atlas",
+      "type": "frontend",
+      "label": "aind-dynamic-foraging-bfm-atlas",
+      "sublabel": "catalog \u2192 GitHub Pages",
+      "pos": [
+        370,
+        420
+      ],
+      "size": [
+        240,
+        56
+      ]
+    },
+    {
       "id": "db",
       "type": "database",
       "label": "AIND foraging database",
-      "sublabel": "DuckDB parquet snapshot",
+      "sublabel": "pinned parquet snapshot",
       "pos": [
-        40,
-        40
+        1030,
+        60
       ],
       "size": [
-        230,
-        52
-      ]
-    },
-    {
-      "id": "hydra",
-      "type": "backend",
-      "label": "code/config/",
-      "sublabel": "data= · model= · _target_",
-      "pos": [
-        40,
-        150
-      ],
-      "size": [
-        230,
-        52
-      ]
-    },
-    {
-      "id": "co",
-      "type": "cloud",
-      "label": "launch_CO_wrapper.py",
-      "sublabel": "Code Ocean job dirs",
-      "pos": [
-        40,
-        250
-      ],
-      "size": [
-        230,
-        52
-      ]
-    },
-    {
-      "id": "beaker",
-      "type": "cloud",
-      "label": "launch_beaker_resumable.py",
-      "sublabel": "W&B sweep → Beaker · AI Hub",
-      "pos": [
-        40,
-        322
-      ],
-      "size": [
-        230,
-        52
-      ]
-    },
-    {
-      "id": "hpc",
-      "type": "cloud",
-      "label": "launch_hpc.py",
-      "sublabel": "W&B sweep → SLURM array",
-      "pos": [
-        40,
-        394
-      ],
-      "size": [
-        230,
-        52
+        240,
+        56
       ]
     },
     {
       "id": "loader",
       "type": "backend",
       "label": "DatasetLoader",
-      "sublabel": "mice · snapshot · synthetic",
+      "sublabel": "mice \u00b7 snapshot \u00b7 synthetic",
       "pos": [
-        430,
-        40
+        1030,
+        180
       ],
       "size": [
         240,
-        52
+        56
       ]
     },
     {
       "id": "runner",
       "type": "backend",
-      "label": "run_capsule.py · run_hpc.py",
-      "sublabel": "training_runner.run_training",
+      "label": "run_hpc \u00b7 training_runner",
+      "sublabel": "stamps meta.* on every run",
       "pos": [
-        430,
-        195
+        700,
+        180
       ],
       "size": [
         240,
-        52
+        56
       ]
     },
     {
-      "id": "gru",
+      "id": "trainers",
       "type": "backend",
-      "label": "GruTrainer",
-      "sublabel": "model=gru · multi-subject GRU",
+      "label": "ModelTrainer.fit",
+      "sublabel": "GRU \u00b7 disRNN \u00b7 baseline RL \u00b7 HB",
       "pos": [
-        790,
-        40
+        700,
+        300
       ],
       "size": [
-        260,
-        52
-      ]
-    },
-    {
-      "id": "disrnn",
-      "type": "backend",
-      "label": "DisrnnTrainer",
-      "sublabel": "model=disrnn · bottleneck RNN",
-      "pos": [
-        790,
-        130
-      ],
-      "size": [
-        260,
-        52
-      ]
-    },
-    {
-      "id": "baseline_rl",
-      "type": "backend",
-      "label": "BaselineRLTrainer",
-      "sublabel": "model=baseline_rl · MLE fits",
-      "pos": [
-        790,
-        220
-      ],
-      "size": [
-        260,
-        52
-      ]
-    },
-    {
-      "id": "hb",
-      "type": "backend",
-      "label": "HBTrainer",
-      "sublabel": "model=hb_hattori · pooled fit",
-      "pos": [
-        790,
-        310
-      ],
-      "size": [
-        260,
-        52
+        240,
+        56
       ]
     },
     {
@@ -170,132 +156,167 @@
       "label": "Weights & Biases",
       "sublabel": "entity AIND-disRNN",
       "pos": [
-        430,
-        430
+        700,
+        420
       ],
       "size": [
         240,
-        52
+        56
+      ]
+    },
+    {
+      "id": "models",
+      "type": "external",
+      "label": "aind-dynamic-foraging-models",
+      "sublabel": "RL agents \u00b7 HB models",
+      "pos": [
+        1030,
+        420
+      ],
+      "size": [
+        240,
+        56
       ]
     }
   ],
   "boundaries": [
     {
       "kind": "region",
-      "label": "aind-dynamic-foraging-bfm-dispatcher · control plane",
+      "label": "aind-dynamic-foraging-bfm-studies \u00b7 science record",
       "wraps": [
-        "hydra",
-        "co",
-        "beaker",
-        "hpc"
+        "manifests",
+        "record",
+        "analysis"
       ],
       "pad": 20
     },
     {
       "kind": "region",
-      "label": "aind-dynamic-foraging-bfm-wrapper · training runtime",
+      "label": "aind-dynamic-foraging-bfm-dispatcher \u00b7 control plane",
+      "wraps": [
+        "config",
+        "launchers"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "aind-dynamic-foraging-bfm-wrapper \u00b7 training runtime",
       "wraps": [
         "loader",
         "runner",
-        "gru",
-        "disrnn",
-        "baseline_rl",
-        "hb"
+        "trainers"
       ],
       "pad": 20
     }
   ],
   "connections": [
     {
-      "from": "db",
-      "to": "loader",
-      "label": "snapshot read"
-    },
-    {
-      "from": "hydra",
-      "to": "runner",
-      "label": "composed config",
+      "from": "manifests",
+      "to": "launchers",
+      "label": "sweep YAML",
       "variant": "emphasis"
     },
     {
-      "from": "co",
-      "to": "runner"
+      "from": "launchers",
+      "to": "record",
+      "label": "writes",
+      "fromSide": "bottom",
+      "toSide": "right"
     },
     {
-      "from": "beaker",
-      "to": "runner"
+      "from": "launchers",
+      "to": "runner",
+      "label": "job",
+      "variant": "emphasis"
     },
     {
-      "from": "hpc",
-      "to": "runner"
+      "from": "config",
+      "to": "runner",
+      "label": "composed config",
+      "fromSide": "right",
+      "toSide": "top"
+    },
+    {
+      "from": "db",
+      "to": "loader",
+      "label": "snapshot",
+      "labelAt": [
+        1192,
+        148
+      ]
     },
     {
       "from": "loader",
       "to": "runner",
       "label": "DatasetBundle",
-      "variant": "emphasis",
-      "labelAt": [
-        550,
-        143
-      ]
-    },
-    {
-      "from": "runner",
-      "to": "gru",
       "variant": "emphasis"
     },
     {
       "from": "runner",
-      "to": "disrnn",
+      "to": "trainers",
       "variant": "emphasis"
     },
     {
-      "from": "runner",
-      "to": "baseline_rl",
-      "variant": "emphasis"
+      "from": "trainers",
+      "to": "models",
+      "fromSide": "right",
+      "toSide": "top"
     },
     {
-      "from": "runner",
-      "to": "hb",
-      "variant": "emphasis"
-    },
-    {
-      "from": "runner",
+      "from": "trainers",
       "to": "wandb",
       "label": "heldout/eval_likelihood",
       "variant": "emphasis",
       "labelAt": [
-        550,
-        338
+        892,
+        388
       ]
+    },
+    {
+      "from": "wandb",
+      "to": "analysis",
+      "label": "freeze",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "bottom"
+    },
+    {
+      "from": "record",
+      "to": "analysis"
+    },
+    {
+      "from": "analysis",
+      "to": "atlas",
+      "label": "studies @ SHA"
     }
   ],
   "cards": [
     {
       "dot": "cyan",
-      "title": "Three routes, one config",
+      "title": "Four repositories, one chain",
       "items": [
-        "Code Ocean, Beaker (AI Hub) and Allen SLURM all consume the same code/config/ groups",
-        "The launcher differs; the composed Hydra config and the runtime code do not",
-        "Beaker and SLURM route through a W&B sweep; Code Ocean fans out job directories"
+        "studies says what to run and why; the dispatcher launches it; the wrapper trains it; the atlas shows the result",
+        "Shared Hydra configs stay in the dispatcher; each study's exact sweep and experiment stay in its variant",
+        "Beaker jobs re-pull the wrapper, dispatcher and foraging-models at the SHAs the launcher pinned"
       ]
     },
     {
       "dot": "violet",
-      "title": "One interface, four variants",
+      "title": "Provenance at launch",
       "items": [
-        "Every model implements ModelTrainer.fit(bundle, loggers) and nothing else",
-        "Hydra's _target_ names the class, so instantiate(cfg.model) needs no branch",
-        "GRU and disRNN train in JAX via disentangled_rnns; baseline_rl and HB call aind-dynamic-foraging-models"
+        "The launcher refuses a study directory with uncommitted changes, and a sweep on the live database",
+        "Its launch record names the studies, dispatcher, wrapper and foraging-models SHAs, the data snapshot and the image",
+        "Every W&B run carries meta.*: study, variant, launch_id, studies_commit and the note saying why it ran"
       ]
     },
     {
       "dot": "emerald",
-      "title": "Why they are comparable",
+      "title": "Reports are code",
       "items": [
-        "All four report heldout/eval_likelihood: per-trial geometric-mean likelihood",
-        "The same DatasetBundle, subject split and trial filters reach every trainer",
-        "That shared axis is what lets a cognitive baseline sit on the GRU scaling curve"
+        "Only a freeze reads W&B; producers compute from committed inputs, each keyed by its digest",
+        "GRU, disRNN, baseline RL and HB all report heldout/eval_likelihood, so they share one axis",
+        "The atlas rebuilds from studies main and traces every number back to its launch and commits"
       ]
     }
   ]
