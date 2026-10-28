@@ -16,9 +16,11 @@
 # held-out session), per-subject MAP refits scored on eval sessions (heldout/eval_likelihood,
 # heldout/final/*), and the K-selection score (glmhmm/select/*).
 #
-# Backend: CPU. The package computes on the CPU even on a GPU host (AIND_GLMHMM_DEVICE, default
-# cpu), so launch HPC with --mode cpu and Beaker without a GPU. On the pinned jax 0.6.1 stack, GPU
-# linear solves fail (cuSOLVER paired with cuBLAS 12.8).
+# Backend: the package computes on the CPU, even on a GPU host, unless AIND_GLMHMM_DEVICE=gpu.
+# - HPC: launch with --mode cpu. The shared GPU env pairs cuSOLVER from CUDA 12.9 with cuBLAS 12.8,
+#   so GPU linear solves fail there.
+# - Beaker: the GLM-HMM image (wrapper beaker/glmhmm/) pins the CUDA libraries, so a GPU works
+#   with AIND_GLMHMM_DEVICE=gpu (AllenNeuralDynamics/aind-dynamic-foraging-bfm-wrapper#111).
 type: glmhmm
 
 _target_: model_trainers.glmhmm_trainer.GLMHMMTrainer
@@ -46,7 +48,8 @@ stickiness: 0.0               # extra Dirichlet concentration on A's diagonal
 num_restarts: 10              # global-fit starts for K > 1 (K=1 weights + init_noise)
 init_noise: 0.2
 em_tol: 1.0e-6                # stop when the log joint improves < this many nats per trial
-max_em_iters: 300
+max_em_iters: 500             # K=10 hurdle converges at 317 on study 14's cohort
+                              # (AllenNeuralDynamics/aind-dynamic-foraging-models#82)
 bucket_size: 64               # session-length granularity of the padded batches
 num_newton_steps: 5           # Newton iterations per emission M-step
 
