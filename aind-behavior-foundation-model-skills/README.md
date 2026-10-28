@@ -14,7 +14,7 @@ Science, the Claude API/Agent SDK, ...).
 | `hpc-launch` | Launching on Allen on-prem SLURM via `launch_hpc.py` / sbatch |
 | `wrapper-runtime` | The training/analysis runtime: run lifecycle, held-out switches, checkpoints, `run_analysis.py` |
 | `study-conventions` | Study/variant folder layout, W&B group naming, provenance, study wrap-up |
-| `posthoc-reporting` | Report/JSON contracts, launch records, regeneration rules |
+| `posthoc-reporting` | Report skeleton, claims and the claims check; report/JSON contracts, launch records, regeneration rules |
 | `git-session-isolation` | Concurrent sessions on one shared repo + dual-repo provenance and the origin-is-truth git rules (Mac + HPC) |
 | `issue-tracking` | Filing issues and putting them on the AIND-behavior-fm project board with Status/Priority/Size |
 
