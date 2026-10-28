@@ -14,8 +14,11 @@ tell it to use read-only tools only, and give it file paths, not a summary:
 
 - the report (`analysis/reports/r<n>-<slug>.md`);
 - its frontmatter claims, with each pointer resolved to its value;
-- every JSON and CSV the report's `inputs` and claims cite;
-- its figures (SVG text is readable);
+- every JSON and CSV the report's `inputs` and claims cite, and the producer's own output
+  JSON;
+- every figure the report embeds (SVG text is readable), and the data behind each one;
+- every sibling or upstream report it names ("same as r1", "study 01 r8"), and the source
+  JSON of every cross-study number (the registry entry's `.source`);
 - the producer scripts that write its blocks, and any helper that chooses a verdict word
   (needed for C9: the same output can come from a fixed string or from code);
 - the upstream source JSONs named in `upstream` and `build_meta(inputs=...)`;
