@@ -51,8 +51,9 @@ that need a person's decision name that role.
 
 These rules apply to reports with frontmatter `schema_version: 2`. A version-1 report
 keeps the version-1 rules; when you next change it, bump it to 2 and bring it up to these
-rules. Never add a finding to `schemas/provenance-baseline.json` instead. Machine checks
-for version 2 arrive with studies#62; until then, follow them by hand.
+rules. Never add a finding to `schemas/provenance-baseline.json` instead. The checker
+enforces the machine-checkable parts (`schemas/README.md`, "Version-2 reports"): the
+skeleton, the schema fields, claim pointers, stale prose and stale generated verdicts.
 
 ### Skeleton
 
@@ -60,6 +61,8 @@ Every report has these sections, in this order. `make new-report` writes them; t
 template is in `references/report-contracts.md`.
 
 1. `# r<n> — <the finding in a few words>`. The title states the result, not the topic.
+   (The checker requires the title and the eight `##` sections below in order; extra `##`
+   sections between them are allowed.)
 2. `## Question`: one sentence, and why it matters.
 3. `## Answer`: numbered findings `F1`, `F2`, …, one sentence each. Order them as an
    argument: the headline first, then what supports it, then what limits it. Never in
@@ -80,11 +83,18 @@ template is in `references/report-contracts.md`.
 - Each finding is a frontmatter claim with a JSON Pointer (RFC 6901, a path to one value)
   to the number that supports it:
   `claims: [{id: F1, text: "...", pointer: "analysis/r1_fit.json#/delta_ll/mean"}]`.
-- **The frontmatter claims are the only home of the verdict.** INDEX.md rows and the
-  README `## Verdict` are generated from them by `make`; never edit those by hand.
+  An unresolved pointer is an error on a live report and a note on a draft, so a fresh
+  scaffold passes before its producer has run.
+- **The frontmatter claims are the only home of the verdict.** `make -C studies/<study>
+  verdicts` writes them into a generated `<!-- BEGIN verdicts -->` block in INDEX.md (a
+  table of every version-2 report: report, status, question, verdict) and in the README
+  `## Verdict` (claims of live version-2 reports). Never edit those blocks by hand; the
+  checker warns when they are out of date (`verdict-stale`).
 - Prose explains the claims and adds no new ones. Cite a finding by its ID ("F2 shows")
   instead of retyping its number. A number you must write in prose comes from the
-  report's JSON; a warn-only lint flags any number that matches nothing there.
+  report's JSON; an advisory note (`report-prose-number`, never fails CI) flags any
+  decimal or percentage that matches nothing there. Write a true constant as inline code,
+  or add it to `PROSE_CONSTANTS` in the checker.
 - **A producer never prints a fixed conclusion sentence.** A verdict word is a JSON field
   that the code chooses from the numbers, and the claim points at it — as study 10 does:
   `"non-inferior" if stats["noninferior"] else "not non-inferior"`. Then an `n/a`
@@ -101,16 +111,21 @@ template is in `references/report-contracts.md`.
   (13 r1 and 13 r2 used one label for both).
 - Explain a specialised term in one sentence where it first appears, and link its
   glossary entry.
-- A number from another study is a named version from the `cross_study.py` registry,
-  printed with its name: "0.7282 (`gru_ceiling.v2_h128`)". A non-default version needs one
-  line of why. Compare two numbers only if their mice, metric and split match, or say
-  that they do not.
+- A number from another study is a named version from the registry in
+  `studies/util/references.py`: `ref("gru_ceiling")` (the default) or
+  `ref("gru_ceiling.v2_h128")`; pass its `.source` to `build_meta(inputs=...)` and its
+  `.upstream` to the report's `upstream`, and print it with `.cite()`, e.g.
+  "0.7282 (`gru_ceiling.v2_h128`)". A non-default version needs one line of why. Compare
+  two numbers only if their conditions (protocol, model, mice, metric, split) match, or
+  say that they do not. A new measurement gets a new name; never repoint an entry.
 
 ### Changing a report
 
 - After a result block or its inputs change, re-read every hand-written sentence in the
-  report, and every sibling report that says "same as r<n>". Then bump `prose_reviewed:`.
-  The checker warns when a block changed but `prose_reviewed` did not.
+  report, and every sibling report that says "same as r<n>". Then update
+  `prose_reviewed: {date, blocks: {<block>: <sha256>}}`. The checker warns
+  (`report-prose-stale`) when a block's digest differs, and prints the new digest to paste
+  once you have re-read the prose.
 - A `live` report's title and claims change only if the numbers changed, or a CHANGELOG
   entry gives the reason and the lead scientist reviews it. Rewording counts as a change.
 - A draft carries `draft_reason:` (one line, e.g. "k̂ rescue pending").
@@ -138,9 +153,11 @@ Run it before draft → live, and on any change to a live report's claims.
 ## Never retype another study's number (hard rule)
 
 A comparison against another study (the GRU ceiling, the best RL baseline, another study's
-curve) reads the number from that study's **committed JSON**; the shared references have
-readers in the studies repo's `studies/util/cross_study.py`. Pass the **source JSON** (the
-helper's matching `*_SOURCE` path, not the helper module) in `build_meta(..., inputs=[...])`,
+curve) reads the number from that study's **committed JSON**. New code reads a named version
+from `studies/util/references.py` (`ref(...)`, see "Numbers, uncertainty and names"); older
+producers use the readers in `studies/util/cross_study.py`. Pass the **source JSON** (the
+entry's `.source`, or the helper's matching `*_SOURCE` path; never the module) in
+`build_meta(..., inputs=[...])`,
 so a change to the number makes the artifact stale, and name the source in the report's `upstream`:
 `{study, report}` for a result, `{study, wandb_group}` for raw data. The checker then warns
 when that source is corrected, superseded or retracted (`report-upstream-stale`), or when the
