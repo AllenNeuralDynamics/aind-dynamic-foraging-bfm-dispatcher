@@ -207,3 +207,17 @@ See `docs/agents/issue-tracker.md`.
 
 Single-context: one `CONTEXT.md` at the repo root plus `docs/adr/`, both created lazily.
 See `docs/agents/domain.md`.
+
+## Explaining and Reporting Style
+
+Applies to conversation replies and to reports. Source: Karpathy's advice to ask for
+explanations in [ASD-STE100](https://www.asd-ste100.org/) (Simplified Technical English), at
+about 80% strictness.
+
+- **Plain language, about 80% of ASD-STE100.** Short sentences (under about 20 words), one
+  action or idea per sentence, active voice, one meaning per word, no filler. Keep exact
+  technical terms; do not force the full approved-word list.
+- **Show, do not only tell.** Explain with a diagram where one helps. For a long or
+  structured explanation, prefer an HTML page over a wall of text.
+- **Order of preference in reports: figure > table > narrative.** A figure beats a table. A
+  table beats prose. Use narrative only for what a figure or table cannot carry.
