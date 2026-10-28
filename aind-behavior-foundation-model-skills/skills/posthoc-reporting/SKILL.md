@@ -1,14 +1,14 @@
 ---
 name: posthoc-reporting
-description: Post-hoc analysis and reporting conventions for studies — report files with YAML frontmatter and BEGIN/END result markers, JSON _meta blocks, launch_record results.md stubs, Makefile targets, cache .gitignore policy, one-producer-per-artifact, and running report generation locally rather than on HPC. Use when writing/regenerating analysis reports, figures, or JSON summaries from finished W&B groups.
+description: Post-hoc analysis and reporting conventions for studies — the fixed report skeleton (Question, Answer findings, Methods, Results, Caveats), frontmatter claims tied to JSON pointers, uncertainty and estimand naming, the claims check before a report goes live, report files with YAML frontmatter and BEGIN/END result markers, JSON _meta blocks, launch_record results.md stubs, Makefile targets, cache .gitignore policy, one-producer-per-artifact, and running report generation locally rather than on HPC. Use when writing, editing or regenerating analysis reports, figures, or JSON summaries from finished W&B groups.
 ---
 
 # Post-hoc analysis & reporting
 
 This skill is the source of truth for analysis/reporting conventions (the one-line
-rule lives in `AGENTS.md` §12). Full artifact contracts: `references/` here. When
-in doubt, mirror a normalized study (e.g. `studies/01-gru-scaling-law/`) rather
-than inventing layout.
+rule lives in `AGENTS.md` §12). Full artifact contracts: `references/` here. Start a
+report from the scaffolder (`make new-report`); never mirror an old report, whose
+layout may predate these rules.
 
 Studies live in **`aind-dynamic-foraging-bfm-studies`**, a sibling checkout of the
 dispatcher (split out at tag `studies-split-v1`, dispatcher #124). Every `studies/...` path
@@ -31,6 +31,106 @@ same checker and fails on any new finding.
 4. **Provenance lives inside the artifact** — JSON `_meta`, report frontmatter.
 5. **Idempotent regeneration** — `make r<n>` twice produces identical files
    (see the caveats below: `_meta` timestamps and cross-machine figure bytes).
+6. **Every claim points at a number** — a report's findings live in its frontmatter,
+   each tied to a value in its JSON; prose explains them and adds none.
+7. **A fresh reader checks the text** — before a report goes live, a new agent that
+   did not write it compares every claim with the numbers.
+
+## Report content (hard rules)
+
+Why: a survey of all 46 reports (2026-10-28) found the script-written result blocks
+matched their JSON, but the hand-written text did not hold still. Prose went stale after
+a block was regenerated (13 r2 kept the pre-rescue "12% fail k̂"). Claims swung on
+unchanged numbers (13 r1's account of the HB gain reversed about five times in 40 hours).
+A producer printed a fixed conclusion on an `n/a` comparison (01 r7). Prose quoted
+numbers with no source. The verdict lived in three places that disagreed. There were five
+title styles, two templates and seven ways to write uncertainty.
+
+These rules apply to reports with frontmatter `schema_version: 2`. A version-1 report
+keeps the version-1 rules; when you next change it, bump it to 2 and bring it up to these
+rules. Never add a finding to `schemas/provenance-baseline.json` instead. Machine checks
+for version 2 arrive with studies#62; until then, follow them by hand.
+
+### Skeleton
+
+Every report has these sections, in this order. `make new-report` writes them; the
+template is in `references/report-contracts.md`.
+
+1. `# r<n> — <the finding in a few words>`. The title states the result, not the topic.
+2. `## Question`: one sentence, and why it matters.
+3. `## Answer`: numbered findings `F1`, `F2`, …, one sentence each. Order them as an
+   argument: the headline first, then what supports it, then what limits it. Never in
+   the order the analysis was done. About five at most; more findings need a new report.
+4. `## Methods`: a script-written facts block (mice, sessions, split, seeds, model
+   versions, interval type) read from the frozen inputs, then prose on the approach. An
+   approach that the study's reports share lives once in the study README; the report
+   says "as in the study methods, except …".
+5. `## Results`: one `### F<k>` subsection per finding, each with its own `result-N`
+   block. Figure first, then table, then prose.
+6. `## What it means`: the interpretation.
+7. `## Caveats`: what this result does not show, and the other explanations not ruled out.
+8. `## Next`: the next step, or "none".
+9. `## Provenance`: W&B groups, inputs, reproduce command.
+
+### Claims and the verdict
+
+- Each finding is a frontmatter claim with a JSON Pointer (RFC 6901, a path to one value)
+  to the number that supports it:
+  `claims: [{id: F1, text: "...", pointer: "analysis/r1_fit.json#/delta_ll/mean"}]`.
+- **The frontmatter claims are the only home of the verdict.** INDEX.md rows and the
+  README `## Verdict` are generated from them by `make`; never edit those by hand.
+- Prose explains the claims and adds no new ones. Cite a finding by its ID ("F2 shows")
+  instead of retyping its number. A number you must write in prose comes from the
+  report's JSON; a warn-only lint flags any number that matches nothing there.
+- **A producer never prints a fixed conclusion sentence.** A verdict word is a JSON field
+  that the code chooses from the numbers, and the claim points at it — as study 10 does:
+  `"non-inferior" if stats["noninferior"] else "not non-inferior"`. Then an `n/a`
+  comparison shows as `n/a`.
+
+### Numbers, uncertainty and names
+
+- Every number carries n and an uncertainty: a 95% CI (a credible interval for a Bayesian
+  fit) or the SEM. Name which one, and what n counts (mice, sessions, seeds). With one
+  seed, write "single seed, no error bar".
+- Name the estimand in full — the exact quantity, including how it is aggregated — with
+  the `CONTEXT.md` glossary name, in table headers, claims and the JSON key or metadata:
+  "held-out likelihood, trial-pooled" is not "held-out likelihood, per-subject median"
+  (13 r1 and 13 r2 used one label for both).
+- Explain a specialised term in one sentence where it first appears, and link its
+  glossary entry.
+- A number from another study is a named version from the `cross_study.py` registry,
+  printed with its name: "0.7282 (`gru_ceiling.v2_h128`)". A non-default version needs one
+  line of why. Compare two numbers only if their mice, metric and split match, or say
+  that they do not.
+
+### Changing a report
+
+- After a result block or its inputs change, re-read every hand-written sentence in the
+  report, and every sibling report that says "same as r<n>". Then bump `prose_reviewed:`.
+  The checker warns when a block changed but `prose_reviewed` did not.
+- A `live` report's title and claims change only if the numbers changed, or a CHANGELOG
+  entry gives the reason and Han reviews it. Rewording counts as a change.
+- A draft carries `draft_reason:` (one line, e.g. "k̂ rescue pending").
+- **Draft → live** needs all seven: (1) the question in one sentence; (2) Answer findings
+  that match the claims; (3) at least one figure; (4) n and uncertainty on every number;
+  (5) caveats; (6) a next step; (7) terms explained. Then a claims check, then Han's
+  explicit go-ahead.
+
+### Claims check
+
+Run it before draft → live, and on any change to a live report's claims.
+
+- Launch a **new** agent with the Agent tool (general-purpose), read-only, with
+  `references/claims-check-rubric.md`. **Never `subagent_type: "fork"`:** a fork inherits
+  the writing conversation, and the point is a reader who did not write the report.
+- Give it files only: the report, its claims with pointers resolved, the JSON it cites,
+  its figures, upstream source JSONs, the diff against the last live version, and the
+  study CHANGELOG.
+- Paste its summary in the PR. Answer every finding like a review thread: fix it, or say
+  why not.
+- Its output describes the report. It never feeds the frontmatter, INDEX or README.
+- The **domain review** is a different, advisory reviewer (scientific blind spots,
+  scores, ideas). Keep the two apart; mixing the jobs makes the claims check miss more.
 
 ## Never retype another study's number (hard rule)
 
@@ -238,7 +338,8 @@ Never copy an old report: its frontmatter may predate the schema.
   in `upstream`; a report that amends an earlier one declares `corrects:` (the corrected
   report is never edited); `reproduce` is `make -C studies/<study> r<n>`. Script-owned
   `<!-- BEGIN result-N -->` / `<!-- END result-N -->` regions — anything inside is
-  overwritten on regen; producers match marker pairs only.
+  overwritten on regen; producers match marker pairs only. `schema_version: 2` adds
+  `claims`, `draft_reason` (drafts) and `prose_reviewed` (see "Report content").
 - **JSON** (`_meta` v2): write it with
   `build_meta(produced_by, WANDB_GROUPS, study_root=STUDY, code=[__file__], inputs=[...])`
   and `write_artifact(path, obj, outputs=[fig, "<report>.md#result-N", ...])` from
@@ -266,9 +367,11 @@ Never copy an old report: its frontmatter may predate the schema.
 
 ## References (read on demand)
 
-- `references/report-contracts.md` — full templates: report frontmatter + marker
-  example, `_meta` JSON, `results.md` stub, Makefile convention, `.gitignore`
+- `references/report-contracts.md` — full templates: the version-2 report skeleton and
+  frontmatter, `_meta` JSON, `results.md` stub, Makefile convention, `.gitignore`
   policy, enforcement checklist.
+- `references/claims-check-rubric.md` — what the claims check reviewer reads, checks and
+  returns; give it to the new agent as its instructions.
 - `references/wandb-graphql-sandbox.md` — pulling W&B data from the Claude Science
   sandbox where `wandb.Api()` can't run (GraphQL + `requests` recipe, deleteRun
   gotcha).
