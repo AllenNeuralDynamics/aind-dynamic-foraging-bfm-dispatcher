@@ -52,6 +52,9 @@ max_em_iters: 500             # K=10 hurdle converges at 317 on study 14's cohor
                               # (AllenNeuralDynamics/aind-dynamic-foraging-models#82)
 bucket_size: 64               # session-length granularity of the padded batches
 num_newton_steps: 5           # Newton iterations per emission M-step
+num_workers: 1                # fits run at once, in threads: restarts, then per-subject
+                              # refits. Results do not depend on it. 10 finishes the
+                              # restarts 3x sooner on 8 cores, 5x on 32 (~31 GB at K=10)
 
 # ── Scoring and outputs ──────────────────────────────────────────────────
 # K selection uses per-subject refits on the TRAINING cohort (train sessions fitted, eval
