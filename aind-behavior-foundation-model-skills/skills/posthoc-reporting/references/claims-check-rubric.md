@@ -16,6 +16,8 @@ tell it to use read-only tools only, and give it file paths, not a summary:
 - its frontmatter claims, with each pointer resolved to its value;
 - every JSON and CSV the report's `inputs` and claims cite;
 - its figures (SVG text is readable);
+- the producer scripts that write its blocks, and any helper that chooses a verdict word
+  (needed for C9: the same output can come from a fixed string or from code);
 - the upstream source JSONs named in `upstream` and `build_meta(inputs=...)`;
 - the diff against the last `live` version of the report, if there is one
   (`git diff <last-live-sha> -- <report>`);
@@ -29,13 +31,13 @@ Record `rubric_version` with the dispatcher commit SHA of this file
 
 | ID | Check | Goes to |
 |---|---|---|
-| C1 | Each claim: does the value at its pointer support the sentence? Is the direction right? Is the size overstated? Is the uncertainty respected (a difference inside its interval is not a difference)? | `claims` |
+| C1 | Each claim: does the value at its pointer support the sentence? Is the direction right? Is the size overstated? Is the uncertainty respected? Compare the interval with the null value (often 0): an interval that excludes it supports a direction; one that includes it is inconclusive — it is not evidence of no effect unless the interval sits inside a stated margin. | `claims` |
 | C2 | Each claim agrees with the figures and tables that show it. | `claims` |
 | C3 | Every number in hand-written prose (outside result blocks) traces to the report's JSON, an upstream JSON, or a named registry reference. Name the source, or list the number as unsourced. | `unsourced_numbers` |
 | C4 | Stale text: a sentence that describes an earlier state, such as a date, a sibling report's status ("same as r1"), a caveat the block now resolves, or a number the block no longer shows. | `stale_sentences` |
 | C5 | Caveats: an obvious alternative explanation or limit the result needs and the Caveats section lacks. Only what the evidence itself raises; no new analyses. | `missing_caveats` |
 | C6 | Estimands: one label for two different quantities, a metric without its aggregation (trial-pooled, per-subject median), or numbers compared across unlike conditions (mice, metric, split). | `estimand_issues` |
-| C7 | Uncertainty: a number with no n, no interval type, or no unit of n; a claim of "no difference" from a single seed or with no test. | `estimand_issues` |
+| C7 | Uncertainty: a number with no n, no interval type, or no unit of n; a claim of "no difference" or "no effect" from a single seed, with no test, or from an interval that merely includes the null value. | `estimand_issues` |
 | C8 | From the diff: a claim or title that changed while its numbers did not, with no CHANGELOG entry. | `claims` (note) |
 | C9 | A conclusion sentence inside a result block that cannot change with the data (a fixed string), or a verdict that contradicts its own table, for example a verdict printed for an `n/a` comparison. | `claims` |
 
@@ -56,6 +58,7 @@ check).
 {
   "report": "studies/<study>/analysis/reports/r<n>-<slug>.md",
   "report_digest": "<sha256 of the report file>",
+  "inputs_digest": "<sha256 over the sorted sha256s of every file supplied, incl. JSON, figures, producers, diff and CHANGELOG>",
   "rubric_version": "claims-check/1 @ <dispatcher sha>",
   "claims": [
     {"id": "F1", "verdict": "supported | overstated | contradicted | cant_verify",
@@ -68,5 +71,6 @@ check).
 }
 ```
 
-Key the output by `report_digest` + `rubric_version`: rerun only when the report or
+Key the output by `report_digest` + `inputs_digest` + `rubric_version`: rerun when the
+report, any supplied evidence (JSON, figures, producers, upstream, diff, CHANGELOG) or
 this rubric changes.

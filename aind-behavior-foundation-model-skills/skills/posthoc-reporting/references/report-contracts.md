@@ -17,8 +17,8 @@ schema_version: 2
 id: r7
 slug: nxd-joint-scaling-grid
 status: draft             # draft | live | superseded | retracted
-draft_reason: "awaiting Han review"      # required while status is draft
-authors: [han, pck]
+draft_reason: "awaiting lead scientist review"   # required while status is draft
+authors: [han, pck]       # first entry is the lead scientist
 wandb_groups:             # exact group names; never a glob
   - nxd-grid@20260623-102649
 inputs:                   # study-relative paths that exist; no commands
@@ -30,7 +30,7 @@ claims:                   # the verdict; INDEX and README rows are generated fro
     text: "Held-out likelihood, trial-pooled, rises with N at every D."
     pointer: "analysis/nxd_scaling.json#/n_axis/all_d_positive"
   - id: F2
-    text: "The N-axis gain does not grow with D (slope 95% CI includes 0)."
+    text: "No clear evidence that the N-axis gain grows with D (slope 95% CI includes 0)."
     pointer: "analysis/nxd_scaling.json#/synergy/verdict"
 prose_reviewed: 2026-10-28   # bump after re-reading the prose against changed blocks
 upstream:                 # what this report uses from elsewhere, or can't express as a path
@@ -40,7 +40,7 @@ corrects:                 # optional: earlier reports this one amends (never edi
 reproduce: make -C studies/<study> r7
 ---
 
-# r7 — More subjects help at every data size, with no N×D synergy
+# r7 — More subjects help at every data size; no clear N×D synergy
 
 ## Question
 
@@ -50,7 +50,8 @@ decides whether to collect more mice or longer recordings.
 ## Answer
 
 - **F1.** Held-out likelihood, trial-pooled, rises with N at every D.
-- **F2.** The gain from N does not grow with D: no N×D synergy.
+- **F2.** No clear evidence that the gain from N grows with D (the interval is wide
+  enough to include zero and a positive slope).
 
 ## Methods
 
@@ -70,7 +71,7 @@ As in the study methods (README), except: (what differs for this report).
 (figure first, then table)
 <!-- END result-1 -->
 
-### F2 — No N×D synergy
+### F2 — No clear N×D synergy
 
 <!-- BEGIN result-2 -->
 (figure, table; the verdict word comes from the JSON field the claim points at)
@@ -123,10 +124,13 @@ from _meta import build_meta, write_artifact
 
 meta = build_meta("analysis/nxd_scaling.py", WANDB_GROUPS, study_root=STUDY,
                   code=[__file__], inputs=[STUDY / "analysis/nxd_frozen.json"])
-fig.savefig(FIG)                                   # outputs are written first ...
-rewrite_block(REPORT, "result-7", table)        # your marker-pair rewriter
+fs.save_figure(fig, FIG)                           # outputs are written first ...
+rewrite_block(REPORT, "methods", methods_md)       # your marker-pair rewriter
+rewrite_block(REPORT, "result-1", f1_md)           # one block per finding
+rewrite_block(REPORT, "result-2", f2_md)
 write_artifact(OUT, {"_meta": meta, **data},       # ... then recorded with their digests
-               outputs=[FIG, f"{REPORT}#result-7"])
+               outputs=[FIG, f"{REPORT}#methods", f"{REPORT}#result-1",
+                        f"{REPORT}#result-2"])
 ```
 
 - `code`: the producer plus every imported `studies/util` module (added automatically;
