@@ -46,6 +46,9 @@ A producer printed a fixed conclusion on an `n/a` comparison (01 r7). Prose quot
 numbers with no source. The verdict lived in three places that disagreed. There were five
 title styles, two templates and seven ways to write uncertainty.
 
+The **lead scientist** of a report is the first name in its `authors`; the rules below
+that need a person's decision name that role.
+
 These rules apply to reports with frontmatter `schema_version: 2`. A version-1 report
 keeps the version-1 rules; when you next change it, bump it to 2 and bring it up to these
 rules. Never add a finding to `schemas/provenance-baseline.json` instead. Machine checks
@@ -109,12 +112,12 @@ template is in `references/report-contracts.md`.
   report, and every sibling report that says "same as r<n>". Then bump `prose_reviewed:`.
   The checker warns when a block changed but `prose_reviewed` did not.
 - A `live` report's title and claims change only if the numbers changed, or a CHANGELOG
-  entry gives the reason and Han reviews it. Rewording counts as a change.
+  entry gives the reason and the lead scientist reviews it. Rewording counts as a change.
 - A draft carries `draft_reason:` (one line, e.g. "k̂ rescue pending").
 - **Draft → live** needs all seven: (1) the question in one sentence; (2) Answer findings
   that match the claims; (3) at least one figure; (4) n and uncertainty on every number;
-  (5) caveats; (6) a next step; (7) terms explained. Then a claims check, then Han's
-  explicit go-ahead.
+  (5) caveats; (6) a next step; (7) terms explained. Then a claims check, then the lead
+  scientist's explicit go-ahead.
 
 ### Claims check
 
@@ -124,8 +127,8 @@ Run it before draft → live, and on any change to a live report's claims.
   `references/claims-check-rubric.md`. **Never `subagent_type: "fork"`:** a fork inherits
   the writing conversation, and the point is a reader who did not write the report.
 - Give it files only: the report, its claims with pointers resolved, the JSON it cites,
-  its figures, upstream source JSONs, the diff against the last live version, and the
-  study CHANGELOG.
+  its figures, the producer scripts that write its blocks, upstream source JSONs, the diff
+  against the last live version, and the study CHANGELOG.
 - Paste its summary in the PR. Answer every finding like a review thread: fix it, or say
   why not.
 - Its output describes the report. It never feeds the frontmatter, INDEX or README.
