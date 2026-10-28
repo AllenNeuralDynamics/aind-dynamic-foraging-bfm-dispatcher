@@ -1,0 +1,61 @@
+# GLM-HMM baseline: an input-driven HMM with GLM emissions over left / right / ignore
+# (Ashwood et al. 2022), the study-14 baseline
+# (AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies#48).
+#
+# Runs through the same entrypoint as every other model:
+#   python -m run_hpc data=mice_snapshot_scaling data.ignore_policy=include model=glmhmm
+#
+# It models the ignore outcome, so it needs data.ignore_policy=include (the trainer refuses
+# exclude). Add current_stage_actual to data.cols_to_retain to get the mature / non-mature
+# split of the held-out score.
+#
+# The model lives in aind-dynamic-foraging-models (glm_hmm, [glmhmm] extra) and the
+# trainer in the wrapper (model_trainers/glmhmm_trainer.py), which documents the protocol:
+# global fit on the training cohort's train sessions, zero-shot held-out score on the eval
+# sessions (heldout/zero_shot/*; not heldout/test_likelihood, which for the GRU covers every
+# held-out session), per-subject MAP refits scored on eval sessions (heldout/eval_likelihood,
+# heldout/final/*), and the K-selection score (glmhmm/select/*).
+#
+# Backend: CPU. The package computes on the CPU even on a GPU host (AIND_GLMHMM_DEVICE, default
+# cpu), so launch HPC with --mode cpu and Beaker without a GPU. On the pinned jax 0.6.1 stack, GPU
+# linear solves fail (cuSOLVER paired with cuBLAS 12.8).
+type: glmhmm
+
+_target_: model_trainers.glmhmm_trainer.GLMHMMTrainer
+
+architecture:
+  multisubject: true          # a cohort fit with per-subject refits; single-subject is not a mode
+output_dir: ${oc.env:BFM_OUTPUT_DIR,${oc.env:DISRNN_OUTPUT_DIR,/results}}
+
+# ── Model ────────────────────────────────────────────────────────────────
+num_states: 3                 # K; study 14 sweeps 1..10
+emission: hurdle              # hurdle | reference (ignore as the zero-logit class, as in ssm)
+design: default               # RewC/UnrC (signed) and Ignored/Rewarded (unsigned) lags + bias
+n_lags: 5                     # trials of history per regressor family; fixed by a K=1 lag scan
+
+# ── Priors (Ashwood et al. 2022) ─────────────────────────────────────────
+# The global fit is close to maximum likelihood; each subject's refit starts from it under a
+# tighter prior. Both are MAP: Gaussian on every GLM weight, Dirichlet on pi and rows of A.
+prior_sigma_global: 100.0
+transition_alpha_global: 1.0
+prior_sigma_subject: 2.0
+transition_alpha_subject: 2.0
+stickiness: 0.0               # extra Dirichlet concentration on A's diagonal
+
+# ── Fitting ──────────────────────────────────────────────────────────────
+num_restarts: 10              # global-fit starts for K > 1 (K=1 weights + init_noise)
+init_noise: 0.2
+em_tol: 1.0e-6                # stop when the log joint improves < this many nats per trial
+max_em_iters: 300
+bucket_size: 64               # session-length granularity of the padded batches
+num_newton_steps: 5           # Newton iterations per emission M-step
+
+# ── Scoring and outputs ──────────────────────────────────────────────────
+# K selection uses per-subject refits on the TRAINING cohort (train sessions fitted, eval
+# sessions scored), never the held-out mice and never the global fit's own likelihood.
+select_on_train_subjects: true
+save_posteriors: true         # per-trial predictive + state posteriors of held-out sessions
+
+seed: ${seed}
+
+run_name_component: glmhmm_${.emission}_K${.num_states}_L${.n_lags}
