@@ -58,7 +58,7 @@ check).
 {
   "report": "studies/<study>/analysis/reports/r<n>-<slug>.md",
   "report_digest": "<sha256 of the report file>",
-  "inputs_digest": "<sha256 over the sorted sha256s of every file supplied, incl. JSON, figures, producers, diff and CHANGELOG>",
+  "inputs_digest": "<sha256 of the JSON object {role/path: sha256} for every file supplied, keys sorted; role is current, last_live or upstream>",
   "rubric_version": "claims-check/1 @ <dispatcher sha>",
   "claims": [
     {"id": "F1", "verdict": "supported | overstated | contradicted | cant_verify",
@@ -71,6 +71,7 @@ check).
 }
 ```
 
-Key the output by `report_digest` + `inputs_digest` + `rubric_version`: rerun when the
+Hash paths with their contents (a path-to-digest map), so two files that swap contents
+change the key. Key the output by `report_digest` + `inputs_digest` + `rubric_version`: rerun when the
 report, any supplied evidence (JSON, figures, producers, upstream, diff, CHANGELOG) or
 this rubric changes.
