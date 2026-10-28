@@ -7,8 +7,9 @@ old report, whose layout may predate these rules.
 ## Report file contract (`reports/r<n>-<slug>.md`)
 
 Fields: [`schemas/report-frontmatter.v1.schema.json`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies/blob/main/schemas/report-frontmatter.v1.schema.json)
-in the studies repo, and its version 2 once studies#62 lands — the schema, not this
-example, is authoritative. The content rules (why each section exists, what a claim
+and [`schemas/report-frontmatter.v2.schema.json`](https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-studies/blob/main/schemas/report-frontmatter.v2.schema.json)
+in the studies repo, with the checks in `schemas/README.md` ("Version-2 reports") — the
+schema, not this example, is authoritative. The content rules (why each section exists, what a claim
 may say) are in `SKILL.md`, "Report content".
 
 ```markdown
@@ -32,7 +33,12 @@ claims:                   # the verdict; INDEX and README rows are generated fro
   - id: F2
     text: "No clear evidence that the N-axis gain grows with D (slope 95% CI includes 0)."
     pointer: "analysis/nxd_scaling.json#/synergy/verdict"
-prose_reviewed: 2026-10-28   # bump after re-reading the prose against changed blocks
+prose_reviewed:           # update after re-reading the prose against changed blocks
+  date: 2026-10-28
+  blocks:                 # make validate prints these digests
+    methods: <sha256>
+    result-1: <sha256>
+    result-2: <sha256>
 upstream:                 # what this report uses from elsewhere, or can't express as a path
   - {study: 01-gru-scaling-law, report: r1}
 corrects:                 # optional: earlier reports this one amends (never edit those)
@@ -108,8 +114,12 @@ Rules:
 - Producer scripts MUST match on marker pairs, never on adjacent prose (that
   fragility deleted a report section once already) or line numbers.
 - Figures referenced by relative path so the file is portable.
-- `claims[].pointer` is `<study-relative JSON path>#<JSON Pointer>` (RFC 6901) and must
-  resolve. A verdict word is a JSON field chosen by code, never a fixed string.
+- `claims[].pointer` is `<study-relative JSON path>#<JSON Pointer>` (RFC 6901). It must
+  resolve on a live report; on a draft an unresolved pointer is only a note. A verdict
+  word is a JSON field chosen by code, never a fixed string.
+- INDEX.md and the README `## Verdict` hold a generated `<!-- BEGIN verdicts -->` /
+  `<!-- END verdicts -->` block, written by `make -C studies/<study> verdicts` from the
+  claims. Text around the block is kept.
 - `draft_reason` is one line saying what keeps the report from `live`.
 - `schema_version: 1` reports keep the version-1 shape (title, result blocks,
   `## Discussion`) until they are next changed.
