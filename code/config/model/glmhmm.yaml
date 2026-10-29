@@ -43,6 +43,11 @@ transition_alpha_global: 1.0
 prior_sigma_subject: 2.0
 transition_alpha_subject: 2.0
 stickiness: 0.0               # extra Dirichlet concentration on A's diagonal
+subject_prior_center: zero     # centre of the refits' weight prior: zero (Ashwood et al.)
+                              # or global (the global fit's weights; needs models >= 0.27.0)
+global_fit_dir: null          # load <dir>/<emission>_K<K>_L<L>.json instead of fitting
+                              # the global fit (rescore the refits only); refused unless
+                              # its global settings and training sessions match this run
 
 # ── Fitting ──────────────────────────────────────────────────────────────
 num_restarts: 10              # global-fit starts for K > 1 (K=1 weights + init_noise)
