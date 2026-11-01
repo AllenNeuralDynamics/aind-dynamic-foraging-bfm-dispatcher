@@ -45,6 +45,8 @@ transition_alpha_subject: 2.0
 stickiness: 0.0               # extra Dirichlet concentration on A's diagonal
 subject_prior_center: zero     # centre of the refits' weight prior: zero (Ashwood et al.)
                               # or global (the global fit's weights; needs models >= 0.27.0)
+transition_strength_subject: null  # null: refit transitions under Dirichlet(alpha); a number c
+                              # centres them on the global fit (1 + c * A_global per row)
 global_fit_dir: null          # load <dir>/<emission>_K<K>_L<L>.json instead of fitting
                               # the global fit (rescore the refits only); refused unless
                               # its global settings and training sessions match this run
