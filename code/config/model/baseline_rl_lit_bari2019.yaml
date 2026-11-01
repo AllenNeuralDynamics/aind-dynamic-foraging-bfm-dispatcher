@@ -1,0 +1,12 @@
+# Literature model Bari2019 (a FORAGER_PRESETS entry). Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerQLearning
+agent_kwargs:
+  number_of_learning_rate: 1
+  number_of_forget_rate: 1
+  choice_kernel: one_step
+  action_selection: softmax
+literature_model: Bari2019

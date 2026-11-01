@@ -1,0 +1,8 @@
+# Literature model Eckstein-RL (a FORAGER_PRESETS entry). Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerEcksteinRL
+agent_kwargs: {}
+literature_model: Eckstein-RL

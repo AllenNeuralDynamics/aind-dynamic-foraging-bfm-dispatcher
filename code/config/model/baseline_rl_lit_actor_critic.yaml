@@ -1,0 +1,9 @@
+# Literature model ActorCritic (a FORAGER_PRESETS entry). Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerActorCritic
+agent_kwargs:
+  choice_kernel: none
+literature_model: ActorCritic

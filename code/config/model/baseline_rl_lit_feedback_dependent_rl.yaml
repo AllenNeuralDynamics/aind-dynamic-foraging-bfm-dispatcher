@@ -1,0 +1,8 @@
+# Literature model FeedbackDependent-RL (a FORAGER_PRESETS entry). Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerFeedbackDependentRL
+agent_kwargs: {}
+literature_model: FeedbackDependent-RL

@@ -1,0 +1,8 @@
+# Literature model Chen-RLCK (a FORAGER_PRESETS entry). Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerRLCK
+agent_kwargs: {}
+literature_model: Chen-RLCK
