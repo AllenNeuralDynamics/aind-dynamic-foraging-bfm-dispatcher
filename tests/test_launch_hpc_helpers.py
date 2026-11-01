@@ -215,6 +215,23 @@ class TestHeldoutOverrideInjection(unittest.TestCase):
             out = launch_hpc._inject_lineage_into_command({"command": cmd}, {})["command"]
         self.assertEqual(sum(self.OVERRIDE in str(c) for c in out), 1)
 
+    def _injected_sweep(self, models: dict, command: list, parameters: dict) -> bool:
+        with mock.patch.object(launch_hpc, "__file__", self._config_dir(models)):
+            cfg = launch_hpc._inject_lineage_into_command(
+                {"command": list(command), "parameters": parameters}, {})
+        return any(self.OVERRIDE in str(c) for c in cfg["command"])
+
+    def test_models_swept_as_a_parameter_without_training_do_not(self):
+        models = {"lit_a": "agent_class: A\n", "lit_b": "agent_class: B\n"}
+        self.assertFalse(self._injected_sweep(
+            models, ["python"], {"model": {"values": ["lit_a", "lit_b"]}}))
+        self.assertFalse(self._injected_sweep(models, ["python"], {"model": {"value": "lit_a"}}))
+
+    def test_a_swept_model_with_training_receives_the_override(self):
+        models = {"lit_a": "agent_class: A\n", "gru": "training: {}\n"}
+        self.assertTrue(self._injected_sweep(
+            models, ["python"], {"model": {"values": ["lit_a", "gru"]}}))
+
     def test_unknown_or_unselected_model_keeps_the_old_behaviour(self):
         self.assertTrue(self._injected({}, ["python", "model=not_a_config"]))
         self.assertTrue(self._injected({"gru": "training: {}\n"}, ["python"]))

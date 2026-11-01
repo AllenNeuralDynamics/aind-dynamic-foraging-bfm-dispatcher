@@ -406,7 +406,7 @@ def _inject_lineage_into_command(
     # launcher. Deciding from the model config itself, rather than a name pattern, keeps new
     # model configs working without touching this list.
     if not any("auto_heldout_finetune.output_root" in str(c) for c in cmd):
-        if _model_has_training_block(cmd):
+        if _model_has_training_block(cmd, sweep_cfg.get("parameters") or {}):
             cmd.append(
                 "model.training.auto_heldout_finetune.output_root="
                 "'${oc.env:BFM_HELDOUT_ROOT,${oc.env:DISRNN_HELDOUT_ROOT,${oc.env:HOME}/outputs/heldout_subject_finetuning}}'"
@@ -415,22 +415,34 @@ def _inject_lineage_into_command(
     return sweep_cfg
 
 
-def _model_has_training_block(cmd: list) -> bool:
-    """Does the model config this sweep selects define `training`?
+def _model_has_training_block(cmd: list, parameters: dict | None = None) -> bool:
+    """Does a model config this sweep selects define `training`?
 
-    Read from the dispatcher's own config tree rather than inferred from the model name, so
-    a new config is classified by what it contains. Unknown or unreadable configs return
-    True, keeping the previous behaviour for everything that is not clearly a trainer-side
-    model: the failure this guard prevents is loud and immediate, while the failure the
-    override prevents (studies 01 and 02 silently losing every `heldout/*` metric) is not.
+    The model is selected in the command (`model=<name>`) or swept as the `model` parameter
+    (every one of its values is checked). Read from the dispatcher's own config tree rather
+    than inferred from the model name, so a new config is classified by what it contains.
+    Unknown or unreadable configs return True, keeping the previous behaviour for everything
+    that is not clearly a trainer-side model: the failure this guard prevents is loud and
+    immediate, while the failure the override prevents (studies 01 and 02 silently losing
+    every `heldout/*` metric) is not.
     """
     model_name = None
     for entry in cmd:
         text = str(entry)
         if text.startswith("model="):
             model_name = text.split("=", 1)[1].strip()
-    if not model_name:
+    swept = (parameters or {}).get("model") or {}
+    names = [model_name] if model_name else []
+    names += [str(v) for v in swept.get("values", [])]
+    if "value" in swept:
+        names.append(str(swept["value"]))
+    if not names:
         return True
+    return any(_config_has_training_block(name) for name in names)
+
+
+def _config_has_training_block(model_name: str) -> bool:
+    """Does `config/model/<model_name>.yaml` define `training`? True when unknown or unreadable."""
     config_path = Path(__file__).resolve().parent / "config" / "model" / f"{model_name}.yaml"
     if not config_path.exists():
         return True
