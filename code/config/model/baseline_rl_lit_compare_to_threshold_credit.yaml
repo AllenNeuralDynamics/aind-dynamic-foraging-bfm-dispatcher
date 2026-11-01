@@ -1,0 +1,12 @@
+# CompareToThreshold in stay-credit coordinates (ForagerCompareThresholdCredit, models PR 95):
+# the same likelihood as baseline_rl_lit_compare_to_threshold with stay credits
+# (stay_credit_win, stay_credit_loss, learn_rate, biasL) as parameters, bounded to [-20, 20]
+# instead of CompareToThreshold's threshold bound of [-1, 1]. Not a literature model; study 12's
+# ctt-credit variant compares it with CompareToThreshold. Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerCompareThresholdCredit
+agent_kwargs: {}
+literature_model: CompareToThreshold-credit
