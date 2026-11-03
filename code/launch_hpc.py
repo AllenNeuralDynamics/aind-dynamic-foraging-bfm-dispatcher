@@ -15,6 +15,7 @@ This launcher does three things:
        +meta.slurm_job_id             SLURM_JOB_ID resolved on the compute node
        +meta.slurm_array_job_id       SLURM_ARRAY_JOB_ID resolved on the compute node
        +meta.slurm_array_task_id      SLURM_ARRAY_TASK_ID resolved on the compute node
+       job_id                         SLURM_JOB_ID, so each job gets its own Hydra run dir (#215)
        +meta.dispatcher_git_commit    dispatcher SHA at launch time
        +meta.dispatcher_git_branch    dispatcher branch at launch time
        +meta.dispatcher_git_dirty     dispatcher dirty flag
@@ -388,6 +389,14 @@ def _inject_lineage_into_command(
             "+meta.slurm_array_task_id='${oc.env:SLURM_ARRAY_TASK_ID,unknown}'",
         ]
     )
+    # config.yaml puts the Hydra run dir at <BFM_OUTPUT_DIR>/<job_id>/ with job_id 0, so every
+    # concurrent HPC job wrote .hydra/, inputs/ and inputs.yaml to one directory, and run_hpc copied
+    # whichever job wrote last into each W&B run (#215). The SLURM job id is unique per array
+    # task. Skip if the sweep sets or sweeps job_id itself.
+    if "job_id" not in (sweep_cfg.get("parameters") or {}) and not any(
+        str(c).startswith("job_id=") for c in cmd
+    ):
+        cmd.append("job_id='${oc.env:SLURM_JOB_ID,0}'")
     # HPC has no /results mount (that is the Beaker/Code Ocean container path the
     # model configs default to), so the end-of-training auto held-out fine-tune
     # aborts with "[Errno 13] Permission denied: '/results'" and the run logs NO
