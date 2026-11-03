@@ -8,8 +8,10 @@
 #
 # The launcher helpers under test need PyYAML. The external bandit schema tests
 # also exercise the canonical pandas table format; nothing here touches SLURM,
-# Beaker, W&B or the network.
+# Beaker, W&B or the network. OmegaConf resolves the `${oc.env:...}` overrides the HPC
+# launcher injects (the version Hydra 1.3 uses in the runtime envs).
 PyYAML>=6,<7
+omegaconf>=2.3,<2.4
 pandas>=2.2,<3
 pyarrow>=17,<22
 scipy>=1.13,<2

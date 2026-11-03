@@ -266,5 +266,41 @@ class TestHeldoutOverrideInjection(unittest.TestCase):
             self.assertTrue(launch_hpc._model_has_training_block(["python", "model=hb"]))
 
 
+class TestRunDirInjection(unittest.TestCase):
+    """Each HPC run gets its own Hydra run dir (#215).
+
+    `config.yaml` puts the run dir at `<BFM_OUTPUT_DIR>/<job_id>/` with `job_id: 0`, so without the
+    override every concurrent job wrote its `.hydra/` and `inputs.yaml` to the same directory and each
+    W&B run kept whichever job wrote last.
+    """
+
+    JOB_ID = "job_id='${oc.env:SLURM_JOB_ID,0}'"
+
+    def _command(self, command: list, parameters: dict | None = None) -> list:
+        cfg = {"command": list(command)}
+        if parameters is not None:
+            cfg["parameters"] = parameters
+        return launch_hpc._inject_lineage_into_command(cfg, {})["command"]
+
+    def test_the_slurm_job_id_names_the_run_dir(self):
+        self.assertIn(self.JOB_ID, self._command(["python", "-m", "run_hpc", "model=hb"]))
+
+    def test_it_resolves_per_job_on_the_compute_node(self):
+        from omegaconf import OmegaConf
+        cfg = OmegaConf.from_dotlist(["job_id=${oc.env:SLURM_JOB_ID,0}"])
+        with mock.patch.dict(os.environ, {"SLURM_JOB_ID": "27572012"}):
+            self.assertEqual(str(cfg.job_id), "27572012")
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(str(cfg.job_id), "0")
+
+    def test_a_job_id_set_by_the_sweep_is_kept(self):
+        cmd = self._command(["python", "job_id=7"])
+        self.assertEqual([c for c in cmd if str(c).startswith("job_id=")], ["job_id=7"])
+
+    def test_a_swept_job_id_is_kept(self):
+        cmd = self._command(["python", "${args_no_hyphens}"], {"job_id": {"values": [1, 2]}})
+        self.assertFalse(any(str(c).startswith("job_id=") for c in cmd))
+
+
 if __name__ == "__main__":
     unittest.main()
