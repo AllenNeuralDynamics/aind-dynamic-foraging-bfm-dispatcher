@@ -1,0 +1,12 @@
+# Literature model LossCounting (not a FORAGER_PRESETS entry: the preset family's free form, whose
+# Win-Stay-Lose-Shift preset fixes the threshold at 1 loss with no spread). Fits
+# loss_count_threshold_mean, loss_count_threshold_std and biasL. Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerLossCounting
+agent_kwargs:
+  win_stay_lose_switch: false
+  choice_kernel: none
+literature_model: LossCounting

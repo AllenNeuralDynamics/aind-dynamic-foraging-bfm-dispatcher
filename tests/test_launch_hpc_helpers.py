@@ -215,6 +215,42 @@ class TestHeldoutOverrideInjection(unittest.TestCase):
             out = launch_hpc._inject_lineage_into_command({"command": cmd}, {})["command"]
         self.assertEqual(sum(self.OVERRIDE in str(c) for c in out), 1)
 
+    def _injected_sweep(self, models: dict, command: list, parameters: dict) -> bool:
+        with mock.patch.object(launch_hpc, "__file__", self._config_dir(models)):
+            cfg = launch_hpc._inject_lineage_into_command(
+                {"command": list(command), "parameters": parameters}, {})
+        return any(self.OVERRIDE in str(c) for c in cfg["command"])
+
+    MACRO = "${args_no_hyphens}"
+    MODELS = {"lit_a": "agent_class: A\n", "lit_b": "agent_class: B\n", "gru": "training: {}\n",
+              "gru2": "training: {}\n"}
+
+    def test_models_swept_as_a_parameter_without_training_do_not(self):
+        self.assertFalse(self._injected_sweep(
+            self.MODELS, ["python", self.MACRO], {"model": {"values": ["lit_a", "lit_b"]}}))
+        self.assertFalse(self._injected_sweep(
+            self.MODELS, ["python", self.MACRO], {"model": {"value": "lit_a"}}))
+
+    def test_models_swept_as_a_parameter_with_training_receive_the_override(self):
+        self.assertTrue(self._injected_sweep(
+            self.MODELS, ["python", self.MACRO], {"model": {"values": ["gru", "gru2"]}}))
+
+    def test_a_later_explicit_model_wins_over_the_swept_one(self):
+        # Hydra keeps the last `model=` override, so an explicit one after the macro selects.
+        self.assertFalse(self._injected_sweep(
+            self.MODELS, ["python", self.MACRO, "model=lit_a"], {"model": {"value": "gru"}}))
+        self.assertTrue(self._injected_sweep(
+            self.MODELS, ["python", "model=lit_a", self.MACRO], {"model": {"value": "gru"}}))
+
+    def test_a_swept_parameter_without_the_args_macro_is_not_passed(self):
+        self.assertFalse(self._injected_sweep(
+            self.MODELS, ["python", "model=lit_a"], {"model": {"values": ["gru", "gru2"]}}))
+
+    def test_a_sweep_mixing_training_and_non_training_models_is_refused(self):
+        with self.assertRaises(ValueError):
+            self._injected_sweep(
+                self.MODELS, ["python", self.MACRO], {"model": {"values": ["lit_a", "gru"]}})
+
     def test_unknown_or_unselected_model_keeps_the_old_behaviour(self):
         self.assertTrue(self._injected({}, ["python", "model=not_a_config"]))
         self.assertTrue(self._injected({"gru": "training: {}\n"}, ["python"]))

@@ -1,0 +1,8 @@
+# Literature model Alsio-DualRateSticky-RL (a FORAGER_PRESETS entry). Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerAlsioRL
+agent_kwargs: {}
+literature_model: Alsio-DualRateSticky-RL

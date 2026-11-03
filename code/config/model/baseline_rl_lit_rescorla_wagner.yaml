@@ -1,0 +1,12 @@
+# Literature model Rescorla-Wagner (a FORAGER_PRESETS entry). Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerQLearning
+agent_kwargs:
+  number_of_learning_rate: 1
+  number_of_forget_rate: 0
+  choice_kernel: none
+  action_selection: epsilon-greedy
+literature_model: Rescorla-Wagner

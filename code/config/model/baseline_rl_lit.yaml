@@ -1,0 +1,28 @@
+# Base for the literature-model fitters (baseline_rl_lit_*.yaml): one per-subject
+# differential-evolution fit of one model in the literature, as implemented in
+# aind-dynamic-foraging-models (ForagerCollection.FORAGER_PRESETS). Not used on its own:
+# agent_class is mandatory, and each child sets it with its preset's agent_kwargs.
+# agent_kwargs is empty here, so a child's kwargs are exactly its preset's: the trainer
+# passes them to the agent class unfiltered, and a deep-merge with another class's kwargs
+# would raise TypeError or fit the wrong model. Studies: 12-cognitive-literature-leaderboard.
+type: baseline_rl
+
+agent_class: ???
+agent_kwargs: {}
+literature_model: ???  # the FORAGER_PRESETS key (or the Costa variant name)
+run_name_component: lit_${.literature_model}
+_target_: model_trainers.baseline_rl_trainer.BaselineRLTrainer
+
+architecture:
+  multisubject: true
+output_dir: ${oc.env:BFM_OUTPUT_DIR,${oc.env:DISRNN_OUTPUT_DIR,/results}}
+multisubject_subject_workers: 6
+fit_bounds_override: {}
+clamp_params: {}
+DE_kwargs:
+  polish: true
+heldout_refit:
+  enabled: false
+  skip_train_fit: false
+
+seed: ${seed}

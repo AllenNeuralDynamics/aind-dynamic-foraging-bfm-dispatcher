@@ -1,0 +1,10 @@
+# Literature model Win-Stay-Lose-Shift (a FORAGER_PRESETS entry). Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerLossCounting
+agent_kwargs:
+  win_stay_lose_switch: true
+  choice_kernel: none
+literature_model: Win-Stay-Lose-Shift

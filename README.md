@@ -90,7 +90,7 @@ Configs live in [`code/config/`](code/config/), composed by Hydra. `config.yaml`
 | `data` | `mice`, `mice_snapshot`, `mice_snapshot_scaling`, `mice_snapshot_smallpool`, `synthetic`, `synthetic_hierarchical` (+ shared `base`) | `data=mice_snapshot` |
 | `data/agent` | `rl`, `rnn`, `hierarchical_rl`, and five `hierarchical_rl_stage*` variants | `data/agent=hierarchical_rl` |
 | `data/task` | `random_walk`, `coupled_block`, `uncoupled_block` | `data/task=uncoupled_block` |
-| `model` | GRU: `gru`, `gru_scaling` · disRNN: `disrnn` · baseline RL: `baseline_rl`, `baseline_rl_bari`, `baseline_rl_ctt`, `baseline_rl_hattori`, `baseline_rl_rw`, `baseline_rl_losscounting` · hierarchical Bayes: `hb_hattori` (NumPyro), `hb_hattori_stan` (Stan) | `model=hb_hattori` |
+| `model` | GRU: `gru`, `gru_scaling` · disRNN: `disrnn` · baseline RL: `baseline_rl`, `baseline_rl_bari`, `baseline_rl_ctt`, `baseline_rl_hattori`, `baseline_rl_rw`, `baseline_rl_losscounting`, `baseline_rl_lit_<name>` (20 literature models; base `baseline_rl_lit`) · hierarchical Bayes: `hb_hattori` (NumPyro), `hb_hattori_stan` (Stan) | `model=hb_hattori` |
 
 `data/agent` and `data/task` are nested config **groups**, so they take a slash, not a dot:
 

@@ -1,0 +1,8 @@
+# Literature model FeedbackDependent-RL+Bias (not a preset: study 09's Costa sensitivity variant). Base: baseline_rl_lit.yaml.
+defaults:
+  - baseline_rl_lit
+  - _self_
+
+agent_class: ForagerFeedbackDependentRLBias
+agent_kwargs: {}
+literature_model: FeedbackDependent-RL+Bias
