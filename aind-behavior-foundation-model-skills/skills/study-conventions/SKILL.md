@@ -77,6 +77,12 @@ Reports: `make new-report` (posthoc-reporting skill).
   fine). Name descriptively (`v2-postwarmup`, `hsize-scan`), lowercase, never by date.
 - **One W&B project per study, one group per variant** (group set via the sweep's
   `name:`) — keeps variants side-by-side comparable; never a project per variant.
+- **Project name: entity `NeuralDynamics`, project `dfbfm_<NN>-<short-name>`** (e.g.
+  `dfbfm_12-leaderboard`; a harness uses `dfbfm-<name>`, e.g. `dfbfm-mevolve`). Plain characters
+  only — Hydra reads `[` as a list and a space breaks shell quoting, so no `[dfbfm] x`. Never put
+  a new study in the shared `aind-dynamic-foraging-model` project. Older studies keep the project
+  they logged to (frozen records are not rewritten). `make new-study` defaults to this entity and
+  rejects other names (studies#99).
 
 ## Provenance (one launch == one "pseudo-sweep")
 

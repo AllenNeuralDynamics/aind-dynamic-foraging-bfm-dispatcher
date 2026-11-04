@@ -156,7 +156,7 @@ the W&B run, plus the Beaker experiment id when relevant.
 
 Studies live in the sibling repo `aind-dynamic-foraging-bfm-studies` (split out, #124): one
 folder per study under its `studies/<name>/`; variants as self-contained subfolders; one W&B
-project per study, one group per variant. A study answers one scientific question — variants
+project per study (`NeuralDynamics/dfbfm_NN-name`), one group per variant. A study answers one scientific question — variants
 are not separate studies. Layout, naming, group scheme, provenance `meta.*`, interventions:
 **study-conventions**.
 
