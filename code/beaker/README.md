@@ -263,10 +263,12 @@ python code/launch_beaker_resumable.py \
 
 It expands the grid into one **self-contained Beaker task per grid point**
 (running `run_hpc` with that point's Hydra overrides baked in — no sweep
-controller), each `preemptible: true` / `priority: low`. Three things make a
+controller), each with the template's `context` (fan-outs: `preemptible: true` /
+`priority: normal`, the 64-slot unallocated tier; `low` is evicted by any normal job — see
+the beaker-launch skill, "Priority & preemption"). Three things make a
 preempted task resume from its last checkpoint instead of restarting:
 
-1. **Beaker autoResume** — set `preemptible: true` (with `priority: low`) and the
+1. **Beaker autoResume** — set `preemptible: true` (at any priority) and the
    server applies `autoResume: true` automatically (confirm with
    `beaker experiment spec <id>`). Do **not** set `autoResume` explicitly in the
    spec: the v2 schema rejects `preemptible` and `autoResume` together

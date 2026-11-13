@@ -20,23 +20,32 @@ job protection** — pick the tier by how much the job must resist eviction:
 
 | Tier | How to submit | Budget | Eviction |
 |---|---|---|---|
-| **1. Allocated / protected** | `{priority: normal or high, preemptible: false}` | **4 allocated slots** | never evicted (guaranteed) |
-| **2. Unallocated / preemptible-normal** | `{priority: normal/high, preemptible: true}` | **8 unallocated slots** (hard cap) | evicted under contention; auto-resumes |
-| **3. Low preemptible (burst)** | `{priority: low, preemptible: true}` | **~unlimited** (best-effort spare GPUs, *ignores* the 8-slot cap) | evicted first; auto-resumes |
+| **1. Allocated / protected** | `{priority: normal or high, preemptible: false}` | **8 allocated slots** | never evicted (guaranteed) |
+| **2. Unallocated / preemptible-normal** | `{priority: normal/high, preemptible: true}` | **64 unallocated slots** | evicted only by higher priority under contention; auto-resumes |
+| **3. Low preemptible (burst)** | `{priority: low, preemptible: true}` | **~unlimited** (best-effort spare GPUs) | evicted by any normal job, and by other low jobs on a full cluster; auto-resumes |
 
-Rules of thumb: default fan-outs → **tier 3** (`priority: low`) for max throughput;
-a few must-finish runs → **tier 1** (4 protected slots); **tier 2** only when a job
-must resist eviction but you've exhausted the 4 allocated slots. `maxWorkloadPriority`
-for this workspace is `high` (verified 2026-07-12), so `high` is available above
-`normal`. The **4 / 8** budget figures are from the 2026-06-22 measurement (the beaker
-CLI does not expose the workspace's slot budget directly — re-derive by watching where
-`normal`-preemptible starts pending vs. bursting).
+Rules of thumb (updated 2026-11-13): default fan-outs → **tier 2** (`priority: normal`,
+`preemptible: true`); the longest must-finish runs → **tier 1**; **tier 3** only when the
+64 unallocated slots are exhausted, and only for runs that can afford to lose everything
+since their last checkpoint. `maxWorkloadPriority` for this workspace is `high` (verified
+2026-07-12), so `high` is available above `normal`. Budgets: **8 / 64** per Han
+(2026-11-13); the 2026-06-22 measurement was 4 / 8. The beaker CLI does not expose the
+budgets directly — re-derive by watching where `normal`-preemptible starts pending while
+physical GPUs are free.
+
+**Why not low (study 17, 2026-11-13).** Low-priority tasks on a full `octo-hub-onprem-h200`
+(our 8 allocated + another workspace's 6 low jobs) were evicted (exit 143) every 2-4 min
+and never got past setup. On `octo-hub-aws-h200`, 8 low tasks were all evicted at 01:37 PT
+when another workspace started 32 normal-priority jobs; they were at 5-8k steps, before
+the first 10k-step checkpoint, so resuming restarted them from step 0. When a cluster is
+physically full, normal-preemptible tasks queue behind other workspaces' normal jobs (same
+priority) rather than evicting them; list both H200 clusters under `constraints.cluster`.
 
 - **Low-priority preemptible jobs burst onto spare idle GPUs *beyond* the
   workspace's unallocated-slot budget** (measured ~14 concurrent on H200), whereas
-  `normal`-priority preemptible jobs are **capped at the unallocated budget** (8)
-  — free physical slots sit idle while tasks pend. Use `normal` only for a single
-  job that must resist eviction.
+  `normal`-priority preemptible jobs are **capped at the unallocated budget** (64 since
+  2026-11; 8 in June) — free physical slots sit idle while tasks pend only once that cap
+  is reached.
 - `autoResume` is **auto-applied** to preemptible jobs — do not set it explicitly
   (the v2 schema rejects `preemptible` + `autoResume`:
   `Error: preemptible cannot be set with min_runtime or auto_resume`). Confirm
