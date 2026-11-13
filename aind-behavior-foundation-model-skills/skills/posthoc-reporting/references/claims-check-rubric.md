@@ -43,7 +43,7 @@ Record `rubric_version` with the dispatcher commit SHA of this file
 | C4 | Stale text: a sentence that describes an earlier state, such as a date, a sibling report's status ("same as r1"), a caveat the block now resolves, or a number the block no longer shows. | `stale_sentences` |
 | C5 | Caveats: an obvious alternative explanation or limit the result needs and the Caveats section lacks. Only what the evidence itself raises; no new analyses. | `missing_caveats` |
 | C6 | Estimands: one label for two different quantities, a metric without its aggregation (trial-pooled, per-subject median), or numbers compared across unlike conditions (mice, metric, split). | `estimand_issues` |
-| C7 | Uncertainty: a number with no n, no interval type, or no unit of n; a claim of "no difference" or "no effect" from a single seed, with no test, or from an interval that merely includes the null value. | `estimand_issues` |
+| C7 | Uncertainty: a number with no n, no interval type, or no unit of n — except a number explicitly marked "single seed, no error bar" (allowed by SKILL.md), which needs n but no interval; a claim of "no difference" or "no effect" from a single seed, with no test, or from an interval that merely includes the null value. | `estimand_issues` |
 | C8 | From the diff and the last-live pointer values: a claim or title that changed while its numbers did not, with no CHANGELOG entry. | `claims` (note) |
 | C9 | A conclusion sentence inside a result block that cannot change with the data (a fixed string), or a verdict that contradicts its own table, for example a verdict printed for an `n/a` comparison. | `claims` |
 
