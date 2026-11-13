@@ -137,6 +137,39 @@ class CedarLaunchTests(unittest.TestCase):
         self.assertIn("'data.subject_ids=[1, 2]'", line)
         self.assertIn("'note=it'\"'\"'s'", line)
 
+    def test_kickoff_reports_started_only_for_a_live_run(self):
+        """Run the kick-off line in bash against a fake entrypoint (`exec "$@"`)."""
+        import os
+        import time
+        from unittest import mock
+        root = Path(self.tmp.name) / "bfm"
+        entry = root / "aind-dynamic-foraging-bfm-wrapper" / "beaker" / "entrypoint.sh"
+        entry.parent.mkdir(parents=True)
+        entry.write_text('exec "$@"\n')
+        outputs, scratch = Path(self.tmp.name) / "output", Path(self.tmp.name) / "scratch"
+        outputs.mkdir()
+        scratch.mkdir()
+        env = {**os.environ, "BFM_ROOT": str(root), "CEDAR_OUTPUTS_DIR": str(outputs)}
+
+        def kick(run_cmd):
+            with mock.patch.object(lc, "STARTUP_CHECK_S", 1):
+                line = lc.kickoff_command({"run_cmd": run_cmd}).replace("cd /scratch", f"cd {scratch}")
+            t0 = time.time()
+            out = subprocess.run(["bash", "-c", line], capture_output=True, text=True, env=env, timeout=20)
+            return out, time.time() - t0
+
+        out, took = kick(["sleep", "30"])                  # a live run: started, and returns at once
+        self.assertEqual((out.returncode, out.stdout.strip()), (0, "started"))
+        self.assertLess(took, 10)
+        subprocess.run(["pkill", "-f", "sleep 30"])
+        out, _ = kick(["bash", "-c", "echo boom; exit 1"])  # dies at once: no `started`, log tail shown
+        self.assertEqual(out.returncode, 3)
+        self.assertNotIn("started", out.stdout)
+        self.assertIn("boom", out.stderr)
+        entry.unlink()                                      # no entrypoint: refused before detaching
+        out, _ = kick(["sleep", "30"])
+        self.assertEqual(out.returncode, 1)
+
     def test_image_record_resolves_the_tag_to_its_digest(self):
         versions = {"versions": [{"digest": "sha256:" + "a" * 64, "tags": ["other"]},
                                  {"digest": "sha256:" + "b" * 64, "tags": ["20261109-wf390d4f"]}]}
@@ -218,37 +251,46 @@ class CedarLaunchTests(unittest.TestCase):
         out = Path(self.tmp.name) / "partial"
         lc.save_record(str(self.sweep), str(self.session_file), plan, refs, out, {}, None, "p", "a partial launch")
         rec = json.loads((out / lc.RECORD_NAME).read_text())
-        self.assertEqual((rec["n_tasks"], rec["n_planned"]), (1, 2))
-        self.assertEqual([s["created"] for s in rec["sessions"]], [True, False])
+        self.assertEqual((rec["n_tasks"], rec["n_planned"]), (0, 2))     # no session with an id
+        self.assertEqual([s["attempted"] for s in rec["sessions"]], [True, False])
 
-    def test_ctrl_c_still_writes_the_record(self):
+    def test_a_failed_or_interrupted_create_still_records_the_session(self):
+        """`create` waits for READY, so the session can exist when it fails or is interrupted."""
         from unittest import mock
-        out = Path(self.tmp.name) / "interrupted"
-        created = []
+        for error, expect in ((KeyboardInterrupt, KeyboardInterrupt), (RuntimeError("NOT_PROGRESSED"), SystemExit)):
+            out = Path(self.tmp.name) / f"failed-{expect.__name__}"
+            ids = {}
 
-        def create(cfg, s, run=None):
-            if created:
-                raise KeyboardInterrupt
-            created.append(s["name"])
-        argv = ["launch_cedar.py", "--sweep", str(self.sweep), "--session", str(self.session_file),
-                "--output-dir", str(out), "--label", "ctrl-c", "--note", "an interrupted launch"]
-        with mock.patch.object(sys, "argv", argv), \
-                mock.patch.multiple(lc, launch_provenance=mock.DEFAULT, check_studies_clean=mock.DEFAULT,
-                                    pin_runtime_refs=mock.DEFAULT, runtime_config_reader=mock.DEFAULT,
-                                    data_record=mock.DEFAULT, image_record_cedar=mock.DEFAULT,
-                                    session_id=mock.DEFAULT, start_run=mock.DEFAULT) as m, \
-                mock.patch.object(lc, "create_session", side_effect=create), \
-                mock.patch.object(lc.subprocess, "run", return_value=Done()):
-            m["launch_provenance"].return_value = {}
-            m["check_studies_clean"].return_value = None
-            m["pin_runtime_refs"].return_value = {}
-            m["data_record"].return_value = {"source": "generated", "config": "synthetic", "type": "synthetic"}
-            m["image_record_cedar"].return_value = {"platform": "cedar", "name": "x:y", "digest": None}
-            m["session_id"].return_value = "sess_1"
-            with self.assertRaises(KeyboardInterrupt):
-                lc.main()
-        rec = json.loads((out / lc.RECORD_NAME).read_text())
-        self.assertEqual([(s["created"], s["id"]) for s in rec["sessions"]], [(True, "sess_1"), (False, None)])
+            def create(cfg, s, run=None):
+                ids[s["name"]] = f"sess_{len(ids)}"         # Cedar allocates the session first
+                if len(ids) == 2:
+                    raise error
+
+            def lookup(cfg, s, run=None):
+                if s["name"] not in ids:
+                    raise RuntimeError("NotFound")
+                return ids[s["name"]]
+            argv = ["launch_cedar.py", "--sweep", str(self.sweep), "--session", str(self.session_file),
+                    "--output-dir", str(out), "--label", "fail", "--note", "a failed launch, for the record"]
+            with mock.patch.object(sys, "argv", argv), \
+                    mock.patch.multiple(lc, launch_provenance=mock.DEFAULT, check_studies_clean=mock.DEFAULT,
+                                        pin_runtime_refs=mock.DEFAULT, runtime_config_reader=mock.DEFAULT,
+                                        data_record=mock.DEFAULT, image_record_cedar=mock.DEFAULT,
+                                        start_run=mock.DEFAULT) as m, \
+                    mock.patch.object(lc, "create_session", side_effect=create), \
+                    mock.patch.object(lc, "session_id", side_effect=lookup), \
+                    mock.patch.object(lc.subprocess, "run", return_value=Done()):
+                m["launch_provenance"].return_value = {}
+                m["check_studies_clean"].return_value = None
+                m["pin_runtime_refs"].return_value = {}
+                m["data_record"].return_value = {"source": "generated", "config": "synthetic", "type": "synthetic"}
+                m["image_record_cedar"].return_value = {"platform": "cedar", "name": "x:y", "digest": None}
+                with self.assertRaises(expect):
+                    lc.main()
+            rec = json.loads((out / lc.RECORD_NAME).read_text())
+            self.assertEqual([(s["attempted"], s["id"]) for s in rec["sessions"]],
+                             [(True, "sess_0"), (True, "sess_1")], expect)
+            self.assertEqual(rec["n_tasks"], 2)
 
     def test_dry_run_refuses_an_output_dir_inside_the_variant(self):
         from unittest import mock

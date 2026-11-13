@@ -68,6 +68,7 @@ MANAGED_ENV = {
     "BFM_META_STUDY", "BFM_META_VARIANT", "BFM_META_LAUNCH_ID", "BFM_META_CONFIG_HASH",
     "BFM_META_LABEL", "BFM_META_NOTE", "BFM_META_STUDIES_COMMIT",
 }
+STARTUP_CHECK_S = 5      # how long the kick-off waits to see the run still alive
 RECORD_NAME = "cedar_launch.json"
 RENDERED_NAME = "cedar_sessions_submitted.yaml"
 
@@ -173,13 +174,18 @@ def kickoff_command(session: dict) -> str:
 
     Only the run itself goes to the background, with all three standard streams redirected:
     a trailing ``&`` after an ``&&`` chain would background the whole chain as a subshell
-    that keeps the SSH connection open for as long as the run lasts.
+    that keeps the SSH connection open for as long as the run lasts. ``started`` is printed
+    only if the run is still alive after ``STARTUP_CHECK_S`` seconds; otherwise the log tail
+    is printed and the line exits non-zero.
     """
     run = " ".join(shlex.quote(t) for t in session["run_cmd"])
-    return ('mkdir -p "$CEDAR_OUTPUTS_DIR/run" && cd /scratch || exit 1; '
+    entry = '"$BFM_ROOT/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh"'
+    log = '"$CEDAR_OUTPUTS_DIR/run.log"'
+    return (f'mkdir -p "$CEDAR_OUTPUTS_DIR/run" && cd /scratch && test -f {entry} || exit 1; '
             'BFM_OUTPUT_DIR="$CEDAR_OUTPUTS_DIR/run" BFM_RESUMABLE_OUTPUT_DIR="$CEDAR_OUTPUTS_DIR/run" '
-            'nohup setsid bash "$BFM_ROOT/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh" '
-            f'{run} > "$CEDAR_OUTPUTS_DIR/run.log" 2>&1 < /dev/null & echo started')
+            f'nohup setsid bash {entry} {run} > {log} 2>&1 < /dev/null & pid=$!; '
+            f'sleep {STARTUP_CHECK_S}; if kill -0 "$pid" 2>/dev/null; then echo started; '
+            f'else tail -n 20 {log} >&2; exit 3; fi')
 
 
 def _cedar_json(*args: str, run=subprocess.run) -> dict:
@@ -236,24 +242,27 @@ def save_record(sweep_file: str, session_file: str, plan: dict, refs: list[dict]
                 provenance: dict, dirty_override: dict | None, label: str | None, note: str | None) -> None:
     """Write ``cedar_launch.json`` and copy the manifests beside it.
 
-    ``refs`` holds every session that was created; one whose id could not be read has
-    ``id: None``, so it stays out of the v2 ``job_refs`` but is still listed under ``sessions``.
-    ``n_tasks`` counts created sessions, ``n_planned`` the grid points.
+    ``refs`` holds every session name the launcher tried, from before its ``create``. A session
+    that exists has its ``id``; one whose id could not be read (never created, or the lookup
+    failed) has ``id: None``, so it stays out of the v2 ``job_refs`` but is still listed under
+    ``sessions`` with ``attempted: true``. ``n_tasks`` counts sessions with an id, ``n_planned``
+    the grid points.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     for f in (sweep_file, session_file):
         shutil.copy2(f, output_dir / Path(f).name)
     by_name = {r["name"]: r["id"] for r in refs}
+    n_tasks = sum(1 for r in refs if r.get("id"))
     record = {
         **v2_record_fields(
             provenance, sweep_path=sweep_file, platform="cedar", wandb_group=plan["group"], label=label,
             note=note, job_refs=refs, manifests=[Path(sweep_file).name, Path(session_file).name, RENDERED_NAME],
-            n_tasks=len(refs), produced_by="launch_cedar.py"),
+            n_tasks=n_tasks, produced_by="launch_cedar.py"),
         "mode": "cedar-grid",
         "wandb_group": plan["group"],
-        "n_tasks": len(refs),
+        "n_tasks": n_tasks,
         "n_planned": len(plan["sessions"]),
-        "sessions": [{"name": s["name"], "created": s["name"] in by_name, "id": by_name.get(s["name"]),
+        "sessions": [{"name": s["name"], "attempted": s["name"] in by_name, "id": by_name.get(s["name"]),
                       "overrides": s["overrides"],
                       "wandb_run_id": next(e["value"] for e in s["envVars"] if e["name"] == "WANDB_RUN_ID")}
                      for s in plan["sessions"]],
@@ -331,16 +340,23 @@ def main() -> None:
                 print("[cedar] would run:", shlex.join(create_command(cfg, s)))
                 print("[cedar] then ssh:", kickoff_command(s))
                 continue
+            # recorded before `create`: the session can exist (and hold its permanent name) even
+            # when `create` then fails to reach READY or is interrupted
+            ref = {"type": "cedar_session", "id": None, "name": s["name"]}
+            refs.append(ref)
             try:
                 create_session(cfg, s)
-                # recorded as soon as it exists, even if its id cannot be read or its run fails to start
-                ref = {"type": "cedar_session", "id": None, "name": s["name"]}
-                refs.append(ref)
                 ref["id"] = session_id(cfg, s)
                 start_run(cfg, s, ref["id"])
             except (RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
                 failure = exc
                 break
+            finally:
+                if ref["id"] is None:
+                    try:
+                        ref["id"] = session_id(cfg, s)
+                    except (RuntimeError, ValueError, OSError):
+                        pass            # never created: stays listed by name, id null
     finally:
         # also on Ctrl+C: sessions already started keep running, so their record must exist
         save_record(args.sweep, args.session, plan, refs, output_dir, provenance, dirty_override,
