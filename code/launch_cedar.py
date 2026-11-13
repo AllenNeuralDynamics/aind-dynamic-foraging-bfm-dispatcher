@@ -325,23 +325,26 @@ def main() -> None:
         {"session_config": cfg, "sessions": [{**s, "create": create_command(cfg, s), "kickoff": kickoff_command(s)}
                                              for s in plan["sessions"]]}, sort_keys=False))
     refs, failure = [], None
-    for s in plan["sessions"]:
-        if args.dry_run:
-            print("[cedar] would run:", shlex.join(create_command(cfg, s)))
-            print("[cedar] then ssh:", kickoff_command(s))
-            continue
-        try:
-            create_session(cfg, s)
-            # recorded as soon as it exists, even if its id cannot be read or its run fails to start
-            ref = {"type": "cedar_session", "id": None, "name": s["name"]}
-            refs.append(ref)
-            ref["id"] = session_id(cfg, s)
-            start_run(cfg, s, ref["id"])
-        except (RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
-            failure = exc
-            break
-    save_record(args.sweep, args.session, plan, refs, output_dir, provenance, dirty_override,
-                args.label, args.note)
+    try:
+        for s in plan["sessions"]:
+            if args.dry_run:
+                print("[cedar] would run:", shlex.join(create_command(cfg, s)))
+                print("[cedar] then ssh:", kickoff_command(s))
+                continue
+            try:
+                create_session(cfg, s)
+                # recorded as soon as it exists, even if its id cannot be read or its run fails to start
+                ref = {"type": "cedar_session", "id": None, "name": s["name"]}
+                refs.append(ref)
+                ref["id"] = session_id(cfg, s)
+                start_run(cfg, s, ref["id"])
+            except (RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
+                failure = exc
+                break
+    finally:
+        # also on Ctrl+C: sessions already started keep running, so their record must exist
+        save_record(args.sweep, args.session, plan, refs, output_dir, provenance, dirty_override,
+                    args.label, args.note)
     if failure:
         sys.exit(f"[cedar] stopped after creating {len(refs)} of {len(plan['sessions'])} sessions: {failure}")
     print("[cedar] done" + (" (dry run: nothing created)" if args.dry_run else ""))

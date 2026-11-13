@@ -221,6 +221,35 @@ class CedarLaunchTests(unittest.TestCase):
         self.assertEqual((rec["n_tasks"], rec["n_planned"]), (1, 2))
         self.assertEqual([s["created"] for s in rec["sessions"]], [True, False])
 
+    def test_ctrl_c_still_writes_the_record(self):
+        from unittest import mock
+        out = Path(self.tmp.name) / "interrupted"
+        created = []
+
+        def create(cfg, s, run=None):
+            if created:
+                raise KeyboardInterrupt
+            created.append(s["name"])
+        argv = ["launch_cedar.py", "--sweep", str(self.sweep), "--session", str(self.session_file),
+                "--output-dir", str(out), "--label", "ctrl-c", "--note", "an interrupted launch"]
+        with mock.patch.object(sys, "argv", argv), \
+                mock.patch.multiple(lc, launch_provenance=mock.DEFAULT, check_studies_clean=mock.DEFAULT,
+                                    pin_runtime_refs=mock.DEFAULT, runtime_config_reader=mock.DEFAULT,
+                                    data_record=mock.DEFAULT, image_record_cedar=mock.DEFAULT,
+                                    session_id=mock.DEFAULT, start_run=mock.DEFAULT) as m, \
+                mock.patch.object(lc, "create_session", side_effect=create), \
+                mock.patch.object(lc.subprocess, "run", return_value=Done()):
+            m["launch_provenance"].return_value = {}
+            m["check_studies_clean"].return_value = None
+            m["pin_runtime_refs"].return_value = {}
+            m["data_record"].return_value = {"source": "generated", "config": "synthetic", "type": "synthetic"}
+            m["image_record_cedar"].return_value = {"platform": "cedar", "name": "x:y", "digest": None}
+            m["session_id"].return_value = "sess_1"
+            with self.assertRaises(KeyboardInterrupt):
+                lc.main()
+        rec = json.loads((out / lc.RECORD_NAME).read_text())
+        self.assertEqual([(s["created"], s["id"]) for s in rec["sessions"]], [(True, "sess_1"), (False, None)])
+
     def test_dry_run_refuses_an_output_dir_inside_the_variant(self):
         from unittest import mock
         argv = ["launch_cedar.py", "--sweep", str(self.sweep), "--session", str(self.session_file),
