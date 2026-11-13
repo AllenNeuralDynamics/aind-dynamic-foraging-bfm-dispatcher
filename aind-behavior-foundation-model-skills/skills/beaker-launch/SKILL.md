@@ -34,7 +34,10 @@ corrected skill. Follow whichever side is more restrictive, and fix both in the 
    repo-local `results/` fallback) — `/results` is the Code Ocean path.
    Credentials on HPC: `BEAKER_TOKEN` is *not* in the env; the launchers fall back to
    `user_token` in `~/.beaker/config.yml` (or `$BEAKER_CONFIG`). `WANDB_API_KEY` comes
-   from `~/.netrc`.
+   from the experiment template's Beaker secret (the personal key, `AIND-disRNN`). The resumable
+   launcher refuses a sweep whose `wandb.entity=` override disagrees with the study README, but it
+   cannot check the secret: for a `NeuralDynamics` study the template's secret must hold that
+   entity's key (#225).
 6. **Scientific submissions use immutable refs.** Templates may retain readable
    branch/tag values and inline comments, but the launchers require all three REF
    variables and resolve them to full SHAs before W&B sweep creation or Beaker

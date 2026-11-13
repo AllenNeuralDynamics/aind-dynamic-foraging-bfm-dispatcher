@@ -82,6 +82,7 @@ from zoneinfo import ZoneInfo
 
 import yaml
 
+import wandb_account
 from launch_inputs import DataConfigError, data_record, image_record_hpc, live_data_refusal, wrapper_config_root
 from provenance import (
     DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
@@ -736,6 +737,10 @@ def main() -> None:
     try:
         check_launch_identity(sweep_yaml, group, args.label, args.note)
     except LaunchIdentityError as exc:
+        raise SystemExit(f"Refusing to launch: {exc}")
+    try:
+        wandb_account.prepare(sweep_yaml, "hpc")
+    except wandb_account.WandbAccountError as exc:
         raise SystemExit(f"Refusing to launch: {exc}")
 
     sweep_cmd = ["wandb", "sweep", str(sweep_yaml)]
