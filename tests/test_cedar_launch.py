@@ -151,8 +151,10 @@ class CedarLaunchTests(unittest.TestCase):
         scratch.mkdir()
         env = {**os.environ, "BFM_ROOT": str(root), "CEDAR_OUTPUTS_DIR": str(outputs)}
 
+        session_log = Path(self.tmp.name) / "cedar-session.log"
+
         def kick(run_cmd):
-            with mock.patch.object(lc, "STARTUP_CHECK_S", 1):
+            with mock.patch.object(lc, "STARTUP_CHECK_S", 1), mock.patch.object(lc, "SESSION_LOG", str(session_log)):
                 line = lc.kickoff_command({"run_cmd": run_cmd}).replace("cd /scratch", f"cd {scratch}")
             t0 = time.time()
             out = subprocess.run(["bash", "-c", line], capture_output=True, text=True, env=env, timeout=20)
@@ -166,8 +168,21 @@ class CedarLaunchTests(unittest.TestCase):
         self.assertEqual(out.returncode, 3)
         self.assertNotIn("started", out.stdout)
         self.assertIn("boom", out.stderr)
+        # the output reaches both the durable run.log and Cedar's session log
+        self.assertIn("boom", (outputs / "run.log").read_text())
+        self.assertIn("boom", session_log.read_text())
+        # the check watches the run, not the pipe: a child still holding the pipe open
+        # (as a W&B service process can) does not make a dead run look started
+        out, _ = kick(["bash", "-c", "sleep 30 & exit 1"])
+        subprocess.run(["pkill", "-f", "sleep 30"])
+        self.assertEqual(out.returncode, 3)
         entry.unlink()                                      # no entrypoint: refused before detaching
         out, _ = kick(["sleep", "30"])
+        self.assertEqual(out.returncode, 1)
+        entry.write_text('exec "$@"\n')                    # run.log cannot be opened: refused too
+        (outputs / "run.log").unlink()
+        (outputs / "run.log").mkdir()
+        out, _ = kick(["true"])
         self.assertEqual(out.returncode, 1)
 
     def test_image_record_resolves_the_tag_to_its_digest(self):
