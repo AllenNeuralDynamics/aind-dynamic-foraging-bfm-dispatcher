@@ -35,9 +35,10 @@ corrected skill. Follow whichever side is more restrictive, and fix both in the 
    Credentials on HPC: `BEAKER_TOKEN` is *not* in the env; the launchers fall back to
    `user_token` in `~/.beaker/config.yml` (or `$BEAKER_CONFIG`). `WANDB_API_KEY` comes
    from the experiment template's Beaker secret (the personal key, `AIND-disRNN`). The resumable
-   launcher refuses a sweep whose `wandb.entity=` override disagrees with the study README, but it
-   cannot check the secret: for a `NeuralDynamics` study the template's secret must hold that
-   entity's key (#225).
+   launcher refuses a sweep whose `wandb.entity=` override disagrees with the study README, and a
+   non-default-entity study whose template secret name does not carry the entity (#225, #227).
+   For `NeuralDynamics` use `han-wandb-api-key-neuraldynamics` (it exists in
+   `ai1/aind-dynamic-foraging-foundation-model`); the launcher checks the name, not the value.
 6. **Scientific submissions use immutable refs.** Templates may retain readable
    branch/tag values and inline comments, but the launchers require all three REF
    variables and resolve them to full SHAs before W&B sweep creation or Beaker

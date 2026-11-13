@@ -108,6 +108,15 @@ class WandbAccountTest(unittest.TestCase):
             wa.check_entity_access("NeuralDynamics", teams_fn=boom)
         self.assertIn("WARNING", out.getvalue())
 
+    def test_beaker_secret_must_carry_the_entity(self):
+        p = make_study(self.root, "NeuralDynamics", HPC_ND)
+        spec = lambda secret: {"tasks": [{"envVars": [{"name": "WANDB_API_KEY", "secret": secret}]}]}
+        with contextlib.redirect_stdout(io.StringIO()):
+            wa.prepare(p, "beaker", spec=spec("han-wandb-api-key-neuraldynamics"))
+            with self.assertRaisesRegex(wa.WandbAccountError, "han-wandb-api-key'|-wandb-api-key-neuraldynamics"):
+                wa.prepare(p, "beaker", spec=spec("han-wandb-api-key"))
+        wa.check_beaker_secret(spec("han-wandb-api-key"), "AIND-disRNN")
+
     def test_beaker_warns_about_the_secret(self):
         p = make_study(self.root, "NeuralDynamics", HPC_ND)
         out = io.StringIO()

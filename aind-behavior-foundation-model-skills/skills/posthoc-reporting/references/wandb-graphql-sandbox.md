@@ -10,6 +10,13 @@ lives in `~/.netrc`, which only the SDK consults:
 export WANDB_API_KEY=$(grep -A2 'api.wandb.ai' ~/.netrc | grep password | awk '{print $2}')
 ```
 
+**For a `NeuralDynamics` project, do not export it by hand.** The key is the `han-hou` one, not the
+personal `.netrc` key. A producer calls `key_for(ENTITY)` from the studies repo's
+`studies/util/wandb_key.py` (studies#157): it returns `~/.config/wandb/api_key.<entity>`, else
+`$WANDB_API_KEY`, else `~/.netrc`. New producers use it; an existing frozen producer adopts it the
+next time it regenerates (editing it earlier makes `make validate` refuse until the artifacts are
+rebuilt).
+
 In the Claude Science Mac sandbox, `wandb.Api()` fails outright: it tries to spawn a
 `wandb-core` helper subprocess (`ServicePollForTokenError`) and write config under
 `~/.config/wandb`, both blocked. Working route:
