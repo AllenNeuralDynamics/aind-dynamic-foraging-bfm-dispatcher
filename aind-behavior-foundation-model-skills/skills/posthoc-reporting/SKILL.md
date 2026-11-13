@@ -46,9 +46,8 @@ A producer printed a fixed conclusion on an `n/a` comparison (01 r7). Prose quot
 numbers with no source. The verdict lived in three places that disagreed. There were five
 title styles, two templates and seven ways to write uncertainty.
 
-The **study owner** approves a report; the rules below that need a person's decision name
-that role. The study frontmatter (`schemas/study-frontmatter.v1.schema.json`) has no owner
-field yet, so until it does the owner is the report's first author (first in `authors`).
+The report's **first author** (the first entry in `authors`) approves; the rules below that
+need a person's decision name that role.
 
 These rules apply to reports with frontmatter `schema_version: 2`. A version-1 report
 keeps the version-1 rules until its results, claims or result blocks change; that change
@@ -129,12 +128,12 @@ template is in `references/report-contracts.md`.
   note (`report-prose-stale`) when a block's digest differs, and prints the new digest to paste
   once you have re-read the prose.
 - A `live` report's title and claims change only if the numbers changed, or a CHANGELOG
-  entry gives the reason and the study owner reviews it. Rewording counts as a change.
+  entry gives the reason and the first author reviews it. Rewording counts as a change.
 - A draft carries `draft_reason:` (one line, e.g. "k̂ rescue pending").
 - **Draft → live** needs all seven: (1) the question in one sentence; (2) Answer findings
   that match the claims; (3) at least one figure; (4) n and uncertainty on every number;
-  (5) caveats; (6) a next step; (7) terms explained. Then a claims check, then the study
-  owner's explicit go-ahead.
+  (5) caveats; (6) a next step; (7) terms explained. Then a claims check, then the first
+  author's explicit go-ahead.
 
 ### Claims check
 

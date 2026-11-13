@@ -18,8 +18,8 @@ schema_version: 2
 id: r7
 slug: nxd-joint-scaling-grid
 status: draft             # draft | live | superseded | retracted
-draft_reason: "awaiting study owner review"   # required while status is draft
-authors: [han, pck]       # first author; approves while the study has no owner field
+draft_reason: "awaiting first author review"   # required while status is draft
+authors: [han, pck]       # first entry is the first author, who approves
 wandb_groups:             # exact group names; never a glob
   - nxd-grid@20260623-102649
 inputs:                   # study-relative paths that exist; no commands
