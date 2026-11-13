@@ -179,6 +179,11 @@ class CedarLaunchTests(unittest.TestCase):
         entry.unlink()                                      # no entrypoint: refused before detaching
         out, _ = kick(["sleep", "30"])
         self.assertEqual(out.returncode, 1)
+        entry.write_text('exec "$@"\n')                    # run.log cannot be opened: refused too
+        (outputs / "run.log").unlink()
+        (outputs / "run.log").mkdir()
+        out, _ = kick(["true"])
+        self.assertEqual(out.returncode, 1)
 
     def test_image_record_resolves_the_tag_to_its_digest(self):
         versions = {"versions": [{"digest": "sha256:" + "a" * 64, "tags": ["other"]},

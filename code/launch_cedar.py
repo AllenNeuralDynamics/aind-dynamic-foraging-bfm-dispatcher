@@ -188,7 +188,9 @@ def kickoff_command(session: dict) -> str:
     # so `$!` is the run itself and the alive check below watches the run, not the pipe.
     tee = shlex.quote(f'exec > >(tee -a {log} {shlex.quote(SESSION_LOG)} > /dev/null) 2>&1; '
                       'exec bash "$0" "$@"')
-    return (f'mkdir -p "$CEDAR_OUTPUTS_DIR/run" && cd /scratch && test -f {entry} || exit 1; '
+    # The durable log is opened here, before detaching, so a run never starts without it;
+    # only the session-log copy is best effort.
+    return (f'mkdir -p "$CEDAR_OUTPUTS_DIR/run" && : >> {log} && cd /scratch && test -f {entry} || exit 1; '
             'BFM_OUTPUT_DIR="$CEDAR_OUTPUTS_DIR/run" BFM_RESUMABLE_OUTPUT_DIR="$CEDAR_OUTPUTS_DIR/run" '
             f'nohup setsid bash -c {tee} {entry} {run} > /dev/null 2>&1 < /dev/null & pid=$!; '
             f'sleep {STARTUP_CHECK_S}; if kill -0 "$pid" 2>/dev/null; then echo started; '
