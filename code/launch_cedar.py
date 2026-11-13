@@ -9,7 +9,9 @@ expands a ``method: grid`` W&B sweep into its grid points and, for each one:
   2. one ``ssh`` that starts ``beaker/entrypoint.sh python -m run_hpc <command + overrides>``
      under ``nohup setsid`` and returns at once. The entrypoint fetches the wrapper,
      dispatcher and foraging-models at the pinned full SHAs; outputs go to
-     ``$CEDAR_OUTPUTS_DIR/run``, which outlives the session.
+     ``$CEDAR_OUTPUTS_DIR/run``, which outlives the session. The run's output goes both to
+     ``$CEDAR_OUTPUTS_DIR/run.log`` (the durable copy) and to the session log that Cedar's
+     log view and ``cedar session logs`` show (the live view, gone with the session).
 
 Each run gets the same deterministic ``WANDB_RUN_ID``, ``WANDB_RESUME=allow``, W&B group
 ``<variant>@<launch_id>`` and ``BFM_META_*`` as on Beaker. No W&B sweep controller is used, so
@@ -69,6 +71,7 @@ MANAGED_ENV = {
     "BFM_META_LABEL", "BFM_META_NOTE", "BFM_META_STUDIES_COMMIT",
 }
 STARTUP_CHECK_S = 5      # how long the kick-off waits to see the run still alive
+SESSION_LOG = "/run/cedar-session.log"  # cedar-session's entrypoint relays it to the container log (mode 622)
 RECORD_NAME = "cedar_launch.json"
 RENDERED_NAME = "cedar_sessions_submitted.yaml"
 
@@ -181,9 +184,13 @@ def kickoff_command(session: dict) -> str:
     run = " ".join(shlex.quote(t) for t in session["run_cmd"])
     entry = '"$BFM_ROOT/aind-dynamic-foraging-bfm-wrapper/beaker/entrypoint.sh"'
     log = '"$CEDAR_OUTPUTS_DIR/run.log"'
+    # The detached shell sends its output through `tee` to both logs, then execs the entrypoint,
+    # so `$!` is the run itself and the alive check below watches the run, not the pipe.
+    tee = shlex.quote(f'exec > >(tee -a {log} {shlex.quote(SESSION_LOG)} > /dev/null) 2>&1; '
+                      'exec bash "$0" "$@"')
     return (f'mkdir -p "$CEDAR_OUTPUTS_DIR/run" && cd /scratch && test -f {entry} || exit 1; '
             'BFM_OUTPUT_DIR="$CEDAR_OUTPUTS_DIR/run" BFM_RESUMABLE_OUTPUT_DIR="$CEDAR_OUTPUTS_DIR/run" '
-            f'nohup setsid bash {entry} {run} > {log} 2>&1 < /dev/null & pid=$!; '
+            f'nohup setsid bash -c {tee} {entry} {run} > /dev/null 2>&1 < /dev/null & pid=$!; '
             f'sleep {STARTUP_CHECK_S}; if kill -0 "$pid" 2>/dev/null; then echo started; '
             f'else tail -n 20 {log} >&2; exit 3; fi')
 
