@@ -33,12 +33,15 @@ Usage (from the studies root, signed in to Cedar):
     --sweep studies/<study>/variants/<variant>/sweep.yaml \\
     --session studies/<study>/variants/<variant>/session_cedar.yaml \\
     --output-dir studies/<study>/variants/<variant>/launch_record/<label> \\
-    --label <label> --note "..." [--dry-run]
+    --label <label> --note "..."
+A ``--dry-run`` creates nothing; give it an ``--output-dir`` outside the variant (it refuses one
+inside, since uncommitted files there would make the real launch refuse).
 """
 
 import argparse
 import hashlib
 import json
+import os
 import shlex
 import shutil
 import subprocess
@@ -209,7 +212,7 @@ def save_record(sweep_file: str, session_file: str, plan: dict, refs: list[dict]
         **v2_record_fields(
             provenance, sweep_path=sweep_file, platform="cedar", wandb_group=plan["group"], label=label,
             note=note, job_refs=refs, manifests=[Path(sweep_file).name, Path(session_file).name, RENDERED_NAME],
-            n_tasks=len(refs) or len(plan["sessions"]), produced_by="launch_cedar.py"),
+            n_tasks=len(plan["sessions"]), produced_by="launch_cedar.py"),
         "mode": "cedar-grid",
         "wandb_group": plan["group"],
         "n_tasks": len(plan["sessions"]),
@@ -241,8 +244,14 @@ def main() -> None:
                    help="launch on the live (unpinned) database; for smoke tests only, never a result")
     args = p.parse_args()
 
+    # the CLI's update notice would land in the JSON the launcher parses
+    os.environ["CEDAR_NO_UPDATE_CHECK"] = "1"
     cfg = load_session_config(args.session)
     output_dir = Path(args.output_dir)
+    variant_dir = Path(args.sweep).resolve().parent
+    if args.dry_run and (output_dir.resolve() == variant_dir or variant_dir in output_dir.resolve().parents):
+        sys.exit("[cedar] --dry-run writes its plan to --output-dir; point it outside the variant, or the "
+                 "uncommitted files make the real launch refuse")
     provenance = launch_provenance(Path(args.sweep), REPO_ROOT)
     print_warnings(provenance, "[cedar] ")
     try:

@@ -183,6 +183,14 @@ class CedarLaunchTests(unittest.TestCase):
         self.assertTrue((out / "sweep.yaml").exists() and (out / "session_cedar.yaml").exists())
         self.assertEqual(rec["image"]["digest"], "sha256:" + "b" * 64)
 
+    def test_dry_run_refuses_an_output_dir_inside_the_variant(self):
+        from unittest import mock
+        argv = ["launch_cedar.py", "--sweep", str(self.sweep), "--session", str(self.session_file),
+                "--output-dir", str(self.variant / "launch_record" / "dry"), "--dry-run"]
+        with mock.patch.object(sys, "argv", argv), self.assertRaises(SystemExit) as cm:
+            lc.main()
+        self.assertIn("outside the variant", str(cm.exception))
+
     def test_record_without_sessions_is_not_v2(self):
         out = self.variant / "launch_record" / "dry"
         lc.save_record(str(self.sweep), str(self.session_file), self.plan(), [], out, {}, None, "dry", "a dry run only")
