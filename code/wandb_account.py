@@ -126,7 +126,23 @@ def _viewer() -> tuple[str, list[str]]:
     return v.username, list(v.teams)
 
 
-def prepare(sweep_path: Path | str, platform: str, teams_fn=None) -> str | None:
+def check_beaker_secret(spec: dict, entity: str) -> None:
+    """Refuse a non-default entity whose spec reads ``WANDB_API_KEY`` from another entity's secret.
+
+    By convention the secret name carries the entity, lowercase (``han-wandb-api-key-neuraldynamics``).
+    """
+    if entity == DEFAULT_ENTITY:
+        return
+    for task in spec.get("tasks", []):
+        for e in task.get("envVars", []):
+            secret = e.get("secret")
+            if e.get("name") == "WANDB_API_KEY" and secret and entity.lower() not in secret.lower():
+                raise WandbAccountError(
+                    f"the experiment's WANDB_API_KEY comes from Beaker secret {secret!r}, which is not "
+                    f"for {entity!r}. Use the secret whose name ends in -wandb-api-key-{entity.lower()}.")
+
+
+def prepare(sweep_path: Path | str, platform: str, teams_fn=None, spec: dict | None = None) -> str | None:
     """The launcher's one call: check the sweep, pick the key, check access. Returns the entity."""
     entity = check_wandb_account(sweep_path, platform)
     if entity is None:
@@ -135,7 +151,9 @@ def prepare(sweep_path: Path | str, platform: str, teams_fn=None) -> str | None:
     print(f"W&B account: entity={entity} key={'file ' + str(used) if used else '~/.netrc'}")
     if platform == "hpc":
         check_entity_access(entity, teams_fn)
-    elif entity != DEFAULT_ENTITY:  # Beaker jobs read their key from a Beaker secret, not this process
+    elif spec is not None:  # Beaker jobs read their key from a Beaker secret, not this process
+        check_beaker_secret(spec, entity)
+    elif entity != DEFAULT_ENTITY:
         print(f"WARNING: the experiment template's WANDB_API_KEY secret must hold the {entity!r} key "
               "(not checked here)")
     return entity

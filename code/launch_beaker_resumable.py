@@ -353,7 +353,7 @@ def main() -> None:
     except LaunchIdentityError as exc:
         sys.exit(f"[resumable] refusing to launch: {exc}")
     try:
-        wandb_account.prepare(args.sweep, "beaker")
+        wandb_account.prepare(args.sweep, "beaker", spec=spec)
     except wandb_account.WandbAccountError as exc:
         sys.exit(f"[resumable] refusing to launch: {exc}")
     try:
