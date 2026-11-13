@@ -72,7 +72,10 @@ So every skill edit lands here, by PR:
    nothing. The repo is correct, the installed copy agents actually read is stale, and
    nothing warns you. Verify with `diff -rq` between the repo pack and
    `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/skills`.
-3. Re-import the plugin in Claude Code (`/plugin` — updates are pull-based, not automatic).
+3. Nothing to re-import: the marketplace has `autoUpdate` on, so each user's install picks up the
+   new version at a later Claude start. To get it now: `claude plugin update
+   aind-behavior-foundation-model-skills@aind-behavior-foundation-model --scope user`, then restart
+   or `/reload-plugins`.
 4. If the skill's `description` changed, note it in the PR: descriptions are the triggering
    mechanism, so a description change alters *when* the skill loads, not just its content.
 
@@ -85,13 +88,21 @@ is a running cost paid by every agent; `references/` is free until read.
 
 **Claude Code (whole pack via the repo's plugin marketplace):**
 
-```
-/plugin marketplace add AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher
-/plugin install aind-behavior-foundation-model-skills@aind-behavior-foundation-model
+Install it **once, at user level**. One copy then serves every repo, clone and worktree:
+
+```bash
+claude plugin marketplace add AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher
+claude plugin install aind-behavior-foundation-model-skills@aind-behavior-foundation-model --scope user
 ```
 
-Inside this repo (and the wrapper repo) the pack is auto-enabled via the
-checked-in `.claude/settings.json`.
+The three repos' checked-in `.claude/settings.json` declare the marketplace with
+`"autoUpdate": true`, so the install updates itself. They do **not** enable the plugin per repo
+(dispatcher#229). A repo-level `enabledPlugins` makes Claude create a separate project copy in
+each repo, pinned to that day's version, and a project copy wins over the user copy, so sessions
+load stale skills. If `claude plugin list` shows the pack at `Scope: project`, remove that copy:
+`claude plugin uninstall aind-behavior-foundation-model-skills@aind-behavior-foundation-model
+--scope project` from that repo, then `git checkout -- .claude/settings.json` (the uninstall
+rewrites it).
 
 **Other Agent Skills tools (e.g. Claude Science):** import the `skills/` directory —
 each subfolder is a standard SKILL.md skill (with its `references/`).
