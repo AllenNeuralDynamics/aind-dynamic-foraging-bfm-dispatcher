@@ -54,6 +54,7 @@ import yaml
 # code/beaker_client.py docstring for why.
 from launch_inputs import (DataConfigError, data_record, image_record_beaker, live_data_refusal,
                            runtime_config_reader, runtime_dispatcher_sha)
+import wandb_account
 from beaker_client import pin_runtime_refs, submit_beaker_experiment
 from provenance import (
     DirtyStudiesError, LaunchIdentityError, check_launch_identity, check_studies_clean,
@@ -350,6 +351,10 @@ def main() -> None:
     try:
         check_launch_identity(args.sweep, spec_group(spec), args.label, args.note)
     except LaunchIdentityError as exc:
+        sys.exit(f"[resumable] refusing to launch: {exc}")
+    try:
+        wandb_account.prepare(args.sweep, "beaker")
+    except wandb_account.WandbAccountError as exc:
         sys.exit(f"[resumable] refusing to launch: {exc}")
     try:
         pins = pin_runtime_refs(spec)

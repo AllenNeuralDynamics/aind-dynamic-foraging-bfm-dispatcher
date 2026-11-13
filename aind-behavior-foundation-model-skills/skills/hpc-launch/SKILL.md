@@ -29,9 +29,15 @@ README wins.**
    `DISPATCHER_ROOT/studies` (see study 09's `variants/*/*.slurm`).
 4. One-time setup per user: `cp code/hpc/slurm/user.env.example code/hpc/slurm/user.env`
    and edit (`SBATCH_*` vars for sbatch, `CONDA_SH` for env activation).
-5. Credentials on HPC live in files, not the env: W&B in `~/.netrc` (the SDK reads it;
-   producers using the GraphQL route need `WANDB_API_KEY` exported — see the
-   posthoc-reporting skill) and Beaker in `~/.beaker/config.yml`.
+5. Credentials on HPC live in files, not the env: W&B in `~/.netrc` (the personal key, entity
+   `AIND-disRNN`; the SDK reads it; producers using the GraphQL route need `WANDB_API_KEY`
+   exported — see the posthoc-reporting skill) and Beaker in `~/.beaker/config.yml`.
+   **The launcher picks the W&B account per study** (#225): it reads the entity from the study
+   README's `wandb:` block, refuses a sweep whose top-level `entity` (and `wandb.entity=` override)
+   disagrees, exports `~/.config/wandb/api_key.<entity>` as `WANDB_API_KEY` if that file exists
+   (`--export=ALL` carries it to the jobs; it is never printed or recorded), and refuses if the key
+   in use is not a member of the entity. A `NeuralDynamics` study needs
+   `~/.config/wandb/api_key.NeuralDynamics`; do not export the key by hand.
 
 ## Not everything belongs on HPC
 

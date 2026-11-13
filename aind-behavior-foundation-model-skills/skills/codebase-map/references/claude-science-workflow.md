@@ -58,7 +58,8 @@ party. The user always owns the initial clone and the SSO auth.
 
 ## Credentials (stored in Claude Science, never in the repo)
 
-- `WANDB_API_KEY` — W&B GraphQL/API access. Entity `AIND-disRNN`, login `houhan`.
+- `WANDB_API_KEY` — W&B GraphQL/API access. Entity `AIND-disRNN`, login `houhan` (older studies);
+  studies on entity `NeuralDynamics` use another key, login `han-hou` (#225).
 - `BEAKER_TOKEN` — Beaker CLI/API (`user_token` from `~/.beaker/config.yml`).
 - `GITHUB_TOKEN` — SSO-authorized PAT for the org; used in-memory for push, never
   persisted into git config.
