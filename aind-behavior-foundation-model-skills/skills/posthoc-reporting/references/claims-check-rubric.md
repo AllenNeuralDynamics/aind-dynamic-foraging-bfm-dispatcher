@@ -8,7 +8,9 @@ novelty, or propose analyses; that is the separate domain review.
 
 ## How to run it (for the writing session)
 
-Launch a **new** agent with the Agent tool (`subagent_type: "general-purpose"`). Never
+Launch a **new** agent with the Agent tool (`subagent_type: "general-purpose"`). Run it on
+**Opus 5.5 at high effort** (`model: "opus"`, `effort: "high"`); the blind test that
+measured its catch rate used Opus, and other models are untested. Never
 `"fork"`: a fork inherits the writing conversation. Pass this file as its instructions,
 tell it to use read-only tools only, and give it file paths, not a summary:
 
@@ -63,6 +65,7 @@ check).
   "report_digest": "<sha256 of the report file>",
   "inputs_digest": "<sha256 of the JSON object {role/path: sha256} for every file supplied, keys sorted; role is current, last_live or upstream>",
   "rubric_version": "claims-check/1 @ <dispatcher sha>",
+  "model": "claude-opus-5-5, effort high",
   "claims": [
     {"id": "F1", "verdict": "supported | overstated | contradicted | cant_verify",
      "evidence_pointer": "<json path#pointer, figure, or table row>", "note": "..."}

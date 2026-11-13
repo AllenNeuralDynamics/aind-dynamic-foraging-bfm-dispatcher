@@ -138,7 +138,8 @@ template is in `references/report-contracts.md`.
 
 Run it before draft → live, and on any change to a live report's claims.
 
-- Launch a **new** agent with the Agent tool (general-purpose), read-only, with
+- Launch a **new** agent with the Agent tool (general-purpose, Opus 5.5 at high effort),
+  read-only, with
   `references/claims-check-rubric.md`. **Never `subagent_type: "fork"`:** a fork inherits
   the writing conversation, and the point is a reader who did not write the report.
 - Give it files only: the report, its claims with pointers resolved, the JSON it cites,
