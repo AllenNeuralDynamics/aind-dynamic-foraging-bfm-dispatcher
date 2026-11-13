@@ -98,7 +98,8 @@ class CedarLaunchTests(unittest.TestCase):
         self.assertEqual(len(names), 2)
         self.assertEqual(len(set(names)), 2)
         self.assertTrue(all(n.startswith("cedar-smoke-") for n in names))
-        self.assertEqual([s["run_cmd"][-1] for s in plan["sessions"]], ["seed=0", "seed=1"])
+        self.assertEqual([s["overrides"] for s in plan["sessions"]], [["seed=0"], ["seed=1"]])
+        self.assertEqual([f"seed={i}" in s["run_cmd"] for i, s in enumerate(plan["sessions"])], [True, True])
         self.assertNotIn("${args_no_hyphens}", plan["sessions"][0]["run_cmd"])
 
     def test_env_carries_group_meta_and_refs_but_not_managed_overrides(self):
@@ -156,12 +157,15 @@ class CedarLaunchTests(unittest.TestCase):
             if cmd[0] == "ssh":
                 return Done(stdout="started\n")
             return Done()
-        self.assertEqual(lc.create_session(self.cfg, s, run=run), "sess_01MEXAMPLE")
+        lc.create_session(self.cfg, s, run=run)
+        self.assertEqual(lc.session_id(self.cfg, s, run=run), "sess_01MEXAMPLE")
         lc.start_run(self.cfg, s, "sess_01MEXAMPLE", run=run)
         self.assertEqual(calls[-1][-2], f"cedar-dfbfm-{s['name']}")
 
         with self.assertRaisesRegex(RuntimeError, "did not start"):
             lc.create_session(self.cfg, s, run=lambda cmd, **kw: Done(returncode=9, stderr="NOT_PROGRESSED"))
+        with self.assertRaisesRegex(RuntimeError, "id could not be read"):
+            lc.session_id(self.cfg, s, run=lambda cmd, **kw: Done(stdout="{}"))
         with self.assertRaisesRegex(RuntimeError, "its run did not"):
             lc.start_run(self.cfg, s, "sess_x", run=lambda cmd, **kw: Done(returncode=255))
 
@@ -182,6 +186,40 @@ class CedarLaunchTests(unittest.TestCase):
         self.assertEqual(rec["manifests"], ["sweep.yaml", "session_cedar.yaml", lc.RENDERED_NAME])
         self.assertTrue((out / "sweep.yaml").exists() and (out / "session_cedar.yaml").exists())
         self.assertEqual(rec["image"]["digest"], "sha256:" + "b" * 64)
+
+    def test_runs_log_to_the_sweeps_entity_and_project(self):
+        cmd = self.plan()["sessions"][0]["run_cmd"]
+        self.assertIn("wandb.entity=NeuralDynamics", cmd)
+        self.assertIn("wandb.project=dfbfm_17-test", cmd)
+        # a command that already says so is not doubled; one that disagrees is refused
+        self.sweep.write_text(SWEEP.replace("  - data=synthetic\n", "  - data=synthetic\n  - wandb.project=dfbfm_17-test\n"))
+        self.assertEqual(self.plan()["sessions"][0]["run_cmd"].count("wandb.project=dfbfm_17-test"), 1)
+        self.sweep.write_text(SWEEP.replace("  - data=synthetic\n", "  - data=synthetic\n  - wandb.project=other\n"))
+        with self.assertRaises(SystemExit):
+            self.plan()
+        self.sweep.write_text(SWEEP + "  wandb.project:\n    values: [a, b]\n")
+        with self.assertRaises(SystemExit):
+            self.plan()
+
+    def test_a_used_output_dir_is_refused(self):
+        from unittest import mock
+        out = Path(self.tmp.name) / "dry"
+        out.mkdir()
+        (out / "cedar_launch.json").write_text("{}")
+        argv = ["launch_cedar.py", "--sweep", str(self.sweep), "--session", str(self.session_file),
+                "--output-dir", str(out), "--dry-run"]
+        with mock.patch.object(sys, "argv", argv), self.assertRaises(SystemExit) as cm:
+            lc.main()
+        self.assertIn("not empty", str(cm.exception))
+
+    def test_a_session_without_a_readable_id_is_still_listed(self):
+        plan = self.plan()
+        refs = [{"type": "cedar_session", "id": None, "name": plan["sessions"][0]["name"]}]
+        out = Path(self.tmp.name) / "partial"
+        lc.save_record(str(self.sweep), str(self.session_file), plan, refs, out, {}, None, "p", "a partial launch")
+        rec = json.loads((out / lc.RECORD_NAME).read_text())
+        self.assertEqual((rec["n_tasks"], rec["n_planned"]), (1, 2))
+        self.assertEqual([s["created"] for s in rec["sessions"]], [True, False])
 
     def test_dry_run_refuses_an_output_dir_inside_the_variant(self):
         from unittest import mock

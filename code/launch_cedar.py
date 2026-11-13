@@ -85,6 +85,29 @@ def load_session_config(path: str) -> dict:
     return cfg
 
 
+def _wandb_routing(sweep: dict, base_command: list) -> list[str]:
+    """``wandb.entity=`` / ``wandb.project=`` overrides from the sweep's top level.
+
+    No sweep controller runs, so nothing else routes the runs: the wrapper passes Hydra's
+    ``wandb`` config to ``wandb.init``, whose defaults are AIND-disRNN/test. A command token
+    that already sets the same value is kept; a different value, or a grid axis over either
+    key, is refused.
+    """
+    extra = []
+    for key in ("entity", "project"):
+        value = sweep.get(key)
+        if not value:
+            continue
+        if f"wandb.{key}" in (sweep.get("parameters") or {}):
+            sys.exit(f"[cedar] the grid varies wandb.{key}; one launch logs to one W&B {key}")
+        given = [str(t).split("=", 1)[1] for t in base_command if str(t).startswith(f"wandb.{key}=")]
+        if any(g != str(value) for g in given):
+            sys.exit(f"[cedar] the sweep's {key} is {value!r} but its command sets wandb.{key}={given[0]}")
+        if not given:
+            extra.append(f"wandb.{key}={value}")
+    return extra
+
+
 def build_plan(sweep_file: str, cfg: dict, label: str | None, note: str | None, provenance: dict) -> dict:
     """One session per grid point: its name, run_hpc command and environment."""
     sweep_path = Path(sweep_file)
@@ -97,6 +120,7 @@ def build_plan(sweep_file: str, cfg: dict, label: str | None, note: str | None, 
     grid = _grid_points(sweep.get("parameters", {}))
     if not grid:
         sys.exit("[cedar] sweep has no grid points")
+    routing = _wandb_routing(sweep, base_command)
 
     study, variant = _study_variant(sweep_path)
     launch_id = _seattle_launch_id()
@@ -117,7 +141,7 @@ def build_plan(sweep_file: str, cfg: dict, label: str | None, note: str | None, 
         overrides = [_override_str(k, v) for k, v in point.items()]
         run_cmd = []
         for token in base_command:
-            run_cmd.extend(overrides if token == SWEEP_ARGS_PLACEHOLDER else [str(token)])
+            run_cmd.extend(overrides + routing if token == SWEEP_ARGS_PLACEHOLDER else [str(token)])
         name = f"{id_base}-{index}"
         if len(name) > 63:
             sys.exit(f"[cedar] session name {name!r} is longer than 63 characters; shorten the variant name")
@@ -180,14 +204,21 @@ def image_record_cedar(cfg: dict, run=subprocess.run) -> dict:
     return {"platform": "cedar", "name": str(cfg["image"]), "digest": digest}
 
 
-def create_session(cfg: dict, session: dict, run=subprocess.run) -> str:
-    """Create one session and return its id."""
+def create_session(cfg: dict, session: dict, run=subprocess.run) -> None:
+    """Create one session; raise if it does not reach READY."""
     out = run(create_command(cfg, session), capture_output=True, text=True)
     if out.returncode != 0:
         raise RuntimeError(f"session {session['name']} did not start: "
                            f"{(out.stderr or out.stdout).strip().splitlines()[-1:]}")
-    return (_cedar_json("session", "get", session["name"], "--workspace-name", cfg["workspace"], run=run)
-            .get("session") or {}).get("id")
+
+
+def session_id(cfg: dict, session: dict, run=subprocess.run) -> str:
+    """The id (sess_...) of a created session."""
+    sid = (_cedar_json("session", "get", session["name"], "--workspace-name", cfg["workspace"], run=run)
+           .get("session") or {}).get("id")
+    if not sid:
+        raise RuntimeError(f"session {session['name']} was created, but its id could not be read")
+    return sid
 
 
 def start_run(cfg: dict, session: dict, sid: str, run=subprocess.run) -> None:
@@ -203,7 +234,12 @@ def start_run(cfg: dict, session: dict, sid: str, run=subprocess.run) -> None:
 
 def save_record(sweep_file: str, session_file: str, plan: dict, refs: list[dict], output_dir: Path,
                 provenance: dict, dirty_override: dict | None, label: str | None, note: str | None) -> None:
-    """Write ``cedar_launch.json`` and copy the manifests beside it."""
+    """Write ``cedar_launch.json`` and copy the manifests beside it.
+
+    ``refs`` holds every session that was created; one whose id could not be read has
+    ``id: None``, so it stays out of the v2 ``job_refs`` but is still listed under ``sessions``.
+    ``n_tasks`` counts created sessions, ``n_planned`` the grid points.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
     for f in (sweep_file, session_file):
         shutil.copy2(f, output_dir / Path(f).name)
@@ -212,11 +248,13 @@ def save_record(sweep_file: str, session_file: str, plan: dict, refs: list[dict]
         **v2_record_fields(
             provenance, sweep_path=sweep_file, platform="cedar", wandb_group=plan["group"], label=label,
             note=note, job_refs=refs, manifests=[Path(sweep_file).name, Path(session_file).name, RENDERED_NAME],
-            n_tasks=len(plan["sessions"]), produced_by="launch_cedar.py"),
+            n_tasks=len(refs), produced_by="launch_cedar.py"),
         "mode": "cedar-grid",
         "wandb_group": plan["group"],
-        "n_tasks": len(plan["sessions"]),
-        "sessions": [{"name": s["name"], "id": by_name.get(s["name"]), "overrides": s["overrides"],
+        "n_tasks": len(refs),
+        "n_planned": len(plan["sessions"]),
+        "sessions": [{"name": s["name"], "created": s["name"] in by_name, "id": by_name.get(s["name"]),
+                      "overrides": s["overrides"],
                       "wandb_run_id": next(e["value"] for e in s["envVars"] if e["name"] == "WANDB_RUN_ID")}
                      for s in plan["sessions"]],
         "dispatcher_commit": provenance.get("dispatcher_git_commit"),
@@ -252,6 +290,8 @@ def main() -> None:
     if args.dry_run and (output_dir.resolve() == variant_dir or variant_dir in output_dir.resolve().parents):
         sys.exit("[cedar] --dry-run writes its plan to --output-dir; point it outside the variant, or the "
                  "uncommitted files make the real launch refuse")
+    if output_dir.is_dir() and any(output_dir.iterdir()):
+        sys.exit(f"[cedar] {output_dir} is not empty; a launch record is never overwritten, so pick a new --output-dir")
     provenance = launch_provenance(Path(args.sweep), REPO_ROOT)
     print_warnings(provenance, "[cedar] ")
     try:
@@ -291,17 +331,19 @@ def main() -> None:
             print("[cedar] then ssh:", kickoff_command(s))
             continue
         try:
-            sid = create_session(cfg, s)
-            # recorded as soon as it exists, even if its run then fails to start
-            refs.append({"type": "cedar_session", "id": sid, "name": s["name"]})
-            start_run(cfg, s, sid)
-        except (RuntimeError, subprocess.TimeoutExpired) as exc:
+            create_session(cfg, s)
+            # recorded as soon as it exists, even if its id cannot be read or its run fails to start
+            ref = {"type": "cedar_session", "id": None, "name": s["name"]}
+            refs.append(ref)
+            ref["id"] = session_id(cfg, s)
+            start_run(cfg, s, ref["id"])
+        except (RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
             failure = exc
             break
     save_record(args.sweep, args.session, plan, refs, output_dir, provenance, dirty_override,
                 args.label, args.note)
     if failure:
-        sys.exit(f"[cedar] stopped after {len(refs)} of {len(plan['sessions'])} sessions: {failure}")
+        sys.exit(f"[cedar] stopped after creating {len(refs)} of {len(plan['sessions'])} sessions: {failure}")
     print("[cedar] done" + (" (dry run: nothing created)" if args.dry_run else ""))
 
 
