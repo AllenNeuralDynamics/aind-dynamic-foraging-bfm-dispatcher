@@ -114,20 +114,31 @@ a grid. Note `b.image.list()` does not exist in `beaker-py<2`; call
 
 ## Priority & preemption
 
-- Fan-outs: `{priority: low, preemptible: true}` — low bursts onto idle GPUs *beyond*
-  the unallocated budget; `normal`+preemptible is capped at it (tasks pend while GPUs idle).
+- **Fan-outs: `{priority: normal, preemptible: true}`** — the unallocated tier, **64 slots**
+  (Han, 2026-11-13). It outranks other workspaces' low-priority jobs and resumes after eviction.
+- **Avoid `priority: low`.** Any normal-priority submission evicts it, and on a full cluster
+  other low jobs evict it too. On 2026-11-13 (study 17) low tasks on a full on-prem H200 were
+  evicted every 2-4 min and never left setup, and 8 low tasks on AWS H200 were all evicted at
+  5-8k steps when another workspace started 32 normal jobs, losing everything before their
+  first 10k-step checkpoint. Use `low` only when the 64 unallocated slots are exhausted.
+- When a cluster is physically full, normal-preemptible tasks **queue** behind other
+  workspaces' normal jobs (same priority): they do not evict them. List both usable H200
+  clusters under `constraints.cluster` so a task takes whichever frees first.
 - `autoResume` is auto-applied to preemptible jobs — **never set it explicitly**
   (spec rejects `preemptible` + `autoResume`).
-- Guaranteed slot (never evicted): `{priority: normal, preemptible: false}`.
+- Guaranteed slot (never evicted): `{priority: normal, preemptible: false}` — **8 allocated slots**;
+  give them the longest, must-finish runs.
 - Mechanism detail + verified measurements: `references/scheduling-lessons.md`.
 
 ## GPU-bundle sizing (avoid silent multi-GPU grabs)
 
-GPUs come bundled with host CPU/RAM (L40S ≈ 93 GiB + 12 CPU per GPU). Requesting more
+GPUs come bundled with host CPU/RAM (L40S ≈ 93 GiB + 12 CPU per GPU; **on-prem H200 = 1 GPU +
+28 CPU + 378 GiB; AWS H200 = 1 GPU + 24 CPU + 250 GiB**, measured 2026-11-13). Requesting more
 `memory`/`cpuCount` than one bundle makes a `gpuCount: 1` job grab **multiple GPUs**
 (e.g. `memory: 256GiB` → 3 GPUs). Size to one bundle: `--memory 90GiB --cpu 12` for
 1 L40S GPU. Verify on the first scheduled job: `beaker job get` GPUS column /
-`BEAKER_ASSIGNED_GPU_COUNT`.
+`BEAKER_ASSIGNED_GPU_COUNT`. A 6 GiB overshoot is enough: `memory: 384GiB` on on-prem H200
+(bundle 378 GiB) gave every task 2 GPUs (study 17, 2026-11-13).
 
 ## Preferred launch route: resumable pseudo-sweep
 
