@@ -46,14 +46,16 @@ A producer printed a fixed conclusion on an `n/a` comparison (01 r7). Prose quot
 numbers with no source. The verdict lived in three places that disagreed. There were five
 title styles, two templates and seven ways to write uncertainty.
 
-The **lead scientist** of a report is the first name in its `authors`; the rules below
-that need a person's decision name that role.
+The **study owner** approves a report; the rules below that need a person's decision name
+that role. The study frontmatter (`schemas/study-frontmatter.v1.schema.json`) has no owner
+field yet, so until it does the owner is the report's first author (first in `authors`).
 
 These rules apply to reports with frontmatter `schema_version: 2`. A version-1 report
-keeps the version-1 rules; when you next change it, bump it to 2 and bring it up to these
-rules. Never add a finding to `schemas/provenance-baseline.json` instead. The checker
-enforces the machine-checkable parts (`schemas/README.md`, "Version-2 reports"): the
-skeleton, the schema fields, claim pointers, stale prose and stale generated verdicts.
+keeps the version-1 rules until its results, claims or result blocks change; that change
+bumps it to 2 and brings it up to these rules. A typo, link or wording fix stays on version 1.
+Never add a finding to `schemas/provenance-baseline.json` instead. The checker checks the
+machine-checkable parts (`schemas/README.md`, "Version-2 reports"): it enforces the schema fields, claim pointers and stale generated verdicts, and prints a note (level
+`info`, never fails CI) for a missing or out-of-order skeleton heading and for stale prose.
 
 ### Skeleton
 
@@ -61,8 +63,8 @@ Every report has these sections, in this order. `make new-report` writes them; t
 template is in `references/report-contracts.md`.
 
 1. `# r<n> — <the finding in a few words>`. The title states the result, not the topic.
-   (The checker requires the title and the eight `##` sections below in order; extra `##`
-   sections between them are allowed.)
+   (The checker prints a note, never a CI failure, when the title or one of the eight `##`
+   sections below is missing or out of order; extra `##` sections between them are allowed.)
 2. `## Question`: one sentence, and why it matters.
 3. `## Answer`: numbered findings `F1`, `F2`, …, one sentence each. Order them as an
    argument: the headline first, then what supports it, then what limits it. Never in
@@ -123,16 +125,16 @@ template is in `references/report-contracts.md`.
 
 - After a result block or its inputs change, re-read every hand-written sentence in the
   report, and every sibling report that says "same as r<n>". Then update
-  `prose_reviewed: {date, blocks: {<block>: <sha256>}}`. The checker warns
-  (`report-prose-stale`) when a block's digest differs, and prints the new digest to paste
+  `prose_reviewed: {date, blocks: {<block>: <sha256>}}`. The checker prints a
+  note (`report-prose-stale`) when a block's digest differs, and prints the new digest to paste
   once you have re-read the prose.
 - A `live` report's title and claims change only if the numbers changed, or a CHANGELOG
-  entry gives the reason and the lead scientist reviews it. Rewording counts as a change.
+  entry gives the reason and the study owner reviews it. Rewording counts as a change.
 - A draft carries `draft_reason:` (one line, e.g. "k̂ rescue pending").
 - **Draft → live** needs all seven: (1) the question in one sentence; (2) Answer findings
   that match the claims; (3) at least one figure; (4) n and uncertainty on every number;
-  (5) caveats; (6) a next step; (7) terms explained. Then a claims check, then the lead
-  scientist's explicit go-ahead.
+  (5) caveats; (6) a next step; (7) terms explained. Then a claims check, then the study
+  owner's explicit go-ahead.
 
 ### Claims check
 

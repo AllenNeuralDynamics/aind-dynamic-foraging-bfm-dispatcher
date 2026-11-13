@@ -18,8 +18,8 @@ schema_version: 2
 id: r7
 slug: nxd-joint-scaling-grid
 status: draft             # draft | live | superseded | retracted
-draft_reason: "awaiting lead scientist review"   # required while status is draft
-authors: [han, pck]       # first entry is the lead scientist
+draft_reason: "awaiting study owner review"   # required while status is draft
+authors: [han, pck]       # first author; approves while the study has no owner field
 wandb_groups:             # exact group names; never a glob
   - nxd-grid@20260623-102649
 inputs:                   # study-relative paths that exist; no commands
@@ -122,7 +122,8 @@ Rules:
   claims. Text around the block is kept.
 - `draft_reason` is one line saying what keeps the report from `live`.
 - `schema_version: 1` reports keep the version-1 shape (title, result blocks,
-  `## Discussion`) until they are next changed.
+  `## Discussion`) until their results, claims or result blocks change
+  (typo, link and wording fixes stay on version 1).
 
 ## JSON output contract (`_meta` v2)
 
