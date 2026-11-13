@@ -98,8 +98,9 @@ template is in `references/report-contracts.md`.
   or add it to `PROSE_CONSTANTS` in the checker.
 - **A producer never prints a fixed conclusion sentence.** A verdict word is a JSON field
   that the code chooses from the numbers, and the claim points at it — as study 10 does:
-  `"non-inferior" if stats["noninferior"] else "not non-inferior"`. Then an `n/a`
-  comparison shows as `n/a`.
+  `"n/a" if stats["noninferior"] is None else ("non-inferior" if stats["noninferior"]
+  else "not non-inferior")`. Handle the missing case first, so an unavailable comparison
+  shows as `n/a`, never as a verdict.
 
 ### Numbers, uncertainty and names
 
