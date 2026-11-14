@@ -144,9 +144,10 @@ Run it before draft → live, and on any change to a live report's claims.
   read-only, with
   `references/claims-check-rubric.md`. **Never `subagent_type: "fork"`:** a fork inherits
   the writing conversation, and the point is a reader who did not write the report.
-- Give it files only: the report, its claims with pointers resolved, the JSON it cites,
-  its figures, the producer scripts that write its blocks, upstream source JSONs, the diff
-  against the last live version, and the study CHANGELOG.
+- Give it a read-only checkout pinned to the report's commit, and as starting points the
+  report, the diff against its last live version and the claim values at both commits. It
+  follows the report's references itself. Commit messages, PR threads and notes are not
+  evidence; the CHANGELOG is claims to check. Guards are in the rubric.
 - Paste its summary in the PR. Answer every finding like a review thread: fix it, or say
   why not.
 - Its output describes the report. It never feeds the frontmatter, INDEX or README.
