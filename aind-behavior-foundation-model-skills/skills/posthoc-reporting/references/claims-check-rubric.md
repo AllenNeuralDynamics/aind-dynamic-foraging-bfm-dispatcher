@@ -12,22 +12,28 @@ Launch a **new** agent with the Agent tool (`subagent_type: "general-purpose"`).
 **Opus 5.5 at high effort** (`model: "opus"`, `effort: "high"`); the blind test that
 measured its catch rate used Opus, and other models are untested. Never
 `"fork"`: a fork inherits the writing conversation. Pass this file as its instructions,
-tell it to use read-only tools only, and give it file paths, not a summary:
+tell it to use read-only tools only, and give it:
 
-- the report (`analysis/reports/r<n>-<slug>.md`);
-- its frontmatter claims, with each pointer resolved to its value;
-- every JSON and CSV the report's `inputs` and claims cite, and the producer's own output
-  JSON;
-- every figure the report embeds (SVG text is readable), and the data behind each one;
-- every sibling or upstream report it names ("same as r1", "study 01 r8"), and the source
-  JSON of every cross-study number (the registry entry's `.source`);
-- the producer scripts that write its blocks, and any helper that chooses a verdict word
-  (needed for C9: the same output can come from a fixed string or from code);
-- the upstream source JSONs named in `upstream` and `build_meta(inputs=...)`;
-- the diff against the last `live` version of the report, if there is one, and the cited
-  JSON values at that version (each claim pointer resolved at the last-live commit)
-  (`git diff <last-live-sha> -- <report>`);
-- the study `CHANGELOG.md`.
+- a **read-only checkout pinned to the report's commit** (a detached worktree; no fetch,
+  so it never sees origin or unmerged branches). It may read any file there and follow
+  every reference the report makes: cited JSON, figures and their data, producers and the
+  helpers they import, sibling and upstream reports, cross-study sources;
+- starting points: the report path; the diff against its last `live` version, if any
+  (`git diff <last-live-sha>..<sha> -- <report>`); and each claim pointer resolved at both
+  commits.
+
+Guards:
+
+- **Not evidence:** commit messages, PR threads, `git log`/`git blame` text, memory files,
+  earlier sessions' notes and drafting notes. The study `CHANGELOG.md` is a list of claims
+  to check, not evidence.
+- **Evidence first:** read the JSON and figures before the prose.
+- **Cite or it does not count:** every verdict names the file and JSON pointer, or the
+  line, that settles it.
+
+A curated, closed set of files is used only for regression tests of this rubric (the
+five known-flaw reports of the 2026-10-28 blind test), where later commits would leak the
+answer. Rerun that test whenever this rubric changes.
 
 Paste the markdown summary into the PR and answer each finding like a review thread.
 Record `rubric_version` with the dispatcher commit SHA of this file
@@ -67,6 +73,7 @@ check).
   "inputs_digest": "<sha256 of the JSON object {role/path: sha256} for every file supplied, keys sorted; role is current, last_live or upstream>",
   "rubric_version": "claims-check/1 @ <dispatcher sha>",
   "model": "claude-opus-5-5, effort high",
+  "commit": "<studies commit the checkout was pinned to>",
   "claims": [
     {"id": "F1", "verdict": "supported | overstated | contradicted | cant_verify",
      "evidence_pointer": "<json path#pointer, figure, or table row>", "note": "..."}
