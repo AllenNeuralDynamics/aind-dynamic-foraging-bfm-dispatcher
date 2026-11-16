@@ -200,9 +200,11 @@ before). A comparison that must stay goes into a producer-written block.
   (wording, an extra caveat, a stale sentence outside the claims) in the record as "deferred to
   the next revision" with a one-line reason, and leave the text as checked, so the record stays
   current. **The same rule holds for Copilot after the final run** (a round you had to request,
-  e.g. after a CI fix): fix freely what changes neither a JSON body nor the report text (a code
-  tidy-up keeps the record current); fix a finding that would change them only if it is
-  blocking (a bug that makes a number wrong), with the one extra run; defer the rest. Why: each run finds less, a reviewer always finds something, and any edit stales the
+  e.g. after a CI fix): fix freely what leaves the record current: no change to the report's claims or text, nor to
+  any checked input (a JSON body, a figure, a CSV, an upstream file); code and reading context
+  are recorded, not checked, so a code tidy-up qualifies. Fix a finding that would change a
+  checked digest only if it is blocking (a bug that makes a number wrong), with the one extra
+  run; defer the rest. Why: each run finds less, a reviewer always finds something, and any edit stales the
   record, so without a stop rule the loop never ends. A later change to a live report starts
   the count again.
 - Its output describes the report. It never feeds the frontmatter, INDEX or README.

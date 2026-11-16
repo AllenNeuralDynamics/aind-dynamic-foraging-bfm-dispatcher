@@ -102,6 +102,8 @@ is `overstated` or `contradicted`.
 ```
 
 Hash paths with their contents (a path-to-digest map), so two files that swap contents
-change the key. Key the output by `report_digest` + `inputs_digest` + `rubric_version`: rerun when the
-report, any supplied evidence (JSON, figures, producers, upstream, diff, CHANGELOG) or
-this rubric changes.
+change the key. Key the output by `report_digest` + `inputs_digest` + `rubric_version`. The
+committed record decides when a rerun is needed: the report's claims or text, any checked
+evidence (an analysis JSON's body, figures, CSVs, upstream files, the diff) or this rubric
+changes. Code (`.py`, e.g. the producers) and reading context (`CONTEXT.md`, the study README,
+PLAN and CHANGELOG) are recorded but not checked, so a change to them alone needs no rerun.
