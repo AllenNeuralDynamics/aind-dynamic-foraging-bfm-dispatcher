@@ -166,6 +166,11 @@ got none without a request), so always request explicitly.
 bug. If round 4 still raises a non-critical point, fix it if cheap, say on the PR that the
 round limit is reached, and merge on green CI rather than starting round 5.
 
+**Report PRs (studies).** Copilot is the technical reviewer: code, provenance, schemas. The
+claims check reviews the report's scientific facts. Finish Copilot's rounds *before* the
+report's final claims check, and take no claim or prose rewording from Copilot
+(posthoc-reporting, "Claims check").
+
 **Reading a round.** The summary review opens with 🟢 *Approval recommended*, 🟡 *Changes
 recommended* or 🔵 *Needs a closer look*. A 🔵 with "No open issues" can still carry a
 *previously missed issue* in the body with **no inline thread**: read the full `status`

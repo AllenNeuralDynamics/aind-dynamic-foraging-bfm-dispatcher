@@ -1,6 +1,6 @@
 # Claims check rubric
 
-rubric_version: claims-check/1
+rubric_version: claims-check/2
 
 You are the claims check: a reader who did not write this report. Your one job is to
 say whether the report's text matches its evidence. You do not judge the science, rate
@@ -12,7 +12,8 @@ Launch a **new** agent with the Agent tool (`subagent_type: "general-purpose"`).
 **Opus 5.5 at high effort** (`model: "opus"`, `effort: "high"`); the blind test that
 measured its catch rate used Opus, and other models are untested. Never
 `"fork"`: a fork inherits the writing conversation. Pass this file as its instructions,
-tell it to use read-only tools only, and give it file paths, not a summary:
+tell it to use read-only tools only **except one output file whose path you name** (in the
+study's scratch, never the repository), and give it file paths, not a summary:
 
 - the report (`analysis/reports/r<n>-<slug>.md`);
 - its frontmatter claims, with each pointer resolved to its value;
@@ -31,10 +32,11 @@ tell it to use read-only tools only, and give it file paths, not a summary:
 
 Paste the markdown summary into the PR and answer each finding like a review thread.
 Record `rubric_version` with the dispatcher commit SHA of this file
-(`claims-check/1 @ <sha>`), so a later run can say which rubric it used.
+(`claims-check/2 @ <sha>`), so a later run can say which rubric it used.
 
 Commit the run as a claims-check record (studies#160): `studies/util/claims_check.py`
-`write_record()` saves the prompt you gave the reviewer, its response verbatim, your answers,
+`write_record()` (or its CLI: `--response <the reviewer's output file>`, so you never retype it)
+saves the prompt you gave the reviewer, its response verbatim, your answers,
 and the digests that key the run (the report's claims + body, and every other file supplied; the
 report itself is never in `inputs`, so a `status` flip does not stale the record), under
 `analysis/provenance/claims_check_<rN>_<date>.md`. The studies checker then requires a current
@@ -69,28 +71,39 @@ Rules for you:
 
 ## Output
 
-Return this JSON, then a short markdown summary (one line per finding, grouped by
-check).
+Write this JSON, then a short markdown summary (one line per finding, grouped by check), to
+the output file the brief names. Write nothing else anywhere. Then reply with only the file's
+path and one line of counts (claims by verdict; findings by list, and how many are blocking):
+the writing session reads the file, and the record copies it unchanged.
+
+Tag every finding `"blocking": true | false`. Blocking means the report must not go live as it
+stands: a claim contradicted or overstated (C1/C2), a verdict that contradicts its table (C9), a
+wrong or unsourced number (C3), or an estimand mix-up that changes what a claim means (C6).
+Everything else (wording, an extra caveat, a stale sentence outside the claims, a C6 in prose
+that leaves the claims' meaning intact) is `false`. A `claims` entry is blocking when its verdict
+is `overstated` or `contradicted`.
 
 ```json
 {
   "report": "studies/<study>/analysis/reports/r<n>-<slug>.md",
   "report_digest": "<sha256 of the report file>",
   "inputs_digest": "<sha256 of the JSON object {role/path: sha256} for every file supplied, keys sorted; role is current, last_live or upstream>",
-  "rubric_version": "claims-check/1 @ <dispatcher sha>",
+  "rubric_version": "claims-check/2 @ <dispatcher sha>",
   "model": "claude-opus-5-5, effort high",
   "claims": [
     {"id": "F1", "verdict": "supported | overstated | contradicted | cant_verify",
-     "evidence_pointer": "<json path#pointer, figure, or table row>", "note": "..."}
+     "evidence_pointer": "<json path#pointer, figure, or table row>", "note": "...", "blocking": false}
   ],
-  "stale_sentences": [{"line": 72, "text": "...", "why": "..."}],
-  "unsourced_numbers": [{"line": 80, "text": "~0.0004", "why": "in no cited JSON"}],
-  "missing_caveats": [{"claim": "F2", "why": "..."}],
-  "estimand_issues": [{"line": 41, "text": "...", "why": "..."}]
+  "stale_sentences": [{"line": 72, "text": "...", "why": "...", "blocking": false}],
+  "unsourced_numbers": [{"line": 80, "text": "~0.0004", "why": "in no cited JSON", "blocking": true}],
+  "missing_caveats": [{"claim": "F2", "why": "...", "blocking": false}],
+  "estimand_issues": [{"line": 41, "text": "...", "why": "...", "blocking": false}]
 }
 ```
 
 Hash paths with their contents (a path-to-digest map), so two files that swap contents
-change the key. Key the output by `report_digest` + `inputs_digest` + `rubric_version`: rerun when the
-report, any supplied evidence (JSON, figures, producers, upstream, diff, CHANGELOG) or
-this rubric changes.
+change the key. Key the output by `report_digest` + `inputs_digest` + `rubric_version`. The
+committed record decides when a rerun is needed: the report's claims or text, any checked
+evidence (an analysis JSON's body, figures, CSVs, upstream files, the diff) or this rubric
+changes. Code (`.py`, e.g. the producers) and reading context (`CONTEXT.md`, the study README,
+PLAN and CHANGELOG) are recorded but not checked, so a change to them alone needs no rerun.
