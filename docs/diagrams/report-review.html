@@ -5279,16 +5279,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 
         <!-- Edge paths -->
-        <path data-edge-from="author" data-edge-to="final" data-edge-label="only if something changed" data-edge-key="0" data-edge-id="e-author-final" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="654,472;654,357;696,357;696,246;712,246" d="M 654 472 L 654 365 Q 654 357 662 357 L 688 357 Q 696 357 696 349 L 696 254 Q 696 246 704 246 L 712 246" class="a-emphasis" data-animate="edge" style="--step:5" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="copilot" data-edge-to="author" data-edge-label="rounds done" data-edge-key="1" data-edge-id="e-copilot-author" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="534,406;534,498;592,498" d="M 534 406 L 534 490 Q 534 498 542 498 L 592 498" class="a-default" data-animate="edge" style="--step:4" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="draft" data-edge-to="selfcheck" data-edge-key="2" data-edge-id="e-draft-self" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="188,120;220,120" d="M 188 120 L 220 120" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="final" data-edge-to="deferred" data-edge-label="non-blocking" data-edge-key="3" data-edge-id="e-final-deferred" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="774,212;774,146" d="M 774 212 L 774 146" class="a-dashed" data-animate="edge" style="--step:11" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="final" data-edge-to="merge" data-edge-label="status: live" data-edge-key="4" data-edge-id="e-final-merge" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="774,280;774,590" d="M 774 280 L 774 590" class="a-emphasis" data-animate="edge" style="--step:6" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="fix" data-edge-to="copilot" data-edge-label="push, request" data-edge-key="5" data-edge-id="e-fix-copilot" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="534,154;534,338" d="M 534 154 L 534 338" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="record" data-edge-to="merge" data-edge-label="digests still match?" data-edge-key="6" data-edge-id="e-record-merge" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="476,624;712,624" d="M 476 624 L 712 624" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="run1" data-edge-to="fix" data-edge-label="findings" data-edge-key="7" data-edge-id="e-run1-fix" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="414,212;414,120;462,120" d="M 414 212 L 414 128 Q 414 120 422 120 L 462 120" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="run1" data-edge-to="record" data-edge-label="write_record" data-edge-key="8" data-edge-id="e-run1-record" data-composition-routing="workflow-v2-auto" data-edge-role="async" data-composition-points="414,280;414,590" d="M 414 280 L 414 590" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="selfcheck" data-edge-to="run1" data-edge-label="files only" data-edge-key="9" data-edge-id="e-self-run1" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="294,154;294,246;354,246" d="M 294 154 L 294 238 Q 294 246 302 246 L 354 246" class="a-emphasis" data-animate="edge" style="--step:1" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="author" data-edge-to="final" data-edge-label="only if the record is stale" data-edge-key="0" data-edge-id="e-author-final" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="654,472;654,357;696,357;696,246;712,246" d="M 654 472 L 654 365 Q 654 357 662 357 L 688 357 Q 696 357 696 349 L 696 254 Q 696 246 704 246 L 712 246" class="a-emphasis" data-animate="edge" style="--step:5" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="author" data-edge-to="merge" data-edge-label="record still current" data-edge-key="1" data-edge-id="e-author-merge" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="654,524;654,546;750,546;750,590" d="M 654 524 L 654 538 Q 654 546 662 546 L 742 546 Q 750 546 750 554 L 750 590" class="a-default" data-animate="edge" style="--step:9" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="copilot" data-edge-to="author" data-edge-label="rounds done" data-edge-key="2" data-edge-id="e-copilot-author" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="534,406;534,498;592,498" d="M 534 406 L 534 490 Q 534 498 542 498 L 592 498" class="a-default" data-animate="edge" style="--step:4" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="draft" data-edge-to="selfcheck" data-edge-key="3" data-edge-id="e-draft-self" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="188,120;220,120" d="M 188 120 L 220 120" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="final" data-edge-to="deferred" data-edge-label="non-blocking" data-edge-key="4" data-edge-id="e-final-deferred" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="774,212;774,146" d="M 774 212 L 774 146" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="final" data-edge-to="merge" data-edge-label="status: live" data-edge-key="5" data-edge-id="e-final-merge" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="774,280;774,590" d="M 774 280 L 774 590" class="a-emphasis" data-animate="edge" style="--step:6" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="fix" data-edge-to="copilot" data-edge-label="push, request" data-edge-key="6" data-edge-id="e-fix-copilot" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="534,154;534,338" d="M 534 154 L 534 338" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="record" data-edge-to="merge" data-edge-label="digests still match?" data-edge-key="7" data-edge-id="e-record-merge" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="476,624;712,624" d="M 476 624 L 712 624" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="run1" data-edge-to="fix" data-edge-label="findings" data-edge-key="8" data-edge-id="e-run1-fix" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="414,212;414,120;462,120" d="M 414 212 L 414 128 Q 414 120 422 120 L 462 120" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="run1" data-edge-to="record" data-edge-label="write_record" data-edge-key="9" data-edge-id="e-run1-record" data-composition-routing="workflow-v2-auto" data-edge-role="async" data-composition-points="414,280;414,590" d="M 414 280 L 414 590" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="selfcheck" data-edge-to="run1" data-edge-label="files only" data-edge-key="10" data-edge-id="e-self-run1" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="294,154;294,246;354,246" d="M 294 154 L 294 238 Q 294 246 302 246 L 354 246" class="a-emphasis" data-animate="edge" style="--step:1" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
 
         <!-- Nodes -->
         <g id="node-draft" data-node-id="draft" data-node-label="Draft report" tabindex="0" role="button" aria-label="Focus Draft report, claims point at JSON values, Writing session › Write" aria-pressed="false" data-node-kind="backend" data-node-sublabel="claims point at JSON values" data-node-tag="make validate on each edit" data-node-context="Writing session › Write">
@@ -5418,40 +5419,44 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </g>
 
         <!-- Edge labels -->
-        <g data-detail="context" data-edge-from="author" data-edge-to="final" data-edge-label="only if something changed" data-edge-key="0" data-edge-id="e-author-final">
-          <rect x="610" y="337" width="130" height="14" rx="3" class="c-mask"/>
-          <text x="675" y="347" class="t-edge-emphasis" font-size="8" text-anchor="middle">only if something changed</text>
+        <g data-detail="context" data-edge-from="author" data-edge-to="final" data-edge-label="only if the record is stale" data-edge-key="0" data-edge-id="e-author-final">
+          <rect x="605.2" y="337" width="139.6" height="14" rx="3" class="c-mask"/>
+          <text x="675" y="347" class="t-edge-emphasis" font-size="8" text-anchor="middle">only if the record is stale</text>
         </g>
-        <g data-detail="context" data-edge-from="copilot" data-edge-to="author" data-edge-label="rounds done" data-edge-key="1" data-edge-id="e-copilot-author">
+        <g data-detail="context" data-edge-from="author" data-edge-to="merge" data-edge-label="record still current" data-edge-key="1" data-edge-id="e-author-merge">
+          <rect x="649" y="526" width="106" height="14" rx="3" class="c-mask"/>
+          <text x="702" y="536" class="t-muted" font-size="8" text-anchor="middle">record still current</text>
+        </g>
+        <g data-detail="context" data-edge-from="copilot" data-edge-to="author" data-edge-label="rounds done" data-edge-key="2" data-edge-id="e-copilot-author">
           <rect x="502.6" y="442" width="62.8" height="14" rx="3" class="c-mask"/>
           <text x="534" y="452" class="t-muted" font-size="8" text-anchor="middle">rounds done</text>
         </g>
 
-        <g data-detail="context" data-edge-from="final" data-edge-to="deferred" data-edge-label="non-blocking" data-edge-key="3" data-edge-id="e-final-deferred">
+        <g data-detail="context" data-edge-from="final" data-edge-to="deferred" data-edge-label="non-blocking" data-edge-key="4" data-edge-id="e-final-deferred">
           <rect x="740.2" y="169" width="67.6" height="14" rx="3" class="c-mask"/>
           <text x="774" y="179" class="t-edge-dashed" font-size="8" text-anchor="middle">non-blocking</text>
         </g>
-        <g data-detail="context" data-edge-from="final" data-edge-to="merge" data-edge-label="status: live" data-edge-key="4" data-edge-id="e-final-merge">
+        <g data-detail="context" data-edge-from="final" data-edge-to="merge" data-edge-label="status: live" data-edge-key="5" data-edge-id="e-final-merge">
           <rect x="740.2" y="425" width="67.6" height="14" rx="3" class="c-mask"/>
           <text x="774" y="435" class="t-edge-emphasis" font-size="8" text-anchor="middle">status: live</text>
         </g>
-        <g data-detail="context" data-edge-from="fix" data-edge-to="copilot" data-edge-label="push, request" data-edge-key="5" data-edge-id="e-fix-copilot">
+        <g data-detail="context" data-edge-from="fix" data-edge-to="copilot" data-edge-label="push, request" data-edge-key="6" data-edge-id="e-fix-copilot">
           <rect x="497.8" y="236" width="72.4" height="14" rx="3" class="c-mask"/>
           <text x="534" y="246" class="t-muted" font-size="8" text-anchor="middle">push, request</text>
         </g>
-        <g data-detail="context" data-edge-from="record" data-edge-to="merge" data-edge-label="digests still match?" data-edge-key="6" data-edge-id="e-record-merge">
+        <g data-detail="context" data-edge-from="record" data-edge-to="merge" data-edge-label="digests still match?" data-edge-key="7" data-edge-id="e-record-merge">
           <rect x="541" y="604" width="106" height="14" rx="3" class="c-mask"/>
           <text x="594" y="614" class="t-edge-security" font-size="8" text-anchor="middle">digests still match?</text>
         </g>
-        <g data-detail="context" data-edge-from="run1" data-edge-to="fix" data-edge-label="findings" data-edge-key="7" data-edge-id="e-run1-fix">
+        <g data-detail="context" data-edge-from="run1" data-edge-to="fix" data-edge-label="findings" data-edge-key="8" data-edge-id="e-run1-fix">
           <rect x="413.8" y="100" width="48.4" height="14" rx="3" class="c-mask"/>
           <text x="438" y="110" class="t-edge-emphasis" font-size="8" text-anchor="middle">findings</text>
         </g>
-        <g data-detail="context" data-edge-from="run1" data-edge-to="record" data-edge-label="write_record" data-edge-key="8" data-edge-id="e-run1-record">
+        <g data-detail="context" data-edge-from="run1" data-edge-to="record" data-edge-label="write_record" data-edge-key="9" data-edge-id="e-run1-record">
           <rect x="380.2" y="425" width="67.6" height="14" rx="3" class="c-mask"/>
           <text x="414" y="435" class="t-edge-dashed" font-size="8" text-anchor="middle">write_record</text>
         </g>
-        <g data-detail="context" data-edge-from="selfcheck" data-edge-to="run1" data-edge-label="files only" data-edge-key="9" data-edge-id="e-self-run1">
+        <g data-detail="context" data-edge-from="selfcheck" data-edge-to="run1" data-edge-label="files only" data-edge-key="10" data-edge-id="e-self-run1">
           <rect x="295" y="226" width="58" height="14" rx="3" class="c-mask"/>
           <text x="324" y="236" class="t-edge-emphasis" font-size="8" text-anchor="middle">files only</text>
         </g>
@@ -5676,7 +5681,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </div>
         <ul>
           <li>At most 3 claims runs per report version, +1 after a blocking fix</li>
-          <li>Blocking: claim contradicted or overstated, verdict vs table, wrong number, meaning-changing estimand</li>
+          <li>Blocking: claim contradicted or overstated, verdict vs table, wrong or unsourced number, meaning-changing estimand</li>
           <li>Everything else is deferred, and the text stays as checked</li>
         </ul>
       </div>

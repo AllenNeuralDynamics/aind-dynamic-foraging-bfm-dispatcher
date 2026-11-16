@@ -210,7 +210,7 @@
       "id": "e-author-final",
       "from": "author",
       "to": "final",
-      "label": "only if something changed",
+      "label": "only if the record is stale",
       "variant": "emphasis"
     },
     {
@@ -242,6 +242,14 @@
       "to": "merge",
       "label": "digests still match?",
       "variant": "security"
+    },
+    {
+      "id": "e-author-merge",
+      "from": "author",
+      "to": "merge",
+      "label": "record still current",
+      "variant": "default",
+      "role": "branch"
     }
   ],
   "cards": [
@@ -259,7 +267,7 @@
       "title": "Stop rules",
       "items": [
         "At most 3 claims runs per report version, +1 after a blocking fix",
-        "Blocking: claim contradicted or overstated, verdict vs table, wrong number, meaning-changing estimand",
+        "Blocking: claim contradicted or overstated, verdict vs table, wrong or unsourced number, meaning-changing estimand",
         "Everything else is deferred, and the text stays as checked"
       ]
     },
