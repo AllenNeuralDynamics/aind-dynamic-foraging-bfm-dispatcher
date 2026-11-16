@@ -1,0 +1,285 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "How a study report is reviewed before it goes live",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": "docs/diagrams/report-review.html",
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Writing session (person + agent)"
+        },
+        "security": {
+          "label": "Review or check"
+        },
+        "external": {
+          "label": "Person"
+        },
+        "database": {
+          "label": "Committed record"
+        },
+        "messagebus": {
+          "label": "Follow-up issue"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "writer",
+      "label": "Writing session"
+    },
+    {
+      "id": "claims",
+      "label": "Claims check: scientific facts"
+    },
+    {
+      "id": "copilot",
+      "label": "Copilot: technical review"
+    },
+    {
+      "id": "author",
+      "label": "First author"
+    },
+    {
+      "id": "ci",
+      "label": "Records and CI"
+    }
+  ],
+  "phases": [
+    {
+      "id": "write",
+      "label": "Write",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "review",
+      "label": "Review and fix",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "golive",
+      "label": "Approve and go live",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "draft",
+    "selfcheck",
+    "run1",
+    "fix",
+    "copilot",
+    "author",
+    "final",
+    "merge"
+  ],
+  "nodes": [
+    {
+      "id": "draft",
+      "lane": "writer",
+      "col": 0,
+      "type": "backend",
+      "label": "Draft report",
+      "sublabel": "claims point at JSON values",
+      "tag": "make validate on each edit"
+    },
+    {
+      "id": "selfcheck",
+      "lane": "writer",
+      "col": 1,
+      "type": "backend",
+      "label": "Self-check",
+      "sublabel": "caveats, cited numbers, nulls",
+      "tag": "no agent, no cost"
+    },
+    {
+      "id": "run1",
+      "lane": "claims",
+      "col": 2,
+      "type": "security",
+      "label": "Claims check run 1",
+      "sublabel": "fresh read-only agent",
+      "tag": "rubric C1\u2013C9"
+    },
+    {
+      "id": "fix",
+      "lane": "writer",
+      "col": 3,
+      "type": "backend",
+      "label": "Fix minimally",
+      "sublabel": "narrow or delete, add little",
+      "tag": "answer every finding"
+    },
+    {
+      "id": "copilot",
+      "lane": "copilot",
+      "col": 3,
+      "type": "security",
+      "label": "Copilot rounds",
+      "sublabel": "code, provenance, schemas",
+      "tag": "at most 4 rounds"
+    },
+    {
+      "id": "author",
+      "lane": "author",
+      "col": 4,
+      "type": "external",
+      "label": "First author review",
+      "sublabel": "judges claims and answers",
+      "icon": "person"
+    },
+    {
+      "id": "final",
+      "lane": "claims",
+      "col": 5,
+      "type": "security",
+      "label": "Final claims run",
+      "sublabel": "fix blocking findings only",
+      "tag": "+1 run after a blocking fix"
+    },
+    {
+      "id": "deferred",
+      "lane": "writer",
+      "col": 5,
+      "type": "messagebus",
+      "label": "Deferred findings",
+      "sublabel": "report revision issue"
+    },
+    {
+      "id": "record",
+      "lane": "ci",
+      "col": 2,
+      "type": "database",
+      "label": "Claims-check record",
+      "sublabel": "one per run, with digests",
+      "tag": "prompt + response verbatim"
+    },
+    {
+      "id": "merge",
+      "lane": "ci",
+      "col": 5,
+      "type": "security",
+      "label": "CI gate, then merge",
+      "sublabel": "provenance, regenerate",
+      "tag": "record must be current"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-draft-self",
+      "from": "draft",
+      "to": "selfcheck",
+      "variant": "default"
+    },
+    {
+      "id": "e-self-run1",
+      "from": "selfcheck",
+      "to": "run1",
+      "label": "files only",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e-run1-fix",
+      "from": "run1",
+      "to": "fix",
+      "label": "findings",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e-fix-copilot",
+      "from": "fix",
+      "to": "copilot",
+      "label": "push, request",
+      "variant": "default"
+    },
+    {
+      "id": "e-copilot-author",
+      "from": "copilot",
+      "to": "author",
+      "label": "rounds done",
+      "variant": "default"
+    },
+    {
+      "id": "e-author-final",
+      "from": "author",
+      "to": "final",
+      "label": "only if something changed",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e-final-merge",
+      "from": "final",
+      "to": "merge",
+      "label": "status: live",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e-final-deferred",
+      "from": "final",
+      "to": "deferred",
+      "label": "non-blocking",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e-run1-record",
+      "from": "run1",
+      "to": "record",
+      "label": "write_record",
+      "variant": "dashed",
+      "role": "async"
+    },
+    {
+      "id": "e-record-merge",
+      "from": "record",
+      "to": "merge",
+      "label": "digests still match?",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "Two reviewers, two jobs",
+      "items": [
+        "Claims check: each claim against its number, estimands, uncertainty, caveats",
+        "Copilot: code, reproducibility, provenance, schemas; never rewords a claim",
+        "Copilot finishes before the final claims run"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Stop rules",
+      "items": [
+        "At most 3 claims runs per report version, +1 after a blocking fix",
+        "Blocking: claim contradicted or overstated, verdict vs table, wrong number, meaning-changing estimand",
+        "Everything else is deferred, and the text stays as checked"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "What makes a record stale",
+      "items": [
+        "Stale: the report's claims or text; a checked input (JSON body, figure, CSV, upstream file)",
+        "Recorded, not checked: code, CONTEXT.md, study README, PLAN, CHANGELOG",
+        "Not counted: status, prose_reviewed"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Always-on machine checks",
+      "items": [
+        "Claim pointers resolve; verdicts are generated from claims",
+        "Prose digests flag text after a block changes",
+        "Reports regenerate offline from frozen inputs; figures are paper-style SVG"
+      ]
+    }
+  ]
+}
