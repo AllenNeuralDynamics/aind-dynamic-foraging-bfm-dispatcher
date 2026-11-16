@@ -33,6 +33,18 @@ Paste the markdown summary into the PR and answer each finding like a review thr
 Record `rubric_version` with the dispatcher commit SHA of this file
 (`claims-check/1 @ <sha>`), so a later run can say which rubric it used.
 
+Commit the run as a claims-check record (studies#160): `studies/util/claims_check.py`
+`write_record()` saves the prompt you gave the reviewer, its response verbatim, your answers,
+and the digests that key the run (the report's claims + body, and every other file supplied; the
+report itself is never in `inputs`, so a `status` flip does not stale the record), under
+`analysis/provenance/claims_check_<rN>_<date>.md`. The studies checker then requires a current
+record for a live report, so a changed report or input means a new run.
+
+At most 3 runs per report version going live (SKILL.md, "Round limit"): in the final run only
+blocking findings (C1/C2 contradicted or overstated, C9, C3, a C6 that changes a claim's
+meaning) are fixed, which needs one more run; the rest are answered in the record as deferred.
+This governs the writing session; your checks and output do not change.
+
 ## Checks
 
 | ID | Check | Goes to |
