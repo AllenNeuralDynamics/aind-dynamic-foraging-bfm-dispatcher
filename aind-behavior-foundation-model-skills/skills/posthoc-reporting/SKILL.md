@@ -147,8 +147,20 @@ Run it before draft → live, and on any change to a live report's claims.
 - Give it files only: the report, its claims with pointers resolved, the JSON it cites,
   its figures, the producer scripts that write its blocks, upstream source JSONs, the diff
   against the last live version, and the study CHANGELOG.
-- Paste its summary in the PR. Answer every finding like a review thread: fix it, or say
-  why not.
+- **Commit a record of every run** (studies#160) with `studies/util/claims_check.py`
+  `write_record(study, report, inputs=[...every file you gave it...], rubric_version=...,
+  model=..., prompt=..., response=..., responses=...)`. Call it right after the run, before
+  you edit anything, so its digests describe what the reviewer read. It writes
+  `analysis/provenance/claims_check_<rN>_<date>.md`: the prompt verbatim, the response
+  verbatim, your answer to each finding, and the digests of the report's claims + body and
+  of every input.
+- Paste its summary in the PR as the review thread. Answer every finding: fix it, or say why
+  not; put the same answers in the record's responses.
+- **`make validate` enforces that the record is current.** A live report with no record is
+  an error; a record whose report content or inputs changed is a warning (CI fails). So
+  after fixing the findings, run the check again on the fixed report and commit a second
+  record before draft → live. Changing only `status` or `prose_reviewed` does not make a
+  record stale.
 - Its output describes the report. It never feeds the frontmatter, INDEX or README.
 - The **domain review** is a different, advisory reviewer (scientific blind spots,
   scores, ideas). Keep the two apart; mixing the jobs makes the claims check miss more.
