@@ -33,7 +33,7 @@
     },
     {
       "id": "claims",
-      "label": "Claims check: scientific facts"
+      "label": "Claims check: scientific review"
     },
     {
       "id": "copilot",
@@ -41,7 +41,7 @@
     },
     {
       "id": "author",
-      "label": "First author"
+      "label": "First author of the report"
     },
     {
       "id": "ci",

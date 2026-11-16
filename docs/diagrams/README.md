@@ -38,7 +38,7 @@ each one links through to the interactive viewer via
 | diagram | subject |
 |---|---|
 | `bfm-stack` | The whole stack across the four repositories: a study variant's manifests → the launchers (which write its launch record) → the wrapper's runner and the four model families behind one `ModelTrainer.fit` → W&B → the study's freeze, producers and reports → the atlas. Also shown on the atlas's About page |
-| `report-review` | How a study report is reviewed before it goes live: self-check, claims check (scientific facts), Copilot (technical review), the first author, the final claims run, the committed claims-check records and the CI gate. Workflow diagram; shown on the atlas's Workflow page |
+| `report-review` | How a study report is reviewed before it goes live: self-check, claims check (scientific review), Copilot (technical review), the first author, the final claims run, the committed claims-check records and the CI gate. Workflow diagram; shown on the atlas's Workflow page |
 | `hb-stack` | The hierarchical Bayes baseline across dispatcher, wrapper and models: which repo owns which part of the fit, and where the held-out boundary sits |
 
 ## bfm-stack

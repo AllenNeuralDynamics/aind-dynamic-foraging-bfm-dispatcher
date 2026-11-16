@@ -6,11 +6,11 @@
   "status": "pass",
   "visualReview": "pending",
   "provenance": "current",
-  "deliveryReceiptId": "a52443c3-0a13-4bb6-9a93-82aa94b40de8",
+  "deliveryReceiptId": "5c791998-a71e-40fa-b78b-885e13ab2b1b",
   "artifact": {
     "path": "docs/diagrams/report-review.html",
-    "sha256": "772e76059a067209905be9c311ff6bb607903d0e86f12b9eac23196bfb1b5ce8",
-    "bytes": 830496
+    "sha256": "edd5ac59284228ff0f37b3f04c9b7bc35853d879c5d1a55603635d9a6fd75096",
+    "bytes": 830559
   },
   "state": {
     "detail": "read",
@@ -1897,23 +1897,23 @@
         "file": "report-review.visual-check.html"
       },
       {
-        "sha256": "9d9f4dd62917e434f18435d6025ed1c1e923e86b4e4c58c486900fc232b0be75",
-        "bytes": 130350,
+        "sha256": "efa875cab3617947cc5b491d9b58b8066cef1f1b90293750c60328ab9ef83ba8",
+        "bytes": 130851,
         "file": "report-review.visual-check.1440x900.light.png"
       },
       {
-        "sha256": "db3232248b8f9a72d5712e20accc93f7137db047076e547d8f6be9cc1079f5bb",
-        "bytes": 149904,
+        "sha256": "68a50168a867925f908978612ea8e50b9826743243ae1d7373588e0c6fefc160",
+        "bytes": 150961,
         "file": "report-review.visual-check.1440x900.dark.png"
       },
       {
-        "sha256": "0d5104b310c17eea80fe45937548708c5db2b63000ce7c8d0942667de0ddda53",
-        "bytes": 174702,
+        "sha256": "59e8041761775ce5f5e5dea5edd7f514cbcf21a71765ad6dc0b1102bc7913088",
+        "bytes": 175861,
         "file": "report-review.visual-check.2048x1320.light.png"
       },
       {
-        "sha256": "3b2d5ca23485df77bfb063f8140ee2fe0bd090b1a367d8aff021e2649db07f91",
-        "bytes": 197162,
+        "sha256": "473b7b6327195f4e5eb3e2f41040b7bdedd9e2dfc9db85e009e5ac7d711a873f",
+        "bytes": 198348,
         "file": "report-review.visual-check.2048x1320.dark.png"
       }
     ]
