@@ -40,6 +40,11 @@ report itself is never in `inputs`, so a `status` flip does not stale the record
 `analysis/provenance/claims_check_<rN>_<date>.md`. The studies checker then requires a current
 record for a live report, so a changed report or input means a new run.
 
+At most 3 runs per report version going live (SKILL.md, "Round limit"): in the final run only
+blocking findings (C1/C2 contradicted or overstated, C9, C3, a C6 that changes a claim's
+meaning) are fixed, which needs one more run; the rest are answered in the record as deferred.
+This governs the writing session; your checks and output do not change.
+
 ## Checks
 
 | ID | Check | Goes to |

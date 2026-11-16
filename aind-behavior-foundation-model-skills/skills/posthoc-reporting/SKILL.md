@@ -162,6 +162,16 @@ Run it before draft → live, and on any change to a live report's claims.
   after fixing the findings, run the check again on the fixed report and commit a second
   record before draft → live. Changing only `status` or `prose_reviewed` does not make a
   record stale.
+- **Round limit: at most 3 runs per report version going live.** Run the last one after the
+  first author's review, so their edits do not force another run. In that final run fix only
+  **blocking** findings: a claim contradicted or overstated (C1/C2), a verdict that contradicts
+  its table (C9), a wrong or unsourced number (C3), or an estimand mix-up that changes what a
+  claim means (C6). A blocking fix needs one more run, past the cap. Answer every other finding
+  (wording, an extra caveat, a stale sentence outside the claims) in the record as "deferred to
+  the next revision" with a one-line reason, and leave the text as checked, so the record stays
+  current. Why: each run finds less, a reviewer always finds something, and any edit stales the
+  record, so without a stop rule the loop never ends. A later change to a live report starts
+  the count again.
 - Its output describes the report. It never feeds the frontmatter, INDEX or README.
 - The **domain review** is a different, advisory reviewer (scientific blind spots,
   scores, ideas). Keep the two apart; mixing the jobs makes the claims check miss more.
