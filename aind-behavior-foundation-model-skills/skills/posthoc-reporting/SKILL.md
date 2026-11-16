@@ -140,16 +140,36 @@ template is in `references/report-contracts.md`.
 
 Run it before draft → live, and on any change to a live report's claims.
 
+**The loop (studies#164).** Each run costs ~10 min and ~180k tokens; study 17 r1 needed four,
+mostly because of how the report was written and fixed. Keep it to two (three with a blocking
+fix):
+
+1. **Self-check first** (you, same session, no agent): every caveat the study's PLAN or variant
+   notes promise is in the report; every number or comparison in hand-written prose is cited by
+   finding ID or computed by the producer into a block; each null or test matches the design
+   (stratification, pairing); each figure caption states its n; README and PLAN are current.
+2. **Run 1**, then fix.
+3. **The first author reviews.**
+4. **Final run** (round limit below).
+
+**Fix minimally**: delete or narrow a sentence rather than add one. New prose is where new
+findings come from (r1's only blocking finding was in a caveat written while fixing the run
+before). A comparison that must stay goes into a producer-written block.
+
 - Launch a **new** agent with the Agent tool (general-purpose, Opus 5.5 at high effort),
   read-only, with
   `references/claims-check-rubric.md`. **Never `subagent_type: "fork"`:** a fork inherits
   the writing conversation, and the point is a reader who did not write the report.
 - Give it files only: the report, its claims with pointers resolved, the JSON it cites,
   its figures, the producer scripts that write its blocks, upstream source JSONs, the diff
-  against the last live version, and the study CHANGELOG.
+  against the last live version, and the study CHANGELOG. Name **one output file** (scratch,
+  not the repository): the rubric (`claims-check/2`) has it write its JSON + summary there,
+  tag every finding `blocking`, and reply with only the path and counts.
 - **Commit a record of every run** (studies#160) with `studies/util/claims_check.py`
   `write_record(study, report, inputs=[...every other file you gave it...], rubric_version=...,
-  model=..., prompt=..., response=..., responses=...)`. Pass the report only as `report`, never
+  model=..., prompt=Path(brief), response=Path(<reviewer's output file>), responses=...)`, or
+  its CLI (`python studies/util/claims_check.py --report ... --inputs inputs.txt --response
+  <file> ...`). Never retype the response: pass the reviewer's file. Pass the report only as `report`, never
   in `inputs`: it is keyed by its claims + body, so a `status` flip does not stale the record. Call it right after the run, before
   you edit anything, so its digests describe what the reviewer read. It writes
   `analysis/provenance/claims_check_<rN>_<date>.md`: the prompt verbatim, the response
@@ -164,7 +184,7 @@ Run it before draft → live, and on any change to a live report's claims.
   record stale.
 - **Round limit: at most 3 runs per report version going live.** Run the last one after the
   first author's review, so their edits do not force another run. In that final run fix only
-  **blocking** findings: a claim contradicted or overstated (C1/C2), a verdict that contradicts
+  **blocking** findings (the reviewer tags them `"blocking": true`): a claim contradicted or overstated (C1/C2), a verdict that contradicts
   its table (C9), a wrong or unsourced number (C3), or an estimand mix-up that changes what a
   claim means (C6). A blocking fix needs one more run, past the cap. Answer every other finding
   (wording, an extra caveat, a stale sentence outside the claims) in the record as "deferred to
