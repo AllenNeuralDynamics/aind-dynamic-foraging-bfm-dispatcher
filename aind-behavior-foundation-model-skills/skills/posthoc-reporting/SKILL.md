@@ -152,7 +152,9 @@ fix):
 3. **Technical review**: request Copilot on the PR and finish its rounds (issue-tracking skill)
    now, before the final run, so the final run is the last reader of the report.
 4. **The first author reviews.**
-5. **Final run** (round limit below). Request no Copilot round after it.
+5. **Final run** (round limit below). Request no Copilot round after it. It is needed only if
+   `make validate` reports the last record as stale: if nothing checked changed since the last run
+   (no fix, no edit by the first author), that run is the final one.
 
 **Two reviewers, two jobs.** The claims check reviews a report's scientific facts: claims
 against numbers, estimands, uncertainty, caveats. Copilot is the technical reviewer: code,

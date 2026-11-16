@@ -13,6 +13,11 @@ Regenerate after editing the source, from the repository root:
       docs/diagrams/<name>.architecture.json docs/diagrams/<name>.html --quality showcase
     node "$ARCHIFY" visual-check docs/diagrams/<name>.html
 
+A workflow diagram (`<name>.workflow.json`) is built with
+`node "$ARCHIFY" finalize workflow docs/diagrams/<name>.workflow.json docs/diagrams/<name>.html --quality showcase`
+instead of `deliver architecture`. On an NFS or GPFS path, `finalize` refuses to write its receipts
+(`finalize-receipt-hardlinked`): build in a node-local copy and copy the outputs back.
+
 `visual-check` needs Chrome and writes the screenshots the PNG is cropped from; it reports
 `skipped` on hosts without it (the HPC login node, for one), so regenerate stills on a
 machine that has a browser. On an HPC compute node, point it at a Playwright Chromium with
@@ -33,6 +38,7 @@ each one links through to the interactive viewer via
 | diagram | subject |
 |---|---|
 | `bfm-stack` | The whole stack across the four repositories: a study variant's manifests → the launchers (which write its launch record) → the wrapper's runner and the four model families behind one `ModelTrainer.fit` → W&B → the study's freeze, producers and reports → the atlas. Also shown on the atlas's About page |
+| `report-review` | How a study report is reviewed before it goes live: self-check, claims check (scientific review), Copilot (technical review), the first author, the final claims run, the committed claims-check records and the CI gate. Workflow diagram; shown on the atlas's Workflow page |
 | `hb-stack` | The hierarchical Bayes baseline across dispatcher, wrapper and models: which repo owns which part of the fit, and where the held-out boundary sits |
 
 ## bfm-stack
@@ -42,3 +48,7 @@ each one links through to the interactive viewer via
 ## hb-stack
 
 [![HB baseline across three repos](hb-stack.png)](https://raw.githack.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/main/docs/diagrams/hb-stack.html)
+
+## report-review
+
+[![How a study report is reviewed before it goes live](report-review.png)](https://raw.githack.com/AllenNeuralDynamics/aind-dynamic-foraging-bfm-dispatcher/main/docs/diagrams/report-review.html)
