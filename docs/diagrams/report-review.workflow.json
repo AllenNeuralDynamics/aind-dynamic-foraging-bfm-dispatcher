@@ -105,8 +105,8 @@
       "col": 2,
       "type": "security",
       "label": "Claims check run 1",
-      "sublabel": "fresh read-only agent",
-      "tag": "rubric C1\u2013C9"
+      "sublabel": "fresh agent, C1\u2013C9 rubric",
+      "tag": "read-only, files only"
     },
     {
       "id": "fix",
@@ -141,7 +141,7 @@
       "col": 5,
       "type": "security",
       "label": "Final claims run",
-      "sublabel": "fix blocking findings only",
+      "sublabel": "same rubric; fix blocking only",
       "tag": "+1 run after a blocking fix"
     },
     {
@@ -257,7 +257,7 @@
       "dot": "violet",
       "title": "Two reviewers, two jobs",
       "items": [
-        "Claims check: each claim against its number, estimands, uncertainty, caveats",
+        "Claims check follows the claims-check rubric: claims vs numbers and figures (C1\u2013C2), prose numbers (C3), stale text (C4), caveats (C5), estimands (C6), uncertainty (C7), claim changes (C8), fixed verdicts (C9)",
         "Copilot: code, reproducibility, provenance, schemas; never rewords a claim",
         "Copilot finishes before the final claims run"
       ]
@@ -267,7 +267,7 @@
       "title": "Stop rules",
       "items": [
         "At most 3 claims runs per report version, +1 after a blocking fix",
-        "Blocking: claim contradicted or overstated, verdict vs table, wrong or unsourced number, meaning-changing estimand",
+        "Blocking (the reviewer tags it): claim contradicted or overstated (C1/C2), wrong or unsourced number (C3), meaning-changing estimand (C6), verdict vs its table (C9)",
         "Everything else is deferred, and the text stays as checked"
       ]
     },

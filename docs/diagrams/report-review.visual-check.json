@@ -6,11 +6,11 @@
   "status": "pass",
   "visualReview": "pending",
   "provenance": "current",
-  "deliveryReceiptId": "5c791998-a71e-40fa-b78b-885e13ab2b1b",
+  "deliveryReceiptId": "c489bc2b-67cd-4ba8-ba48-cf5873c727f3",
   "artifact": {
     "path": "docs/diagrams/report-review.html",
-    "sha256": "edd5ac59284228ff0f37b3f04c9b7bc35853d879c5d1a55603635d9a6fd75096",
-    "bytes": 830559
+    "sha256": "e745cc732fd28ae584070fae472ce89b8b06a184413dc471915bba61f588fcec",
+    "bytes": 830799
   },
   "state": {
     "detail": "read",
@@ -32,7 +32,7 @@
         "innerWidth": 1440,
         "innerHeight": 900,
         "scrollWidth": 1440,
-        "scrollHeight": 1322,
+        "scrollHeight": 1321,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -42,7 +42,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -51,7 +51,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -117,11 +117,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -144,7 +144,7 @@
         "innerWidth": 1600,
         "innerHeight": 1000,
         "scrollWidth": 1600,
-        "scrollHeight": 1388,
+        "scrollHeight": 1387,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -154,7 +154,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1536,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -163,7 +163,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -229,11 +229,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -256,7 +256,7 @@
         "innerWidth": 1920,
         "innerHeight": 1080,
         "scrollWidth": 1920,
-        "scrollHeight": 1387,
+        "scrollHeight": 1388,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -266,7 +266,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1856,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -275,7 +275,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -341,11 +341,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -368,7 +368,7 @@
         "innerWidth": 2048,
         "innerHeight": 1320,
         "scrollWidth": 2048,
-        "scrollHeight": 1405,
+        "scrollHeight": 1406,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -378,7 +378,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -387,7 +387,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -453,11 +453,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -533,7 +533,7 @@
         "innerWidth": 1440,
         "innerHeight": 900,
         "scrollWidth": 1440,
-        "scrollHeight": 1322,
+        "scrollHeight": 1321,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -543,7 +543,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -552,7 +552,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -618,11 +618,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -645,7 +645,7 @@
         "innerWidth": 1600,
         "innerHeight": 1000,
         "scrollWidth": 1600,
-        "scrollHeight": 1388,
+        "scrollHeight": 1387,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -655,7 +655,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1536,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -664,7 +664,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -730,11 +730,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -757,7 +757,7 @@
         "innerWidth": 1920,
         "innerHeight": 1080,
         "scrollWidth": 1920,
-        "scrollHeight": 1387,
+        "scrollHeight": 1388,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -767,7 +767,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1856,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -776,7 +776,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -842,11 +842,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -869,7 +869,7 @@
         "innerWidth": 2048,
         "innerHeight": 1320,
         "scrollWidth": 2048,
-        "scrollHeight": 1405,
+        "scrollHeight": 1406,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -879,7 +879,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -888,7 +888,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -954,11 +954,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -986,7 +986,7 @@
         "innerWidth": 1440,
         "innerHeight": 900,
         "scrollWidth": 1440,
-        "scrollHeight": 1322,
+        "scrollHeight": 1321,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -996,7 +996,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -1005,7 +1005,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1071,11 +1071,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -1098,7 +1098,7 @@
         "innerWidth": 1600,
         "innerHeight": 1000,
         "scrollWidth": 1600,
-        "scrollHeight": 1388,
+        "scrollHeight": 1387,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -1108,7 +1108,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1536,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -1117,7 +1117,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1183,11 +1183,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -1210,7 +1210,7 @@
         "innerWidth": 1920,
         "innerHeight": 1080,
         "scrollWidth": 1920,
-        "scrollHeight": 1387,
+        "scrollHeight": 1388,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -1220,7 +1220,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1856,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -1229,7 +1229,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1295,11 +1295,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -1322,7 +1322,7 @@
         "innerWidth": 2048,
         "innerHeight": 1320,
         "scrollWidth": 2048,
-        "scrollHeight": 1405,
+        "scrollHeight": 1406,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -1332,7 +1332,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -1341,7 +1341,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1407,11 +1407,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -1439,7 +1439,7 @@
         "innerWidth": 1440,
         "innerHeight": 900,
         "scrollWidth": 1440,
-        "scrollHeight": 1322,
+        "scrollHeight": 1321,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -1449,7 +1449,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -1458,7 +1458,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1524,11 +1524,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -1552,7 +1552,7 @@
         "innerWidth": 1440,
         "innerHeight": 900,
         "scrollWidth": 1440,
-        "scrollHeight": 1322,
+        "scrollHeight": 1321,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -1562,7 +1562,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -1571,7 +1571,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1637,11 +1637,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -1665,7 +1665,7 @@
         "innerWidth": 2048,
         "innerHeight": 1320,
         "scrollWidth": 2048,
-        "scrollHeight": 1405,
+        "scrollHeight": 1406,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -1675,7 +1675,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -1684,7 +1684,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1750,11 +1750,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -1778,7 +1778,7 @@
         "innerWidth": 2048,
         "innerHeight": 1320,
         "scrollWidth": 2048,
-        "scrollHeight": 1405,
+        "scrollHeight": 1406,
         "overflowX": false,
         "overflowY": true,
         "verticalScrollAccepted": true,
@@ -1788,7 +1788,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1290,
+        "diagramWidth": 1311,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -1797,7 +1797,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 860,
+        "viewBoxWidth": 874,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1863,11 +1863,11 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fix blocking findings only",
+        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
-          "id": "final"
+          "id": "run1"
         },
         "minimumRequiredNodeTextPx": 6,
         "readabilityOk": true,
@@ -1897,23 +1897,23 @@
         "file": "report-review.visual-check.html"
       },
       {
-        "sha256": "efa875cab3617947cc5b491d9b58b8066cef1f1b90293750c60328ab9ef83ba8",
-        "bytes": 130851,
+        "sha256": "3216a469a221787e5998225b263a6f4f1351ac67be45aaa1111105de78596567",
+        "bytes": 130222,
         "file": "report-review.visual-check.1440x900.light.png"
       },
       {
-        "sha256": "68a50168a867925f908978612ea8e50b9826743243ae1d7373588e0c6fefc160",
-        "bytes": 150961,
+        "sha256": "413e788876120d3e7b7f04961aed12a94408abeadfd5182db069b8dd222b7d3d",
+        "bytes": 149944,
         "file": "report-review.visual-check.1440x900.dark.png"
       },
       {
-        "sha256": "59e8041761775ce5f5e5dea5edd7f514cbcf21a71765ad6dc0b1102bc7913088",
-        "bytes": 175861,
+        "sha256": "9e5f86245c0c2d025d24b035335c3207281c8d106a9a1bad97340d0faeefb8a9",
+        "bytes": 175663,
         "file": "report-review.visual-check.2048x1320.light.png"
       },
       {
-        "sha256": "473b7b6327195f4e5eb3e2f41040b7bdedd9e2dfc9db85e009e5ac7d711a873f",
-        "bytes": 198348,
+        "sha256": "026ec1b563bc560ae4d7d9ace676edfb0d97e21957a80ad0125e109c76c39a9b",
+        "bytes": 197778,
         "file": "report-review.visual-check.2048x1320.dark.png"
       }
     ]
