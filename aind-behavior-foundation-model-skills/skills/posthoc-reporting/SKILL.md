@@ -149,8 +149,16 @@ fix):
    finding ID or computed by the producer into a block; each null or test matches the design
    (stratification, pairing); each figure caption states its n; README and PLAN are current.
 2. **Run 1**, then fix.
-3. **The first author reviews.**
-4. **Final run** (round limit below).
+3. **Technical review**: request Copilot on the PR and finish its rounds (issue-tracking skill)
+   now, before the final run, so the final run is the last reader of the report.
+4. **The first author reviews.**
+5. **Final run** (round limit below). Request no Copilot round after it.
+
+**Two reviewers, two jobs.** The claims check reviews a report's scientific facts: claims
+against numbers, estimands, uncertainty, caveats. Copilot is the technical reviewer: code,
+reproducibility, provenance, schemas (studies `.github/copilot-instructions.md` tells it so).
+Do not take a wording change to a claim or to report prose from Copilot; that is the claims
+check's call.
 
 **Fix minimally**: delete or narrow a sentence rather than add one. New prose is where new
 findings come from (r1's only blocking finding was in a caveat written while fixing the run
@@ -181,7 +189,9 @@ before). A comparison that must stay goes into a producer-written block.
   an error; a record whose report content or inputs changed is a warning (CI fails). So
   after fixing the findings, run the check again on the fixed report and commit a second
   record before draft → live. Changing only `status` or `prose_reviewed` does not make a
-  record stale.
+  record stale, and neither does a change to code alone: `.py` files are recorded under `code`,
+  not checked, since a code change that alters a number or a sentence shows in the JSON body or
+  the report text.
 - **Round limit: at most 3 runs per report version going live.** Run the last one after the
   first author's review, so their edits do not force another run. In that final run fix only
   **blocking** findings (the reviewer tags them `"blocking": true`): a claim contradicted or overstated (C1/C2), a verdict that contradicts
@@ -189,7 +199,10 @@ before). A comparison that must stay goes into a producer-written block.
   claim means (C6). A blocking fix needs one more run, past the cap. Answer every other finding
   (wording, an extra caveat, a stale sentence outside the claims) in the record as "deferred to
   the next revision" with a one-line reason, and leave the text as checked, so the record stays
-  current. Why: each run finds less, a reviewer always finds something, and any edit stales the
+  current. **The same rule holds for Copilot after the final run** (a round you had to request,
+  e.g. after a CI fix): fix freely what changes neither a JSON body nor the report text (a code
+  tidy-up keeps the record current); fix a finding that would change them only if it is
+  blocking (a bug that makes a number wrong), with the one extra run; defer the rest. Why: each run finds less, a reviewer always finds something, and any edit stales the
   record, so without a stop rule the loop never ends. A later change to a live report starts
   the count again.
 - Its output describes the report. It never feeds the frontmatter, INDEX or README.
