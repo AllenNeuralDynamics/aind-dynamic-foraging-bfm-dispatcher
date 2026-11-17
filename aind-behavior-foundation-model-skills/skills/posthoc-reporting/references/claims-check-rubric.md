@@ -44,8 +44,8 @@ report itself is never in `inputs`, so a `status` flip does not stale the record
 record for a live report, so a changed report or input means a new run.
 
 At most 3 runs per report version going live (SKILL.md, "Round limit"): in the final run only
-High findings are fixed, which needs one more run; the rest are answered in the record (Medium:
-fixed or moved to the next revision by the first author; Low: may be closed with a reason).
+High findings are fixed, which needs one more run; the rest are answered in the record and the
+text is left as checked (Medium: deferred to the next revision; Low: may be closed with a reason).
 This governs the writing session; your checks and output do not change.
 
 ## Checks
@@ -86,9 +86,10 @@ are the ones GitHub Copilot uses in its review summary, so both reviews of a PR 
 | `Low` | Does not change what a claim means | a stale sentence outside the claims (C4); a label or wording that is unclear but not wrong |
 
 The table gives defaults; choose by the effect on the reader, and say why in the finding when
-you move one away from its default. A `claims` entry whose verdict is `supported` is not a
-finding: give it `"item": "C1"` and `"severity": null`, and a `producer_traces` entry that matches
-gets `"severity": null` too. A claim that fails two checks gets two entries. An entry is a finding
+you move one away from its default. A claim that passes C1 (verdict `supported`) gets one
+`claims` entry with `"item": "C1"` and `"severity": null`, and a `producer_traces` entry that
+matches gets `"severity": null` too. Every other check a claim fails (C2, C8, C9), even a claim
+that passes C1, is its own `claims` entry with that `item` and a non-null severity. An entry is a finding
 exactly when its `severity` is not null; the PR scorecard counts findings per check from that.
 
 ## Output
