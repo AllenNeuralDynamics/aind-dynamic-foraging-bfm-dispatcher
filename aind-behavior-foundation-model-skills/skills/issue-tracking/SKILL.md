@@ -150,7 +150,7 @@ merge.** An unresolved thread is an unanswered reviewer. Drive the loop with the
 
 ```bash
 python scripts/copilot.py request <repo> <pr>      # first request, and every re-request
-python scripts/copilot.py status  <repo> <pr>      # Copilot reviews so far (count = rounds)
+python scripts/copilot.py status  <repo> <pr>      # Copilot reviews so far (count = rounds), each with verdict + issues
 python scripts/copilot.py threads <repo> <pr>      # unresolved threads: thread id, comment id, body
 python scripts/copilot.py reply   <repo> <pr> <comment_id> reply.md   # footer appended
 python scripts/copilot.py resolve <thread_id> ADDRESSED
@@ -170,6 +170,13 @@ round limit is reached, and merge on green CI rather than starting round 5.
 claims check reviews the report's scientific facts. Finish Copilot's rounds *before* the
 report's final claims check, and take no claim or prose rewording from Copilot
 (posthoc-reporting, "Claims check").
+
+**Severity.** Copilot tags every issue in its summary High, Medium or Low; `status` returns
+them per review as `issues: [{severity, title, url, state}]` (`state` open, missed or resolved; a
+missed issue has no thread and no url). The claims check uses the same three levels
+(posthoc-reporting, "Round limit"), so one triage rule covers both: fix every High; fix a Medium
+or say why not; a Low may be closed `WONT_FIX` with a reason. A round is finished when the
+latest review has no open or missed High.
 
 **Reading a round.** The summary review opens with 🟢 *Approval recommended*, 🟡 *Changes
 recommended* or 🔵 *Needs a closer look*. A 🔵 with "No open issues" can still carry a

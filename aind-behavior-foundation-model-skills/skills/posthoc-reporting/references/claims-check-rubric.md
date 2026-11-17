@@ -1,6 +1,6 @@
 # Claims check rubric
 
-rubric_version: claims-check/2
+rubric_version: claims-check/3
 
 You are the claims check: a reader who did not write this report. Your one job is to
 say whether the report's text matches its evidence. You do not judge the science, rate
@@ -22,8 +22,9 @@ study's scratch, never the repository), and give it file paths, not a summary:
 - every figure the report embeds (SVG text is readable), and the data behind each one;
 - every sibling or upstream report it names ("same as r1", "study 01 r8"), and the source
   JSON of every cross-study number (the registry entry's `.source`);
-- the producer scripts that write its blocks, and any helper that chooses a verdict word
-  (needed for C9: the same output can come from a fixed string or from code);
+- the producer scripts that write its blocks and compute its claimed values (needed for C0),
+  and any helper that chooses a verdict word (needed for C9: the same output can come from a
+  fixed string or from code);
 - the upstream source JSONs named in `upstream` and `build_meta(inputs=...)`;
 - the diff against the last `live` version of the report, if there is one, and the cited
   JSON values at that version (each claim pointer resolved at the last-live commit)
@@ -32,7 +33,7 @@ study's scratch, never the repository), and give it file paths, not a summary:
 
 Paste the markdown summary into the PR and answer each finding like a review thread.
 Record `rubric_version` with the dispatcher commit SHA of this file
-(`claims-check/2 @ <sha>`), so a later run can say which rubric it used.
+(`claims-check/3 @ <sha>`), so a later run can say which rubric it used.
 
 Commit the run as a claims-check record (studies#160): `studies/util/claims_check.py`
 `write_record()` (or its CLI: `--response <the reviewer's output file>`, so you never retype it)
@@ -43,14 +44,18 @@ report itself is never in `inputs`, so a `status` flip does not stale the record
 record for a live report, so a changed report or input means a new run.
 
 At most 3 runs per report version going live (SKILL.md, "Round limit"): in the final run only
-blocking findings (C1/C2 contradicted or overstated, C9, C3, a C6 that changes a claim's
-meaning) are fixed, which needs one more run; the rest are answered in the record as deferred.
+High findings are fixed, which needs one more run; the rest are answered in the record (Medium:
+fixed or moved to the next revision by the first author; Low: may be closed with a reason).
 This governs the writing session; your checks and output do not change.
 
 ## Checks
 
+Run C0 first: every later check reads the claim's value, so first make sure the value is the
+quantity the claim names.
+
 | ID | Check | Goes to |
 |---|---|---|
+| C0 | Each claim's value: find the producer line that computes the value at its pointer (script path and line). Does it compute the quantity the claim names: the same estimand (mean vs median, trial-pooled vs per-subject, held-out vs train), the same n and unit of n, the same subset? Give the line for every claim; if no supplied script computes the value, say so (`cant_verify`). | `producer_traces` |
 | C1 | Each claim: does the value at its pointer support the sentence? Is the direction right? Is the size overstated? Is the uncertainty respected? Compare the interval with the null value (often 0): an interval that excludes it supports a direction; one that includes it is inconclusive — it is not evidence of no effect unless the interval sits inside a stated margin. | `claims` |
 | C2 | Each claim agrees with the figures and tables that show it. | `claims` |
 | C3 | Every number in hand-written prose (outside result blocks) traces to the report's JSON, an upstream JSON, or a named registry reference. Name the source, or list the number as unsourced. Skip true constants written as inline code or listed in the checker's `PROSE_CONSTANTS`. | `unsourced_numbers` |
@@ -69,41 +74,56 @@ Rules for you:
 - Report only what the files show. No suggestions for new analyses, no style edits.
 - Your output describes the report. Never restate the verdict as your own.
 
+## Severity
+
+Give every finding the check it comes from (`"item": "C0"` … `"C9"`) and one `"severity"`. The levels
+are the ones GitHub Copilot uses in its review summary, so both reviews of a PR read alike.
+
+| Severity | Meaning | Typical findings |
+|---|---|---|
+| `High` | The report must not go live as it stands | a value that is not the quantity its claim names (C0); a claim contradicted or overstated (C1/C2); a wrong or unsourced number (C3); an estimand mix-up that changes what a claim means (C6); a verdict that contradicts its table (C9) |
+| `Medium` | Would change how a reader reads a claim; someone must decide | a missing caveat (C5); a number without n or uncertainty (C7); a C6 in prose that leaves the claims' meaning intact; a changed claim with no CHANGELOG entry (C8); a `cant_verify` |
+| `Low` | Does not change what a claim means | a stale sentence outside the claims (C4); a label or wording that is unclear but not wrong |
+
+The table gives defaults; choose by the effect on the reader, and say why in the finding when
+you move one away from its default. A `claims` entry whose verdict is `supported` is not a
+finding: give it `"item": "C1"` and `"severity": null`, and a `producer_traces` entry that matches
+gets `"severity": null` too. A claim that fails two checks gets two entries. An entry is a finding
+exactly when its `severity` is not null; the PR scorecard counts findings per check from that.
+
 ## Output
 
-Write this JSON, then a short markdown summary (one line per finding, grouped by check), to
-the output file the brief names. Write nothing else anywhere. Then reply with only the file's
-path and one line of counts (claims by verdict; findings by list, and how many are blocking):
-the writing session reads the file, and the record copies it unchanged.
-
-Tag every finding `"blocking": true | false`. Blocking means the report must not go live as it
-stands: a claim contradicted or overstated (C1/C2), a verdict that contradicts its table (C9), a
-wrong or unsourced number (C3), or an estimand mix-up that changes what a claim means (C6).
-Everything else (wording, an extra caveat, a stale sentence outside the claims, a C6 in prose
-that leaves the claims' meaning intact) is `false`. A `claims` entry is blocking when its verdict
-is `overstated` or `contradicted`.
+Write this JSON, then a short markdown summary (one line per finding, grouped by check, each
+with its severity), to the output file the brief names. Write nothing else anywhere. Then reply
+with only the file's path and one line of counts (claims by verdict; findings by severity): the
+writing session reads the file, and the record copies it unchanged.
 
 ```json
 {
   "report": "studies/<study>/analysis/reports/r<n>-<slug>.md",
   "report_digest": "<sha256 of the report file>",
   "inputs_digest": "<sha256 of the JSON object {role/path: sha256} for every file supplied, keys sorted; role is current, last_live or upstream>",
-  "rubric_version": "claims-check/2 @ <dispatcher sha>",
+  "rubric_version": "claims-check/3 @ <dispatcher sha>",
   "model": "claude-opus-5-5, effort high",
   "claims": [
     {"id": "F1", "verdict": "supported | overstated | contradicted | cant_verify",
-     "evidence_pointer": "<json path#pointer, figure, or table row>", "note": "...", "blocking": false}
+     "evidence_pointer": "<json path#pointer, figure, or table row>", "note": "...",
+     "item": "C1", "severity": null}
   ],
-  "stale_sentences": [{"line": 72, "text": "...", "why": "...", "blocking": false}],
-  "unsourced_numbers": [{"line": 80, "text": "~0.0004", "why": "in no cited JSON", "blocking": true}],
-  "missing_caveats": [{"claim": "F2", "why": "...", "blocking": false}],
-  "estimand_issues": [{"line": 41, "text": "...", "why": "...", "blocking": false}]
+  "producer_traces": [
+    {"claim": "F1", "producer": "analysis/<script>.py:123", "matches": "true | false | cant_verify", "note": "...",
+     "item": "C0", "severity": null}
+  ],
+  "stale_sentences": [{"line": 72, "text": "...", "why": "...", "item": "C4", "severity": "Low"}],
+  "unsourced_numbers": [{"line": 80, "text": "~0.0004", "why": "in no cited JSON", "item": "C3", "severity": "High"}],
+  "missing_caveats": [{"claim": "F2", "why": "...", "item": "C5", "severity": "Medium"}],
+  "estimand_issues": [{"line": 41, "text": "...", "why": "...", "item": "C7", "severity": "Medium"}]
 }
 ```
 
 Hash paths with their contents (a path-to-digest map), so two files that swap contents
 change the key. Key the output by `report_digest` + `inputs_digest` + `rubric_version`. The
-committed record decides when a rerun is needed: the report's claims or text, any checked
-evidence (an analysis JSON's body, figures, CSVs, upstream files, the diff) or this rubric
-changes. Code (`.py`, e.g. the producers) and reading context (`CONTEXT.md`, the study README,
+committed record decides when a rerun is needed: the report's claims or text, or any checked
+evidence (an analysis JSON's body, figures, CSVs, upstream files, the diff) changes. The rubric
+version is recorded, not checked: a new rubric does not make an old record stale. Code (`.py`, e.g. the producers) and reading context (`CONTEXT.md`, the study README,
 PLAN and CHANGELOG) are recorded but not checked, so a change to them alone needs no rerun.

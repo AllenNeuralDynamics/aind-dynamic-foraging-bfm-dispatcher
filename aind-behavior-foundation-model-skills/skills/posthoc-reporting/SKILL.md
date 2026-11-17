@@ -141,7 +141,7 @@ template is in `references/report-contracts.md`.
 Run it before draft → live, and on any change to a live report's claims.
 
 **The loop (studies#164).** Each run costs ~10 min and ~180k tokens; study 17 r1 needed four,
-mostly because of how the report was written and fixed. Keep it to two (three with a blocking
+mostly because of how the report was written and fixed. Keep it to two (three with a High
 fix):
 
 1. **Self-check first** (you, same session, no agent): every caveat the study's PLAN or variant
@@ -173,8 +173,9 @@ before). A comparison that must stay goes into a producer-written block.
 - Give it files only: the report, its claims with pointers resolved, the JSON it cites,
   its figures, the producer scripts that write its blocks, upstream source JSONs, the diff
   against the last live version, and the study CHANGELOG. Name **one output file** (scratch,
-  not the repository): the rubric (`claims-check/2`) has it write its JSON + summary there,
-  tag every finding `blocking`, and reply with only the path and counts.
+  not the repository): the rubric (`claims-check/3`) has it write its JSON + summary there,
+  give every finding its check (`item`, C0–C9) and a `severity` (High / Medium / Low), and reply
+  with only the path and counts.
 - **Commit a record of every run** (studies#160) with `studies/util/claims_check.py`
   `write_record(study, report, inputs=[...every other file you gave it...], rubric_version=...,
   model=..., prompt=Path(brief), response=Path(<reviewer's output file>), responses=...)`, or
@@ -196,19 +197,26 @@ before). A comparison that must stay goes into a producer-written block.
   the report text.
 - **Round limit: at most 3 runs per report version going live.** Run the last one after the
   first author's review, so their edits do not force another run. In that final run fix only
-  **blocking** findings (the reviewer tags them `"blocking": true`): a claim contradicted or overstated (C1/C2), a verdict that contradicts
-  its table (C9), a wrong or unsourced number (C3), or an estimand mix-up that changes what a
-  claim means (C6). A blocking fix needs one more run, past the cap. Answer every other finding
-  (wording, an extra caveat, a stale sentence outside the claims) in the record as "deferred to
-  the next revision" with a one-line reason, and leave the text as checked, so the record stays
-  current. **The same rule holds for Copilot after the final run** (a round you had to request,
-  e.g. after a CI fix): fix freely what leaves the record current: no change to the report's claims or text, nor to
-  any checked input (a JSON body, a figure, a CSV, an upstream file); code and reading context
-  are recorded, not checked, so a code tidy-up qualifies. Fix a finding that would change a
-  checked digest only if it is blocking (a bug that makes a number wrong), with the one extra
-  run; defer the rest. Why: each run finds less, a reviewer always finds something, and any edit stales the
-  record, so without a stop rule the loop never ends. A later change to a live report starts
-  the count again.
+  **High** findings (the rubric's `severity`: a value that is not the quantity its claim names
+  (C0), a claim contradicted or overstated (C1/C2), a wrong or unsourced number (C3), an estimand
+  mix-up that changes what a claim means (C6), a verdict that contradicts its table (C9)). A High
+  fix needs one more run, past the cap. Answer every other finding in the record and leave the
+  text as checked, so the record stays current: **Medium** (a missing caveat, a number without
+  uncertainty) is "deferred to the next revision"; **Low** (wording, a stale sentence outside the
+  claims) may be closed as won't-fix, with a one-line reason. The first author may move a finding
+  to another severity. **The same rule holds for Copilot after the final run** (a round you had
+  to request, e.g. after a CI fix), with Copilot's own High / Medium / Low tags from its review
+  summary: fix freely what leaves the record current: no change to the report's claims or text,
+  nor to any checked input (a JSON body, a figure, a CSV, an upstream file); code and reading
+  context are recorded, not checked, so a code tidy-up qualifies. Fix a finding that would change
+  a checked digest only if it is High (a bug that makes a number wrong), with the one extra run;
+  defer the rest. Why: each run finds less, a reviewer always finds something, and any edit
+  stales the record, so without a stop rule the loop never ends. A later change to a live report
+  starts the count again.
+- **When versions stop.** A deferred finding is not an obligation. A new revision opens only for
+  an open Medium finding the first author keeps, new data, or a correction; Low findings never
+  open one. A report is done when its last claims check has no open High and no Medium the first
+  author kept.
 - Its output describes the report. It never feeds the frontmatter, INDEX or README.
 - The **domain review** is a different, advisory reviewer (scientific blind spots,
   scores, ideas). Keep the two apart; mixing the jobs makes the claims check miss more.
