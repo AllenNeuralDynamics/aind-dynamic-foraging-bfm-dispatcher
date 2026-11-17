@@ -33,7 +33,7 @@
     },
     {
       "id": "claims",
-      "label": "Claims check: scientific review"
+      "label": "Claims check"
     },
     {
       "id": "copilot",
@@ -105,7 +105,7 @@
       "col": 2,
       "type": "security",
       "label": "Claims check run 1",
-      "sublabel": "fresh agent, C1\u2013C9 rubric",
+      "sublabel": "fresh agent, C0–C9 rubric",
       "tag": "read-only, files only"
     },
     {
@@ -123,7 +123,7 @@
       "col": 3,
       "type": "security",
       "label": "Copilot rounds",
-      "sublabel": "code, provenance, schemas",
+      "sublabel": "code, provenance, schemas; High/Medium/Low",
       "tag": "at most 4 rounds"
     },
     {
@@ -141,8 +141,8 @@
       "col": 5,
       "type": "security",
       "label": "Final claims run",
-      "sublabel": "same rubric; fix blocking only",
-      "tag": "+1 run after a blocking fix"
+      "sublabel": "fix High only",
+      "tag": "+1 run after a High fix"
     },
     {
       "id": "deferred",
@@ -150,7 +150,7 @@
       "col": 5,
       "type": "messagebus",
       "label": "Deferred findings",
-      "sublabel": "report revision issue"
+      "sublabel": "kept Medium findings"
     },
     {
       "id": "record",
@@ -224,7 +224,7 @@
       "id": "e-final-deferred",
       "from": "final",
       "to": "deferred",
-      "label": "non-blocking",
+      "label": "Medium / Low",
       "variant": "dashed",
       "role": "branch"
     },
@@ -257,7 +257,7 @@
       "dot": "violet",
       "title": "Two reviewers, two jobs",
       "items": [
-        "Claims check follows the claims-check rubric: claims vs numbers and figures (C1\u2013C2), prose numbers (C3), stale text (C4), caveats (C5), estimands (C6), uncertainty (C7), claim changes (C8), fixed verdicts (C9)",
+        "Claims check follows the claims-check rubric: value traced to its producer line (C0, first), claims vs numbers and figures (C1–C2), prose numbers (C3), stale text (C4), caveats (C5), estimands (C6), uncertainty (C7), claim changes (C8), fixed verdicts (C9)",
         "Copilot: code, reproducibility, provenance, schemas; never rewords a claim",
         "Copilot finishes before the final claims run"
       ]
@@ -266,9 +266,10 @@
       "dot": "rose",
       "title": "Stop rules",
       "items": [
-        "At most 3 claims runs per report version, +1 after a blocking fix",
-        "Blocking (the reviewer tags it): claim contradicted or overstated (C1/C2), wrong or unsourced number (C3), meaning-changing estimand (C6), verdict vs its table (C9)",
-        "Everything else is deferred, and the text stays as checked"
+        "At most 3 claims runs per report version, +1 after a High fix",
+        "High, Medium, Low: the claims check and Copilot use the same three severities",
+        "High must be fixed: value is not the claimed quantity (C0), claim contradicted or overstated (C1/C2), wrong or unsourced number (C3), meaning-changing estimand (C6), verdict vs its table (C9)",
+        "Medium: fixed, or kept by the first author for the next revision; Low may be closed with a reason. The text stays as checked"
       ]
     },
     {
