@@ -31,7 +31,7 @@ REASONS = ("ADDRESSED", "WONT_FIX", "INVALID", "OUTDATED")
 # ("2 open issues", "1 previously missed issue", "1 resolved since last review") whose items carry
 # a severity badge. An open issue links its thread; a previously missed one has no thread (its
 # title closes a nested <summary>).
-VERDICT = re.compile(r"^###\s*\S+\s+(.+?)\s*$", re.M)
+VERDICT = re.compile(r"^###\s*\S+\s+(Approval recommended|Changes recommended|Needs a closer look)\s*$", re.M)
 SECTION = re.compile(r"<summary><strong>\d+ (open issues?|previously missed issues?|resolved since last review)</strong></summary>")
 ISSUE = re.compile(r'alt="(High|Medium|Low) severity"[^>]*></picture>\s*(?:\[(.*?)\]\((\S+?)\)|(.*?)</summary>)', re.S)
 STATE = {"open": "open", "previously": "missed", "resolved": "resolved"}
