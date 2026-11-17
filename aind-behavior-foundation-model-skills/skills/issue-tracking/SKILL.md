@@ -175,8 +175,11 @@ report's final claims check, and take no claim or prose rewording from Copilot
 them per review as `issues: [{severity, title, url, state}]` (`state` open, missed or resolved; a
 missed issue has no thread and no url). The claims check uses the same three levels
 (posthoc-reporting, "Round limit"), so one triage rule covers both: fix every High; fix a Medium
-or say why not; a Low may be closed `WONT_FIX` with a reason. A round is finished when the
-latest review has no open or missed High.
+or say why not; a Low may be closed `WONT_FIX` with a reason. A round is finished when every
+High the latest review lists as open or missed has been handled: fixed or answered, with its
+thread replied to and resolved, or, for a missed issue (no thread), a PR comment saying what
+shipped. The summary's labels describe the commit Copilot reviewed, not your later fixes, so do
+not wait for a new review to clear them.
 
 **Reading a round.** The summary review opens with 🟢 *Approval recommended*, 🟡 *Changes
 recommended* or 🔵 *Needs a closer look*. A 🔵 with "No open issues" can still carry a
