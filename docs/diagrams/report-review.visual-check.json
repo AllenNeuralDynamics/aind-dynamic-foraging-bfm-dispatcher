@@ -6,11 +6,11 @@
   "status": "pass",
   "visualReview": "pending",
   "provenance": "current",
-  "deliveryReceiptId": "c489bc2b-67cd-4ba8-ba48-cf5873c727f3",
+  "deliveryReceiptId": "43366d25-d6ef-48e5-a15f-60b1cfe50720",
   "artifact": {
     "path": "docs/diagrams/report-review.html",
-    "sha256": "e745cc732fd28ae584070fae472ce89b8b06a184413dc471915bba61f588fcec",
-    "bytes": 830799
+    "sha256": "466ca5a6bf16b81b92169c2496649c05219699d53526a171a4b39a7066dd14af",
+    "bytes": 830889
   },
   "state": {
     "detail": "read",
@@ -42,7 +42,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -51,7 +51,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -117,7 +117,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -154,7 +154,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1536,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -163,7 +163,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -229,7 +229,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -266,7 +266,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1856,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -275,7 +275,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -341,7 +341,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -378,7 +378,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -387,7 +387,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -453,7 +453,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -543,7 +543,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -552,7 +552,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -618,7 +618,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -655,7 +655,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1536,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -664,7 +664,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -730,7 +730,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -767,7 +767,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1856,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -776,7 +776,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -842,7 +842,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -879,7 +879,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -888,7 +888,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -954,7 +954,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -996,7 +996,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -1005,7 +1005,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1071,7 +1071,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -1108,7 +1108,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1536,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -1117,7 +1117,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1183,7 +1183,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -1220,7 +1220,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1856,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 60,
@@ -1229,7 +1229,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1295,7 +1295,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -1332,7 +1332,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -1341,7 +1341,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1407,7 +1407,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -1449,7 +1449,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -1458,7 +1458,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1524,7 +1524,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -1562,7 +1562,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1376,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 12,
           "headerPx": 52,
@@ -1571,7 +1571,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1637,7 +1637,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -1675,7 +1675,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -1684,7 +1684,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1750,7 +1750,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -1788,7 +1788,7 @@
         "readerFit": "width-first",
         "ok": true,
         "readerWidth": 1920,
-        "diagramWidth": 1311,
+        "diagramWidth": 1290,
         "pageComposition": {
           "bodyPaddingPx": 64,
           "headerPx": 68,
@@ -1797,7 +1797,7 @@
           "cardsPx": 0,
           "viewBoxHeight": 786
         },
-        "viewBoxWidth": 874,
+        "viewBoxWidth": 860,
         "workflowLanes": [
           {
             "frameId": "lane-0",
@@ -1863,7 +1863,7 @@
         "minimumProjectedNodeTextPx": 7.4,
         "minimumProjectedNonEdgeTextPx": 7.4,
         "minimumProjectedEdgeTextPx": 8,
-        "minimumProjectedNodeText": "fresh agent, C1\u2013C9 rubric",
+        "minimumProjectedNodeText": "fresh agent, C0–C9 rubric",
         "minimumProjectedNodeTextDetail": "context",
         "minimumProjectedNodeTextOwner": {
           "kind": "node",
@@ -1897,23 +1897,23 @@
         "file": "report-review.visual-check.html"
       },
       {
-        "sha256": "3216a469a221787e5998225b263a6f4f1351ac67be45aaa1111105de78596567",
-        "bytes": 130222,
+        "sha256": "424f6bd8d3d5072084f73a3be45e51fba8a5e530a6328efb99d9b27d93fccc97",
+        "bytes": 129190,
         "file": "report-review.visual-check.1440x900.light.png"
       },
       {
-        "sha256": "413e788876120d3e7b7f04961aed12a94408abeadfd5182db069b8dd222b7d3d",
-        "bytes": 149944,
+        "sha256": "70a82a30ee4d6425e9a0c28f418ecb4b29e4b989548ede6b4af547a7564664d9",
+        "bytes": 148428,
         "file": "report-review.visual-check.1440x900.dark.png"
       },
       {
-        "sha256": "9e5f86245c0c2d025d24b035335c3207281c8d106a9a1bad97340d0faeefb8a9",
-        "bytes": 175663,
+        "sha256": "eab38bfcb0c013fb9d4be71e5179d198a2e284f3993713ac4212f64159e6f5e1",
+        "bytes": 174083,
         "file": "report-review.visual-check.2048x1320.light.png"
       },
       {
-        "sha256": "026ec1b563bc560ae4d7d9ace676edfb0d97e21957a80ad0125e109c76c39a9b",
-        "bytes": 197778,
+        "sha256": "2becd923a75fc75cdfac4e9613dd144201834a021a75ab57a6e85316607e3820",
+        "bytes": 195931,
         "file": "report-review.visual-check.2048x1320.dark.png"
       }
     ]
