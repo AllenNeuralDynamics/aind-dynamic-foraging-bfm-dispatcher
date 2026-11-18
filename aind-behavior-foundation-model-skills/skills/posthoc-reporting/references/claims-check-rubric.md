@@ -15,8 +15,11 @@ measured its catch rate used Opus, and other models are untested. Never
 tell it to use read-only tools only **except one output file whose path you name** (in the
 study's scratch, never the repository), and give it:
 
-- a **read-only checkout pinned to the report's commit** (a detached worktree; no fetch,
-  so it never sees origin or unmerged branches). It may read any file there and follow
+- a **read-only checkout pinned to the report's commit** (a detached worktree; no fetch).
+  A worktree shares the repository's refs and objects, so it is not an isolation boundary:
+  read only the files in this tree and the starting points below, and never another ref or
+  commit (`git show <ref>:<path>`, `git log`, `git diff` beyond the supplied diff). A CI run
+  with a single-commit clone has nothing else to read. It may read any file in the tree and follow
   every reference the report makes: cited JSON, figures and their data, producers and the
   helpers they import (C0 traces a value to its producer line; C9 needs the helper that
   chooses a verdict word), sibling and upstream reports, cross-study sources;
