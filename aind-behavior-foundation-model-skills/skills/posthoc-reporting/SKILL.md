@@ -170,19 +170,22 @@ before). A comparison that must stay goes into a producer-written block.
   read-only, with
   `references/claims-check-rubric.md`. **Never `subagent_type: "fork"`:** a fork inherits
   the writing conversation, and the point is a reader who did not write the report.
-- Give it files only: the report, its claims with pointers resolved, the JSON it cites,
-  its figures, the producer scripts that write its blocks, upstream source JSONs, the diff
-  against the last live version, and the study CHANGELOG. Name **one output file** (scratch,
+- Give it a read-only checkout pinned to the report's commit, and as starting points the
+  report, the diff against its last live version and the claim values at both commits. It
+  follows the report's references itself. Commit messages, PR threads and notes are not
+  evidence; the CHANGELOG is claims to check. Guards are in the rubric. Name **one output file** (scratch,
   not the repository): the rubric (`claims-check/3`) has it write its JSON + summary there,
   give every finding its check (`item`, C0–C9) and a `severity` (High / Medium / Low), and reply
   with only the path and counts.
 - **Commit a record of every run** (studies#160) with `studies/util/claims_check.py`
-  `write_record(study, report, inputs=[...every other file you gave it...], rubric_version=...,
+  `write_record(study, report, inputs=[...the starting points and every file a verdict cites...], rubric_version=...,
   model=..., prompt=Path(brief), response=Path(<reviewer's output file>), responses=...)`, or
   its CLI (`python studies/util/claims_check.py --report ... --inputs inputs.txt --response
   <file> ...`). Never retype the response: pass the reviewer's file. Pass the report only as `report`, never
   in `inputs`: it is keyed by its claims + body, so a `status` flip does not stale the record. Call it right after the run, before
-  you edit anything, so its digests describe what the reviewer read. It writes
+  you edit anything, so its digests describe what the reviewer read. Files it opened but did not
+  cite stay out of `inputs`: a record goes stale when the evidence a verdict rests on changes, not
+  when an unrelated file does. It writes
   `analysis/provenance/claims_check_<rN>_<date>.md`: the prompt verbatim, the response
   verbatim (with their sha256), your answer to each finding, and the digests of the report's
   claims + body and of every input.
