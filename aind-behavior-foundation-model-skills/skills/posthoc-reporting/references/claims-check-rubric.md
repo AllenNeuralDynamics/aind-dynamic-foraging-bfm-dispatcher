@@ -117,17 +117,17 @@ writing session reads the file, and the record copies it unchanged.
   "model": "claude-opus-5-5, effort high",
   "commit": "<studies commit the checkout was pinned to>",
   "claims": [
-    {"id": "F1", "verdict": "supported | overstated | contradicted | cant_verify",
+    {"id": "Fig1", "verdict": "supported | overstated | contradicted | cant_verify",
      "evidence_pointer": "<json path#pointer, figure, or table row>", "note": "...",
      "item": "C1", "severity": null}
   ],
   "producer_traces": [
-    {"claim": "F1", "producer": "analysis/<script>.py:123", "matches": "true | false | cant_verify", "note": "...",
+    {"claim": "Fig1", "producer": "analysis/<script>.py:123", "matches": "true | false | cant_verify", "note": "...",
      "item": "C0", "severity": null}
   ],
   "stale_sentences": [{"line": 72, "text": "...", "why": "...", "item": "C4", "severity": "Low"}],
   "unsourced_numbers": [{"line": 80, "text": "~0.0004", "why": "in no cited JSON", "item": "C3", "severity": "High"}],
-  "missing_caveats": [{"claim": "F2", "why": "...", "item": "C5", "severity": "Medium"}],
+  "missing_caveats": [{"claim": "Fig2", "why": "...", "item": "C5", "severity": "Medium"}],
   "estimand_issues": [{"line": 41, "text": "...", "why": "...", "item": "C7", "severity": "Medium"}]
 }
 ```

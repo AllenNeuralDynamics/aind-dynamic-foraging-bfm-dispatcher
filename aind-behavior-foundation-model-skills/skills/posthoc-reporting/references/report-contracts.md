@@ -27,10 +27,10 @@ inputs:                   # study-relative paths that exist; no commands
   data: analysis/nxd_scaling.json
   figure: analysis/fig_nxd_scaling.svg   # written by figure_style.save_figure
 claims:                   # the verdict; INDEX and README rows are generated from it
-  - id: F1
+  - id: Fig1
     text: "Held-out likelihood, trial-pooled, rises with N at every D."
     pointer: "analysis/nxd_scaling.json#/n_axis/all_d_positive"
-  - id: F2
+  - id: Fig2
     text: "No clear evidence that the N-axis gain grows with D (slope 95% CI includes 0)."
     pointer: "analysis/nxd_scaling.json#/synergy/verdict"
 prose_reviewed:           # update after re-reading the prose against changed blocks
@@ -55,8 +55,8 @@ decides whether to collect more mice or longer recordings.
 
 ## Answer
 
-- **F1.** Held-out likelihood, trial-pooled, rises with N at every D.
-- **F2.** No clear evidence that the gain from N grows with D (the interval is wide
+- **Fig. 1.** Held-out likelihood, trial-pooled, rises with N at every D.
+- **Fig. 2.** No clear evidence that the gain from N grows with D (the interval is wide
   enough to include zero and a positive slope).
 
 ## Methods
@@ -71,13 +71,13 @@ As in the study methods (README), except: (what differs for this report).
 
 ## Results
 
-### F1 — N helps at every D
+### Fig. 1 — N helps at every D
 
 <!-- BEGIN result-1 -->
 (figure first, then table)
 <!-- END result-1 -->
 
-### F2 — No clear N×D synergy
+### Fig. 2 — No clear N×D synergy
 
 <!-- BEGIN result-2 -->
 (figure, table; the verdict word comes from the JSON field the claim points at)
@@ -85,7 +85,7 @@ As in the study methods (README), except: (what differs for this report).
 
 ## What it means
 
-(interpretation; cite findings by ID; explain each specialised term at first use and
+(interpretation; cite findings as "Fig. 2"; explain each specialised term at first use and
 link its CONTEXT.md glossary entry)
 
 ## Caveats
