@@ -65,15 +65,19 @@ template is in `references/report-contracts.md`.
    (The checker prints a note, never a CI failure, when the title or one of the eight `##`
    sections below is missing or out of order; extra `##` sections between them are allowed.)
 2. `## Question`: one sentence, and why it matters.
-3. `## Answer`: numbered findings `F1`, `F2`, …, one sentence each. Order them as an
-   argument: the headline first, then what supports it, then what limits it. Never in
-   the order the analysis was done. About five at most; more findings need a new report.
+3. `## Answer`: numbered findings `Fig. 1`, `Fig. 2`, …, one sentence each. They summarise
+   the report's argument at a high level: the headline first, then what supports it, then
+   what limits it. Never in the order the analysis was done, and never one finding per
+   figure by default. Merge findings that make the same point at different settings (for
+   example "decoding works at K = 3" and "decoding works at K = 2–10" are one finding).
+   About five at most; more findings need a new report.
 4. `## Methods`: a script-written facts block (mice, sessions, split, seeds, model
    versions, interval type) read from the frozen inputs, then prose on the approach. An
    approach that the study's reports share lives once in the study README; the report
    says "as in the study methods, except …".
-5. `## Results`: one `### F<k>` subsection per finding, each with its own `result-N`
-   block. Figure first, then table, then prose.
+5. `## Results`: one `### Fig. k` subsection per finding, each with its own `result-N`
+   block. Figure first, then table, then prose. Supplementary items are labelled
+   `SupFig. 1`, `SupFig. 2`, … (never `S1`, which collides with state names).
 6. `## What it means`: the interpretation.
 7. `## Caveats`: what this result does not show, and the other explanations not ruled out.
 8. `## Next`: the next step, or "none".
@@ -83,7 +87,7 @@ template is in `references/report-contracts.md`.
 
 - Each finding is a frontmatter claim with a JSON Pointer (RFC 6901, a path to one value)
   to the number that supports it:
-  `claims: [{id: F1, text: "...", pointer: "analysis/r1_fit.json#/delta_ll/mean"}]`.
+  `claims: [{id: Fig1, text: "...", pointer: "analysis/r1_fit.json#/delta_ll/mean"}]`.
   An unresolved pointer is an error on a live report and a note on a draft, so a fresh
   scaffold passes before its producer has run.
 - **The frontmatter claims are the only home of the verdict.** `make -C studies/<study>
@@ -91,7 +95,7 @@ template is in `references/report-contracts.md`.
   table of every version-2 report: report, status, question, verdict) and in the README
   `## Verdict` (claims of live version-2 reports). Never edit those blocks by hand; the
   checker warns when they are out of date (`verdict-stale`).
-- Prose explains the claims and adds no new ones. Cite a finding by its ID ("F2 shows")
+- Prose explains the claims and adds no new ones. Cite a finding by its label ("Fig. 2 shows"; claim id `Fig2`)
   instead of retyping its number. A number you must write in prose comes from the
   report's JSON; an advisory note (`report-prose-number`, never fails CI) flags any
   decimal or percentage that matches nothing there. Write a true constant as inline code,
